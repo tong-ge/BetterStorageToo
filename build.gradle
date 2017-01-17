@@ -17,7 +17,18 @@ buildscript
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "${minecraft_version}-${mod_version}"
+// Define properties file
+ext.configFile = file "gradle.properties"
+
+configFile.withReader
+{
+    // Load config. It shall from now be referenced as simply config or project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.minecraft_version}-${config.mod_version}"
 group = "io.github.thestoneman.betterstorage"
 archivesBaseName = "BetterStorage"
 
@@ -25,10 +36,11 @@ archivesBaseName = "BetterStorage"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-minecraft {
-    version = "${minecraft_version}-${forge_version}"
+minecraft
+{
+    version = "${config.minecraft_version}-${config.forge_version}"
 
-		if( file('../run').exists() )
+	if( file('../run').exists() )
 	{
 		runDir = "../run/assets"
 	}
@@ -37,7 +49,7 @@ minecraft {
 		runDir = "assets"
 	}
 
-    mappings = forge_mappings
+    mappings = "${config.mappings_version}"
 }
 
 repositories {
@@ -53,18 +65,25 @@ repositories {
         name "MineTweaker3"
         artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-([classifier]-)[revision].[ext]"
     }
+    maven {
+        name 'prog'
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 dependencies {
-    compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
-    compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
-    compile name: "NotEnoughItems"    , group: "codechicken", version: nei_version, classifier: "dev"
-    runtime name: "CodeChickenLib"    , group: "codechicken", version: ccl_version, classifier: "dev"
-    runtime name: "CodeChickenCore"   , group: "codechicken", version: ccc_version, classifier: "dev"
-    compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
-    compile name: "Botania"           , group: "vazkii.botania", version: botania_version, classifier: "deobf"
-    runtime name: "Baubles"           , group: "com.azanor.baubles", version: baubles_version, classifier: "deobf"
-    compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
+    //compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
+    //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
+    //compile name: "NotEnoughItems"    , group: "codechicken", version: nei_version, classifier: "dev"
+    //runtime name: "CodeChickenLib"    , group: "codechicken", version: ccl_version, classifier: "dev"
+    //runtime name: "CodeChickenCore"   , group: "codechicken", version: ccc_version, classifier: "dev"
+    //compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
+    //compile name: "Botania"           , group: "vazkii.botania", version: botania_version, classifier: "deobf"
+    //runtime name: "Baubles"           , group: "com.azanor.baubles", version: baubles_version, classifier: "deobf"
+    //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
+
+    deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"
+    runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
 }
 
 sourceSets

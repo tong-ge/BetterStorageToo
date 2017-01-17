@@ -1,0 +1,21 @@
+{
+	"parent": "item/generated",
+	"textures":
+	{
+		"layer0": "betterstorage:items/key",
+		"layer1": "betterstorage:items/key_fullColor"
+	},
+	"display":
+	{
+		"thirdperson_righthand":
+		{
+			"rotation": [ 0, -90, 0 ],
+			"translation": [ 0, 4.0, 0.5 ]
+		},
+		"thirdperson_lefthand":
+		{
+			"rotation": [ 0, 90, 0 ],
+			"translation": [ 0, 4.0, 0.5 ]
+		}
+	}
+}

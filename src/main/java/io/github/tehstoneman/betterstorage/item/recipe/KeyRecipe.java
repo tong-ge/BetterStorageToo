@@ -1,14 +1,14 @@
-package net.mcft.copy.betterstorage.item.recipe;
+package io.github.tehstoneman.betterstorage.item.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.mcft.copy.betterstorage.content.BetterStorageItems;
-import net.mcft.copy.betterstorage.item.ItemBetterStorage;
-import net.mcft.copy.betterstorage.utils.DyeUtils;
-import net.mcft.copy.betterstorage.utils.InventoryUtils;
+import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
+import io.github.tehstoneman.betterstorage.utils.DyeUtils;
+import io.github.tehstoneman.betterstorage.utils.InventoryUtils;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -103,6 +103,13 @@ public class KeyRecipe extends ComboRecipe {
 			}
 		}
 		return new KeyRecipe(width, height, recipeItems);
+	}
+
+	@Override
+	public ItemStack[] getRemainingItems( InventoryCrafting inv )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -1,6 +1,16 @@
 package io.github.tehstoneman.betterstorage.misc;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.item.recipe.RecipeCopyKey;
+import io.github.tehstoneman.betterstorage.item.recipe.RecipeDyeKey;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public final class Recipes
 {
@@ -27,6 +37,8 @@ public final class Recipes
 
 		// RecipeSorter.register("betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "");
 		// RecipeSorter.register("betterstorage:lockcolorrecipe", LockColorRecipe.class, Category.SHAPELESS, "");
+
+		RecipeSorter.register( "betterstorage:copykeyrecipe", RecipeCopyKey.class, Category.SHAPED, "" );
 	}
 
 	private static void addTileRecipes()
@@ -63,7 +75,7 @@ public final class Recipes
 		 * "| o",
 		 * "ooo", 'o', "plankWood",
 		 * '|', Blocks.trapdoor));
-		 * 
+		 *
 		 * // Reinforced locker recipes
 		 * if (BetterStorageTiles.reinforcedLocker != null)
 		 * for (ContainerMaterial material : ContainerMaterial.getMaterials()) {
@@ -142,20 +154,35 @@ public final class Recipes
 
 	private static void addItemRecipes()
 	{
-		/*
-		 * if (BetterStorageItems.key != null) {
-		 * // Key recipe
-		 * // TODO: Add support for ore dictionary gold ingots / nuggets.
-		 * GameRegistry.addRecipe(KeyRecipe.createKeyRecipe(
-		 * ".o",
-		 * ".o",
-		 * " o", 'o', Items.gold_ingot,
-		 * '.', Items.gold_nugget));
-		 * // Key modify recipe
-		 * GameRegistry.addRecipe(KeyRecipe.createKeyRecipe(
-		 * "k", 'k', new ItemStack(BetterStorageItems.key)));
-		 * }
-		 */
+
+		if( BetterStorageItems.key != null )
+		{
+			// Key recipes
+			//formatter:off
+			IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.key ),
+					new Object[] { ".o",
+								   ".o",
+								   " o", 'o', "ingotGold",
+								   		 '.', "nuggetGold" } );
+			GameRegistry.addRecipe( keyRecipe );
+			IRecipe keyCopyRecipe = new RecipeCopyKey( new ItemStack( BetterStorageItems.key ),
+					new Object[] { ".o",
+								   ".o",
+								   "ko", 'o', "ingotGold",
+								   		 '.', "nuggetGold",
+								   		 'k', new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ) } );
+			GameRegistry.addRecipe( keyCopyRecipe );
+			IRecipe keyDyeRecipe = new RecipeDyeKey( new ItemStack( BetterStorageItems.key, 1, 1 ),
+					new Object[] { new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+								   "dye" } );
+			GameRegistry.addRecipe( keyDyeRecipe );
+			keyDyeRecipe = new RecipeDyeKey( new ItemStack( BetterStorageItems.key, 1, 2 ),
+					new Object[] { new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+								  "dye",
+								  "dye" } );
+			GameRegistry.addRecipe( keyDyeRecipe );
+			//formatter:on
+		}
 
 		/*
 		 * if (BetterStorageItems.lock != null) {
@@ -290,7 +317,7 @@ public final class Recipes
 		 * if (BetterStorageItems.anyCardboardItemsEnabled) {
 		 * // Crafting Station: Add cardboard enchantment recipe
 		 * BetterStorageCrafting.addStationRecipe(new CardboardEnchantmentRecipe());
-		 * 
+		 *
 		 * // Crafting Station: Add cardboard repair recipe
 		 * if (BetterStorageItems.cardboardSheet != null)
 		 * BetterStorageCrafting.addStationRecipe(new CardboardRepairRecipe());

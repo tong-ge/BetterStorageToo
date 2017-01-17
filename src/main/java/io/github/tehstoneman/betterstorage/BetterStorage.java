@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 //@formatter:off
 @Mod( modid        = Constants.modId,
       name         = Constants.modName,
-      dependencies = "required-after:Forge; after:Thaumcraft; after:NotEnoughItems;",
+      dependencies = "required-after:Forge; after:Thaumcraft; after:JEI;",
       guiFactory   = "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory" )
 //@formatter:on
 public class BetterStorage
@@ -70,12 +70,15 @@ public class BetterStorage
 		BetterStorageTileEntities.register();
 		BetterStorageEntities.register();
 		DungeonLoot.add();
+		
+		proxy.preInit();
 	}
 
 	@EventHandler
 	public void load( FMLInitializationEvent event )
 	{
 		Recipes.add();
+
 		proxy.initialize();
 	}
 
@@ -83,5 +86,7 @@ public class BetterStorage
 	public void postInit( FMLPostInitializationEvent event )
 	{
 		Addon.postInitializeAll();
+		
+		proxy.postInit();
 	}
 }

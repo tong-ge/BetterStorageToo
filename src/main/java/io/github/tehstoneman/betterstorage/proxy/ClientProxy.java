@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -22,15 +25,29 @@ public class ClientProxy extends CommonProxy
 	 */
 
 	@Override
+	public void preInit()
+	{
+		super.preInit();
+
+		BetterStorageItems.registerItemModels();
+	}
+
+	@Override
 	public void initialize()
 	{
-
 		super.initialize();
 
 		// new KeyBindingHandler();
 
 		// registerRenderers();
+	}
 
+	@Override
+	public void postInit()
+	{
+		super.postInit();
+		
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.key );
 	}
 
 	@Override
@@ -102,70 +119,70 @@ public class ClientProxy extends CommonProxy
 	/*
 	 * @SubscribeEvent
 	 * public void drawBlockHighlight(DrawBlockHighlightEvent event) {
-	 * 
+	 *
 	 * EntityPlayer player = event.player;
 	 * World world = player.worldObj;
 	 * MovingObjectPosition target = WorldUtils.rayTrace(player, event.partialTicks);
-	 * 
+	 *
 	 * if ((target == null) || (target.typeOfHit != MovingObjectType.BLOCK)) return;
 	 * int x = target.blockX;
 	 * int y = target.blockY;
 	 * int z = target.blockZ;
-	 * 
+	 *
 	 * AxisAlignedBB box = null;
 	 * Block block = world.getBlock(x, y, z);
 	 * TileEntity tileEntity = world.getTileEntity(x, y, z);
-	 * 
+	 *
 	 * if (block instanceof TileArmorStand)
 	 * box = getArmorStandHighlightBox(player, world, x, y, z, target.hitVec);
 	 * else if (block == Blocks.iron_door)
 	 * box = getIronDoorHightlightBox(player, world, x, y, z, target.hitVec, block);
 	 * else if (tileEntity instanceof IHasAttachments)
 	 * box = getAttachmentPointsHighlightBox(player, tileEntity, target);
-	 * 
+	 *
 	 * if (box == null) return;
-	 * 
+	 *
 	 * double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
 	 * double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
 	 * double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;
 	 * box.offset(-xOff, -yOff, -zOff);
-	 * 
+	 *
 	 * GL11.glEnable(GL11.GL_BLEND);
 	 * GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	 * GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
 	 * GL11.glLineWidth(2.0F);
 	 * GL11.glDisable(GL11.GL_TEXTURE_2D);
 	 * GL11.glDepthMask(false);
-	 * 
+	 *
 	 * RenderGlobal.drawOutlinedBoundingBox(box, -1);
-	 * 
+	 *
 	 * GL11.glDepthMask(true);
 	 * GL11.glEnable(GL11.GL_TEXTURE_2D);
 	 * GL11.glDisable(GL11.GL_BLEND);
-	 * 
+	 *
 	 * event.setCanceled(true);
-	 * 
+	 *
 	 * }
 	 */
 
 	/*
 	 * private AxisAlignedBB getArmorStandHighlightBox(EntityPlayer player, World world, int x, int y, int z, Vec3 hitVec) {
-	 * 
+	 *
 	 * int metadata = world.getBlockMetadata(x, y, z);
 	 * if (metadata > 0) y -= 1;
-	 * 
+	 *
 	 * TileEntityArmorStand armorStand = WorldUtils.get(world, x, y, z, TileEntityArmorStand.class);
 	 * if (armorStand == null) return null;
-	 * 
+	 *
 	 * int slot = Math.max(0, Math.min(3, (int)((hitVec.yCoord - y) * 2)));
-	 * 
+	 *
 	 * double minX = x + 2 / 16.0;
 	 * double minY = y + slot / 2.0;
 	 * double minZ = z + 2 / 16.0;
 	 * double maxX = x + 14 / 16.0;
 	 * double maxY = y + slot / 2.0 + 0.5;
 	 * double maxZ = z + 14 / 16.0;
-	 * 
+	 *
 	 * EnumArmorStandRegion region = EnumArmorStandRegion.values()[slot];
 	 * for (ArmorStandEquipHandler handler : BetterStorageArmorStand.getEquipHandlers(region)) {
 	 * ItemStack item = armorStand.getItem(handler);
@@ -185,9 +202,9 @@ public class ClientProxy extends CommonProxy
 	 * return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 	 * }
 	 * }
-	 * 
+	 *
 	 * return AxisAlignedBB.getBoundingBox(minX, y, minZ, maxX, y + 2, maxZ);
-	 * 
+	 *
 	 * }
 	 */
 
@@ -206,33 +223,33 @@ public class ClientProxy extends CommonProxy
 	 * public void onRenderPlayerSpecialsPre(RenderPlayerEvent.Specials.Pre event) {
 	 * ItemStack backpack = ItemBackpack.getBackpackData(event.entityPlayer).backpack;
 	 * if (backpack != null) {
-	 * 
+	 *
 	 * EntityPlayer player = event.entityPlayer;
 	 * float partial = event.partialRenderTick;
 	 * ItemBackpack backpackType = (ItemBackpack)backpack.getItem();
 	 * int color = backpackType.getColor(backpack);
 	 * ModelBackpackArmor model = (ModelBackpackArmor)backpackType.getArmorModel(player, backpack, 0);
-	 * 
+	 *
 	 * model.onGround = ReflectionUtils.invoke(
 	 * RendererLivingEntity.class, event.renderer, "func_77040_d", "renderSwingProgress",
 	 * EntityLivingBase.class, float.class, player, partial);
 	 * model.setLivingAnimations(player, 0, 0, partial);
-	 * 
+	 *
 	 * RenderUtils.bindTexture(new ResourceLocation(backpackType.getArmorTexture(backpack, player, 0, null)));
 	 * RenderUtils.setColorFromInt((color >= 0) ? color : 0xFFFFFF);
 	 * model.render(player, 0, 0, 0, 0, 0, 0);
-	 * 
+	 *
 	 * if (color >= 0) {
 	 * RenderUtils.bindTexture(new ResourceLocation(backpackType.getArmorTexture(backpack, player, 0, "overlay")));
 	 * GL11.glColor3f(1.0F, 1.0F, 1.0F);
 	 * model.render(player, 0, 0, 0, 0, 0, 0);
 	 * }
-	 * 
+	 *
 	 * if (backpack.isItemEnchanted()) {
 	 * float f9 = player.ticksExisted + partial;
-	 * 
+	 *
 	 * RenderUtils.bindTexture(Resources.enchantedEffect);
-	 * 
+	 *
 	 * GL11.glEnable(GL11.GL_BLEND);
 	 * GL11.glColor4f(0.5F, 0.5F, 0.5F, 1.0F);
 	 * GL11.glDepthFunc(GL11.GL_EQUAL);
@@ -261,7 +278,7 @@ public class ClientProxy extends CommonProxy
 	 * GL11.glDisable(GL11.GL_BLEND);
 	 * GL11.glDepthFunc(GL11.GL_LEQUAL);
 	 * }
-	 * 
+	 *
 	 * } else backpack = ItemBackpack.getBackpack(event.entityPlayer);
 	 * if (backpack != null) event.renderCape = false;
 	 * }
