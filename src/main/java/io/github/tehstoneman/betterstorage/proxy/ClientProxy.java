@@ -47,7 +47,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 		
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.key );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.key, BetterStorageItems.lock );
 	}
 
 	@Override

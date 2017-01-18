@@ -172,8 +172,14 @@ public class ItemKey extends ItemBetterStorage implements IKey
 		if( tag == null )
 			tooltip.add( "Keytag not set" );
 		else
+		{
 			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
 				tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
+			if( tag.hasKey( TAG_COLOR1 ) )
+				tooltip.add( "Color 1 : " + tag.getInteger( TAG_COLOR1 ) );
+			if( tag.hasKey( TAG_COLOR2 ) )
+				tooltip.add( "Color 2 : " + tag.getInteger( TAG_COLOR2 ) );
+		}
 	}
 
 	@Override
@@ -181,7 +187,5 @@ public class ItemKey extends ItemBetterStorage implements IKey
 	public void registerItemModels()
 	{
 		ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
-		ModelLoader.setCustomModelResourceLocation( this, 1, new ModelResourceLocation( getRegistryName() + "_with_color", "inventory" ) );
-		ModelLoader.setCustomModelResourceLocation( this, 2, new ModelResourceLocation( getRegistryName() + "_with_overlay", "inventory" ) );
 	}
 }

@@ -2,8 +2,9 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.item.recipe.RecipeCopyKey;
-import io.github.tehstoneman.betterstorage.item.recipe.RecipeDyeKey;
+import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
+import io.github.tehstoneman.betterstorage.item.recipe.CopyKeyRecipe;
+import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -32,13 +33,13 @@ public final class Recipes
 	private static void registerRecipeSorter()
 	{
 		// RecipeSorter.register("betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "");
-		// RecipeSorter.register("betterstorage:keyrecipe", KeyRecipe.class, Category.SHAPED, "");
-		// RecipeSorter.register("betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "");
 
 		// RecipeSorter.register("betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "");
 		// RecipeSorter.register("betterstorage:lockcolorrecipe", LockColorRecipe.class, Category.SHAPELESS, "");
 
-		RecipeSorter.register( "betterstorage:copykeyrecipe", RecipeCopyKey.class, Category.SHAPED, "" );
+		RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
+		RecipeSorter.register( "betterstorage:colorkeyrecipe", ColorRecipe.class, Category.SHAPELESS, "" );
+		RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
 	}
 
 	private static void addTileRecipes()
@@ -158,41 +159,55 @@ public final class Recipes
 		if( BetterStorageItems.key != null )
 		{
 			// Key recipes
-			//formatter:off
-			IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.key ),
+			//@formatter:off
+			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.key ),
 					new Object[] { ".o",
 								   ".o",
 								   " o", 'o', "ingotGold",
 								   		 '.', "nuggetGold" } );
 			GameRegistry.addRecipe( keyRecipe );
-			IRecipe keyCopyRecipe = new RecipeCopyKey( new ItemStack( BetterStorageItems.key ),
+			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.key ),
 					new Object[] { ".o",
 								   ".o",
 								   "ko", 'o', "ingotGold",
 								   		 '.', "nuggetGold",
-								   		 'k', new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ) } );
+								   		 'k', new ItemStack( BetterStorageItems.key ) } );
 			GameRegistry.addRecipe( keyCopyRecipe );
-			IRecipe keyDyeRecipe = new RecipeDyeKey( new ItemStack( BetterStorageItems.key, 1, 1 ),
-					new Object[] { new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+			IRecipe keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.key ),
+					new Object[] { new ItemStack( BetterStorageItems.key ),
 								   "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
-			keyDyeRecipe = new RecipeDyeKey( new ItemStack( BetterStorageItems.key, 1, 2 ),
-					new Object[] { new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+			keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.key ),
+					new Object[] { new ItemStack( BetterStorageItems.key ),
 								  "dye",
 								  "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
-			//formatter:on
-		}
+			//@formatter:on
 
-		/*
-		 * if (BetterStorageItems.lock != null) {
-		 * // Lock recipe
-		 * if (BetterStorageItems.key != null)
-		 * GameRegistry.addRecipe(LockRecipe.createLockRecipe());
-		 * // Lock color recipe
-		 * GameRegistry.addRecipe(LockColorRecipe.createLockColorRecipe());
-		 * }
-		 */
+			if( BetterStorageItems.lock != null )
+			{
+				// Lock recipe
+				//@formatter:off
+				final IRecipe lockRecipe = new LockRecipe( new ItemStack( BetterStorageItems.lock ),
+						new Object[] { " g ",
+									   "gkg",
+									   "gig", 'g', "ingotGold",
+									   		  'k', new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+									   		  'i', "ingotIron" } );
+				GameRegistry.addRecipe( lockRecipe );
+				// Lock color recipe
+				IRecipe lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.lock ),
+						new Object[] { new ItemStack( BetterStorageItems.lock ),
+									   "dye" } );
+				GameRegistry.addRecipe( lockDyeRecipe );
+				lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.lock ),
+						new Object[] { new ItemStack( BetterStorageItems.lock ),
+									  "dye",
+									  "dye" } );
+				GameRegistry.addRecipe( lockDyeRecipe );
+				//@formatter:on
+			}
+		}
 
 		// Keyring recipe
 		/*

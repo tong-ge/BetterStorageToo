@@ -1,0 +1,9 @@
+{
+	"parent": "item/generated",
+	"textures":
+	{
+		"layer0": "betterstorage:items/lock_color1",
+		"layer1": "betterstorage:items/lock_color2",
+		"layer2": "betterstorage:items/lock_highlight"
+	}
+}

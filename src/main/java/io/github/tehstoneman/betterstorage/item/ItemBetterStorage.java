@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.item;
 
-import java.awt.Color;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,9 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class ItemBetterStorage extends Item
 {
 
-	public static final String	TAG_COLOR		= "color";
-	public static final String	TAG_FULL_COLOR	= "fullColor";
-	public static final String	TAG_KEYLOCK_ID	= "id";
+	public static final String	TAG_COLOR1		= "color1";
+	public static final String	TAG_COLOR2		= "color2";
+	public static final String	TAG_KEYLOCK_ID	= "keyid";
 
 	private String				name;
 
@@ -49,46 +49,45 @@ public abstract class ItemBetterStorage extends Item
 
 	// NBT helper functions
 	// Only used by keys and locks currently.
-
-	public static int getColor( ItemStack stack )
+	public static int getKeyColor1( ItemStack stack )
 	{
 		if( stack.hasTagCompound() )
 		{
 			final NBTTagCompound tag = stack.getTagCompound();
-			if( tag.hasKey( TAG_COLOR ) )
-				return tag.getInteger( TAG_COLOR );
+			if( tag.hasKey( TAG_COLOR1 ) )
+				return tag.getInteger( TAG_COLOR1 );
 		}
-		return Color.WHITE.getRGB();
+		return MapColor.GOLD.colorValue;
 	}
 
-	public static void setColor( ItemStack stack, int color )
+	public static void setKeyColor1( ItemStack stack, int color )
 	{
 		NBTTagCompound tag = stack.getTagCompound();
 		if( tag == null )
 			tag = new NBTTagCompound();
 
-		tag.setInteger( TAG_COLOR, color );
+		tag.setInteger( TAG_COLOR1, color );
 		stack.setTagCompound( tag );
 	}
 
-	public static int getFullColor( ItemStack stack )
+	public static int getKeyColor2( ItemStack stack )
 	{
 		if( stack.hasTagCompound() )
 		{
 			final NBTTagCompound tag = stack.getTagCompound();
-			if( tag.hasKey( TAG_FULL_COLOR ) )
-				return tag.getInteger( TAG_FULL_COLOR );
+			if( tag.hasKey( TAG_COLOR2 ) )
+				return tag.getInteger( TAG_COLOR2 );
 		}
-		return Color.WHITE.getRGB();
+		return getKeyColor1( stack );
 	}
 
-	public static void setFullColor( ItemStack stack, int fullColor )
+	public static void setKeyColor2( ItemStack stack, int fullColor )
 	{
 		NBTTagCompound tag = stack.getTagCompound();
 		if( tag == null )
 			tag = new NBTTagCompound();
 
-		tag.setInteger( TAG_FULL_COLOR, fullColor );
+		tag.setInteger( TAG_COLOR2, fullColor );
 		stack.setTagCompound( tag );
 	}
 

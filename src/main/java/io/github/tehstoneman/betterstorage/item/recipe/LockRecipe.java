@@ -1,16 +1,19 @@
 package io.github.tehstoneman.betterstorage.item.recipe;
 
+import java.util.UUID;
+
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-/*
- * Recipe to copy keys
- */
-public class RecipeCopyKey extends ShapedOreRecipe
+public class LockRecipe extends ShapedOreRecipe
 {
-	public RecipeCopyKey( ItemStack result, Object[] recipe )
+
+	public LockRecipe( ItemStack result, Object[] recipe )
 	{
 		super( result, recipe );
 	}
@@ -31,7 +34,7 @@ public class RecipeCopyKey extends ShapedOreRecipe
 
 		if( itemStack != null )
 		{
-			final ItemStack resultStack = new ItemStack( BetterStorageItems.key, 1, itemStack.getMetadata() );
+			final ItemStack resultStack = new ItemStack( BetterStorageItems.lock );
 
 			if( itemStack.hasTagCompound() )
 				resultStack.setTagCompound( itemStack.getTagCompound() );
@@ -62,4 +65,15 @@ public class RecipeCopyKey extends ShapedOreRecipe
 
 		return resultStack;
 	}
+
+	public static LockRecipe createLockRecipe()
+	{
+		final ItemStack gold = new ItemStack( Items.GOLD_INGOT );
+		final ItemStack iron = new ItemStack( Items.IRON_INGOT );
+		final ItemStack key = new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE );
+		final ItemStack lock = new ItemStack( BetterStorageItems.lock );
+		final ItemStack[] items = new ItemStack[] { null, gold, null, gold, key, gold, gold, iron, gold };
+		return new LockRecipe( lock, items );
+	}
+
 }

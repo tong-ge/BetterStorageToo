@@ -2,19 +2,23 @@
 	"parent": "item/generated",
 	"textures":
 	{
-		"layer0": "betterstorage:items/key"
+		"layer0": "betterstorage:items/key_color1",
+		"layer1": "betterstorage:items/key_color2",
+		"layer2": "betterstorage:items/key_highlight"
 	},
 	"display":
 	{
 		"thirdperson_righthand":
 		{
 			"rotation": [ 0, -90, 0 ],
-			"translation": [ 0, 4.0, 0.5 ]
+			"translation": [ 0, 4.0, 0.5 ],
+            "scale": [ 0.55, 0.55, 0.55 ]
 		},
 		"thirdperson_lefthand":
 		{
 			"rotation": [ 0, 90, 0 ],
-			"translation": [ 0, 4.0, 0.5 ]
+			"translation": [ 0, 4.0, 0.5 ],
+            "scale": [ 0.55, 0.55, 0.55 ]
 		}
 	}
 }

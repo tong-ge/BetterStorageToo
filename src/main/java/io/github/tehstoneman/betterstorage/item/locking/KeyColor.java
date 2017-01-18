@@ -16,11 +16,11 @@ public class KeyColor implements IItemColor
 		switch( tintIndex )
 		{
 		case 0:
-			return Color.WHITE.getRGB();
+			return ItemBetterStorage.getKeyColor2( stack );
 		case 1:
-			return ItemBetterStorage.getFullColor( stack );
+			return ItemBetterStorage.getKeyColor1( stack );
 		case 2:
-			return ItemBetterStorage.getColor( stack );
+			return  Color.WHITE.getRGB();
 		}
 		return Color.WHITE.getRGB();
 	}

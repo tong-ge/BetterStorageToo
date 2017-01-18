@@ -75,10 +75,10 @@ public class LockAttachment extends ItemAttachment {
 		if (item == null) return null;
 		ItemStack key = new ItemStack(BetterStorageItems.key);
 		ItemBetterStorage.setID(key, ItemBetterStorage.getID(item));
-		int color = ItemBetterStorage.getColor(item);
-		if (color >= 0) ItemBetterStorage.setColor(key, color);
-		int fullColor = ItemBetterStorage.getFullColor(item);
-		if (fullColor >= 0) ItemBetterStorage.setFullColor(key, fullColor);
+		int color = ItemBetterStorage.getKeyColor1(item);
+		if (color >= 0) ItemBetterStorage.setKeyColor1(key, color);
+		int fullColor = ItemBetterStorage.getKeyColor2(item);
+		if (fullColor >= 0) ItemBetterStorage.setKeyColor2(key, fullColor);
 		return key;
 	}
 	
