@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy
 {
@@ -9,7 +12,7 @@ public class CommonProxy
 
 	public void preInit()
 	{
-		// TODO Auto-generated method stub
+		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 	}
 
 	public void initialize()

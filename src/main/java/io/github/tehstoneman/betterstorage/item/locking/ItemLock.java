@@ -28,6 +28,7 @@ public class ItemLock extends ItemBetterStorage implements ILock
 	public ItemLock()
 	{
 		setMaxDamage( 64 );
+		setMaxStackSize( 1 );
 	}
 
 	/*

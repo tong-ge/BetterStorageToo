@@ -1,0 +1,7 @@
+{
+	"parent": "betterstorage:item/keyring",
+	"textures":
+	{
+		"layer0": "betterstorage:items/keyring_3"
+	}
+}

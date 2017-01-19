@@ -24,7 +24,6 @@ public class ItemKey extends ItemBetterStorage implements IKey
 	public ItemKey()
 	{
 		setMaxDamage( 0 );
-		setHasSubtypes( true );
 		setMaxStackSize( 1 );
 	}
 
@@ -180,12 +179,5 @@ public class ItemKey extends ItemBetterStorage implements IKey
 			if( tag.hasKey( TAG_COLOR2 ) )
 				tooltip.add( "Color 2 : " + tag.getInteger( TAG_COLOR2 ) );
 		}
-	}
-
-	@Override
-	@SideOnly( Side.CLIENT )
-	public void registerItemModels()
-	{
-		ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
 	}
 }

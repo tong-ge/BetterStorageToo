@@ -1,4 +1,4 @@
-package net.mcft.copy.betterstorage.container;
+package io.github.tehstoneman.betterstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -5,6 +5,7 @@ import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.CopyKeyRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -207,16 +208,19 @@ public final class Recipes
 				GameRegistry.addRecipe( lockDyeRecipe );
 				//@formatter:on
 			}
-		}
 
-		// Keyring recipe
-		/*
-		 * if (BetterStorageItems.keyring != null)
-		 * GameRegistry.addShapedRecipe(new ItemStack(BetterStorageItems.keyring),
-		 * "...",
-		 * ". .",
-		 * "...", '.', Items.gold_nugget);
-		 */
+			// Keyring recipe
+			if( BetterStorageItems.keyring != null )
+			{
+				//@formatter:off
+				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.keyring ),
+						new Object[] { "...",
+									   ". .",
+									   "...", '.', "nuggetGold" } );
+				GameRegistry.addRecipe( keyRingRecipe );
+				//@formatter:on
+			}
+		}
 
 		// Drinking helmet recipe
 		/*

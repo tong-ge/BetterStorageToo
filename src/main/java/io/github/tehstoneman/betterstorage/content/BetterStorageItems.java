@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.content;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.item.locking.ItemKey;
+import io.github.tehstoneman.betterstorage.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,7 +13,7 @@ public final class BetterStorageItems
 {
 	public static ItemKey	key;
 	public static ItemLock	lock;
-	// public static ItemKeyring keyring;
+	public static ItemKeyring keyring;
 	// public static ItemCardboardSheet cardboardSheet;
 	// public static ItemMasterKey masterKey;
 	// public static ItemDrinkingHelmet drinkingHelmet;
@@ -42,7 +43,7 @@ public final class BetterStorageItems
 	{
 		key = MiscUtils.conditionalNew( ItemKey.class, GlobalConfig.keyEnabled );
 		lock = MiscUtils.conditionalNew( ItemLock.class, GlobalConfig.lockEnabled );
-		// keyring = MiscUtils.conditionalNew(ItemKeyring.class, GlobalConfig.keyringEnabled);
+		keyring = MiscUtils.conditionalNew(ItemKeyring.class, GlobalConfig.keyringEnabled);
 		// cardboardSheet = MiscUtils.conditionalNew(ItemCardboardSheet.class, GlobalConfig.cardboardSheetEnabled);
 		// masterKey = MiscUtils.conditionalNew(ItemMasterKey.class, GlobalConfig.masterKeyEnabled);
 		// drinkingHelmet = MiscUtils.conditionalNew(ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled);
@@ -94,5 +95,6 @@ public final class BetterStorageItems
 	{
 		key.registerItemModels();
 		lock.registerItemModels();
+		keyring.registerItemModels();
 	}
 }

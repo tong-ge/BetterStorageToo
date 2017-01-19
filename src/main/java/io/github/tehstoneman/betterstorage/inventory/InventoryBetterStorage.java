@@ -1,6 +1,6 @@
-package net.mcft.copy.betterstorage.inventory;
+package io.github.tehstoneman.betterstorage.inventory;
 
-import net.mcft.copy.betterstorage.utils.StackUtils;
+import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -18,7 +18,7 @@ public abstract class InventoryBetterStorage implements IInventory {
 	}
 	
 	@Override
-	public String getInventoryName() { return name; }
+	public String getName() { return name; }
 	
 	@Override
 	public int getInventoryStackLimit() { return 64; }
@@ -36,16 +36,16 @@ public abstract class InventoryBetterStorage implements IInventory {
 		return stack;
 	}
 	
-	@Override
+	/*@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack == null) return null;
 		setInventorySlotContents(slot, null);
 		return stack;
-	}
+	}*/
 	
 	@Override
-	public boolean hasCustomInventoryName() { return false; }
+	public boolean hasCustomName() { return false; }
 	
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) { return true; }
