@@ -2,10 +2,10 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.CopyKeyRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -13,6 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public final class Recipes
 {
@@ -46,14 +47,15 @@ public final class Recipes
 	private static void addTileRecipes()
 	{
 		// Crate recipe
-		/*
-		 * if (BetterStorageTiles.crate != null)
-		 * GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BetterStorageTiles.crate),
-		 * "o/o",
-		 * "/ /",
-		 * "o/o", 'o', "plankWood",
-		 * '/', "stickWood"));
-		 */
+		//@formatter:off
+		if( BetterStorageTiles.crate != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageTiles.crate ),
+							"o/o",
+							"/ /",
+							"o/o",	'o', "plankWood",
+									'/', "stickWood" ) );
+		//@formatter:on
 
 		// Reinforced chest recipes
 		/*
@@ -232,14 +234,16 @@ public final class Recipes
 	private static void addCardboardRecipes()
 	{
 		// Cardboard sheet recipe
-		/*
-		 * if (BetterStorageItems.cardboardSheet != null) {
-		 * GameRegistry.addShapelessRecipe(new ItemStack(BetterStorageItems.cardboardSheet, 4),
-		 * Items.paper, Items.paper, Items.paper,
-		 * Items.paper, Items.paper, Items.paper,
-		 * Items.paper, Items.paper, Items.slime_ball);
-		 * }
-		 */
+		if( BetterStorageItems.cardboardSheet != null )
+		{
+			//@formatter:off
+			final IRecipe cardboardSheetRecipe = new ShapelessOreRecipe( new ItemStack( BetterStorageItems.cardboardSheet, 4 ),
+					new Object[] { "paper",     "paper", "paper",
+								   "paper", "slimeball", "paper",
+								   "paper",     "paper", "paper" } );
+			GameRegistry.addRecipe( cardboardSheetRecipe );
+			//@formatter:on
+		}
 
 		// Cardboard helmet recipe
 		/*

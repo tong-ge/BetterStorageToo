@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
+import io.github.tehstoneman.betterstorage.container.ContainerCrate;
 import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.misc.Constants;
@@ -21,6 +22,13 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem );
 		}
+		/*if( ID == EnumGui.CRATE.getGuiID() )
+		{
+			ItemStack itemStack = player.getHeldItemMainhand();
+			if( itemStack.getItem() != BetterStorageItems.keyring)
+				return null;
+			return new ContainerCrate( player, Constants.containerCrate, player.inventory.currentItem );
+		}*/
 		return null;
 	}
 
@@ -34,12 +42,19 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new GuiBetterStorage( new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem ) );
 		}
+		/*if( ID == EnumGui.CRATE.getGuiID() )
+		{
+			ItemStack itemStack = player.getHeldItemMainhand();
+			if( itemStack.getItem() != BetterStorageItems.keyring)
+				return null;
+			return new GuiCrate( player, rows, Constants.containerCrate, localized );
+		}*/
 		return null;
 	}
 
 	public static enum EnumGui implements IStringSerializable
 	{
-		KEYRING( 0, "keyring" ), RED( 1, "red" ), GREEN( 2, "green" ), YELLOW( 3, "yellow" );
+		KEYRING( 0, "keyring" ), CRATE( 1, "crate" ), GREEN( 2, "green" ), YELLOW( 3, "yellow" );
 
 		private final int				guiID;
 		private final String			name;

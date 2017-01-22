@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,6 +30,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 
+		BetterStorageTiles.registerItemModels();
 		BetterStorageItems.registerItemModels();
 	}
 

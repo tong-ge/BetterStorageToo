@@ -186,10 +186,8 @@ public abstract class TileEntityContainer extends TileEntity
 	/** Called when a neighbor block changes. */
 	public void onNeighborUpdate( Block neighborBlock )
 	{
-		/*
-		 * if (acceptsRedstoneSignal() && neighborBlock.canProvidePower(null))
-		 * checkForRedstoneChange();
-		 */
+		if( acceptsRedstoneSignal() && neighborBlock.canProvidePower( null ) )
+			checkForRedstoneChange();
 	}
 
 	/** Called after the block is destroyed, drops contents etc. */
@@ -242,17 +240,18 @@ public abstract class TileEntityContainer extends TileEntity
 		return getRedstonePower() > 0;
 	}
 
-	/*
-	 * protected void checkForRedstoneChange() {
-	 * int previousPower = redstonePower;
-	 * redstonePower = (requiresStrongSignal() ? getStrongRedstoneSignal()
-	 * : getWeakRedstoneSignal());
-	 * if (redstonePower == previousPower) return;
-	 * onRedstonePowerChanged(previousPower, redstonePower);
-	 * if (previousPower <= 0) onRedstoneActivated();
-	 * if (redstonePower <= 0) onRedstoneDeactivated();
-	 * }
-	 */
+	protected void checkForRedstoneChange()
+	{
+		final int previousPower = redstonePower;
+		// redstonePower = (requiresStrongSignal() ? getStrongRedstoneSignal() : getWeakRedstoneSignal());
+		if( redstonePower == previousPower )
+			return;
+		onRedstonePowerChanged( previousPower, redstonePower );
+		if( previousPower <= 0 )
+			onRedstoneActivated();
+		if( redstonePower <= 0 )
+			onRedstoneDeactivated();
+	}
 
 	/** Called when redstone power going to this block changes. */
 	protected void onRedstonePowerChanged( int previousPower, int currentPower )
@@ -267,9 +266,9 @@ public abstract class TileEntityContainer extends TileEntity
 	{}
 
 	/** Returns the strong redstone signal power going into this block. */
-	// protected int getStrongRedstoneSignal() { return worldObj.getBlockPowerInput(xCoord, yCoord, zCoord); }
+	// protected int getStrongRedstoneSignal() { return worldObj.getBlockPowerInput(pos.getX(), pos.getY(), pos.getZ()); }
 	/** Returns the weak redstone signal power going into this block. */
-	// protected int getWeakRedstoneSignal() { return worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord); }
+	// protected int getWeakRedstoneSignal() { return worldObj.getStrongestIndirectPower(pos.getX(), pos.getY(), pos.getZ()); }
 
 	// Comparator related
 

@@ -28,12 +28,6 @@ public class ItemKey extends ItemBetterStorage implements IKey
 	}
 
 	@Override
-	public int getMetadata( int damage )
-	{
-		return damage;
-	}
-
-	@Override
 	public int getItemEnchantability()
 	{
 		return 20;
