@@ -1,4 +1,4 @@
-package net.mcft.copy.betterstorage.attachment;
+package io.github.tehstoneman.betterstorage.attachment;
 
 public interface IHasAttachments {
 	

@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
+import java.util.logging.Logger;
+
 import io.github.tehstoneman.betterstorage.container.ContainerCrate;
+import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

@@ -3,10 +3,14 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import io.github.tehstoneman.betterstorage.container.ContainerCrate;
 import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.inventory.InventoryCratePlayerView;
 import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.tile.crate.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -22,13 +26,15 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem );
 		}
-		/*if( ID == EnumGui.CRATE.getGuiID() )
+		if( ID == EnumGui.CRATE.getGuiID() )
 		{
-			ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring)
-				return null;
-			return new ContainerCrate( player, Constants.containerCrate, player.inventory.currentItem );
-		}*/
+			TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z) );
+			if( tileEntity instanceof TileEntityCrate )
+			{
+				InventoryCratePlayerView crate = new InventoryCratePlayerView((TileEntityCrate)tileEntity);
+				return new ContainerCrate( player, new InventoryCratePlayerView((TileEntityCrate)tileEntity) );
+			}
+		}
 		return null;
 	}
 
@@ -42,19 +48,24 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new GuiBetterStorage( new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem ) );
 		}
-		/*if( ID == EnumGui.CRATE.getGuiID() )
+		if( ID == EnumGui.CRATE.getGuiID() )
 		{
-			ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring)
-				return null;
-			return new GuiCrate( player, rows, Constants.containerCrate, localized );
-		}*/
+			TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z) );
+			if( tileEntity instanceof TileEntityCrate )
+			{
+				TileEntityCrate crate = (TileEntityCrate)tileEntity;
+				return new GuiCrate( player, Math.min(crate.getSizeInventory() / 9, 6), Constants.containerCrate, false );
+			}
+		}
 		return null;
 	}
 
 	public static enum EnumGui implements IStringSerializable
 	{
-		KEYRING( 0, "keyring" ), CRATE( 1, "crate" ), GREEN( 2, "green" ), YELLOW( 3, "yellow" );
+		//@formatter:off
+		KEYRING( 0, "keyring" ),
+		CRATE(   1, "crate" );
+		//@formatter:on
 
 		private final int				guiID;
 		private final String			name;

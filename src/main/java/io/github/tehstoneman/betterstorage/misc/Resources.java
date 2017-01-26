@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.misc;
 
-import net.mcft.copy.betterstorage.misc.BetterStorageResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -8,7 +7,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public final class Resources
 {
-
 	public static final ResourceLocation	textureEmpty				= new BetterStorageResource( "textures/empty.png" );
 	public static final ResourceLocation	enchantedEffect				= new ResourceLocation( "textures/misc/enchanted_item_glint.png" );
 
@@ -35,5 +33,4 @@ public final class Resources
 
 	private Resources()
 	{}
-
 }

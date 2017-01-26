@@ -27,7 +27,7 @@ public final class BetterStorageTiles
 
 	public static void initialize()
 	{
-		crate = MiscUtils.conditionalNew(TileCrate.class, GlobalConfig.crateEnabled);
+		crate = MiscUtils.conditionalNew( TileCrate.class, GlobalConfig.crateEnabled );
 		// reinforcedChest = MiscUtils.conditionalNew(TileReinforcedChest.class, GlobalConfig.reinforcedChestEnabled);
 		// locker = MiscUtils.conditionalNew(TileLocker.class, GlobalConfig.lockerEnabled);
 		// armorStand = MiscUtils.conditionalNew(TileArmorStand.class, GlobalConfig.armorStandEnabled);

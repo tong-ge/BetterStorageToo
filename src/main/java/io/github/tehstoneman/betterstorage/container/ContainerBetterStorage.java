@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.container;
 
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
+import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -164,50 +165,50 @@ public class ContainerBetterStorage extends Container
 		Slot slot = null;
 		if( slotId >= 0 && slotId < inventorySlots.size() )
 			slot = inventorySlots.get( slotId );
-		/*
-		 * if( slot != null )
-		 * if( special == 0 )
-		 * {
-		 * if( button == 0 || button == 1 )
-		 * {
-		 * // Override default behavior to use putStack
-		 * // instead of manipulating stackSize directly.
-		 * final ItemStack slotStack = slot.getStack();
-		 * final ItemStack holding = player.inventory.getItemStack();
-		 * if( slotStack != null && holding != null && ( holding == null ? slot.canTakeStack( player ) : slot.isItemValid( holding ) )
-		 * && StackUtils.matches( slotStack, holding ) )
-		 * {
-		 * int amount = button == 0 ? holding.stackSize : 1;
-		 * amount = Math.min( amount, slot.getSlotStackLimit() - slotStack.stackSize );
-		 * amount = Math.min( amount, slotStack.getMaxStackSize() - slotStack.stackSize );
-		 * if( amount > 0 )
-		 * {
-		 * if( ( holding.stackSize -= amount ) <= 0 )
-		 * player.inventory.setItemStack( null );
-		 * slot.putStack( StackUtils.copyStack( slotStack, slotStack.stackSize + amount ) );
-		 * }
-		 * return slotStack;
-		 * }
-		 * }
-		 * }
-		 * else
-		 * if( special == 1 )
-		 * // Override default shift-click so it doesn't call
-		 * // retrySlotClick, whatever that was meant for.
-		 * return slot.canTakeStack( player ) ? transferStackInSlot( player, slotId ) : null;
-		 * else
-		 * if( special == 2 && button >= 0 && button < 9 )
-		 * {
-		 * // Override default hotbar switching to make sure
-		 * // the items can be taken and put into those slots.
-		 * if( startHotbar < 0 )
-		 * return null;
-		 * final Slot slot2 = inventorySlots.get( startHotbar + button );
-		 * final ItemStack stack = slot.getStack();
-		 * if( !slot2.canTakeStack( player ) || stack != null && !slot2.isItemValid( stack ) )
-		 * return null;
-		 * }
-		 */
+
+		if( slot != null )
+			if( clickTypeIn == ClickType.QUICK_CRAFT )
+			{
+				if( dragType == 0 || dragType == 1 )
+				{
+					// Override default behavior to use putStack
+					// instead of manipulating stackSize directly.
+					final ItemStack slotStack = slot.getStack();
+					final ItemStack holding = player.inventory.getItemStack();
+					if( slotStack != null && holding != null && ( holding == null ? slot.canTakeStack( player ) : slot.isItemValid( holding ) )
+							&& StackUtils.matches( slotStack, holding ) )
+					{
+						int amount = dragType == 0 ? holding.stackSize : 1;
+						amount = Math.min( amount, slot.getSlotStackLimit() - slotStack.stackSize );
+						amount = Math.min( amount, slotStack.getMaxStackSize() - slotStack.stackSize );
+						if( amount > 0 )
+						{
+							if( ( holding.stackSize -= amount ) <= 0 )
+								player.inventory.setItemStack( null );
+							slot.putStack( StackUtils.copyStack( slotStack, slotStack.stackSize + amount ) );
+						}
+						return slotStack;
+					}
+				}
+			}
+			else
+				if( clickTypeIn == ClickType.PICKUP )
+					// Override default shift-click so it doesn't call
+					// retrySlotClick, whatever that was meant for.
+					return slot.canTakeStack( player ) ? transferStackInSlot( player, slotId ) : null;
+				else
+					if( clickTypeIn == ClickType.QUICK_MOVE && dragType >= 0 && dragType < 9 )
+					{
+						// Override default hotbar switching to make sure
+						// the items can be taken and put into those slots.
+						if( startHotbar < 0 )
+							return null;
+						final Slot slot2 = inventorySlots.get( startHotbar + dragType );
+						final ItemStack stack = slot.getStack();
+						if( !slot2.canTakeStack( player ) || stack != null && !slot2.isItemValid( stack ) )
+							return null;
+					}
+
 		return super.slotClick( slotId, dragType, clickTypeIn, player );
 	}
 

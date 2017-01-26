@@ -10,6 +10,7 @@ import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.content.BetterStorageTileEntities;
 import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.item.tile.ItemTileBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.misc.CreativeTabBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.DungeonLoot;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 //@formatter:off
 @Mod( modid        = Constants.modId,
@@ -64,7 +66,7 @@ public class BetterStorage
 
 		BetterStorageTiles.initialize();
 		BetterStorageItems.initialize();
-
+		
 		EnchantmentBetterStorage.initialize();
 
 		BetterStorageTileEntities.register();

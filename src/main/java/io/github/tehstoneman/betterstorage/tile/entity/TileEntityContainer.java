@@ -13,6 +13,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -171,7 +173,10 @@ public abstract class TileEntityContainer extends TileEntity
 	 * Called when the block is picked (default: middle mouse).
 	 * Returns the item to be picked, or null if nothing.
 	 */
-	// public ItemStack onPickBlock(ItemStack block, MovingObjectPosition target) { return block; }
+	public ItemStack onPickBlock( ItemStack block, RayTraceResult target )
+	{
+		return block;
+	}
 
 	/**
 	 * Called when a block is attempted to be broken by a player.
@@ -243,7 +248,7 @@ public abstract class TileEntityContainer extends TileEntity
 	protected void checkForRedstoneChange()
 	{
 		final int previousPower = redstonePower;
-		// redstonePower = (requiresStrongSignal() ? getStrongRedstoneSignal() : getWeakRedstoneSignal());
+		redstonePower = requiresStrongSignal() ? getStrongRedstoneSignal() : getWeakRedstoneSignal();
 		if( redstonePower == previousPower )
 			return;
 		onRedstonePowerChanged( previousPower, redstonePower );
@@ -266,9 +271,16 @@ public abstract class TileEntityContainer extends TileEntity
 	{}
 
 	/** Returns the strong redstone signal power going into this block. */
-	// protected int getStrongRedstoneSignal() { return worldObj.getBlockPowerInput(pos.getX(), pos.getY(), pos.getZ()); }
+	protected int getStrongRedstoneSignal()
+	{
+		return worldObj.getStrongPower( pos );
+	}
+
 	/** Returns the weak redstone signal power going into this block. */
-	// protected int getWeakRedstoneSignal() { return worldObj.getStrongestIndirectPower(pos.getX(), pos.getY(), pos.getZ()); }
+	protected int getWeakRedstoneSignal()
+	{
+		return worldObj.isBlockIndirectlyGettingPowered( pos );
+	}
 
 	// Comparator related
 
@@ -338,14 +350,12 @@ public abstract class TileEntityContainer extends TileEntity
 	}
 
 	/** Resets accessed and contents changed flags and updates nearby blocks. */
-	/*
-	 * protected void comparatorUpdateAndReset()
-	 * {
-	 * compAccessed = false;
-	 * compContentsChanged = false;
-	 * WorldUtils.notifyBlocksAround( worldObj, pos.getX(), pos.getY(), pos.getZ() );
-	 * }
-	 */
+	protected void comparatorUpdateAndReset()
+	{
+		compAccessed = false;
+		compContentsChanged = false;
+		WorldUtils.notifyBlocksAround( worldObj, pos.getX(), pos.getY(), pos.getZ() );
+	}
 
 	/**
 	 * Calls the TileEntity.markDirty function without affecting the
@@ -355,7 +365,7 @@ public abstract class TileEntityContainer extends TileEntity
 	{
 		if( worldObj.isRemote )
 			return;
-		// worldObj.markTileEntityChunkModified(xCoord, yCoord, zCoord, this);
+		worldObj.markChunkDirty( new BlockPos( pos ), this );
 		if( hasComparatorAccessed() )
 			markContentsChanged();
 	}
@@ -385,13 +395,12 @@ public abstract class TileEntityContainer extends TileEntity
 	}
 
 	/** Returns if the container should synchronize playersUsing over the network, called each tick. */
-	/*
-	 * protected boolean syncPlayersUsing() {
-	 * return (!worldObj.isRemote && doesSyncPlayers() &&
-	 * (((ticksExisted + pos.getX() + pos.getY() + pos.getZ()) & 0xFF) == 0) &&
-	 * worldObj.doChunksNearChunkExist(xCoord, yCoord, zCoord, 16));
-	 * }
-	 */
+	protected boolean syncPlayersUsing()
+	{
+		return !worldObj.isRemote && doesSyncPlayers() && ( ticksExisted + pos.getX() + pos.getY() + pos.getZ() & 0xFF ) == 0;
+		// && worldObj.doChunksNearChunkExist( pos, 16 );
+	}
+
 	/** Synchronizes playersUsing over the network. */
 	private void doSyncPlayersUsing( int playersUsing )
 	{
@@ -427,31 +436,35 @@ public abstract class TileEntityContainer extends TileEntity
 		return 0.1F;
 	}
 
-	/*
-	 * @Override
-	 * public void updateEntity() {
-	 * if (ticksExisted++ == 0) {
-	 * // Only run once after tile entity has loaded.
-	 * checkForRedstoneChange();
-	 * }
-	 *
-	 * // If a comparator or such has accessed the container and
-	 * // the contents have been changed, send a block update.
-	 * if (hasComparatorAccessed() && hasContentsChanged())
-	 * comparatorUpdateAndReset();
-	 *
-	 * if (syncPlayersUsing()) {
-	 * int newPlayersUsing = WorldUtils.syncPlayersUsing(this, playersUsing);
-	 * if (newPlayersUsing != playersUsing)
-	 * doSyncPlayersUsing(playersUsing = newPlayersUsing);
-	 * }
-	 *
-	 * prevLidAngle = lidAngle;
-	 * if (playersUsing > 0) {
-	 * if (lidAngle < 1.0F) lidAngle = Math.min(1.0F, lidAngle + getLidSpeed());
-	 * } else if (lidAngle > 0.0F) lidAngle = Math.max(0.0F, lidAngle - getLidSpeed());
-	 * }
-	 */
+	// @Override
+	public void updateEntity()
+	{
+		if( ticksExisted++ == 0 )
+			// Only run once after tile entity has loaded.
+			checkForRedstoneChange();
+
+		// If a comparator or such has accessed the container and
+		// the contents have been changed, send a block update.
+		if( hasComparatorAccessed() && hasContentsChanged() )
+			comparatorUpdateAndReset();
+
+		if( syncPlayersUsing() )
+		{
+			final int newPlayersUsing = WorldUtils.syncPlayersUsing( this, playersUsing );
+			if( newPlayersUsing != playersUsing )
+				doSyncPlayersUsing( playersUsing = newPlayersUsing );
+		}
+
+		prevLidAngle = lidAngle;
+		if( playersUsing > 0 )
+		{
+			if( lidAngle < 1.0F )
+				lidAngle = Math.min( 1.0F, lidAngle + getLidSpeed() );
+		}
+		else
+			if( lidAngle > 0.0F )
+				lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
+	}
 
 	// Reading from / writing to NBT
 
@@ -490,10 +503,10 @@ public abstract class TileEntityContainer extends TileEntity
 	 * Marks the block for an update, which will cause
 	 * a description packet to be send to players.
 	 */
-	/*
-	 * public void markForUpdate() {
-	 * worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	 * markDirty();
-	 * }
-	 */
+	public void markForUpdate()
+	{
+		worldObj.markBlockRangeForRenderUpdate( pos, pos );
+		markDirty();
+	}
+
 }

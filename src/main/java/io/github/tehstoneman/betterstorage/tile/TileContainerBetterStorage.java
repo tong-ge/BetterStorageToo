@@ -1,13 +1,18 @@
 package io.github.tehstoneman.betterstorage.tile;
 
+import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -25,14 +30,12 @@ public abstract class TileContainerBetterStorage extends TileBetterStorage imple
 		return true;
 	}
 
-	/*
-	 * @Override
-	 * public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param )
-	 * {
-	 * final TileEntity te = worldIn.getTileEntity( pos );
-	 * return te != null ? te.receiveClientEvent( id, param ) : false;
-	 * }
-	 */
+	@Override
+	public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param )
+	{
+		final TileEntity te = worldIn.getTileEntity( pos );
+		return te != null ? te.receiveClientEvent( id, param ) : false;
+	}
 
 	// Pass actions to TileEntityContainer
 
@@ -44,49 +47,59 @@ public abstract class TileContainerBetterStorage extends TileBetterStorage imple
 			( (TileEntityContainer)tileEntity ).onBlockPlaced( placer, stack );
 	}
 
-	/*
-	 * @Override
-	 * public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player,
-	 * int side, float hitX, float hitY, float hitZ) {
-	 * return getContainer(world, x, y, z).onBlockActivated(player, side, hitX, hitY, hitZ);
-	 * }
-	 */
+	@Override
+	public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
+			EnumFacing side, float hitX, float hitY, float hitZ )
+	{
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityContainer )
+			return ( (TileEntityContainer)tileEntity ).onBlockActivated( playerIn, side.getIndex(), hitX, hitY, hitZ );
 
-	/*
-	 * @Override
-	 * public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-	 * if (!getContainer(world, x, y, z).onBlockBreak(player)) return false;
-	 * return super.removedByPlayer(world, player, x, y, z);
-	 * }
-	 */
+		return false;
+	}
 
-	/*
-	 * @Override
-	 * public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
-	 * TileEntityContainer container = getContainer(world, x, y, z);
-	 * if (container != null) container.onBlockDestroyed();
-	 * }
-	 */
+	@Override
+	public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest )
+	{
+		final TileEntity tileEntity = world.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityContainer )
+			if( !( (TileEntityContainer)tileEntity ).onBlockBreak( player ) )
+				return false;
+		return super.removedByPlayer( state, world, pos, player, willHarvest );
+	}
 
-	/*
-	 * @Override
-	 * public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-	 * TileEntityContainer container = getContainer(world, x, y, z);
-	 * if (container instanceof IHasAttachments) {
-	 * ItemStack pick = ((IHasAttachments)container).getAttachments().pick(target);
-	 * if (pick != null) return pick;
-	 * }
-	 * ItemStack pick = super.getPickBlock(target, world, x, y, z);
-	 * return container.onPickBlock(pick, target);
-	 * }
-	 */
+	@Override
+	public void onBlockDestroyedByPlayer( World worldIn, BlockPos pos, IBlockState state )
+	{
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityContainer )
+			( (TileEntityContainer)tileEntity ).onBlockDestroyed();
+	}
 
-	/*
-	 * @Override
-	 * public int getComparatorInputOverride(World world, int x, int y, int z, int direction) {
-	 * return TileEntityContainer.getContainerComparatorSignalStrength(world, x, y, z);
-	 * }
-	 */
+	@Override
+	public ItemStack getPickBlock( IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player )
+	{
+		final TileEntity tileEntity = world.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityContainer )
+		{
+			final TileEntityContainer container = (TileEntityContainer)tileEntity;
+			if( container instanceof IHasAttachments )
+			{
+				final ItemStack pick = ( (IHasAttachments)container ).getAttachments().pick( target );
+				if( pick != null )
+					return pick;
+			}
+			final ItemStack pick = super.getPickBlock( state, target, world, pos, player );
+			return container.onPickBlock( pick, target );
+		}
+		return super.getPickBlock( state, target, world, pos, player );
+	}
+
+	@Override
+	public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
+	{
+		return TileEntityContainer.getContainerComparatorSignalStrength( worldIn, pos.getX(), pos.getY(), pos.getZ() );
+	}
 
 	@Override
 	public void onNeighborChange( IBlockAccess world, BlockPos pos, BlockPos neighbor )
@@ -95,5 +108,4 @@ public abstract class TileContainerBetterStorage extends TileBetterStorage imple
 		if( tileEntity instanceof TileEntityContainer )
 			( (TileEntityContainer)tileEntity ).onNeighborUpdate( world.getBlockState( neighbor ).getBlock() );
 	}
-
 }
