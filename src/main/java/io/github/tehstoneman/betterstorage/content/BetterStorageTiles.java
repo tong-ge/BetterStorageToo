@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.content;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
+import io.github.tehstoneman.betterstorage.tile.TileReinforcedChest;
 import io.github.tehstoneman.betterstorage.tile.crate.TileCrate;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,8 +10,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BetterStorageTiles
 {
-	public static TileCrate crate;
-	// public static TileReinforcedChest reinforcedChest;
+	public static TileCrate				crate;
+	public static TileReinforcedChest	reinforcedChest;
 	// public static TileLocker locker;
 	// public static TileArmorStand armorStand;
 	// public static TileBackpack backpack;
@@ -28,7 +29,7 @@ public final class BetterStorageTiles
 	public static void initialize()
 	{
 		crate = MiscUtils.conditionalNew( TileCrate.class, GlobalConfig.crateEnabled );
-		// reinforcedChest = MiscUtils.conditionalNew(TileReinforcedChest.class, GlobalConfig.reinforcedChestEnabled);
+		reinforcedChest = MiscUtils.conditionalNew( TileReinforcedChest.class, GlobalConfig.reinforcedChestEnabled );
 		// locker = MiscUtils.conditionalNew(TileLocker.class, GlobalConfig.lockerEnabled);
 		// armorStand = MiscUtils.conditionalNew(TileArmorStand.class, GlobalConfig.armorStandEnabled);
 		// backpack = MiscUtils.conditionalNew(TileBackpack.class, GlobalConfig.backpackEnabled);
@@ -47,5 +48,6 @@ public final class BetterStorageTiles
 	public static void registerItemModels()
 	{
 		crate.registerItemModels();
+		reinforcedChest.registerItemModels();
 	}
 }

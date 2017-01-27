@@ -1,18 +1,25 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
+import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedChest;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
 public class ClientProxy extends CommonProxy
 {
-
-	// public static int reinforcedChestRenderId;
 	// public static int lockerRenderId;
 	// public static int armorStandRenderId;
 	// public static int backpackRenderId;
@@ -20,10 +27,7 @@ public class ClientProxy extends CommonProxy
 	// public static int lockableDoorRenderId;
 	// public static int presentRenderId;
 
-	/*
-	 * public static final Map<Class<? extends TileEntity>, BetterStorageRenderingHandler> renderingHandlers =
-	 * new HashMap<Class<? extends TileEntity>, BetterStorageRenderingHandler>();
-	 */
+	public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
 
 	@Override
 	public void preInit()
@@ -41,14 +45,14 @@ public class ClientProxy extends CommonProxy
 
 		// new KeyBindingHandler();
 
-		// registerRenderers();
+		registerRenderers();
 	}
 
 	@Override
 	public void postInit()
 	{
 		super.postInit();
-		
+
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.key, BetterStorageItems.lock );
 	}
 
@@ -74,7 +78,7 @@ public class ClientProxy extends CommonProxy
 		// RenderingRegistry.registerEntityRenderingHandler(EntityFrienderman.class, new RenderFrienderman());
 		// RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
 
-		// reinforcedChestRenderId = registerTileEntityRenderer(TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		// lockerRenderId = registerTileEntityRenderer(TileEntityLocker.class, new TileEntityLockerRenderer());
 		// armorStandRenderId = registerTileEntityRenderer(TileEntityArmorStand.class, new TileEntityArmorStandRenderer(), false, 0, 1, 0);
 		// backpackRenderId = registerTileEntityRenderer(TileEntityBackpack.class, new TileEntityBackpackRenderer(), true, -160, 1.5F, 0.14F);
@@ -100,23 +104,21 @@ public class ClientProxy extends CommonProxy
 	 * }
 	 */
 
-	/*
-	 * public static int registerTileEntityRenderer(Class<? extends TileEntity> tileEntityClass, TileEntitySpecialRenderer renderer,
-	 * boolean render3dInInventory, float rotation, float scale, float yOffset) {
-	 * ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, renderer);
-	 * BetterStorageRenderingHandler renderingHandler =
-	 * new BetterStorageRenderingHandler(tileEntityClass, renderer, render3dInInventory, rotation, scale, yOffset);
-	 * RenderingRegistry.registerBlockHandler(renderingHandler);
-	 * renderingHandlers.put(tileEntityClass, renderingHandler);
-	 * return renderingHandler.getRenderId();
-	 * }
-	 */
+	public static int registerTileEntityRenderer( Class< ? extends TileEntity > tileEntityClass, TileEntitySpecialRenderer renderer,
+			boolean render3dInInventory, float rotation, float scale, float yOffset )
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer( tileEntityClass, renderer );
+		final BetterStorageRenderingHandler renderingHandler = new BetterStorageRenderingHandler( tileEntityClass, renderer, render3dInInventory,
+				rotation, scale, yOffset );
+		// RenderingRegistry.registerBlockHandler(renderingHandler);
+		renderingHandlers.put( tileEntityClass, renderingHandler );
+		return renderingHandler.getRenderId();
+	}
 
-	/*
-	 * public static int registerTileEntityRenderer(Class<? extends TileEntity> tileEntityClass, TileEntitySpecialRenderer renderer) {
-	 * return registerTileEntityRenderer(tileEntityClass, renderer, true, 90, 1, 0);
-	 * }
-	 */
+	public static int registerTileEntityRenderer( Class< ? extends TileEntity > tileEntityClass, TileEntitySpecialRenderer renderer )
+	{
+		return registerTileEntityRenderer( tileEntityClass, renderer, true, 90, 1, 0 );
+	}
 
 	/*
 	 * @SubscribeEvent
@@ -285,5 +287,4 @@ public class ClientProxy extends CommonProxy
 	 * if (backpack != null) event.renderCape = false;
 	 * }
 	 */
-
 }

@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.content;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.tile.crate.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedChest;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class BetterStorageTileEntities
@@ -13,7 +14,7 @@ public final class BetterStorageTileEntities
 	public static void register()
 	{
 		GameRegistry.registerTileEntity(TileEntityCrate.class, Constants.containerCrate);
-		// GameRegistry.registerTileEntity(TileEntityReinforcedChest.class, Constants.containerReinforcedChest);
+		GameRegistry.registerTileEntity(TileEntityReinforcedChest.class, Constants.containerReinforcedChest);
 		// GameRegistry.registerTileEntity(TileEntityLocker.class, Constants.containerLocker);
 		// GameRegistry.registerTileEntity(TileEntityArmorStand.class, Constants.containerArmorStand);
 		// GameRegistry.registerTileEntity(TileEntityBackpack.class, Constants.containerBackpack);

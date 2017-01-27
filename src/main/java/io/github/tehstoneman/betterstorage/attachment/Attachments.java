@@ -12,17 +12,21 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Attachments implements Iterable< Attachment >
 {
 
-	public static final ThreadLocal< EntityPlayer >	playerLocal	= new ThreadLocal< >();
+	public static final ThreadLocal< EntityPlayer >	playerLocal	= new ThreadLocal<>();
 
 	public final TileEntity							tileEntity;
-	private final Map< Integer, Attachment >		attachments	= new HashMap< >();
+	private final Map< Integer, Attachment >		attachments	= new HashMap<>();
 
 	public Attachments( TileEntity tileEntity )
 	{
@@ -44,34 +48,41 @@ public class Attachments implements Iterable< Attachment >
 	}
 
 	// Called in Block.collisionRayTrace.
-	/*
-	 * public RayTraceResult rayTrace(World world, int x, int y, int z, Vec3d start, Vec3d end) {
-	 * AxisAlignedBB aabb = tileEntity.getBlockType().getCollisionBoundingBox(world.getBlockState( new BlockPos( x, y, z) ), world, new BlockPos( x, y, z));
-	 * RayTraceResult target = aabb.calculateIntercept(start, end);
-	 * EntityPlayer player = playerLocal.get();
-	 * 
-	 * double distance = ((target != null) ? start.distanceTo(target.hitVec) : Double.MAX_VALUE);
-	 * for (Attachment attachment : this) {
-	 * if (!attachment.boxVisible(player)) continue;
-	 * AxisAlignedBB attachmentBox = attachment.getHighlightBox();
-	 * RayTraceResult attachmentTarget = attachmentBox.calculateIntercept(start, end);
-	 * if (attachmentTarget == null) continue;
-	 * double attachmentDistance = start.distanceTo(attachmentTarget.hitVec);
-	 * if (attachmentDistance >= distance) continue;
-	 * distance = attachmentDistance;
-	 * target = attachmentTarget;
-	 * target.subHit = attachment.subId;
-	 * }
-	 * 
-	 * if (target != null) {
-	 * target.blockX = x;
-	 * target.blockY = y;
-	 * target.blockZ = z;
-	 * }
-	 * return target;
-	 * 
-	 * }
-	 */
+
+	public RayTraceResult rayTrace( World world, int x, int y, int z, Vec3d start, Vec3d end )
+	{
+		final AxisAlignedBB aabb = tileEntity.getBlockType().getCollisionBoundingBox( world.getBlockState( new BlockPos( x, y, z ) ), world,
+				new BlockPos( x, y, z ) );
+		RayTraceResult target = aabb.calculateIntercept( start, end );
+		final EntityPlayer player = playerLocal.get();
+
+		double distance = target != null ? start.distanceTo( target.hitVec ) : Double.MAX_VALUE;
+		for( final Attachment attachment : this )
+		{
+			if( !attachment.boxVisible( player ) )
+				continue;
+			final AxisAlignedBB attachmentBox = attachment.getHighlightBox();
+			final RayTraceResult attachmentTarget = attachmentBox.calculateIntercept( start, end );
+			if( attachmentTarget == null )
+				continue;
+			final double attachmentDistance = start.distanceTo( attachmentTarget.hitVec );
+			if( attachmentDistance >= distance )
+				continue;
+			distance = attachmentDistance;
+			target = attachmentTarget;
+			target.subHit = attachment.subId;
+		}
+
+		/*
+		 * if (target != null) {
+		 * target.blockX = x;
+		 * target.blockY = y;
+		 * target.blockZ = z;
+		 * }
+		 */
+		return target;
+
+	}
 
 	// Called in TileEntity.updateEntity.
 	public void update()
@@ -137,7 +148,7 @@ public class Attachments implements Iterable< Attachment >
 	private int getFreeSubId()
 	{
 		int freeSubId = 0;
-		final Set< Integer > takenSet = new HashSet< >( attachments.keySet() );
+		final Set< Integer > takenSet = new HashSet<>( attachments.keySet() );
 		while( takenSet.remove( ++freeSubId ) )
 		{}
 		return freeSubId;
