@@ -348,7 +348,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer implemen
 			setOrientation( EnumFacing.getFront( compound.getByte( "orientation" ) ) );
 		if( compound.hasKey( "connected" ) )
 			setConnected( EnumFacing.getFront( compound.getByte( "connected" ) ) );
-		Logger.getLogger( Constants.modId ).info(  compound.toString() );
+		//Logger.getLogger( Constants.modId ).info(  compound.toString() );
 	}
 
 	// Reading from / writing to NBT

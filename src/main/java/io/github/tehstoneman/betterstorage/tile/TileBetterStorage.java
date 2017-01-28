@@ -56,6 +56,6 @@ public class TileBetterStorage extends Block
 	@SideOnly( Side.CLIENT )
 	public void registerItemModels()
 	{
-		ModelLoader.setCustomModelResourceLocation( ItemBlock.getItemFromBlock( this ), 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
+		ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( this ), 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
 	}
 }

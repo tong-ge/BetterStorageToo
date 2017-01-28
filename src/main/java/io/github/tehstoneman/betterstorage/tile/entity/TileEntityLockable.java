@@ -305,7 +305,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 				setLockInternal( null );
 			else
 				setLockInternal( ItemStack.loadItemStackFromNBT( compound.getCompoundTag( "lock" ) ) );
-		Logger.getLogger( Constants.modId ).info(  compound.toString() );
+		//Logger.getLogger( Constants.modId ).info(  compound.toString() );
 	}
 
 	// Reading from / writing to NBT
