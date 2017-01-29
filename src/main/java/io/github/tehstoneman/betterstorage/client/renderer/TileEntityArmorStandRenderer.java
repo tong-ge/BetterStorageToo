@@ -9,8 +9,6 @@ import io.github.tehstoneman.betterstorage.api.stand.IArmorStandRenderHandler;
 import io.github.tehstoneman.betterstorage.client.model.ModelArmorStand;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
-import net.mcft.copy.betterstorage.client.renderer.RenderArmor;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;

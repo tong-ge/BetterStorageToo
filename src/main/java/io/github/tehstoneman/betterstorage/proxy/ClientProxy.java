@@ -4,34 +4,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.api.stand.BetterStorageArmorStand;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityArmorStandRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.client.renderer.TileLockableDoorRenderingHandler;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
+import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedLocker;
 import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
+import io.github.tehstoneman.betterstorage.tile.stand.VanillaArmorStandRenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
 public class ClientProxy extends CommonProxy
 {
-	// public static int lockableDoorRenderId;
-	// public static int presentRenderId;
-
 	public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
 
 	@Override
@@ -48,7 +50,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.initialize();
 
-		// new KeyBindingHandler();
+		new KeyBindingHandler();
 
 		registerRenderers();
 	}
@@ -65,15 +67,11 @@ public class ClientProxy extends CommonProxy
 	protected void registerArmorStandHandlers()
 	{
 		super.registerArmorStandHandlers();
-		// BetterStorageArmorStand.registerRenderHandler(new VanillaArmorStandRenderHandler());
+		BetterStorageArmorStand.registerRenderHandler( new VanillaArmorStandRenderHandler() );
 	}
 
 	private void registerRenderers()
 	{
-
-		// registerItemRenderer(BetterStorageItems.itemBackpack, new ItemRendererBackpack(TileEntityBackpack.class));
-		// registerItemRenderer(BetterStorageItems.itemEnderBackpack, new ItemRendererBackpack(TileEntityBackpack.class));
-
 		// registerItemRenderer(BetterStorageTiles.reinforcedChest, new ItemRendererContainer(TileEntityReinforcedChest.class));
 		// registerItemRenderer(BetterStorageTiles.reinforcedLocker, new ItemRendererContainer(TileEntityReinforcedLocker.class));
 
@@ -89,7 +87,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
-		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
+		//RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
 		Addon.registerRenderersAll();
 
 	}

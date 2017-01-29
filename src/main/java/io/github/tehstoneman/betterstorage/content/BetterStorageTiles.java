@@ -23,10 +23,6 @@ public final class BetterStorageTiles
 	public static TileLocker			locker;
 	public static TileArmorStand		armorStand;
 
-	// Backpacks removed
-	// public static TileBackpack backpack;
-	// public static TileEnderBackpack enderBackpack;
-
 	public static TileCardboardBox		cardboardBox;
 	public static TileReinforcedLocker	reinforcedLocker;
 	public static TileCraftingStation	craftingStation;

@@ -19,8 +19,6 @@ public class GlobalConfig extends Config
 	public static final String		reinforcedChestEnabled			= "tile.reinforcedChest";
 	public static final String		lockerEnabled					= "tile.locker";
 	public static final String		armorStandEnabled				= "tile.armorStand";
-	public static final String		backpackEnabled					= "tile.backpack";
-	public static final String		enderBackpackEnabled			= "tile.enderBackpack";
 	public static final String		cardboardBoxEnabled				= "tile.cardboardBox";
 	public static final String		reinforcedLockerEnabled			= "tile.reinforcedLocker";
 	public static final String		craftingStationEnabled			= "tile.craftingStation";
@@ -93,9 +91,6 @@ public class GlobalConfig extends Config
 				.setRequiresMcRestart( true );
 		new BooleanSetting( this, lockerEnabled, true, "tile.betterstorage.locker.name" ).setHasComment( false ).setRequiresMcRestart( true );
 		new BooleanSetting( this, armorStandEnabled, true, "tile.betterstorage.armorStand.name" ).setHasComment( false ).setRequiresMcRestart( true );
-		new BooleanSetting( this, backpackEnabled, true, "tile.betterstorage.backpack.name" ).setHasComment( false ).setRequiresMcRestart( true );
-		new BooleanSetting( this, enderBackpackEnabled, true, "tile.betterstorage.enderBackpack.name" ).setHasComment( false )
-				.setRequiresMcRestart( true );
 		new BooleanSetting( this, cardboardBoxEnabled, true, "tile.betterstorage.cardboardBox.name" ).setHasComment( false )
 				.setRequiresMcRestart( true );
 		new BooleanSetting( this, reinforcedLockerEnabled, true, "tile.betterstorage.reinforcedLocker.name" ).setHasComment( false )
@@ -193,6 +188,5 @@ public class GlobalConfig extends Config
 		new BooleanSetting( this, enableWarningMessages, true )
 				.setComment( "If disabled, prevents certain warning messages from being logged to the console." );
 		new BooleanSetting( this, enableChristmasEvent, true ).setComment( "If disabled, prevents the christmas event from happening. You monster." );
-
 	}
 }

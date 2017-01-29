@@ -19,9 +19,9 @@ public class ContainerMaterial
 
 	public static final String							TAG_NAME		= "Material";
 
-	private static Map< String, ContainerMaterial >		materialMap		= new HashMap< >();
-	private static Map< Integer, ContainerMaterial >	materialMapOld	= new HashMap< >();
-	private static List< ContainerMaterial >			materials		= new ArrayList< >();
+	private static Map< String, ContainerMaterial >		materialMap		= new HashMap<>();
+	private static Map< Integer, ContainerMaterial >	materialMapOld	= new HashMap<>();
+	private static List< ContainerMaterial >			materials		= new ArrayList<>();
 
 	// Vanilla materials
 	public static ContainerMaterial						iron			= new ContainerMaterial( 0, "iron", Items.IRON_INGOT, Blocks.IRON_BLOCK );
@@ -91,8 +91,15 @@ public class ContainerMaterial
 	{
 		if( ingot == null || block == null )
 			return null;
-		return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ), "o#o", "#C#", "oOo", 'C', middle, '#', "logWood", 'o', ingot, 'O',
-				block );
+		//@formatter:off
+		return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ),
+								"o#o",
+								"#C#",
+								"oOo",	'C', middle,
+										'#', "logWood",
+										'o', ingot,
+										'O', block );
+		//@formatter:on
 	}
 
 	public ResourceLocation getChestResource( boolean large )
