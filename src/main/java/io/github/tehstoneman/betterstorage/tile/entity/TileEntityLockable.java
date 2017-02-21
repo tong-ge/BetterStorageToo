@@ -3,13 +3,13 @@ package io.github.tehstoneman.betterstorage.tile.entity;
 import java.security.InvalidParameterException;
 import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.tile.ContainerMaterial;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;

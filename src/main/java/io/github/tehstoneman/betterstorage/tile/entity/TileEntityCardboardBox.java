@@ -1,10 +1,11 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.inventory.InventoryCardboardBox;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import io.github.tehstoneman.betterstorage.item.tile.ItemCardboardBox;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,7 +27,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 
 	protected ItemStack getItemDropped()
 	{
-		return new ItemStack( BetterStorageTiles.cardboardBox );
+		return new ItemStack( BetterStorageBlocks.cardboardBox );
 	}
 
 	protected void onItemDropped( ItemStack stack )
@@ -44,7 +45,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	@Override
 	public String getName()
 	{
-		return Constants.containerCardboardBox;
+		return ModInfo.containerCardboardBox;
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	@Override
 	public InventoryTileEntity makePlayerInventory()
 	{
-		return new InventoryTileEntity( this, new InventoryCardboardBox( contents ) );
+		return new InventoryTileEntity( this, new InventoryCardboardBox( inventory ) );
 	}
 
 	@Override
@@ -66,8 +67,8 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		// If the cardboard box item has items, set the container contents to them.
 		if( StackUtils.has( stack, "Items" ) )
 		{
-			final ItemStack[] itemContents = StackUtils.getStackContents( stack, contents.length );
-			System.arraycopy( itemContents, 0, contents, 0, itemContents.length );
+			final ItemStack[] itemContents = StackUtils.getStackContents( stack, inventory.length );
+			System.arraycopy( itemContents, 0, inventory, 0, itemContents.length );
 		}
 		final int maxUses = ItemCardboardBox.getUses();
 		if( maxUses > 0 )
@@ -80,7 +81,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	{
 		if( !canPickUp() || destroyed )
 			return;
-		final boolean empty = StackUtils.isEmpty( contents );
+		final boolean empty = StackUtils.isEmpty( inventory );
 		if( !empty )
 		{
 			uses--;
@@ -93,7 +94,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		}
 		final ItemStack stack = getItemDropped();
 		if( !empty )
-			StackUtils.setStackContents( stack, contents );
+			StackUtils.setStackContents( stack, inventory );
 		onItemDropped( stack );
 		// Don't drop an empty cardboard box in creative.
 		if( !empty || !brokenInCreative )

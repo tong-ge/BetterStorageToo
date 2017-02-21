@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.item.tile;
 
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.tile.ContainerMaterial;
 import io.github.tehstoneman.betterstorage.tile.TileLockable;
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ public class ItemLockable extends ItemBlock
 		final ContainerMaterial material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
 
 		final String name = I18n.format( getUnlocalizedName( stack ) + ".name.full" );
-		final String materialName = I18n.format( "material." + Constants.modId + "." + material.name );
+		final String materialName = I18n.format( "material." + ModInfo.modId + "." + material.name );
 		return name.replace( "%MATERIAL%", materialName );
 	}
 }

@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.tile;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
+import io.github.tehstoneman.betterstorage.common.block.BlockBetterStorage;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.material.Material;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileLockableDoor extends TileBetterStorage
+public class TileLockableDoor extends BlockBetterStorage
 {
 	/*
 	 * private IIcon iconUpper;

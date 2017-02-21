@@ -1,9 +1,8 @@
 package io.github.tehstoneman.betterstorage.utils;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
-import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,11 +52,8 @@ public final class PlayerUtils
 		if( !localized )
 			title = name;
 
-		if( name.equals( Constants.containerCrate ) )
-			return new GuiCrate( player, rows, title, localized );
-		else
-			if( name.equals( Constants.containerKeyring ) )
-				return new GuiBetterStorage( new ContainerKeyring( player, title, columns ) );
+		if( name.equals( ModInfo.containerKeyring ) )
+			return new GuiBetterStorage( new ContainerKeyring( player, title, columns ) );
 		/*
 		 * else if (name.startsWith(Constants.containerThaumiumChest))
 		 * return new GuiThaumiumChest(player, columns, rows, title, localized);

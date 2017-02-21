@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.inventory;
 
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -37,14 +37,14 @@ public class InventoryTileEntity extends InventoryBetterStorage
 
 	public InventoryTileEntity( TileEntityContainer tileEntity )
 	{
-		this( tileEntity, new InventoryStacks( tileEntity.contents ) );
+		this( tileEntity, new InventoryStacks( tileEntity.inventory ) );
 	}
 
 	private static ItemStack[][] getAllContents( TileEntityContainer... tileEntities )
 	{
 		final ItemStack[][] allContents = new ItemStack[tileEntities.length][];
 		for( int i = 0; i < tileEntities.length; i++ )
-			allContents[i] = tileEntities[i].contents;
+			allContents[i] = tileEntities[i].inventory;
 		return allContents;
 	}
 

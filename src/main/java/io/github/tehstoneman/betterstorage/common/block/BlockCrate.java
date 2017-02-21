@@ -1,21 +1,19 @@
-package io.github.tehstoneman.betterstorage.tile.crate;
+package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
-import io.github.tehstoneman.betterstorage.item.tile.ItemTileBetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
-import io.github.tehstoneman.betterstorage.tile.TileContainerBetterStorage;
-import io.github.tehstoneman.betterstorage.utils.WorldUtils;
+import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -23,13 +21,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional.Interface;
+import net.minecraftforge.fml.common.Optional.Method;
+import vazkii.botania.api.mana.ILaputaImmobile;
 
-//@Interface(modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true)
-public class TileCrate extends TileContainerBetterStorage // implements ILaputaImmobile
+@Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
+public class BlockCrate extends BlockContainerBetterStorage implements ILaputaImmobile
 {
 	public static final PropertyBool	CONNECTED_DOWN	= PropertyBool.create( "down" );
 	public static final PropertyBool	CONNECTED_UP	= PropertyBool.create( "up" );
@@ -38,13 +35,10 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 	public static final PropertyBool	CONNECTED_EAST	= PropertyBool.create( "east" );
 	public static final PropertyBool	CONNECTED_WEST	= PropertyBool.create( "west" );
 
-	public TileCrate()
+	public BlockCrate()
 	{
 		super( Material.WOOD );
-
 		setHardness( 2.0f );
-		// setStepSound(soundTypeWood);
-
 		setHarvestLevel( "axe", 0 );
 
 		//@formatter:off
@@ -55,13 +49,6 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 												  .withProperty( CONNECTED_EAST, false )
 												  .withProperty( CONNECTED_WEST, false ) );
 		//@formatter:on
-	}
-
-	@Override
-	protected void registerBlock()
-	{
-		GameRegistry.register( this );
-		GameRegistry.register( new ItemTileBetterStorage( this ).setRegistryName( getRegistryName() ) );
 	}
 
 	@Override
@@ -85,7 +72,7 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos )
 	{
@@ -95,21 +82,17 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 		state = state.withProperty( CONNECTED_SOUTH, canConnect( worldIn, pos, EnumFacing.SOUTH ) );
 		state = state.withProperty( CONNECTED_EAST, canConnect( worldIn, pos, EnumFacing.EAST ) );
 		state = state.withProperty( CONNECTED_WEST, canConnect( worldIn, pos, EnumFacing.WEST ) );
-		//Logger.getLogger( Constants.modId ).info( "state " + state );
 		return state;
 	}
 
 	public boolean canConnect( IBlockAccess worldIn, BlockPos pos, EnumFacing side )
 	{
 		final TileEntityCrate thisCrate = (TileEntityCrate)worldIn.getTileEntity( pos );
-		//Logger.getLogger( Constants.modId ).info( "thisCrate.getID() " + thisCrate.getID() );
-		if( thisCrate.getID() == -1 )
-			return false;
 		final TileEntity tileEntity = worldIn.getTileEntity( pos.add( side.getDirectionVec() ) );
 		if( tileEntity instanceof TileEntityCrate )
 		{
 			final TileEntityCrate connectedCrate = (TileEntityCrate)tileEntity;
-			return thisCrate.getID() == connectedCrate.getID();
+			return thisCrate.getPileID().equals( connectedCrate.getPileID() );
 		}
 		return false;
 	}
@@ -135,14 +118,56 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 	}
 
 	@Override
+	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
+	{
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityCrate )
+			( (TileEntityCrate)tileEntity ).onBlockPlaced( placer, stack );
+	}
+
+	@Override
 	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem,
 			EnumFacing side, float hitX, float hitY, float hitZ )
 	{
 		if( world.isRemote )
 			return true;
-		player.openGui( Constants.modId, EnumGui.CRATE.getGuiID(), world, pos.getX(), pos.getY(), pos.getZ() );
+		final TileEntityCrate tileEntityCrate = (TileEntityCrate)world.getTileEntity( pos );
+		player.openGui( ModInfo.modId, EnumGui.CRATE.getGuiID(), world, pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
+
+	@Override
+	public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest )
+	{
+		final TileEntity tileEntity = world.getTileEntity( pos );
+		if( !world.isRemote && tileEntity instanceof TileEntityCrate )
+		{
+			final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
+			final CrateStackHandler handler = tileCrate.getCrateStackHandler();
+			final ItemStack[] overflow = handler.removeCrate( tileCrate );
+			if( overflow != null )
+				for( final ItemStack stack : overflow )
+					if( stack != null && stack.stackSize > 0 )
+						world.spawnEntityInWorld( new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack ) );
+		}
+		return super.removedByPlayer( state, world, pos, player, willHarvest );
+	}
+
+	/*
+	 * @Override
+	 * public void breakBlock( World worldIn, BlockPos pos, IBlockState state )
+	 * {
+	 * final TileEntityCrate tileEntityCrate = (TileEntityCrate)worldIn.getTileEntity( pos );
+	 * final CrateStackHandler handler = tileEntityCrate.getCrateStackHandler();
+	 * for( int i = 0; i < handler.getSlots(); i++ )
+	 * {
+	 * final ItemStack stack = handler.getStackInSlot( i );
+	 * if( stack != null && stack.stackSize > 0 )
+	 * worldIn.spawnEntityInWorld( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), stack ) );
+	 * }
+	 * super.breakBlock( worldIn, pos, state );
+	 * }
+	 */
 
 	@Override
 	public boolean hasComparatorInputOverride( IBlockState state )
@@ -150,42 +175,10 @@ public class TileCrate extends TileContainerBetterStorage // implements ILaputaI
 		return true;
 	}
 
-	/*
-	 * private class ConnectedTextureCrate extends ConnectedTexture
-	 * {
-	 *
-	 * @Override
-	 * public boolean canConnect( IBlockAccess world, BlockPos pos, EnumFacing side, EnumFacing connected )
-	 * {
-	 * if( world.getBlockState( pos ) != TileCrate.this )
-	 * return false;
-	 * final int offX = pos.getX() + connected.getFrontOffsetX();
-	 * final int offY = pos.getY() + connected.getFrontOffsetY();
-	 * final int offZ = pos.getZ() + connected.getFrontOffsetZ();
-	 *
-	 * if( offY <= 0 )
-	 * return false;
-	 *
-	 * final TileEntityCrate connectedCrate = WorldUtils.get( world, offX, offY, offZ, TileEntityCrate.class );
-	 * if( connectedCrate == null )
-	 * return false;
-	 * final TileEntityCrate crate = WorldUtils.get( world, pos.getX(), pos.getY(), pos.getZ(), TileEntityCrate.class );
-	 * return crate.getID() == connectedCrate.getID() && !crate.equals( connectedCrate );
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean canMove(World world, int x, int y, int z) {
-	 * return false;
-	 * }
-	 */
-
+	@Method( modid = "Botania" )
 	@Override
-	@SideOnly( Side.CLIENT )
-	public void registerItemModels()
+	public boolean canMove( World world, BlockPos pos )
 	{
-		ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( this ), 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
+		return false;
 	}
 }

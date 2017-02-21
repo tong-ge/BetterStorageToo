@@ -2,13 +2,16 @@ package io.github.tehstoneman.betterstorage.tile.crate;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.crate.ICrateWatcher;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.inventory.InventoryCrateBlockView;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.misc.ItemIdentifier;
 import io.github.tehstoneman.betterstorage.misc.Region;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
@@ -16,19 +19,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * Holds data for a single crate pile, a multi-block
  * structure made from individual crate blocks
  */
-public class CratePileData
+public class CratePileData extends WorldSavedData
 {
 
-	private static final int				maxCratePileSize	= 8192;
+	private static final int				maxCratePileSize	= 125;
 
-	public final CratePileCollection		collection;
-	public final int						id;
+	public final CrateStackCollection		collection;
+	public final UUID						pileID;
 
 	private final CrateItems				contents			= new CrateItems();
 
@@ -36,11 +42,20 @@ public class CratePileData
 	private boolean							destroyed			= false;
 	private boolean							dirty				= false;
 	private CratePileMap					map;
+	private AxisAlignedBB					bounding;
 
 	private final Set< ICrateWatcher >		watchers			= new HashSet<>();
 
 	/** An inventory interface built for machines accessing the crate pile. */
 	public final InventoryCrateBlockView	blockView			= new InventoryCrateBlockView( this );
+
+	public CratePileData( CrateStackCollection collection, UUID id, int numCrates )
+	{
+		super("name");
+		this.collection = collection;
+		this.pileID = id;
+		this.numCrates = numCrates;
+	}
 
 	/** Returns the items in this crate pile. */
 	public CrateItems getContents()
@@ -57,7 +72,7 @@ public class CratePileData
 	/** Returns the maximum number of slots. */
 	public int getCapacity()
 	{
-		return numCrates * TileEntityCrate.slotsPerCrate;
+		return numCrates * ( 18 + Math.min( numCrates / 6, 18 ) );
 	}
 
 	/** Returns the number of unique items. */
@@ -99,13 +114,6 @@ public class CratePileData
 		return ( map.region.minZ + map.region.maxZ ) / 2;
 	}
 
-	public CratePileData( CratePileCollection collection, int id, int numCrates )
-	{
-		this.collection = collection;
-		this.id = id;
-		this.numCrates = numCrates;
-	}
-
 	// Saving related
 
 	/** Returns if the crate pile is marked as dirty. */
@@ -131,7 +139,7 @@ public class CratePileData
 	{
 		if( !isDirty() )
 			return;
-		collection.save( this );
+		//collection.save( this );
 		dirty = false;
 
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.crateDebugMessages ) )
@@ -154,40 +162,67 @@ public class CratePileData
 	/** Returns if the crate can be added to the crate pile. */
 	public boolean canAdd( TileEntityCrate crate )
 	{
-		return map != null && numCrates < maxCratePileSize && ( map.region.contains( crate ) || canExpand( crate ) )
-				&& ( map.get( crate.getPos().getX(), crate.getPos().getY() - 1, crate.getPos().getZ() ) || crate.getPos().getY() == map.region.minY );
+		Logger.getLogger( ModInfo.modId ).info( "bounding : " + bounding );
+		// return map != null && numCrates < maxCratePileSize && ( map.region.contains( crate ) || canExpand( crate ) ) && ( map.get( crate.getPos().getX(),
+		// crate.getPos().getY() - 1, crate.getPos().getZ() ) || crate.getPos().getY() == map.region.minY );
+		return numCrates < maxCratePileSize
+				&& ( bounding.isVecInside( new Vec3d( crate.getPos() ).addVector( 0.5, 0.5, 0.5 ) ) || canExpand( crate ) );
 	}
 
 	/** Returns if the crate can expand the crate pile. */
 	private boolean canExpand( TileEntityCrate crate )
 	{
-		final int volume = map.region.volume();
+		final int volume = getVolume();
 		// Can't expand if there's not enough crates in the bounding box.
 		if( numCrates < Math.min( (int)( volume * 0.8 ), volume - 5 ) )
 			return false;
+		
+		int width = getWidth();
+		int height = getHeight();
+		int depth = getDepth();
 
-		if( crate.getPos().getX() < map.region.minX || crate.getPos().getX() > map.region.maxX )
+		if( crate.getPos().getX() < bounding.minX || crate.getPos().getX() > bounding.maxX )
 		{
-			final int maxDiff = map.region.height() == 1 ? 1 : 3;
-			if( map.region.width() >= maxDiff + Math.min( map.region.height(), map.region.depth() ) )
+			final int maxDiff = height == 1 ? 1 : 3;
+			if( width >= maxDiff + Math.min( height, depth ) )
 				return false;
 		}
 		else
-			if( crate.getPos().getZ() < map.region.minZ || crate.getPos().getZ() > map.region.maxZ )
+			if( crate.getPos().getZ() < bounding.minZ || crate.getPos().getZ() > bounding.maxZ )
 			{
-				final int maxDiff = map.region.width() == 1 ? 1 : 3;
-				if( map.region.height() >= maxDiff + Math.min( map.region.width(), map.region.depth() ) )
+				final int maxDiff = width == 1 ? 1 : 3;
+				if( height >= maxDiff + Math.min( width, depth ) )
 					return false;
 			}
 			else
-				if( crate.getPos().getY() < map.region.minY || crate.getPos().getY() > map.region.maxY )
+				if( crate.getPos().getY() < bounding.minY || crate.getPos().getY() > bounding.maxY )
 				{
-					final int maxDiff = map.region.width() == 1 || map.region.height() == 1 ? 1 : 4;
-					if( map.region.depth() >= maxDiff + Math.min( map.region.width(), map.region.height() ) )
+					final int maxDiff = width == 1 || height == 1 ? 1 : 4;
+					if( depth >= maxDiff + Math.min( width, height ) )
 						return false;
 				}
 
 		return true;
+	}
+
+	public int getWidth()
+	{
+		return (int)( bounding.maxX - bounding.minX );
+	}
+
+	public int getDepth()
+	{
+		return (int)( bounding.maxY - bounding.minY );
+	}
+
+	public int getHeight()
+	{
+		return (int)( bounding.maxZ - bounding.minZ );
+	}
+
+	public int getVolume()
+	{
+		return getWidth() * getDepth() * getHeight();
 	}
 
 	public void trimMap()
@@ -368,7 +403,7 @@ public class CratePileData
 		return compound;
 	}
 
-	public static CratePileData fromCompound( CratePileCollection collection, int crateId, NBTTagCompound compound )
+	public static CratePileData fromCompound( CrateStackCollection collection, UUID crateId, NBTTagCompound compound )
 	{
 		final int numCrates = compound.getShort( "numCrates" );
 		final CratePileData pileData = new CratePileData( collection, crateId, numCrates );
@@ -388,5 +423,19 @@ public class CratePileData
 		if( compound.hasKey( "map" ) )
 			pileData.map = CratePileMap.fromCompound( compound.getCompoundTag( "map" ) );
 		return pileData;
+	}
+
+	@Override
+	public void readFromNBT( NBTTagCompound nbt )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT( NBTTagCompound compound )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

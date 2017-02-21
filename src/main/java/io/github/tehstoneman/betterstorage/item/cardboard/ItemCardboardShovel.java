@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,7 +20,7 @@ public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 	{
 		super( ItemCardboardSheet.toolMaterial );
 		setCreativeTab( BetterStorage.creativeTab );
-		setUnlocalizedName( Constants.modId + "." + getItemName() );
+		setUnlocalizedName( ModInfo.modId + "." + getItemName() );
 		GameRegistry.registerItem( this, getItemName() );
 	}
 

@@ -2,6 +2,9 @@ package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -13,6 +16,8 @@ public class CommonProxy
 	public void preInit()
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
+		BetterStorageBlocks.registerBlocks();
+		BetterStorageItems.initialize();
 	}
 
 	public void initialize()
@@ -20,9 +25,6 @@ public class CommonProxy
 
 		MinecraftForge.EVENT_BUS.register( this );
 		// FMLCommonHandler.instance().bus().register(this);
-
-		// new BackpackHandler();
-		// new CraftingHandler();
 
 		// if (BetterStorage.globalConfig.getBoolean(GlobalConfig.enableChristmasEvent)) new ChristmasEventHandler();
 
@@ -273,4 +275,9 @@ public class CommonProxy
 	 * }
 	 * }
 	 */
+	
+	public String localize(String unlocalized, Object... args )
+	{
+		return I18n.translateToLocalFormatted( unlocalized, args );
+	}
 }

@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

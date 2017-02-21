@@ -1,7 +1,7 @@
-package io.github.tehstoneman.betterstorage.tile;
+package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -16,9 +16,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class TileContainerBetterStorage extends TileBetterStorage implements ITileEntityProvider
+public abstract class BlockContainerBetterStorage extends BlockBetterStorage implements ITileEntityProvider
 {
-	protected TileContainerBetterStorage( Material material )
+	protected BlockContainerBetterStorage( Material material )
 	{
 		super( material );
 		isBlockContainer = true;
@@ -38,7 +38,6 @@ public abstract class TileContainerBetterStorage extends TileBetterStorage imple
 	}
 
 	// Pass actions to TileEntityContainer
-
 	@Override
 	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
 	{

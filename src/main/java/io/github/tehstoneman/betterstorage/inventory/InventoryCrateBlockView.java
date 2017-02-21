@@ -2,9 +2,9 @@ package io.github.tehstoneman.betterstorage.inventory;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.crate.ICrateWatcher;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.misc.ItemIdentifier;
 import io.github.tehstoneman.betterstorage.tile.crate.CratePileData;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
@@ -33,7 +33,7 @@ public class InventoryCrateBlockView extends InventoryBetterStorage implements I
 
 	public InventoryCrateBlockView( CratePileData data )
 	{
-		super( Constants.containerCrate );
+		super( ModInfo.containerCrate );
 		this.data = data;
 		data.addWatcher( this );
 	}

@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import java.util.ArrayList;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.DummyConfigElement;
@@ -16,7 +16,7 @@ public class GuiBetterStorageConfig extends GuiConfig
 
 	public GuiBetterStorageConfig( GuiScreen parentScreen )
 	{
-		super( parentScreen, configElements, Constants.modId, true, false, Constants.modName );
+		super( parentScreen, configElements, ModInfo.modId, true, false, ModInfo.modName );
 	}
 
 	public static void initialize( Minecraft minecraftInstance )

@@ -2,26 +2,36 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class Region
 {
+	public BlockPos	posMin;
+	public BlockPos	posMax;
 
-	public int	minX, minY, minZ;
-	public int	maxX, maxY, maxZ;
+	public Region( BlockPos posMin, BlockPos posMax )
+	{
+		set( posMin, posMax );
+	}
+
+	public Region( TileEntity entity )
+	{
+		this( entity.getPos(), entity.getPos() );
+	}
 
 	public int width()
 	{
-		return maxX - minX + 1;
+		return posMax.getX() - posMin.getX() + 1;
 	}
 
 	public int depth()
 	{
-		return maxY - minY + 1;
+		return posMax.getY() - posMin.getY() + 1;
 	}
 
 	public int height()
 	{
-		return maxZ - minZ + 1;
+		return posMax.getZ() - posMin.getZ() + 1;
 	}
 
 	public int volume()
@@ -29,100 +39,70 @@ public class Region
 		return width() * depth() * height();
 	}
 
-	public Region( int minX, int minY, int minZ, int maxX, int maxY, int maxZ )
+	public void set( BlockPos posMin, BlockPos posMax )
 	{
-		set( minX, minY, minZ, maxX, maxY, maxZ );
+		this.posMin = posMin;
+		this.posMax = posMax;
 	}
 
-	public Region( TileEntity entity )
+	public void expand( BlockPos posMin, BlockPos posMax )
 	{
-		this( entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ(), entity.getPos().getX(), entity.getPos().getY(),
-				entity.getPos().getZ() );
-	}
-
-	public void set( int minX, int minY, int minZ, int maxX, int maxY, int maxZ )
-	{
-		this.minX = minX;
-		this.minY = minY;
-		this.minZ = minZ;
-		this.maxX = maxX;
-		this.maxY = maxY;
-		this.maxZ = maxZ;
-	}
-
-	public void expand( int minX, int minY, int minZ, int maxX, int maxY, int maxZ )
-	{
-		this.minX -= minX;
-		this.minY -= minY;
-		this.minZ -= minZ;
-		this.maxX += maxX;
-		this.maxY += maxY;
-		this.maxZ += maxZ;
+		this.posMin.subtract( posMin );
+		this.posMax.add( posMax );
 	}
 
 	public void expand( int size )
 	{
-		expand( size, size, size, size, size, size );
+		expand( new BlockPos( size, size, size ), new BlockPos( size, size, size ) );
 	}
 
-	public boolean contains( int x, int y, int z )
+	public boolean contains( BlockPos pos )
 	{
-		return x >= minX && y >= minY && z >= minZ && x <= maxX && y <= maxY && z <= maxZ;
+		return pos.getX() >= posMin.getX() && pos.getY() >= posMin.getY() && pos.getZ() >= posMin.getZ() && pos.getX() <= posMax.getX()
+				&& pos.getY() <= posMax.getY() && pos.getZ() <= posMax.getZ();
 	}
 
 	public boolean contains( TileEntity entity )
 	{
-		return contains( entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ() );
+		return contains( entity.getPos() );
 	}
 
-	public void expandToContain( int x, int y, int z )
+	public void expandToContain( BlockPos pos )
 	{
-		minX = Math.min( minX, x );
-		minY = Math.min( minY, y );
-		minZ = Math.min( minZ, z );
-		maxX = Math.max( maxX, x );
-		maxY = Math.max( maxY, y );
-		maxZ = Math.max( maxZ, z );
+		posMin = new BlockPos( Math.min( posMin.getX(), pos.getX() ), Math.min( posMin.getY(), pos.getY() ), Math.min( posMin.getZ(), pos.getZ() ) );
+		posMax = new BlockPos( Math.max( posMax.getX(), pos.getX() ), Math.max( posMax.getY(), pos.getY() ), Math.max( posMax.getZ(), pos.getZ() ) );
 	}
 
 	public void expandToContain( TileEntity entity )
 	{
-		expandToContain( entity.getPos().getX(), entity.getPos().getY(), entity.getPos().getZ() );
+		expandToContain( entity.getPos() );
 	}
 
 	public NBTTagCompound toCompound()
 	{
 		final NBTTagCompound compound = new NBTTagCompound();
-		compound.setInteger( "minX", minX );
-		compound.setInteger( "minY", minY );
-		compound.setInteger( "minZ", minZ );
-		compound.setInteger( "maxX", maxX );
-		compound.setInteger( "maxY", maxY );
-		compound.setInteger( "maxZ", maxZ );
+		compound.setLong( "posMin", posMin.toLong() );
+		compound.setLong( "posMax", posMax.toLong() );
 		return compound;
 	}
 
 	public static Region fromCompound( NBTTagCompound compound )
 	{
-		final int minX = compound.getInteger( "minX" );
-		final int minY = compound.getInteger( "minY" );
-		final int minZ = compound.getInteger( "minZ" );
-		final int maxX = compound.getInteger( "maxX" );
-		final int maxY = compound.getInteger( "maxY" );
-		final int maxZ = compound.getInteger( "maxZ" );
-		return new Region( minX, minY, minZ, maxX, maxY, maxZ );
+		final BlockPos posMin = BlockPos.fromLong( compound.getInteger( "posMin.getX()" ) );
+		final BlockPos posMax = BlockPos.fromLong( compound.getInteger( "posMax.getX()" ) );
+		return new Region( posMin, posMax );
 	}
 
 	@Override
 	public Region clone()
 	{
-		return new Region( minX, minY, minZ, maxX, maxY, maxZ );
+		return new Region( posMin, posMax );
 	}
 
 	@Override
 	public String toString()
 	{
-		return "[ " + minX + "," + minY + "," + minZ + " : " + maxX + "," + maxY + "," + maxZ + " ]";
+		return "[ " + posMin.getX() + "," + posMin.getY() + "," + posMin.getZ() + " : " + posMax.getX() + "," + posMax.getY() + "," + posMax.getZ()
+				+ " ]";
 	}
-
 }

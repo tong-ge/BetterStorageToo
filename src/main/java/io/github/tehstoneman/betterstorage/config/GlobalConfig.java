@@ -62,12 +62,6 @@ public class GlobalConfig extends Config
 	public static final String		enableCrateStorageInterface		= "general.enableCrateStorageInterface";
 	public static final String		crateDebugMessages				= "general.crateDebugMessages";
 
-	public static final String		backpackChestplate				= "general.backpackChestplate";
-	public static final String		backpackRows					= "general.backpackRows";
-	public static final String		enableBackpackOpen				= "general.enableBackpackOpen";
-	public static final String		enableBackpackInteraction		= "general.enableBackpackInteraction";
-	public static final String		dropBackpackOnDeath				= "general.dropBackpackOnDeath";
-
 	public static final String		cardboardBoxRows				= "general.cardboardBoxRows";
 	public static final String		cardboardBoxUses				= "general.cardboardBoxUses";
 	public static final String		cardboardBoxShowContents		= "general.cardboardBoxShowContents";
@@ -153,16 +147,6 @@ public class GlobalConfig extends Config
 		enableCrateStorageInterfaceSetting = new BooleanSetting( this, enableCrateStorageInterface, true )
 				.setComment( "If disabled, prevents mods from using storage crates' special storage interface (like Applied Energistics)." );
 		new BooleanSetting( this, crateDebugMessages ).setComment( "If enabled, logs crate related debug messages (like them saving)." );
-
-		// Backpack settings
-		new BooleanSetting( this, backpackChestplate, true ).setSynced()
-				.setComment( "If disabled, backpacks don't take up the player's chestplate armor slot." );
-		new IntegerSetting( this, backpackRows, 4 ).setValidRange( 1, 6 ).setComment( "Number of rows in backpacks. Valid values are 1 to 6." );
-		new BooleanSetting( this, enableBackpackOpen, false ).setSynced().setComment( "Allows equipped backpacks to be opened by pressing a key." );
-		new BooleanSetting( this, enableBackpackInteraction, true )
-				.setComment( "Allows equipped backpacks to be opened by other players by right clicking them." );
-		new BooleanSetting( this, dropBackpackOnDeath, true )
-				.setComment( "If enabled, drops backpacks as block instead of spilling the items around." );
 
 		// Cardboard box settings
 		new IntegerSetting( this, cardboardBoxRows, 1 ).setValidRange( 1, 3 )

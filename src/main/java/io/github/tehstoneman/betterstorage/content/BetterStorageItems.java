@@ -30,7 +30,7 @@ public final class BetterStorageItems
 	public static ItemKeyring			keyring;
 	public static ItemMasterKey			masterKey;
 	public static ItemCardboardSheet	cardboardSheet;
-	public static ItemDrinkingHelmet	drinkingHelmet;
+	//public static ItemDrinkingHelmet	drinkingHelmet;
 	public static ItemBucketSlime		slimeBucket;
 	public static ItemPresentBook		presentBook;
 
@@ -57,7 +57,7 @@ public final class BetterStorageItems
 		keyring = MiscUtils.conditionalNew( ItemKeyring.class, GlobalConfig.keyringEnabled );
 		masterKey = MiscUtils.conditionalNew( ItemMasterKey.class, GlobalConfig.masterKeyEnabled );
 		cardboardSheet = MiscUtils.conditionalNew( ItemCardboardSheet.class, GlobalConfig.cardboardSheetEnabled );
-		drinkingHelmet = MiscUtils.conditionalNew( ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled );
+		//drinkingHelmet = MiscUtils.conditionalNew( ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled );
 		slimeBucket = MiscUtils.conditionalNew( ItemBucketSlime.class, GlobalConfig.slimeBucketEnabled );
 		presentBook = new ItemPresentBook();
 

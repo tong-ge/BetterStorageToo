@@ -6,15 +6,12 @@ import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.config.Config;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.content.BetterStorageEntities;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.content.BetterStorageTileEntities;
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.EnchantmentBetterStorage;
-import io.github.tehstoneman.betterstorage.item.tile.ItemTileBetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.misc.CreativeTabBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.DungeonLoot;
 import io.github.tehstoneman.betterstorage.misc.Recipes;
+import io.github.tehstoneman.betterstorage.network.SyncCrateMessage;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
@@ -26,20 +23,23 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 //@formatter:off
-@Mod( modid        = Constants.modId,
-      name         = Constants.modName,
-      dependencies = "required-after:Forge; after:Thaumcraft; after:JEI;",
-      guiFactory   = "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory" )
+@Mod( modid						= ModInfo.modId,
+      name						= ModInfo.modName,
+      version					= ModInfo.modVersion,
+      dependencies				= ModInfo.dependencies,
+      acceptedMinecraftVersions	= ModInfo.acceptedMC,
+      guiFactory				= ModInfo.guiFactory,
+      updateJSON				= ModInfo.updateJson )
 //@formatter:on
 public class BetterStorage
 {
-	@Instance( Constants.modId )
+	@Instance( ModInfo.modId )
 	public static BetterStorage			instance;
 
-	@SidedProxy( serverSide = Constants.commonProxy, clientSide = Constants.clientProxy )
+	@SidedProxy( serverSide = ModInfo.commonProxy, clientSide = ModInfo.clientProxy )
 	public static CommonProxy			proxy;
 
 	public static SimpleNetworkWrapper	simpleNetworkWrapper;
@@ -53,7 +53,11 @@ public class BetterStorage
 	@EventHandler
 	public void preInit( FMLPreInitializationEvent event )
 	{
-		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( Constants.modId );
+		// Register network messages
+		int messageID = 0;
+		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
+		simpleNetworkWrapper.registerMessage( SyncCrateMessage.Handler.class, SyncCrateMessage.class, messageID++, Side.CLIENT );
+
 		log = event.getModLog();
 		creativeTab = new CreativeTabBetterStorage();
 
@@ -64,16 +68,14 @@ public class BetterStorage
 		globalConfig.load();
 		globalConfig.save();
 
-		BetterStorageTiles.initialize();
-		BetterStorageItems.initialize();
-		
+		proxy.preInit();
+
 		EnchantmentBetterStorage.initialize();
 
 		BetterStorageTileEntities.register();
 		BetterStorageEntities.register();
 		DungeonLoot.add();
-		
-		proxy.preInit();
+
 	}
 
 	@EventHandler
@@ -88,7 +90,7 @@ public class BetterStorage
 	public void postInit( FMLPostInitializationEvent event )
 	{
 		Addon.postInitializeAll();
-		
+
 		proxy.postInit();
 	}
 }

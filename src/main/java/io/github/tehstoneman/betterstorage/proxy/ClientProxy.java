@@ -11,9 +11,8 @@ import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoo
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.TileLockableDoorRenderingHandler;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
@@ -25,9 +24,9 @@ import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
 import io.github.tehstoneman.betterstorage.tile.stand.VanillaArmorStandRenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,8 +40,8 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 
-		BetterStorageTiles.registerItemModels();
-		BetterStorageItems.registerItemModels();
+		BetterStorageBlocks.registerItemModels();
+		//BetterStorageItems.registerItemModels();
 	}
 
 	@Override
@@ -289,4 +288,10 @@ public class ClientProxy extends CommonProxy
 	 * if (backpack != null) event.renderCape = false;
 	 * }
 	 */
+
+	@Override
+	public String localize(String unlocalized, Object... args )
+	{
+		return I18n.format( unlocalized, args );
+	}
 }

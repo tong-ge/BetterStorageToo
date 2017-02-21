@@ -16,7 +16,7 @@ public final class DungeonLoot
 	public static void add()
 	{
 
-		if( BetterStorageItems.drinkingHelmet != null )
+		/*if( BetterStorageItems.drinkingHelmet != null )
 		{
 			final ItemStack drinkingHelmet = new ItemStack( BetterStorageItems.drinkingHelmet );
 			// addMultiple(drinkingHelmet, ChestGenHooks.DUNGEON_CHEST, 1.0,
@@ -36,7 +36,7 @@ public final class DungeonLoot
 			final NBTTagList drinkingHelmetLore = NbtUtils.createList( "\"i fail at names for items\" -Nishtown" );
 			StackUtils.set( drinkingHelmetSpecial, drinkingHelmetLore, "display", "Lore" );
 			// addMultiple(drinkingHelmetSpecial, ChestGenHooks.PYRAMID_DESERT_CHEST, 0.2);
-		}
+		}*/
 
 		/*
 		 * if (BetterStorageTiles.backpack != null) {

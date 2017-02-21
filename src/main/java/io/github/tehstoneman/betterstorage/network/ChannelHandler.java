@@ -1,9 +1,8 @@
 package io.github.tehstoneman.betterstorage.network;
 
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.network.packet.PacketDrinkingHelmetUse;
 import io.github.tehstoneman.betterstorage.network.packet.PacketLockHit;
-import io.github.tehstoneman.betterstorage.network.packet.PacketOpenGui;
 import io.github.tehstoneman.betterstorage.network.packet.PacketPresentOpen;
 import io.github.tehstoneman.betterstorage.network.packet.PacketSyncSetting;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +18,7 @@ public class ChannelHandler extends SimpleNetworkWrapper
 
 	public ChannelHandler()
 	{
-		super( Constants.modId );
-		register( 0, Side.CLIENT, PacketOpenGui.class );
+		super( ModInfo.modId );
 		// register(1, Side.CLIENT, PacketBackpackTeleport.class);
 		// register(2, Side.CLIENT, PacketBackpackHasItems.class);
 		// register(3, Side.CLIENT, PacketBackpackIsOpen.class);

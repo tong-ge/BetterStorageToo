@@ -1,12 +1,13 @@
 package io.github.tehstoneman.betterstorage.tile;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCraftingStation;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TileCraftingStation extends TileContainerBetterStorage
+public class TileCraftingStation extends BlockContainerBetterStorage
 {
 
 	// private IIcon topIcon;

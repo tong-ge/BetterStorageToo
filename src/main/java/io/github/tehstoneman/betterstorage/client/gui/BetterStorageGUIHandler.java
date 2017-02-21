@@ -1,11 +1,10 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import io.github.tehstoneman.betterstorage.container.ContainerCrate;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.inventory.InventoryCratePlayerView;
-import io.github.tehstoneman.betterstorage.misc.Constants;
-import io.github.tehstoneman.betterstorage.tile.crate.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,18 +20,18 @@ public class BetterStorageGUIHandler implements IGuiHandler
 	{
 		if( ID == EnumGui.KEYRING.getGuiID() )
 		{
-			ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring)
+			final ItemStack itemStack = player.getHeldItemMainhand();
+			if( itemStack.getItem() != BetterStorageItems.keyring )
 				return null;
-			return new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem );
+			return new ContainerKeyring( player, ModInfo.containerKeyring, player.inventory.currentItem );
 		}
 		if( ID == EnumGui.CRATE.getGuiID() )
 		{
-			TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z) );
+			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
 			if( tileEntity instanceof TileEntityCrate )
 			{
-				InventoryCratePlayerView crate = new InventoryCratePlayerView((TileEntityCrate)tileEntity);
-				return new ContainerCrate( player, new InventoryCratePlayerView((TileEntityCrate)tileEntity) );
+				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+				return new ContainerCrate( player, crate );
 			}
 		}
 		return null;
@@ -43,18 +42,18 @@ public class BetterStorageGUIHandler implements IGuiHandler
 	{
 		if( ID == EnumGui.KEYRING.getGuiID() )
 		{
-			ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring)
+			final ItemStack itemStack = player.getHeldItemMainhand();
+			if( itemStack.getItem() != BetterStorageItems.keyring )
 				return null;
-			return new GuiBetterStorage( new ContainerKeyring( player, Constants.containerKeyring, player.inventory.currentItem ) );
+			return new GuiBetterStorage( new ContainerKeyring( player, ModInfo.containerKeyring, player.inventory.currentItem ) );
 		}
 		if( ID == EnumGui.CRATE.getGuiID() )
 		{
-			TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z) );
+			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
 			if( tileEntity instanceof TileEntityCrate )
 			{
-				TileEntityCrate crate = (TileEntityCrate)tileEntity;
-				return new GuiCrate( player, Math.min(crate.getSizeInventory() / 9, 6), Constants.containerCrate, false );
+				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+				return new GuiCrate( crate, new ContainerCrate( player, crate ) );
 			}
 		}
 		return null;

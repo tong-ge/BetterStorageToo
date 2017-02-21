@@ -1,38 +1,57 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
-import io.github.tehstoneman.betterstorage.container.ContainerCrate;
-import io.github.tehstoneman.betterstorage.misc.Constants;
-import io.github.tehstoneman.betterstorage.misc.Resources;
-import net.minecraft.entity.player.EntityPlayer;
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
-public class GuiCrate extends GuiBetterStorage
+public class GuiCrate extends GuiContainer
 {
-	private final ContainerCrate containerCrate;
+	private final ContainerCrate	containerCrate;
+	private final int				yOffset;
 
-	public GuiCrate( EntityPlayer player, int rows, String title, boolean localized )
+	public GuiCrate( TileEntityCrate tileEntityCrate, ContainerCrate containerCrate )
 	{
-		super( new ContainerCrate( player, rows, title, localized ) );
-		containerCrate = (ContainerCrate)container;
+		super( containerCrate );
+		this.containerCrate = containerCrate;
+		final int rows = containerCrate.indexHotbar / 9;
+		yOffset = 17 + rows * 18;
+		ySize = yOffset + 97;
 	}
 
 	@Override
-	protected ResourceLocation getResource()
+	protected void drawGuiContainerForegroundLayer( int mouseX, int mouseY )
 	{
-		return Resources.containerCrate;
+		fontRendererObj.drawString( BetterStorage.proxy.localize( ModInfo.containerCrate ), 8, 6, 0x404040 );
+		fontRendererObj.drawString( BetterStorage.proxy.localize( "container.inventory" ), 8, yOffset + 3, 0x404040 );
+
+		if( mouseX >= guiLeft + 115 && mouseX < guiLeft + 169 && mouseY >= guiTop + 7 && mouseY < guiTop + 13 )
+		{
+			final int volume = containerCrate.getVolume();
+			final List< String > hoveringText = new ArrayList<>();
+			hoveringText.add( volume + BetterStorage.proxy.localize( ModInfo.containerCapacity ) );
+			drawHoveringText( hoveringText, mouseX - guiLeft, mouseY - guiTop, fontRendererObj );
+		}
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer( float var1, int var2, int var3 )
+	protected void drawGuiContainerBackgroundLayer( float partialTicks, int mouseX, int mouseY )
 	{
-		super.drawGuiContainerBackgroundLayer( var1, var2, var3 );
-		final int x = ( width - xSize ) / 2;
-		final int y = ( height - ySize ) / 2;
-		drawTexturedModalRect( x + 115, y + 7, 176, 0, containerCrate.fullness * 54 / 255, 6 );
+		mc.renderEngine.bindTexture( new ResourceLocation( ModInfo.modId, "textures/gui/crate.png" ) );
+
+		drawTexturedModalRect( guiLeft, guiTop, 0, 0, xSize, yOffset );
+		drawTexturedModalRect( guiLeft, guiTop + yOffset, 0, 125, xSize, 97 );
+
+		final int volume = containerCrate.getVolume();
+		if( volume > 0.0 )
+			drawTexturedModalRect( guiLeft + 115, guiTop + 7, 176, 0, (int)( 54 * ( volume / 100.0 ) ), 6 );
 	}
 }

@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -84,7 +84,7 @@ public class EnchantmentBetterStorage extends Enchantment
 			int maxBase, int maxScaling )
 	{
 		super( Rarity.COMMON, type, new EntityEquipmentSlot[] { EntityEquipmentSlot.MAINHAND } );
-		setName( Constants.modId + "." + type.toString() + "." + name );
+		setName( ModInfo.modId + "." + type.toString() + "." + name );
 		this.maxLevel = maxLevel;
 		this.minBase = minBase;
 		this.minScaling = minScaling;

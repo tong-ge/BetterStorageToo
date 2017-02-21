@@ -2,8 +2,8 @@ package io.github.tehstoneman.betterstorage.item;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.misc.ChristmasEventHandler;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.client.Minecraft;
@@ -31,7 +31,7 @@ public class ItemPresentBook extends ItemWritableBook
 		setCreativeTab( null );
 
 		final String name = MiscUtils.getName( this );
-		setUnlocalizedName( Constants.modId + "." + name );
+		setUnlocalizedName( ModInfo.modId + "." + name );
 		// setTextureName(Constants.modId + ":" + name);
 	}
 

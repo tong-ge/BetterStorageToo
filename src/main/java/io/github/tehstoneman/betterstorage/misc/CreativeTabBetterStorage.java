@@ -2,8 +2,9 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -15,7 +16,7 @@ public class CreativeTabBetterStorage extends CreativeTabs
 {
 	public CreativeTabBetterStorage()
 	{
-		super( Constants.modId );
+		super( ModInfo.modId );
 	}
 
 	@Override
@@ -23,11 +24,11 @@ public class CreativeTabBetterStorage extends CreativeTabs
 	public Item getTabIconItem()
 	{
 
-		if( BetterStorageTiles.crate != null )
-			return Item.getItemFromBlock( BetterStorageTiles.crate );
+		if( BetterStorageBlocks.CRATE != null )
+			return Item.getItemFromBlock( BetterStorageBlocks.CRATE );
 		else
-			if( BetterStorageTiles.reinforcedChest != null )
-				return Item.getItemFromBlock( BetterStorageTiles.reinforcedChest );
+			if( BetterStorageBlocks.reinforcedChest != null )
+				return Item.getItemFromBlock( BetterStorageBlocks.reinforcedChest );
 			else
 
 				return Item.getItemFromBlock( Blocks.CHEST );

@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.container;
 
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.inventory.InventoryCraftingStation;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import net.minecraft.entity.player.EntityPlayer;

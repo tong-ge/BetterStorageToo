@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.tile;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLocker;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -9,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileLocker extends TileContainerBetterStorage
+public class TileLocker extends BlockContainerBetterStorage
 {
 	public TileLocker()
 	{

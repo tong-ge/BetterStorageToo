@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.crate.ICrateWatcher;
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.misc.ItemIdentifier;
 import io.github.tehstoneman.betterstorage.tile.crate.CratePileData;
-import io.github.tehstoneman.betterstorage.tile.crate.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,8 +39,9 @@ public class InventoryCratePlayerView extends InventoryBetterStorage implements 
 
 	public InventoryCratePlayerView( TileEntityCrate crate )
 	{
-		super( Constants.containerCrate );
-		data = crate.getPileData();
+		super( ModInfo.containerCrate );
+		//data = crate.getPileData();
+		data = new CratePileData(null, null, 0);
 		this.crate = crate;
 
 		final int size = Math.min( data.getCapacity(), inventoryMaxSize );

@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.content;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
-import io.github.tehstoneman.betterstorage.misc.Constants;
-import io.github.tehstoneman.betterstorage.tile.crate.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
@@ -20,15 +20,15 @@ public final class BetterStorageTileEntities
 
 	public static void register()
 	{
-		GameRegistry.registerTileEntity( TileEntityCrate.class, Constants.containerCrate );
-		GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, Constants.containerReinforcedChest );
-		GameRegistry.registerTileEntity( TileEntityLocker.class, Constants.containerLocker );
-		GameRegistry.registerTileEntity( TileEntityArmorStand.class, Constants.containerArmorStand );
-		GameRegistry.registerTileEntity( TileEntityCardboardBox.class, Constants.containerCardboardBox );
-		GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, Constants.containerReinforcedLocker );
-		GameRegistry.registerTileEntity( TileEntityCraftingStation.class, Constants.containerCraftingStation );
-		GameRegistry.registerTileEntity( TileEntityLockableDoor.class, Constants.lockableDoor );
-		GameRegistry.registerTileEntity( TileEntityPresent.class, Constants.containerPresent );
+		GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
+		GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
+		GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
+		GameRegistry.registerTileEntity( TileEntityArmorStand.class, ModInfo.containerArmorStand );
+		GameRegistry.registerTileEntity( TileEntityCardboardBox.class, ModInfo.containerCardboardBox );
+		GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
+		GameRegistry.registerTileEntity( TileEntityCraftingStation.class, ModInfo.containerCraftingStation );
+		GameRegistry.registerTileEntity( TileEntityLockableDoor.class, ModInfo.lockableDoor );
+		GameRegistry.registerTileEntity( TileEntityPresent.class, ModInfo.containerPresent );
 
 		Addon.registerTileEntitesAll();
 	}

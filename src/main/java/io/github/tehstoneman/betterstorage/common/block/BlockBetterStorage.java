@@ -1,7 +1,7 @@
-package io.github.tehstoneman.betterstorage.tile;
+package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -13,19 +13,22 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileBetterStorage extends Block
+public class BlockBetterStorage extends Block
 {
 	private String name;
 
-	public TileBetterStorage( Material material )
+	public BlockBetterStorage( Material material )
 	{
 		super( material );
 
 		setCreativeTab( BetterStorage.creativeTab );
 
-		this.setUnlocalizedName( Constants.modId + "." + getTileName() );
-		this.setRegistryName( getTileName() );
-		registerBlock();
+		if( !(this instanceof BlockCrate))
+		{
+			setUnlocalizedName( ModInfo.modId + "." + getTileName() );
+			this.setRegistryName( getTileName() );
+			registerBlock();
+		}
 	}
 
 	/** Returns the name of this tile, for example "craftingStation". */
@@ -44,13 +47,15 @@ public class TileBetterStorage extends Block
 	protected void registerBlock()
 	{
 		GameRegistry.register( this );
-		GameRegistry.register( new ItemBlock( this ).setRegistryName( this.getRegistryName() ) );
-		/*final Class< ? extends Item > itemClass = getItemClass();
-
-		if( itemClass != null )
-			GameRegistry.registerBlock( this, (Class< ? extends ItemBlock >)itemClass, getTileName(), Constants.modId );
-		else
-			GameRegistry.registerBlock( this, null, getTileName(), Constants.modId );*/
+		GameRegistry.register( new ItemBlock( this ).setRegistryName( getRegistryName() ) );
+		/*
+		 * final Class< ? extends Item > itemClass = getItemClass();
+		 *
+		 * if( itemClass != null )
+		 * GameRegistry.registerBlock( this, (Class< ? extends ItemBlock >)itemClass, getTileName(), Constants.modId );
+		 * else
+		 * GameRegistry.registerBlock( this, null, getTileName(), Constants.modId );
+		 */
 	}
 
 	@SideOnly( Side.CLIENT )

@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.item.recipe;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.init.Blocks;
@@ -16,12 +16,12 @@ public class PresentRecipe extends ShapedRecipes
 
 	public PresentRecipe()
 	{
-		super( 3, 3, createRecipeInput(), new ItemStack( BetterStorageTiles.present ) );
+		super( 3, 3, createRecipeInput(), new ItemStack( BetterStorageBlocks.present ) );
 	}
 
 	private static ItemStack[] createRecipeInput()
 	{
-		final ItemStack box = new ItemStack( BetterStorageTiles.cardboardBox );
+		final ItemStack box = new ItemStack( BetterStorageBlocks.cardboardBox );
 		final ItemStack wool1 = new ItemStack( Blocks.WOOL, 1, 14 );
 		final ItemStack wool2 = new ItemStack( Blocks.WOOL, 1, 0 );
 		return new ItemStack[] { wool1, wool2, wool1, wool1, box, wool1, wool1, wool2, wool1 };
@@ -31,7 +31,7 @@ public class PresentRecipe extends ShapedRecipes
 	public boolean matches( InventoryCrafting crafting, World world )
 	{
 		final ItemStack box = crafting.getStackInSlot( 4 );
-		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageTiles.cardboardBox ) || !StackUtils.has( box, "Items" ) )
+		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageBlocks.cardboardBox ) || !StackUtils.has( box, "Items" ) )
 			return false;
 
 		final int corners = checkWoolColor( crafting, 0, 2, 6, 8 );
@@ -54,7 +54,7 @@ public class PresentRecipe extends ShapedRecipes
 		final boolean skojanzaMode = leftRight == colorOuter;
 		final ItemStack box = crafting.getStackInSlot( 4 );
 
-		final ItemStack present = new ItemStack( BetterStorageTiles.present );
+		final ItemStack present = new ItemStack( BetterStorageBlocks.present );
 		final NBTTagCompound compound = box.getTagCompound().copy();
 		compound.setByte( TileEntityPresent.TAG_COLOR_INNER, (byte)colorInner );
 		compound.setByte( TileEntityPresent.TAG_COLOR_OUTER, (byte)colorOuter );

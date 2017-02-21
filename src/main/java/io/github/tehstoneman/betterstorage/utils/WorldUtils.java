@@ -3,9 +3,9 @@ package io.github.tehstoneman.betterstorage.utils;
 import java.util.List;
 
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
-import io.github.tehstoneman.betterstorage.container.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;

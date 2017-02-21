@@ -1,6 +1,7 @@
-package io.github.tehstoneman.betterstorage.container;
+package io.github.tehstoneman.betterstorage.common.inventory;
 
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
+import io.github.tehstoneman.betterstorage.container.SlotBetterStorage;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;

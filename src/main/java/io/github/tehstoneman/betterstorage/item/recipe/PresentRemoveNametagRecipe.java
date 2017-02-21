@@ -9,7 +9,7 @@ import io.github.tehstoneman.betterstorage.api.crafting.RecipeBounds;
 import io.github.tehstoneman.betterstorage.api.crafting.RecipeInputItemStack;
 import io.github.tehstoneman.betterstorage.api.crafting.ShapelessStationRecipe;
 import io.github.tehstoneman.betterstorage.api.crafting.StationCrafting;
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.utils.RandomUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
@@ -25,7 +25,7 @@ public class PresentRemoveNametagRecipe extends ShapelessStationRecipe
 	public PresentRemoveNametagRecipe()
 	{
 		super( new IRecipeInput[] { new RecipeInputPresent(), new RecipeInputShears() },
-				new ItemStack[] { new ItemStack( BetterStorageTiles.present ), new ItemStack( Items.NAME_TAG ) } );
+				new ItemStack[] { new ItemStack( BetterStorageBlocks.present ), new ItemStack( Items.NAME_TAG ) } );
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class PresentRemoveNametagRecipe extends ShapelessStationRecipe
 			final ItemStack stack = input[i];
 			if( stack == null )
 				continue;
-			if( stack.getItem() == Item.getItemFromBlock( BetterStorageTiles.present ) )
+			if( stack.getItem() == Item.getItemFromBlock( BetterStorageBlocks.present ) )
 			{
 				nameTag = StackUtils.get( stack, null, TileEntityPresent.TAG_NAMETAG );
 				StackUtils.remove( output[i] = stack.copy(), TileEntityPresent.TAG_NAMETAG );
@@ -59,7 +59,7 @@ public class PresentRemoveNametagRecipe extends ShapelessStationRecipe
 	{
 		public RecipeInputPresent()
 		{
-			super( new ItemStack( BetterStorageTiles.present ) );
+			super( new ItemStack( BetterStorageBlocks.present ) );
 		}
 
 		@Override

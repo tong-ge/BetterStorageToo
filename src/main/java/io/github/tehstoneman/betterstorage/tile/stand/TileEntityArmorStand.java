@@ -3,12 +3,12 @@ package io.github.tehstoneman.betterstorage.tile.stand;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.stand.ArmorStandEquipHandler;
 import io.github.tehstoneman.betterstorage.api.stand.BetterStorageArmorStand;
 import io.github.tehstoneman.betterstorage.api.stand.EnumArmorStandRegion;
 import io.github.tehstoneman.betterstorage.api.stand.IArmorStand;
-import io.github.tehstoneman.betterstorage.misc.Constants;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityContainer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,7 +79,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 	@Override
 	public String getName()
 	{
-		return Constants.containerArmorStand;
+		return ModInfo.containerArmorStand;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
+import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.BlockHorizontal;
@@ -26,7 +27,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class TileLockable extends TileContainerBetterStorage
+public abstract class TileLockable extends BlockContainerBetterStorage
 {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 

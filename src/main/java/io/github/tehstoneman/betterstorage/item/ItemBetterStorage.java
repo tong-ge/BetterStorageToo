@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.item;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -29,7 +29,7 @@ public abstract class ItemBetterStorage extends Item
 		setMaxStackSize( 1 );
 		setCreativeTab( BetterStorage.creativeTab );
 
-		setUnlocalizedName( Constants.modId + "." + getItemName() );
+		setUnlocalizedName( ModInfo.modId + "." + getItemName() );
 		setRegistryName( getItemName() );
 		GameRegistry.register( this );
 	}

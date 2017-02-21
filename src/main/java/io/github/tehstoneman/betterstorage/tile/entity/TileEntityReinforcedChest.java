@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -48,7 +48,7 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	@Override
 	protected String getConnectableName()
 	{
-		return Constants.containerReinforcedChest;
+		return ModInfo.containerReinforcedChest;
 	}
 
 	@Override

@@ -1,11 +1,12 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.container.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.container.ContainerCraftingStation;
 import io.github.tehstoneman.betterstorage.inventory.InventoryCraftingStation;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.NbtUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +36,7 @@ public class TileEntityCraftingStation extends TileEntityContainer implements II
 	@Override
 	public String getName()
 	{
-		return Constants.containerCraftingStation;
+		return ModInfo.containerCraftingStation;
 	}
 
 	@Override

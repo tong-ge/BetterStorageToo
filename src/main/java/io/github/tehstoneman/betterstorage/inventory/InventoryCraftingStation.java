@@ -42,7 +42,7 @@ public class InventoryCraftingStation extends InventoryBetterStorage
 
 	public InventoryCraftingStation( TileEntityCraftingStation entity )
 	{
-		this( "", entity.crafting, entity.output, entity.contents );
+		this( "", entity.crafting, entity.output, entity.inventory );
 		this.entity = entity;
 	}
 

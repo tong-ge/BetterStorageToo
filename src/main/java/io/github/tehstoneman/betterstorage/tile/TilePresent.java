@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.tile;
 
 import java.util.Random;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.item.tile.ItemPresent;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import net.minecraft.block.material.Material;
@@ -13,7 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TilePresent extends TileContainerBetterStorage
+public class TilePresent extends BlockContainerBetterStorage
 {
 	public TilePresent()
 	{

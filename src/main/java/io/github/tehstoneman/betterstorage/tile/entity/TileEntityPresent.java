@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +36,7 @@ public class TileEntityPresent extends TileEntityCardboardBox
 	@Override
 	protected ItemStack getItemDropped()
 	{
-		return !destroyed ? new ItemStack( BetterStorageTiles.present ) : null;
+		return !destroyed ? new ItemStack( BetterStorageBlocks.present ) : null;
 	}
 
 	@Override

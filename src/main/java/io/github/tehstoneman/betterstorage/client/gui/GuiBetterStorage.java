@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import io.github.tehstoneman.betterstorage.container.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

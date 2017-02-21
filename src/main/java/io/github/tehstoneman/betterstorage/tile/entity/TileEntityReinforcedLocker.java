@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,6 +47,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 	@Override
 	protected String getConnectableName()
 	{
-		return Constants.containerReinforcedLocker;
+		return ModInfo.containerReinforcedLocker;
 	}
 }

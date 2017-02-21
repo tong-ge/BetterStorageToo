@@ -1,6 +1,6 @@
-package io.github.tehstoneman.betterstorage.tile.entity;
+package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.container.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import io.github.tehstoneman.betterstorage.utils.NbtUtils;
 import io.github.tehstoneman.betterstorage.utils.PlayerUtils;
@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TileEntityContainer extends TileEntity
 {
-	public final ItemStack[]			contents;
+	public ItemStack[]			inventory;
 
 	private final InventoryTileEntity	playerInventory;
 
@@ -67,13 +67,13 @@ public abstract class TileEntityContainer extends TileEntity
 	public TileEntityContainer()
 	{
 		final int size = getSizeContents();
-		contents = size > 0 ? new ItemStack[size] : null;
+		inventory = size > 0 ? new ItemStack[size] : null;
 		playerInventory = makePlayerInventory();
 	}
 
 	public InventoryTileEntity makePlayerInventory()
 	{
-		return contents != null ? new InventoryTileEntity( this ) : null;
+		return inventory != null ? new InventoryTileEntity( this ) : null;
 	}
 
 	public InventoryTileEntity getPlayerInventory()
@@ -205,8 +205,8 @@ public abstract class TileEntityContainer extends TileEntity
 	/** Called when the container is destroyed to drop its contents. */
 	public void dropContents()
 	{
-		if( contents != null )
-			for( final ItemStack stack : contents )
+		if( inventory != null )
+			for( final ItemStack stack : inventory )
 				WorldUtils.dropStackFromBlock( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack );
 	}
 
@@ -474,8 +474,8 @@ public abstract class TileEntityContainer extends TileEntity
 		super.readFromNBT( compound );
 		if( compound.hasKey( "CustomName" ) )
 			customTitle = compound.getString( "CustomName" );
-		if( contents != null )
-			NbtUtils.readItems( contents, compound.getTagList( "Items", NBT.TAG_COMPOUND ) );
+		if( inventory != null )
+			NbtUtils.readItems( inventory, compound.getTagList( "Items", NBT.TAG_COMPOUND ) );
 		if( compound.getBoolean( "ComparatorAccessed" ) )
 			compAccessedOnLoad = true;
 		if( acceptsRedstoneSignal() )
@@ -488,8 +488,8 @@ public abstract class TileEntityContainer extends TileEntity
 		super.writeToNBT( compound );
 		if( customTitle != null )
 			compound.setString( "CustomName", customTitle );
-		if( contents != null )
-			compound.setTag( "Items", NbtUtils.writeItems( contents ) );
+		if( inventory != null )
+			compound.setTag( "Items", NbtUtils.writeItems( inventory ) );
 		if( hasComparatorAccessed() )
 			compound.setBoolean( "ComparatorAccessed", true );
 		if( acceptsRedstoneSignal() )

@@ -1,8 +1,9 @@
 package io.github.tehstoneman.betterstorage.tile;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockBetterStorage;
 import net.minecraft.block.material.Material;
 
-public class TileFlintBlock extends TileBetterStorage
+public class TileFlintBlock extends BlockBetterStorage
 {
 	public TileFlintBlock()
 	{

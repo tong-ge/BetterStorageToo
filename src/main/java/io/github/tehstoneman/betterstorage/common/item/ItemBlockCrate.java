@@ -1,6 +1,6 @@
-package io.github.tehstoneman.betterstorage.item.tile;
+package io.github.tehstoneman.betterstorage.common.item;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,9 +10,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemTileBetterStorage extends ItemBlock
+public class ItemBlockCrate extends ItemBlock
 {
-	public ItemTileBetterStorage( Block block )
+	public ItemBlockCrate( Block block )
 	{
 		super( block );
 	}
@@ -23,7 +23,7 @@ public class ItemTileBetterStorage extends ItemBlock
 	{
 		if( !super.placeBlockAt( stack, player, world, pos, side, hitX, hitY, hitZ, newState ) )
 			return false;
-		BetterStorageTiles.crate.onBlockPlacedExtended( world, pos, side, hitX, hitY, hitZ, player, stack );
+		BetterStorageBlocks.CRATE.onBlockPlacedExtended( world, pos, side, hitX, hitY, hitZ, player, stack );
 		return true;
 	}
 }

@@ -2,8 +2,8 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.content.BetterStorageTiles;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardEnchantmentRecipe;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardRepairRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
@@ -44,7 +44,7 @@ private Recipes()
 
 	private static void registerRecipeSorter()
 	{
-		RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
+		//RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
 		RecipeSorter.register( "betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "" );
 		RecipeSorter.register( "betterstorage:lockcolorrecipe", LockRecipe.class, Category.SHAPELESS, "" );
@@ -58,9 +58,9 @@ private Recipes()
 	{
 		// Crate recipe
 		//@formatter:off
-		if( BetterStorageTiles.crate != null )
+		if( BetterStorageBlocks.CRATE != null )
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageTiles.crate ),
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CRATE ),
 							"o/o",
 							"/ /",
 							"o/o",	'o', "plankWood",
@@ -68,26 +68,26 @@ private Recipes()
 		//@formatter:on
 
 		// Reinforced chest recipes
-		if( BetterStorageTiles.reinforcedChest != null )
+		if( BetterStorageBlocks.reinforcedChest != null )
 			for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
 			{
-				final IRecipe recipe = material.getReinforcedRecipe( Blocks.CHEST, BetterStorageTiles.reinforcedChest );
+				final IRecipe recipe = material.getReinforcedRecipe( Blocks.CHEST, BetterStorageBlocks.reinforcedChest );
 				if( recipe != null )
 					GameRegistry.addRecipe( recipe );
 			}
 
 		// Locker recipe
-		if( BetterStorageTiles.locker != null )
+		if( BetterStorageBlocks.locker != null )
 		{
 			//@formatter:off
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageTiles.locker ),
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.locker ),
 							"ooo",
 							"o |",
 							"ooo",	'o', "plankWood",
 									'|', Blocks.TRAPDOOR ) );
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageTiles.locker ),
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.locker ),
 							"ooo",
 							"| o",
 							"ooo",	'o', "plankWood",
@@ -95,10 +95,10 @@ private Recipes()
 			//@formatter:on
 
 			// Reinforced locker recipes
-			if( BetterStorageTiles.reinforcedLocker != null )
+			if( BetterStorageBlocks.reinforcedLocker != null )
 				for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
 				{
-					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageTiles.locker, BetterStorageTiles.reinforcedLocker );
+					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.locker, BetterStorageBlocks.reinforcedLocker );
 					if( recipe != null )
 						GameRegistry.addRecipe( recipe );
 				}
@@ -106,8 +106,8 @@ private Recipes()
 
 		// Armor stand recipe
 		//@formatter:off
-		if( BetterStorageTiles.armorStand != null )
-			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageTiles.armorStand ),
+		if( BetterStorageBlocks.armorStand != null )
+			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.armorStand ),
 					" i ",
 					"/i/",
 					" s ",	's', new ItemStack( Blocks.STONE_SLAB, 1, 0 ),
@@ -115,15 +115,15 @@ private Recipes()
 							'/', Items.STICK );
 
 		// Cardboard box recipe
-		if( BetterStorageTiles.cardboardBox != null && BetterStorageItems.cardboardSheet != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageTiles.cardboardBox ),
+		if( BetterStorageBlocks.cardboardBox != null && BetterStorageItems.cardboardSheet != null )
+			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.cardboardBox ),
 					"ooo",
 					"o o",
 					"ooo",	'o', "sheetCardboard" ) );
 
 		// Crafting Station recipe
-		if( BetterStorageTiles.craftingStation != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageTiles.craftingStation ),
+		if( BetterStorageBlocks.craftingStation != null )
+			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.craftingStation ),
 					"B-B",
 					"PTP",
 					"WCW",	'B', Blocks.STONEBRICK,
@@ -131,25 +131,25 @@ private Recipes()
 							'P', Blocks.PISTON,
 							'T', Blocks.CRAFTING_TABLE,
 							'W', "plankWood",
-							'C', BetterStorageTiles.crate != null ? BetterStorageTiles.crate : Blocks.CHEST ) );
+							'C', BetterStorageBlocks.CRATE != null ? BetterStorageBlocks.CRATE : Blocks.CHEST ) );
 		//@formatter:on
 
 		// Present recipe
-		if( BetterStorageTiles.present != null && BetterStorageTiles.cardboardBox != null )
+		if( BetterStorageBlocks.present != null && BetterStorageBlocks.cardboardBox != null )
 		{
 			GameRegistry.addRecipe( new PresentRecipe() );
 			BetterStorageCrafting.addStationRecipe( new PresentRemoveNametagRecipe() );
 		}
 
 		// Flint Block recipe
-		if( BetterStorageTiles.flintBlock != null )
+		if( BetterStorageBlocks.flintBlock != null )
 		{
 			//@formatter:off
-			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageTiles.flintBlock ),
+			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.flintBlock ),
 					"ooo",
 					"ooo",
 					"ooo",	'o', Items.FLINT );
-			GameRegistry.addShapelessRecipe( new ItemStack( Items.FLINT, 9 ), BetterStorageTiles.flintBlock );
+			GameRegistry.addShapelessRecipe( new ItemStack( Items.FLINT, 9 ), BetterStorageBlocks.flintBlock );
 			//@formatter:on
 		}
 
@@ -224,8 +224,7 @@ private Recipes()
 		}
 
 		// Drinking helmet recipe
-		if( BetterStorageItems.drinkingHelmet != null )
-			GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
+		//if( BetterStorageItems.drinkingHelmet != null ) GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
 
 	}
 

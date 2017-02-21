@@ -3,9 +3,10 @@ package io.github.tehstoneman.betterstorage.tile.entity;
 import java.util.logging.Logger;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
-import io.github.tehstoneman.betterstorage.misc.Constants;
 import io.github.tehstoneman.betterstorage.utils.DirectionUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;

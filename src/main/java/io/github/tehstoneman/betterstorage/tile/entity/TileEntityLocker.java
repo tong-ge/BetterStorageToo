@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
-import io.github.tehstoneman.betterstorage.misc.Constants;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.utils.DirectionUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -60,7 +60,7 @@ public class TileEntityLocker extends TileEntityLockable
 	@Override
 	protected String getConnectableName()
 	{
-		return Constants.containerLocker;
+		return ModInfo.containerLocker;
 	}
 
 	@Override
