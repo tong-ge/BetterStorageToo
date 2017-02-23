@@ -23,12 +23,9 @@ public class BlockBetterStorage extends Block
 
 		setCreativeTab( BetterStorage.creativeTab );
 
-		if( !(this instanceof BlockCrate))
-		{
-			setUnlocalizedName( ModInfo.modId + "." + getTileName() );
-			this.setRegistryName( getTileName() );
-			registerBlock();
-		}
+		setUnlocalizedName( ModInfo.modId + "." + getTileName() );
+		this.setRegistryName( getTileName() );
+		registerBlock();
 	}
 
 	/** Returns the name of this tile, for example "craftingStation". */

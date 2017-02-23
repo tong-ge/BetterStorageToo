@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
@@ -28,6 +26,8 @@ public class CrateStackHandler extends ItemStackHandler
 	private UUID				pileID;
 	private List< Integer >		indexSlots;
 	private boolean				doShuffle			= true;
+
+	private TileEntityCrate		crateToUpdate;
 
 	public CrateStackHandler( int size )
 	{
@@ -59,6 +59,7 @@ public class CrateStackHandler extends ItemStackHandler
 		return region;
 	}
 
+	/** Returns the number of occupied slots */
 	public int getOccupiedSlots()
 	{
 		int count = 0;
@@ -82,11 +83,18 @@ public class CrateStackHandler extends ItemStackHandler
 		return list.subList( 0, count );
 	}
 
+	/** Returns a slot pointed to by a randomized index */
+	public int getIndexedSlot( int slot )
+	{
+		return indexSlots.get( slot );
+	}
+
 	private static boolean isEnabled()
 	{
 		return GlobalConfig.enableCrateStorageInterfaceSetting.getValue();
 	}
 
+	/** Tries to fit contents into full stacks, and moves empty slots to the end of the inventory */
 	public void consolidateStacks()
 	{
 		for( int i = 1; i < stacks.length; i++ )
@@ -95,6 +103,7 @@ public class CrateStackHandler extends ItemStackHandler
 					stacks[i] = null;
 	}
 
+	/** Merges partial stacks into each other */
 	public int mergeItemStack( ItemStack stack, int startIndex, int endIndex )
 	{
 		int i = startIndex;
@@ -133,34 +142,6 @@ public class CrateStackHandler extends ItemStackHandler
 		return stack.stackSize;
 	}
 
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		final NBTTagCompound compound = super.serializeNBT();
-
-		compound.setInteger( "NumCrates", numCrates );
-		if( pileID != null )
-			compound.setUniqueId( "PileID", pileID );
-
-		if( region != null )
-			compound.setTag( "Region", region.toCompound() );
-		return compound;
-	}
-
-	@Override
-	public void deserializeNBT( NBTTagCompound compound )
-	{
-		super.deserializeNBT( compound );
-
-		numCrates = compound.getInteger( "NumCrates" );
-		if( compound.hasUniqueId( "PileID" ) )
-			pileID = compound.getUniqueId( "PileID" );
-
-		if( compound.hasKey( "Region" ) )
-			region = Region.fromCompound( compound.getCompoundTag( "Region" ) );
-		onLoad();
-	}
-
 	/** Returns if the crate can be added to the crate pile. */
 	public boolean canAdd( TileEntityCrate crate )
 	{
@@ -193,7 +174,7 @@ public class CrateStackHandler extends ItemStackHandler
 				if( depth >= maxCratePileSize )
 					return false;
 				final int maxDiff = width == 1 ? 1 : 3;
-				if( height >= maxDiff + Math.min( width, depth ) )
+				if( depth >= maxDiff + Math.min( height, depth ) )
 					return false;
 			}
 			else
@@ -201,8 +182,8 @@ public class CrateStackHandler extends ItemStackHandler
 				{
 					if( height >= maxCratePileSize )
 						return false;
-					final int maxDiff = width == 1 || height == 1 ? 1 : 4;
-					if( depth >= maxDiff + Math.min( width, height ) )
+					final int maxDiff = width == 1 || depth == 1 ? 1 : 4;
+					if( height >= maxDiff + Math.min( width, depth ) )
 						return false;
 				}
 
@@ -239,52 +220,40 @@ public class CrateStackHandler extends ItemStackHandler
 			setNumCrates( numCrates - 1 );
 			CrateStackCollection.getCollection( crate.getWorld() ).markDirty();
 			return overflow;
-			/*
-			 * final Iterable< BlockPos > list = BlockPos.getAllInBox( region.posMin, region.posMax );
-			 * Region region = null;
-			 * for( final BlockPos pos : list )
-			 * if( !pos.equals( crate.getPos() ) )
-			 * {
-			 * final TileEntity tileEntity = crate.getWorld().getTileEntity( pos );
-			 * if( tileEntity != null && tileEntity instanceof TileEntityCrate )
-			 * if( region == null )
-			 * region = new Region( tileEntity );
-			 * else
-			 * region.expandToContain( tileEntity );
-			 * }
-			 * this.region = region;
-			 */
 		}
 		else
 		{
 			CrateStackCollection.getCollection( crate.getWorld() ).removeCratePile( pileID );
 			return stacks;
 		}
-		// return null;
 	}
 
+	/** Sets the region of this handler */
 	public void setRegion( Region region )
 	{
 		this.region = region;
 	}
 
+	/** Sets the number of crates used by this hander */
 	public void setNumCrates( int numCrates )
 	{
 		this.numCrates = numCrates;
 		stacks = Arrays.copyOf( stacks, this.getCapacity() );
-		// setSize( this.getCapacity() );
 	}
 
+	/** Returns the ID of this handler */
 	public UUID getPileID()
 	{
 		return pileID;
 	}
 
+	/** Sets the ID used by this handler */
 	public void setPileID( UUID pileID )
 	{
 		this.pileID = pileID;
 	}
 
+	/** Returns a randomized copy of the inventory */
 	public ItemStack[] getRandomStacks( int count )
 	{
 		final List< ItemStack > items = Arrays.asList( stacks );
@@ -331,7 +300,6 @@ public class CrateStackHandler extends ItemStackHandler
 		Region region = null;
 		for( final BlockPos pos : BlockPos.getAllInBox( this.region.posMin, this.region.posMax ) )
 		{
-			Logger.getLogger( ModInfo.modId ).info( "pos " + pos );
 			final TileEntity tileEntity = world.getTileEntity( pos );
 			if( tileEntity instanceof TileEntityCrate )
 			{
@@ -343,7 +311,6 @@ public class CrateStackHandler extends ItemStackHandler
 						region.expandToContain( pos );
 			}
 		}
-		Logger.getLogger( ModInfo.modId ).info( "Old " + this.region + " : New " + region );
 		if( region != null )
 			this.region = region;
 	}
@@ -361,10 +328,24 @@ public class CrateStackHandler extends ItemStackHandler
 		super.setStackInSlot( getIndexedSlot( slot ), stack );
 	}
 
+	/** Bypass the randomization of the overrided version of this function */
+	public void setStackInSlotFixed( int slot, ItemStack stack )
+	{
+		doShuffle = false;
+		super.setStackInSlot( slot, stack );
+		doShuffle = true;
+	}
+
 	@Override
 	public ItemStack getStackInSlot( int slot )
 	{
 		return super.getStackInSlot( getIndexedSlot( slot ) );
+	}
+
+	/** Bypass the randomization of the overrided version of this function */
+	public ItemStack getStackInSlotFixed( int slot )
+	{
+		return super.getStackInSlot( slot );
 	}
 
 	@Override
@@ -373,24 +354,7 @@ public class CrateStackHandler extends ItemStackHandler
 		return super.extractItem( getIndexedSlot( slot ), amount, simulate );
 	}
 
-	@Override
-	public ItemStack insertItem( int slot, ItemStack stack, boolean simulate )
-	{
-		return super.insertItem( getIndexedSlot( slot ), stack, simulate );
-	}
-
-	public void setStackInSlotFixed( int slot, ItemStack stack )
-	{
-		doShuffle = false;
-		super.setStackInSlot( slot, stack );
-		doShuffle = true;
-	}
-
-	public ItemStack getStackInSlotFixed( int slot )
-	{
-		return super.getStackInSlot( slot );
-	}
-
+	/** Bypass the randomization of the overrided version of this function */
 	public ItemStack extractItemFixed( int slot, int amount, boolean simulate )
 	{
 		doShuffle = false;
@@ -399,6 +363,13 @@ public class CrateStackHandler extends ItemStackHandler
 		return result;
 	}
 
+	@Override
+	public ItemStack insertItem( int slot, ItemStack stack, boolean simulate )
+	{
+		return super.insertItem( getIndexedSlot( slot ), stack, simulate );
+	}
+
+	/** Bypass the randomization of the overrided version of this function */
 	public ItemStack insertItemFixed( int slot, ItemStack stack, boolean simulate )
 	{
 		doShuffle = false;
@@ -407,10 +378,10 @@ public class CrateStackHandler extends ItemStackHandler
 		return result;
 	}
 
-	@Override
-	protected void onLoad()
+	/** Records a tileentity to notify if contents has changed */
+	public void sendUpdatesTo( TileEntityCrate tileEntityCrate )
 	{
-		indexSlots = getShuffledIndexes( stacks.length );
+		crateToUpdate = tileEntityCrate;
 	}
 
 	@Override
@@ -421,10 +392,41 @@ public class CrateStackHandler extends ItemStackHandler
 			consolidateStacks();
 			indexSlots = getShuffledIndexes( stacks.length );
 		}
+		if( crateToUpdate != null )
+			crateToUpdate.markDirty();
 	}
 
-	public int getIndexedSlot( int slot )
+	@Override
+	protected void onLoad()
 	{
-		return indexSlots.get( slot );
+		indexSlots = getShuffledIndexes( stacks.length );
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		final NBTTagCompound compound = super.serializeNBT();
+
+		compound.setInteger( "NumCrates", numCrates );
+		if( pileID != null )
+			compound.setUniqueId( "PileID", pileID );
+
+		if( region != null )
+			compound.setTag( "Region", region.toCompound() );
+		return compound;
+	}
+
+	@Override
+	public void deserializeNBT( NBTTagCompound compound )
+	{
+		super.deserializeNBT( compound );
+
+		numCrates = compound.getInteger( "NumCrates" );
+		if( compound.hasUniqueId( "PileID" ) )
+			pileID = compound.getUniqueId( "PileID" );
+
+		if( compound.hasKey( "Region" ) )
+			region = Region.fromCompound( compound.getCompoundTag( "Region" ) );
+		onLoad();
 	}
 }

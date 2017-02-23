@@ -73,11 +73,6 @@ public class ContainerCrate extends Container
 			listeners.get( j ).sendProgressBarUpdate( this, 0, volume );
 	}
 
-	public int getVolume()
-	{
-		return volume;
-	}
-
 	@Override
 	@SideOnly( Side.CLIENT )
 	public void updateProgressBar( int id, int val )
@@ -141,5 +136,11 @@ public class ContainerCrate extends Container
 		if( !flag && endIndex <= indexHotbar )
 			flag = inventoryCrate.mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
 		return flag;
+	}
+
+	/** Returns the recorded volume of this container */
+	public int getVolume()
+	{
+		return volume;
 	}
 }

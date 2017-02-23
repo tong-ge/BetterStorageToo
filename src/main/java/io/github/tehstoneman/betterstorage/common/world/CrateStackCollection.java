@@ -7,7 +7,6 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import io.github.tehstoneman.betterstorage.tile.crate.CratePileData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
@@ -54,8 +53,8 @@ public class CrateStackCollection extends WorldSavedData
 	/**
 	 * Get or create a crate handler for the given UUID
 	 * Used for syncing client with server
-	 * */
-	@SideOnly(Side.CLIENT)
+	 */
+	@SideOnly( Side.CLIENT )
 	public CrateStackHandler getOrCreateCratePile( UUID pileID )
 	{
 		if( !pileDataMap.containsKey( pileID ) )

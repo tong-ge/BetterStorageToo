@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.api.crate;
+package net.mcft.copy.betterstorage.api.crate;
 
 import net.minecraft.item.ItemStack;
 

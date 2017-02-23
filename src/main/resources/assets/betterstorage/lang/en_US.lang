@@ -1,9 +1,8 @@
 # Containers
 container.betterstorage.craftingStation=Crafting Station
-container.betterstorage.backpack=Backpack
 container.betterstorage.cardboardBox=Cardboard Box
 container.betterstorage.crate=Storage Crate
-container.betterstorage.enderBackpack=Ender Backpack
+container.betterstorage.crate.capacity=%% Capacity
 container.betterstorage.keyring=Keyring
 container.betterstorage.locker=Locker
 container.betterstorage.lockerLarge=Large Locker
@@ -11,7 +10,6 @@ container.betterstorage.reinforcedChest=Reinforced Chest
 container.betterstorage.reinforcedChestLarge=Large Reinforced Chest
 container.betterstorage.reinforcedLocker=Reinforced Locker
 container.betterstorage.reinforcedLockerLarge=Large Reinforced Locker
-container.betterstorage.thaumcraftBackpack=Thaumaturge's Backpack
 container.betterstorage.thaumiumChest=Thaumium Chest
 container.betterstorage.thaumiumChestLarge=Large Thaumium Chest
 
@@ -25,7 +23,6 @@ enchantment.betterstorage.lock.shock=Shock
 enchantment.betterstorage.lock.trigger=Trigger
 
 # Entities
-entity.betterstorage.Frienderman.name=Enderman
 
 # Items
 item.betterstorage.bucketSlime.name=Slime in a Bucket
@@ -49,7 +46,6 @@ item.betterstorage.masterKey.name=Master Key
 itemGroup.betterstorage=BetterStorage
 
 # Keys
-key.betterstorage.backpackOpen=[BetterStorage] Open Backpack
 key.betterstorage.drinkingHelmet=[BetterStorage] Use Drinking Helmet
 
 # Container materials
@@ -66,37 +62,23 @@ material.betterstorage.zinc=Zinc
 # Thaumcraft
 tc.research_name.betterstorage.magicstorage=Magical Storage
 tc.research_text.betterstorage.magicstorage=Enchanting your containers
-tc.research_page.betterstorage.magicstorage.1=Infusing a backpack with magic and materials of magical nature will increase its overall durability, enchantability and storage capacity. While worn, items stored inside will still be able to repair, though much slower, unless the backpack itself also has the repair enchantment.<BR>It is also possible to throw together a reinforced iron chest and a bunch of thaumium, which will result in an even more durable chest which can also store more items.
 
 # Blocks
 tile.betterstorage.craftingStation.name=Crafting Station
 tile.betterstorage.armorStand.name=Armor Stand
-tile.betterstorage.backpack.cantEquip.backpack=You already have a backpack equipped
-tile.betterstorage.backpack.cantEquip.chestplate=You can't equip a backpack while wearing a chestplate
-tile.betterstorage.backpack.name=Backpack
 tile.betterstorage.cardboardBox.name=Cardboard Box
 tile.betterstorage.crate.name=Storage Crate
-tile.betterstorage.enderBackpack.name=Ender Backpack
 tile.betterstorage.flintBlock.name=Block of Flint
 tile.betterstorage.locker.name=Locker
 tile.betterstorage.reinforcedChest.name=Reinforced Chest
 tile.betterstorage.reinforcedChest.name.full=Reinforced %MATERIAL% Chest
 tile.betterstorage.reinforcedLocker.name=Reinforced Locker
 tile.betterstorage.reinforcedLocker.name.full=Reinforced %MATERIAL% Locker
-tile.betterstorage.thaumcraftBackpack.name=Thaumaturge's Backpack
 tile.betterstorage.thaumiumChest.name=Thaumium Chest
 tile.betterstorage.lockableDoor.name=Locked Iron Door
 tile.betterstorage.present.name=Present
 
 # Tooltips
-tooltip.betterstorage.backpack.bound=Bound backpack.
-tooltip.betterstorage.backpack.containsItems=Contains items.
-tooltip.betterstorage.backpack.equipHint=Place down and break#while sneaking to equip.
-tooltip.betterstorage.backpack.equipHint.extended=Sneak and break to equip.#Sneak and right click ground#with empty hand to unequip.
-tooltip.betterstorage.backpack.openHint=Press %KEY% to open while equipped.
-tooltip.betterstorage.backpack.unequipHint=Sneak and right click ground#with empty hand to unequip.
-tooltip.betterstorage.backpack.unequipHint.extended=%INFO% Sneak and right click#ground with empty hand to unequip.
-tooltip.betterstorage.backpack.used=Currently being used by a player.
 tooltip.betterstorage.bucketSlime.more.1=1 more effect ...
 tooltip.betterstorage.bucketSlime.more.x=%X% more effects ...
 tooltip.betterstorage.cardboardBox.useHint=One-time use portable storage.
@@ -123,16 +105,6 @@ config.betterstorage.general.enableCrateStorageInterface=Crate Storage Interface
 config.betterstorage.general.enableCrateStorageInterface.tooltip=If disabled, prevents mods from using storage crates' special storage interface (like Applied Energistics).
 config.betterstorage.general.crateDebugMessages=Crate Debug Messages
 config.betterstorage.general.crateDebugMessages.tooltip=If enabled, logs crate related debug messages (like them saving).
-config.betterstorage.general.backpackChestplate=Backpack Chestplate
-config.betterstorage.general.backpackChestplate.tooltip=If disabled, backpacks don't take up the player's chestplate armor slot.
-config.betterstorage.general.backpackRows=Backpack Rows
-config.betterstorage.general.backpackRows.tooltip=Number of rows in backpacks.
-config.betterstorage.general.enableBackpackOpen=Backpack Open
-config.betterstorage.general.enableBackpackOpen.tooltip=Allows equipped backpacks to be opened by pressing a key.
-config.betterstorage.general.enableBackpackInteraction=Backpack Interaction
-config.betterstorage.general.enableBackpackInteraction.tooltip=Allows equipped backpacks to be opened by other players by right clicking them.
-config.betterstorage.general.dropBackpackOnDeath=Backpack Drop
-config.betterstorage.general.dropBackpackOnDeath.tooltip=If enabled, drops backpacks as block instead of spilling the items around.
 config.betterstorage.general.cardboardBoxRows=Cardboard Box Rows
 config.betterstorage.general.cardboardBoxRows.tooltip=Number of rows in cardboard boxes.
 config.betterstorage.general.cardboardBoxUses=Cardboard Box Uses

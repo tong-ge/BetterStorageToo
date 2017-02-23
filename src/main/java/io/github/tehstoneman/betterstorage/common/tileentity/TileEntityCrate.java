@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
+import io.github.tehstoneman.betterstorage.misc.Region;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -23,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-//public class TileEntityCrate extends TileEntityContainer implements IInventory, ICrateStorage, ICrateWatcher
 public class TileEntityCrate extends TileEntity
 {
 	public static final int	slotsPerCrate	= 18;
@@ -52,6 +50,7 @@ public class TileEntityCrate extends TileEntity
 		return super.getCapability( capability, facing );
 	}
 
+	/** Helper function to add crate to handler */
 	public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
 	{
 		if( !worldObj.isRemote && pileID == null )
@@ -67,9 +66,12 @@ public class TileEntityCrate extends TileEntity
 		final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
 		if( worldObj.isRemote )
 			return new CrateStackHandler( getCapacity() );
-		return collection.getCratePile( getPileID() );
+		final CrateStackHandler handler = collection.getCratePile( pileID );
+		handler.sendUpdatesTo( this );
+		return handler;
 	}
 
+	/** Get the pile ID for this tile entity */
 	public UUID getPileID()
 	{
 		if( pileID == null )
@@ -81,9 +83,11 @@ public class TileEntityCrate extends TileEntity
 		return pileID;
 	}
 
+	/** Sets the pile ID for this tile entity */
 	public void setPileID( UUID pileID )
 	{
 		this.pileID = pileID;
+		markDirty();
 	}
 
 	/**
@@ -93,7 +97,6 @@ public class TileEntityCrate extends TileEntity
 	private void checkPileConnections( UUID pileID )
 	{
 		final int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-		Logger.getLogger( ModInfo.modId ).info( "Checking connections" );
 
 		// Destroy all crates above.
 		final TileEntity tileEntity = worldObj.getTileEntity( pos.up() );
@@ -142,7 +145,6 @@ public class TileEntityCrate extends TileEntity
 						if( stack != null )
 							newHandler.addItems( stack );
 
-				Logger.getLogger( ModInfo.modId ).info( "crateSets=" + crateSets.size() + " : numCrates=" + numCrates );
 				// Add all crates above the base crate.
 				while( true )
 				{
@@ -153,22 +155,16 @@ public class TileEntityCrate extends TileEntity
 					numCrates++;
 				}
 			}
-			// Move some of the items over to the new crate pile.
-			/*
-			 * final int count = numCrates * newHandler.getOccupiedSlots() / ( newHandler.getNumCrates() + numCrates );
-			 * for( final ItemStack stack : newHandler.getRandomStacks( count ) )
-			 * {
-			 * handler.removeItems( stack );
-			 * newHandler.addItems( stack );
-			 * }
-			 */
+			notifyRegionUpdate( newHandler.getRegion(), newHandler.getPileID() );
 		}
 		// Trim the original map to the size it actually is.
 		// This is needed because the crates may not be removed in
 		// order, from outside to inside.
 		handler.trimRegion( worldObj );
+		notifyRegionUpdate( handler.getRegion(), getPileID() );
 	}
 
+	/** Compile lists of connected crates */
 	private List< HashSet< TileEntityCrate > > getCrateSets( int x, int y, int z, UUID pileID )
 	{
 		final List< HashSet< TileEntityCrate > > crateSets = new ArrayList<>();
@@ -211,6 +207,7 @@ public class TileEntityCrate extends TileEntity
 		return crateSets;
 	}
 
+	/** Checks crate connections */
 	private void checkConnections( int x, int y, int z, UUID pileID, HashSet< TileEntityCrate > set )
 	{
 		final TileEntityCrate crate = (TileEntityCrate)worldObj.getTileEntity( new BlockPos( x, y, z ) );
@@ -221,6 +218,7 @@ public class TileEntityCrate extends TileEntity
 			checkConnections( x + ndir.getFrontOffsetX(), y, z + ndir.getFrontOffsetZ(), pileID, set );
 	}
 
+	/** Tries to connect a crate to the given side */
 	public boolean attemptConnect( EnumFacing side )
 	{
 		if( worldObj.isRemote || side == EnumFacing.UP )
@@ -237,13 +235,27 @@ public class TileEntityCrate extends TileEntity
 			{
 				handler.addCrate( this );
 				pileID = handler.getPileID();
-				final IBlockState state = worldObj.getBlockState( pos );
-				worldObj.notifyBlockUpdate( pos, state, state, 3 );
+				notifyRegionUpdate( handler.getRegion(), pileID );
 				markDirty();
+				crateClicked.markDirty();
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/** Notify all matching crates within a region of an update */
+	public void notifyRegionUpdate( Region region, UUID pileID )
+	{
+		for( final BlockPos blockPos : BlockPos.getAllInBox( region.posMin, region.posMax ) )
+		{
+			final TileEntity te = worldObj.getTileEntity( blockPos );
+			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
+			{
+				final IBlockState state = worldObj.getBlockState( blockPos );
+				worldObj.notifyBlockUpdate( blockPos, state, state, 3 );
+			}
+		}
 	}
 
 	public void setCustomTitle( String displayName )
@@ -258,19 +270,9 @@ public class TileEntityCrate extends TileEntity
 		if( worldObj.isRemote )
 			return;
 		checkPileConnections( getPileID() );
-		/*
-		 * final CrateStackHandler handler = getCrateStackHandler();
-		 * handler.removeCrate( this );
-		 * if(handler.getNumCrates()==0)
-		 * {
-		 * CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
-		 * collection.removeCratePile( pileID );
-		 * }
-		 */
-		// dropOverflowContents( data );
-		// checkPileConnections( data );
 	}
 
+	/** Get the number of crates connected to this tile entity */
 	public int getNumCrates()
 	{
 		if( worldObj.isRemote )
@@ -278,11 +280,14 @@ public class TileEntityCrate extends TileEntity
 		return getCrateStackHandler().getNumCrates();
 	}
 
+	/** Sets the number of crates connected to this tile entity */
 	public void setNumCrates( int numCrates )
 	{
 		getCrateStackHandler().setNumCrates( numCrates );
+		markDirty();
 	}
 
+	/** Get the total capacity this tile entity */
 	public int getCapacity()
 	{
 		if( worldObj.isRemote )
@@ -292,157 +297,22 @@ public class TileEntityCrate extends TileEntity
 
 	// Comparator related
 
-	// private final boolean watcherRegistered = false;
-
-	/*
-	 * @Override
-	 * protected int getComparatorSignalStengthInternal()
-	 * {
-	 * if( worldObj.isRemote )
-	 * return 0;
-	 * final CratePileData data = getPileData();
-	 * return data.getOccupiedSlots() > 0 ? 1 + data.getOccupiedSlots() * 14 / data.getCapacity() : 0;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * protected void markComparatorAccessed()
-	 * {
-	 * super.markComparatorAccessed();
-	 *
-	 * if( !watcherRegistered && !worldObj.isRemote )
-	 * {
-	 * //getPileData().addWatcher( this );
-	 * watcherRegistered = true;
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * protected void comparatorUpdateAndReset()
-	 * {
-	 * super.comparatorUpdateAndReset();
-	 * if( watcherRegistered && !hasComparatorAccessed() )
-	 * {
-	 * //getPileData().removeWatcher( this );
-	 * watcherRegistered = false;
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void onCrateItemsModified( ItemStack stack )
-	 * {
-	 * markContentsChanged();
-	 * }
-	 */
-
-	// IInventory implementation
-
-	/*
-	 * @Override
-	 * public ITextComponent getDisplayName()
-	 * {
-	 * return new TextComponentString( getName() );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public int getInventoryStackLimit()
-	 * {
-	 * return 64;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public int getSizeInventory()
-	 * {
-	 * if( worldObj.isRemote || GlobalConfig.enableCrateInventoryInterfaceSetting.getValue() )
-	 * return ( numCrates + (int)Math.pow( numCrates, 1.25 ) ) * ( slotsPerCrate / 2 );
-	 * return 0;
-	 * // return getPileData().blockView.getSizeInventory();
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean isItemValidForSlot( int slot, ItemStack stack )
-	 * {
-	 * if( !GlobalConfig.enableCrateInventoryInterfaceSetting.getValue() )
-	 * return false;
-	 * return getPileData().blockView.isItemValidForSlot( slot, stack );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void setInventorySlotContents( int slot, ItemStack stack )
-	 * {
-	 * if( GlobalConfig.enableCrateInventoryInterfaceSetting.getValue() )
-	 * {
-	 * getPileData().blockView.setInventorySlotContents( slot, stack );
-	 * markDirty();
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public ItemStack decrStackSize( int slot, int amount )
-	 * {
-	 * if( !GlobalConfig.enableCrateInventoryInterfaceSetting.getValue() )
-	 * return null;
-	 * markDirty();
-	 * return getPileData().blockView.decrStackSize( slot, amount );
-	 * }
-	 */
+	/** Get the comparator level of this tile entity */
+	public int getComparatorSignalStrength()
+	{
+		if( worldObj.isRemote )
+			return 0;
+		final CrateStackHandler handler = getCrateStackHandler();
+		return handler.getOccupiedSlots() > 0 ? 1 + handler.getOccupiedSlots() * 14 / handler.getCapacity() : 0;
+	}
 
 	@Override
 	public void markDirty()
 	{
-		// if( GlobalConfig.enableCrateInventoryInterfaceSetting.getValue() )
-		// getPileData().blockView.markDirty();
 		final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
 		collection.markDirty();
 		super.markDirty();
 	}
-
-	/*
-	 * @Override
-	 * public boolean isUseableByPlayer( EntityPlayer player )
-	 * {
-	 * return false;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean hasCustomName()
-	 * {
-	 * return false;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void openInventory( EntityPlayer player )
-	 * {
-	 * getPileData().blockView.openInventory( player );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void closeInventory( EntityPlayer player )
-	 * {
-	 * getPileData().blockView.closeInventory( player );
-	 * }
-	 */
 
 	// TileEntity synchronization
 
@@ -498,6 +368,8 @@ public class TileEntityCrate extends TileEntity
 
 		if( pileID != null )
 			compound.setUniqueId( "PileID", pileID );
+		compound.setInteger( "NumCrates", getNumCrates() );
+		compound.setInteger( "Capacity", getCapacity() );
 
 		return compound;
 	}
@@ -509,5 +381,7 @@ public class TileEntityCrate extends TileEntity
 
 		if( compound.hasUniqueId( "PileID" ) )
 			pileID = compound.getUniqueId( "PileID" );
+		numCrates = compound.getInteger( "NumCrates" );
+		capacity = compound.getInteger( "Capacity" );
 	}
 }

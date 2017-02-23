@@ -23,14 +23,12 @@ public class CreativeTabBetterStorage extends CreativeTabs
 	@SideOnly( Side.CLIENT )
 	public Item getTabIconItem()
 	{
-
 		if( BetterStorageBlocks.CRATE != null )
 			return Item.getItemFromBlock( BetterStorageBlocks.CRATE );
 		else
 			if( BetterStorageBlocks.reinforcedChest != null )
 				return Item.getItemFromBlock( BetterStorageBlocks.reinforcedChest );
 			else
-
 				return Item.getItemFromBlock( Blocks.CHEST );
 	}
 
@@ -38,7 +36,11 @@ public class CreativeTabBetterStorage extends CreativeTabs
 	@SideOnly( Side.CLIENT )
 	public void displayAllRelevantItems( List< ItemStack > list )
 	{
-		super.displayAllRelevantItems( list );
+		// super.displayAllRelevantItems( list );
+		for( final Item item : Item.REGISTRY )
+			if( item != null )
+				if( item.getUnlocalizedName().contains( ModInfo.modId ) )
+					item.getSubItems( item, this, list );
 		addEnchantmentBooksToList( list, BetterStorageEnchantment.getType( "key" ), BetterStorageEnchantment.getType( "lock" ) );
 	}
 }

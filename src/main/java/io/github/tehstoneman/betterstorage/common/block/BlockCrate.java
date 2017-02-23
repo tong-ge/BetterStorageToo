@@ -1,11 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import java.util.logging.Logger;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.common.Optional.Method;
 import vazkii.botania.api.mana.ILaputaImmobile;
 
 @Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
-public class BlockCrate extends BlockContainerBetterStorage implements ILaputaImmobile
+public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImmobile
 {
 	public static final PropertyBool	CONNECTED_DOWN	= PropertyBool.create( "down" );
 	public static final PropertyBool	CONNECTED_UP	= PropertyBool.create( "up" );
@@ -55,8 +56,12 @@ public class BlockCrate extends BlockContainerBetterStorage implements ILaputaIm
 	protected BlockStateContainer createBlockState()
 	{
 		//@formatter:off
-		final IProperty[] listedProperties = new IProperty[]
-				{ CONNECTED_DOWN, CONNECTED_UP, CONNECTED_NORTH, CONNECTED_SOUTH, CONNECTED_EAST, CONNECTED_WEST };
+		final IProperty[] listedProperties = new IProperty[] { CONNECTED_DOWN,
+															   CONNECTED_UP,
+															   CONNECTED_NORTH,
+															   CONNECTED_SOUTH,
+															   CONNECTED_EAST,
+															   CONNECTED_WEST };
 		//@formatter:on
 		return new BlockStateContainer( this, listedProperties );
 	}
@@ -85,6 +90,12 @@ public class BlockCrate extends BlockContainerBetterStorage implements ILaputaIm
 		return state;
 	}
 
+	/**
+	 * Checks if this block can connect with a neighboring block
+	 * 
+	 * @param side
+	 *            Side facing toward neighbor
+	 */
 	public boolean canConnect( IBlockAccess worldIn, BlockPos pos, EnumFacing side )
 	{
 		final TileEntityCrate thisCrate = (TileEntityCrate)worldIn.getTileEntity( pos );
@@ -103,6 +114,9 @@ public class BlockCrate extends BlockContainerBetterStorage implements ILaputaIm
 		return new TileEntityCrate();
 	}
 
+	/**
+	 * Called to test special placement conditions
+	 */
 	public void onBlockPlacedExtended( World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity,
 			ItemStack stack )
 	{
@@ -153,26 +167,27 @@ public class BlockCrate extends BlockContainerBetterStorage implements ILaputaIm
 		return super.removedByPlayer( state, world, pos, player, willHarvest );
 	}
 
-	/*
-	 * @Override
-	 * public void breakBlock( World worldIn, BlockPos pos, IBlockState state )
-	 * {
-	 * final TileEntityCrate tileEntityCrate = (TileEntityCrate)worldIn.getTileEntity( pos );
-	 * final CrateStackHandler handler = tileEntityCrate.getCrateStackHandler();
-	 * for( int i = 0; i < handler.getSlots(); i++ )
-	 * {
-	 * final ItemStack stack = handler.getStackInSlot( i );
-	 * if( stack != null && stack.stackSize > 0 )
-	 * worldIn.spawnEntityInWorld( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), stack ) );
-	 * }
-	 * super.breakBlock( worldIn, pos, state );
-	 * }
-	 */
+	@Override
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	{
+		//world.getTileEntity( pos ).markDirty();
+	}
 
 	@Override
 	public boolean hasComparatorInputOverride( IBlockState state )
 	{
 		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
+	{
+		TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( !(tileEntity instanceof TileEntityCrate))
+			return 0;
+		
+		TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
+		return tileCrate.getComparatorSignalStrength();
 	}
 
 	@Method( modid = "Botania" )

@@ -11,7 +11,6 @@ import io.github.tehstoneman.betterstorage.item.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.CreativeTabBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.DungeonLoot;
 import io.github.tehstoneman.betterstorage.misc.Recipes;
-import io.github.tehstoneman.betterstorage.network.SyncCrateMessage;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
 
 //@formatter:off
 @Mod( modid						= ModInfo.modId,
@@ -54,9 +52,9 @@ public class BetterStorage
 	public void preInit( FMLPreInitializationEvent event )
 	{
 		// Register network messages
-		int messageID = 0;
+		final int messageID = 0;
 		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
-		simpleNetworkWrapper.registerMessage( SyncCrateMessage.Handler.class, SyncCrateMessage.class, messageID++, Side.CLIENT );
+		// simpleNetworkWrapper.registerMessage( SyncCrateMessage.Handler.class, SyncCrateMessage.class, messageID++, Side.CLIENT );
 
 		log = event.getModLog();
 		creativeTab = new CreativeTabBetterStorage();

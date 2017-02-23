@@ -39,6 +39,7 @@ targetCompatibility = 1.8
 minecraft
 {
     version = "${config.minecraft_version}-${config.forge_version}"
+    //mc_version = "${config.minecraft_version}"
 
 	if( file('../run').exists() )
 	{
@@ -99,11 +100,11 @@ sourceSets
     {
         java
         {
-        	srcDir 'src/main/java'
+        	srcDirs 'src/main/java'
         }
         resources
         {
-        	srcDir 'src/main/resources'
+        	srcDirs 'src/main/resources'
         }
     }
 }
@@ -118,7 +119,7 @@ processResources {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mc_version':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
