@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class TileCardboardBox extends BlockContainerBetterStorage
+public class TileCardboardBox extends TileContainerBetterStorage
 {
 
 	// private IIcon sideIcon;

@@ -1,41 +1,78 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
-import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
-import io.github.tehstoneman.betterstorage.utils.NbtUtils;
-import io.github.tehstoneman.betterstorage.utils.PlayerUtils;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityContainer extends TileEntity
+public abstract class TileEntityContainer extends TileEntity implements ITickable
 {
-	public ItemStack[]			inventory;
+	public ItemStackHandler	inventory;
 
-	private final InventoryTileEntity	playerInventory;
+	// private final InventoryTileEntity playerInventory;
 
 	/** The custom title of this container, set by an anvil. */
-	private String						customTitle			= null;
+	private String			customTitle			= null;
 
-	private int							playersUsing		= 0;
+	private int				playersUsing		= 0;
 
-	protected boolean					brokenInCreative	= false;
+	protected boolean		brokenInCreative	= false;
 
-	public int							ticksExisted		= 0;
-	public float						lidAngle			= 0;
-	public float						prevLidAngle		= 0;
+	public int				ticksExisted		= 0;
+	public float			lidAngle			= 0;
+	public float			prevLidAngle		= 0;
+
+	public TileEntityContainer()
+	{
+		final int size = getSizeContents();
+		if( size > 0 )
+			inventory = new ItemStackHandler( size )
+			{
+				@Override
+				protected void onContentsChanged(int slot)
+				{
+					TileEntityContainer.this.markDirty();
+				}
+			};
+			else
+				inventory = null;
+	}
+
+	@Override
+	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return true;
+		return super.hasCapability( capability, facing );
+	}
+
+	@Override
+	public <T> T getCapability( Capability< T > capability, EnumFacing facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return (T)inventory;
+		return super.getCapability( capability, facing );
+	}
 
 	/** The amount of columns in the container. */
 	public int getColumns()
@@ -64,22 +101,19 @@ public abstract class TileEntityContainer extends TileEntity
 		return playersUsing;
 	}
 
-	public TileEntityContainer()
-	{
-		final int size = getSizeContents();
-		inventory = size > 0 ? new ItemStack[size] : null;
-		playerInventory = makePlayerInventory();
-	}
+	/*
+	 * public InventoryTileEntity makePlayerInventory()
+	 * {
+	 * return inventory != null ? new InventoryTileEntity( this ) : null;
+	 * }
+	 */
 
-	public InventoryTileEntity makePlayerInventory()
-	{
-		return inventory != null ? new InventoryTileEntity( this ) : null;
-	}
-
-	public InventoryTileEntity getPlayerInventory()
-	{
-		return playerInventory;
-	}
+	/*
+	 * public InventoryTileEntity getPlayerInventory()
+	 * {
+	 * return playerInventory;
+	 * }
+	 */
 
 	/**
 	 * Returns if a player can use this container. This is called once before
@@ -92,10 +126,12 @@ public abstract class TileEntityContainer extends TileEntity
 	}
 
 	/** Creates and returns a Container for this container. */
-	public ContainerBetterStorage createContainer( EntityPlayer player )
-	{
-		return new ContainerBetterStorage( player, getPlayerInventory() );
-	}
+	/*
+	 * public ContainerBetterStorage createContainer( EntityPlayer player )
+	 * {
+	 * return new ContainerBetterStorage( player, getPlayerInventory() );
+	 * }
+	 */
 
 	// Container title related
 
@@ -158,16 +194,18 @@ public abstract class TileEntityContainer extends TileEntity
 			return true;
 		if( !canPlayerUseContainer( player ) )
 			return true;
-		openGui( player );
+		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), worldObj, pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
 
 	/** Opens the GUI of this container for the player. */
-	public void openGui( EntityPlayer player )
-	{
-		final ContainerBetterStorage container = createContainer( player );
-		PlayerUtils.openGui( player, getName(), container.getColumns(), container.getRows(), getCustomTitle(), container );
-	}
+	/*
+	 * public void openGui( EntityPlayer player )
+	 * {
+	 * final ContainerBetterStorage container = createContainer( player );
+	 * PlayerUtils.openGui( player, getName(), container.getColumns(), container.getRows(), getCustomTitle(), container );
+	 * }
+	 */
 
 	/**
 	 * Called when the block is picked (default: middle mouse).
@@ -206,8 +244,12 @@ public abstract class TileEntityContainer extends TileEntity
 	public void dropContents()
 	{
 		if( inventory != null )
-			for( final ItemStack stack : inventory )
-				WorldUtils.dropStackFromBlock( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack );
+			for( int i = 0; i < inventory.getSlots(); i++ )
+			{
+				final ItemStack stack = inventory.getStackInSlot( i );
+				if( stack != null && stack.stackSize > 0 )
+					worldObj.spawnEntityInWorld( new EntityItem( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack ) );
+			}
 	}
 
 	/**
@@ -299,25 +341,31 @@ public abstract class TileEntityContainer extends TileEntity
 	}
 
 	/**
-	 * Helper function. Returns the comparator signal strength of
-	 * the container at this position, or 0 if there is no container
-	 * or the function is called on client-side.
-	 */
-	public static int getContainerComparatorSignalStrength( IBlockAccess world, int x, int y, int z )
-	{
-		final TileEntityContainer container = WorldUtils.get( world, x, y, z, TileEntityContainer.class );
-		return container != null ? container.getComparatorSignalStrength() : 0;
-	}
-
-	/**
 	 * Called when a comparator or similar block wants to know this
 	 * TileEntity's comparator signal strength. Marks this location
 	 * to be updated the next time the container contents change.
 	 */
 	public int getComparatorSignalStrength()
 	{
-		markComparatorAccessed();
-		return getComparatorSignalStengthInternal();
+		if( worldObj.isRemote )
+			return 0;
+
+		int i = 0;
+		float f = 0.0F;
+
+		for( int j = 0; j < inventory.getSlots(); ++j )
+		{
+			final ItemStack itemstack = inventory.getStackInSlot( j );
+
+			if( itemstack != null )
+			{
+				f += (float)itemstack.stackSize / itemstack.getMaxStackSize();
+				++i;
+			}
+		}
+
+		f = f / inventory.getSlots();
+		return MathHelper.floor_float( f * 14.0F ) + ( i > 0 ? 1 : 0 );
 	}
 
 	/**
@@ -363,18 +411,21 @@ public abstract class TileEntityContainer extends TileEntity
 	 */
 	public void markDirtySuper()
 	{
-		if( worldObj.isRemote )
+		if( worldObj == null || worldObj.isRemote )
 			return;
 		worldObj.markChunkDirty( new BlockPos( pos ), this );
 		if( hasComparatorAccessed() )
 			markContentsChanged();
 	}
 
-	@Override
-	public void markDirty()
-	{
-		markDirtySuper();
-	}
+	/*
+	 * @Override
+	 * public void markDirty()
+	 * {
+	 * markDirtySuper();
+	 * super.markDirty();
+	 * }
+	 */
 
 	@Override
 	public void validate()
@@ -436,8 +487,8 @@ public abstract class TileEntityContainer extends TileEntity
 		return 0.1F;
 	}
 
-	// @Override
-	public void updateEntity()
+	@Override
+	public void update()
 	{
 		if( ticksExisted++ == 0 )
 			// Only run once after tile entity has loaded.
@@ -447,13 +498,6 @@ public abstract class TileEntityContainer extends TileEntity
 		// the contents have been changed, send a block update.
 		if( hasComparatorAccessed() && hasContentsChanged() )
 			comparatorUpdateAndReset();
-
-		if( syncPlayersUsing() )
-		{
-			final int newPlayersUsing = WorldUtils.syncPlayersUsing( this, playersUsing );
-			if( newPlayersUsing != playersUsing )
-				doSyncPlayersUsing( playersUsing = newPlayersUsing );
-		}
 
 		prevLidAngle = lidAngle;
 		if( playersUsing > 0 )
@@ -466,6 +510,43 @@ public abstract class TileEntityContainer extends TileEntity
 				lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
 	}
 
+	// TileEntity synchronization
+
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		final NBTTagCompound compound = super.getUpdateTag();
+
+		if( customTitle != null )
+			compound.setString( "CustomName", customTitle );
+
+		return compound;
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		final NBTTagCompound compound = getUpdateTag();
+		return new SPacketUpdateTileEntity( getPos(), getBlockMetadata(), compound );
+	}
+
+	@Override
+	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
+	{
+		handleUpdateTag( packet.getNbtCompound() );
+
+		worldObj.markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
+	}
+
+	@Override
+	public void handleUpdateTag( NBTTagCompound compound )
+	{
+		super.handleUpdateTag( compound );
+
+		if( compound.hasKey( "CustomName" ) )
+			customTitle = compound.getString( "CustomName" );
+	}
+
 	// Reading from / writing to NBT
 
 	@Override
@@ -474,8 +555,8 @@ public abstract class TileEntityContainer extends TileEntity
 		super.readFromNBT( compound );
 		if( compound.hasKey( "CustomName" ) )
 			customTitle = compound.getString( "CustomName" );
-		if( inventory != null )
-			NbtUtils.readItems( inventory, compound.getTagList( "Items", NBT.TAG_COMPOUND ) );
+		if( compound.hasKey( "Inventory" ) )
+			inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
 		if( compound.getBoolean( "ComparatorAccessed" ) )
 			compAccessedOnLoad = true;
 		if( acceptsRedstoneSignal() )
@@ -489,7 +570,7 @@ public abstract class TileEntityContainer extends TileEntity
 		if( customTitle != null )
 			compound.setString( "CustomName", customTitle );
 		if( inventory != null )
-			compound.setTag( "Items", NbtUtils.writeItems( inventory ) );
+			compound.setTag( "Inventory", inventory.serializeNBT() );
 		if( hasComparatorAccessed() )
 			compound.setBoolean( "ComparatorAccessed", true );
 		if( acceptsRedstoneSignal() )
@@ -505,7 +586,7 @@ public abstract class TileEntityContainer extends TileEntity
 	 */
 	public void markForUpdate()
 	{
-		worldObj.markBlockRangeForRenderUpdate( pos, pos );
+		worldObj.notifyBlockUpdate( pos, worldObj.getBlockState( pos ), worldObj.getBlockState( pos ), 3 );
 		markDirty();
 	}
 

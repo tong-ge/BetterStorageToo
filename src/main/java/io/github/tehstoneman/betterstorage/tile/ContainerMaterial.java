@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.misc.BetterStorageResource;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.block.Block;
@@ -48,7 +49,7 @@ public class ContainerMaterial
 
 	public static ContainerMaterial get( int id )
 	{
-		return materialMapOld.get( id );
+		return materialMapOld.getOrDefault( id, iron );
 	}
 
 	/**

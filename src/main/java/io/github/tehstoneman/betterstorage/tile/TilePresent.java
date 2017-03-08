@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TilePresent extends BlockContainerBetterStorage
+public class TilePresent extends TileContainerBetterStorage
 {
 	public TilePresent()
 	{

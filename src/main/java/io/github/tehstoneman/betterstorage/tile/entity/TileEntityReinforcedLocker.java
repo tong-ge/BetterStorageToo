@@ -14,7 +14,8 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 	@SideOnly( Side.CLIENT )
 	public ResourceLocation getResource()
 	{
-		return getMaterial().getLockerResource( isConnected() );
+		return new ResourceLocation(ModInfo.modId, "textures/models/locker" + ( isConnected() ? "_large/" : "/" ) + getMaterial().getName() + ".png");
+		//return getMaterial().getLockerResource( isConnected() );
 	}
 
 	@Override

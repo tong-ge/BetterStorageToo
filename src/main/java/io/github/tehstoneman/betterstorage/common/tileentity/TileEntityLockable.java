@@ -1,37 +1,31 @@
-package io.github.tehstoneman.betterstorage.tile.entity;
+package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import java.security.InvalidParameterException;
-import java.util.logging.Logger;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
-import io.github.tehstoneman.betterstorage.tile.ContainerMaterial;
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TileEntityLockable extends TileEntityConnectable implements ILockable, IHasAttachments
 {
-	private boolean				powered;
+	private boolean			powered;
 
-	public ContainerMaterial	material;
-	public LockAttachment		lockAttachment;
+	public EnumReinforced	material;
+	public LockAttachment	lockAttachment;
 
-	protected Attachments		attachments	= new Attachments( this );
+	protected Attachments	attachments	= new Attachments( this );
 
 	protected ItemStack getLockInternal()
 	{
@@ -52,19 +46,20 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		setAttachmentPosition();
 	}
 
-	public ContainerMaterial getMaterial()
+	public EnumReinforced getMaterial()
 	{
-		if( !canHaveMaterial() )
-			return null;
-		if( material != null )
-			return material;
-		return material = worldObj != null ? ContainerMaterial.get( getBlockMetadata() ) : ContainerMaterial.iron;
+		// if( !canHaveMaterial() ) return null;
+		if( material == null )
+			material = EnumReinforced.byMetadata( getBlockMetadata() );
+		return material;
 	}
 
-	public boolean canHaveMaterial()
-	{
-		return true;
-	}
+	/*
+	 * public boolean canHaveMaterial()
+	 * {
+	 * return getBlockMetadata() == EnumReinforced.SPECIAL.getMetadata();
+	 * }
+	 */
 
 	public boolean canHaveLock()
 	{
@@ -98,9 +93,9 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		attachments.update();
 	}
 
@@ -120,21 +115,25 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		return super.canPlayerUseContainer( player ) && ( getLock() == null || canUse( player ) );
 	}
 
-	@Override
-	protected void onBlockPlacedBeforeCheckingConnections( EntityLivingBase player, ItemStack stack )
-	{
-		super.onBlockPlacedBeforeCheckingConnections( player, stack );
-		if( canHaveMaterial() )
-			material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
-	}
+	/*
+	 * @Override
+	 * protected void onBlockPlacedBeforeCheckingConnections( EntityLivingBase player, ItemStack stack )
+	 * {
+	 * super.onBlockPlacedBeforeCheckingConnections( player, stack );
+	 * //if( canHaveMaterial() )
+	 * material = EnumReinforced.byMetadata( stack.getMetadata() );
+	 * }
+	 */
 
-	@Override
-	public ItemStack onPickBlock( ItemStack block, RayTraceResult target )
-	{
-		if( !canHaveMaterial() )
-			return block;
-		return getMaterial().setMaterial( block );
-	}
+	/*
+	 * @Override
+	 * public ItemStack onPickBlock( ItemStack block, RayTraceResult target )
+	 * {
+	 * if( !canHaveMaterial() )
+	 * return block;
+	 * return getMaterial().setMaterial( block );
+	 * }
+	 */
 
 	@Override
 	public void dropContents()
@@ -151,8 +150,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void onBlockRenderAsItem( ItemStack stack )
 	{
 		super.onBlockRenderAsItem( stack );
-		if( canHaveMaterial() )
-			material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
+		// if( canHaveMaterial() )
+		material = EnumReinforced.byMetadata( stack.getMetadata() );
 	}
 
 	// TileEntityConnactable stuff
@@ -207,7 +206,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	@Override
 	public void useUnlocked( EntityPlayer player )
 	{
-		openGui( player );
+		//openGui( player );
 	}
 
 	@Override
@@ -282,8 +281,6 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public NBTTagCompound getUpdateTag()
 	{
 		final NBTTagCompound compound = super.getUpdateTag();
-		if( canHaveMaterial() )
-			compound.setString( ContainerMaterial.TAG_NAME, getMaterial().name );
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -297,43 +294,33 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void handleUpdateTag( NBTTagCompound compound )
 	{
 		super.handleUpdateTag( compound );
-		//final NBTTagCompound compound = packet.getNbtCompound();
-		if( canHaveMaterial() )
-			material = ContainerMaterial.get( compound.getString( ContainerMaterial.TAG_NAME ) );
 		if( canHaveLock() )
 			if( !compound.hasKey( "lock" ) )
 				setLockInternal( null );
 			else
 				setLockInternal( ItemStack.loadItemStackFromNBT( compound.getCompoundTag( "lock" ) ) );
-		//Logger.getLogger( Constants.modId ).info(  compound.toString() );
 	}
 
 	// Reading from / writing to NBT
 
 	@Override
-	public void readFromNBT( NBTTagCompound compound )
-	{
-		super.readFromNBT( compound );
-		if( canHaveMaterial() )
-			material = ContainerMaterial.get( compound.getString( ContainerMaterial.TAG_NAME ) );
-		if( canHaveLock() && compound.hasKey( "lock" ) )
-			setLockInternal( ItemStack.loadItemStackFromNBT( compound.getCompoundTag( "lock" ) ) );
-		//Logger.getLogger( Constants.modId ).info(  compound.toString() );
-	}
-
-	@Override
 	public NBTTagCompound writeToNBT( NBTTagCompound compound )
 	{
 		super.writeToNBT( compound );
-		if( canHaveMaterial() )
-			compound.setString( ContainerMaterial.TAG_NAME, getMaterial().name );
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
 			if( lock != null )
 				compound.setTag( "lock", lock.writeToNBT( new NBTTagCompound() ) );
 		}
-		//Logger.getLogger( Constants.modId ).info(  compound.toString() );
 		return compound;
+	}
+
+	@Override
+	public void readFromNBT( NBTTagCompound compound )
+	{
+		super.readFromNBT( compound );
+		if( canHaveLock() && compound.hasKey( "lock" ) )
+			setLockInternal( ItemStack.loadItemStackFromNBT( compound.getCompoundTag( "lock" ) ) );
 	}
 }

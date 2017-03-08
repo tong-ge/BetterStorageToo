@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.stand.BetterStorageArmorStand;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
@@ -12,13 +13,13 @@ import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRende
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedLocker;
 import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
 import io.github.tehstoneman.betterstorage.tile.stand.VanillaArmorStandRenderHandler;
@@ -26,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,8 +42,10 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 
+		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
+
 		BetterStorageBlocks.registerItemModels();
-		//BetterStorageItems.registerItemModels();
+		// BetterStorageItems.registerItemModels();
 	}
 
 	@Override
@@ -71,7 +75,6 @@ public class ClientProxy extends CommonProxy
 
 	private void registerRenderers()
 	{
-		// registerItemRenderer(BetterStorageTiles.reinforcedChest, new ItemRendererContainer(TileEntityReinforcedChest.class));
 		// registerItemRenderer(BetterStorageTiles.reinforcedLocker, new ItemRendererContainer(TileEntityReinforcedLocker.class));
 
 		// registerItemRenderer(BetterStorageTiles.cardboardBox, new ItemRendererCardboardBox(BetterStorageTiles.cardboardBox));
@@ -86,24 +89,10 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
-		//RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
+		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
 		Addon.registerRenderersAll();
 
 	}
-
-	/*
-	 * public static void registerItemRenderer(Block block, IItemRenderer renderer) {
-	 * if (block != null)
-	 * MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), renderer);
-	 * }
-	 */
-
-	/*
-	 * public static void registerItemRenderer(Item item, IItemRenderer renderer) {
-	 * if (item != null)
-	 * MinecraftForgeClient.registerItemRenderer(item, renderer);
-	 * }
-	 */
 
 	public static int registerTileEntityRenderer( Class< ? extends TileEntity > tileEntityClass, TileEntitySpecialRenderer renderer,
 			boolean render3dInInventory, float rotation, float scale, float yOffset )
@@ -111,7 +100,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer( tileEntityClass, renderer );
 		final BetterStorageRenderingHandler renderingHandler = new BetterStorageRenderingHandler( tileEntityClass, renderer, render3dInInventory,
 				rotation, scale, yOffset );
-		// RenderingRegistry.registerBlockHandler(renderingHandler);
 		renderingHandlers.put( tileEntityClass, renderingHandler );
 		return renderingHandler.getRenderId();
 	}
@@ -290,7 +278,7 @@ public class ClientProxy extends CommonProxy
 	 */
 
 	@Override
-	public String localize(String unlocalized, Object... args )
+	public String localize( String unlocalized, Object... args )
 	{
 		return I18n.format( unlocalized, args );
 	}

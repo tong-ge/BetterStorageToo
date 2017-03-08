@@ -333,7 +333,7 @@ public class TileEntityCrate extends TileEntity
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		final NBTTagCompound compound = getUpdateTag();
-		return new SPacketUpdateTileEntity( getPos(), 0, compound );
+		return new SPacketUpdateTileEntity( getPos(), getBlockMetadata(), compound );
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package io.github.tehstoneman.betterstorage.network.packet;
 import java.io.IOException;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.network.AbstractPacket;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;

@@ -1,8 +1,8 @@
-package io.github.tehstoneman.betterstorage.common.block;
+package io.github.tehstoneman.betterstorage.tile;
 
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
+import io.github.tehstoneman.betterstorage.common.block.BlockBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,9 +17,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockContainerBetterStorage extends Block implements ITileEntityProvider
+public abstract class TileContainerBetterStorage extends BlockBetterStorage implements ITileEntityProvider
 {
-	protected BlockContainerBetterStorage( Material material )
+	protected TileContainerBetterStorage( Material material )
 	{
 		super( material );
 		isBlockContainer = true;
@@ -45,15 +45,6 @@ public abstract class BlockContainerBetterStorage extends Block implements ITile
 		final TileEntity tileEntity = worldIn.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityContainer )
 			( (TileEntityContainer)tileEntity ).onBlockPlaced( placer, stack );
-	}
-
-	@Override
-	public void breakBlock( World worldIn, BlockPos pos, IBlockState state )
-	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityContainer )
-			( (TileEntityContainer)tileEntity ).onBlockDestroyed();
-		super.breakBlock( worldIn, pos, state );
 	}
 
 	@Override
@@ -105,20 +96,9 @@ public abstract class BlockContainerBetterStorage extends Block implements ITile
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride( IBlockState state )
-	{
-		return true;
-	}
-
-	@Override
 	public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
 	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( !( tileEntity instanceof TileEntityContainer ) )
-			return 0;
-
-		final TileEntityContainer tileContainer = (TileEntityContainer)tileEntity;
-		return tileContainer.getComparatorSignalStrength();
+		return TileEntityContainer.getContainerComparatorSignalStrength( worldIn, pos.getX(), pos.getY(), pos.getZ() );
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TileCraftingStation extends BlockContainerBetterStorage
+public class TileCraftingStation extends TileContainerBetterStorage
 {
 
 	// private IIcon topIcon;

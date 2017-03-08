@@ -3,12 +3,12 @@ package io.github.tehstoneman.betterstorage.misc;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardEnchantmentRecipe;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardRepairRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.CopyKeyRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.DrinkingHelmetRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.DyeRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.PresentRecipe;
@@ -27,7 +27,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public final class Recipes
 {
-private Recipes()
+	private Recipes()
 	{}
 
 	public static void add()
@@ -44,7 +44,7 @@ private Recipes()
 
 	private static void registerRecipeSorter()
 	{
-		//RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
+		// RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
 		RecipeSorter.register( "betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "" );
 		RecipeSorter.register( "betterstorage:lockcolorrecipe", LockRecipe.class, Category.SHAPELESS, "" );
@@ -68,13 +68,19 @@ private Recipes()
 		//@formatter:on
 
 		// Reinforced chest recipes
-		if( BetterStorageBlocks.reinforcedChest != null )
-			for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
-			{
-				final IRecipe recipe = material.getReinforcedRecipe( Blocks.CHEST, BetterStorageBlocks.reinforcedChest );
-				if( recipe != null )
-					GameRegistry.addRecipe( recipe );
-			}
+		if( BetterStorageBlocks.REINFORCED_CHEST != null )
+			for( final EnumReinforced material : EnumReinforced.values() )
+				if( material != EnumReinforced.SPECIAL )
+					//@formatter:off
+					GameRegistry.addRecipe(
+							new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() ),
+									"o#o",
+									"#C#",
+									"oOo",	'C', Blocks.CHEST,
+											'#', "logWood",
+											'o', material.getOreDictIngot(),
+											'O', material.getOreDictBlock() ) );
+					//@formatter:on
 
 		// Locker recipe
 		if( BetterStorageBlocks.locker != null )
@@ -224,7 +230,7 @@ private Recipes()
 		}
 
 		// Drinking helmet recipe
-		//if( BetterStorageItems.drinkingHelmet != null ) GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
+		// if( BetterStorageItems.drinkingHelmet != null ) GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
 
 	}
 
@@ -326,14 +332,14 @@ private Recipes()
 		}
 		//@formatter:on
 
-		
-		  if (BetterStorageItems.anyCardboardItemsEnabled) {
-		  // Crafting Station: Add cardboard enchantment recipe
-		  BetterStorageCrafting.addStationRecipe(new CardboardEnchantmentRecipe());
-		 
-		  // Crafting Station: Add cardboard repair recipe
-		  if (BetterStorageItems.cardboardSheet != null)
-		  BetterStorageCrafting.addStationRecipe(new CardboardRepairRecipe());
-		  }
+		if( BetterStorageItems.anyCardboardItemsEnabled )
+		{
+			// Crafting Station: Add cardboard enchantment recipe
+			BetterStorageCrafting.addStationRecipe( new CardboardEnchantmentRecipe() );
+
+			// Crafting Station: Add cardboard repair recipe
+			if( BetterStorageItems.cardboardSheet != null )
+				BetterStorageCrafting.addStationRecipe( new CardboardRepairRecipe() );
+		}
 	}
 }

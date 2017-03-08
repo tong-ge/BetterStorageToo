@@ -124,12 +124,6 @@ public class ContainerCrate extends Container
 	}
 
 	@Override
-	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
-	{
-		return super.slotClick( slotId, dragType, clickTypeIn, player );
-	}
-
-	@Override
 	protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
 	{
 		boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );

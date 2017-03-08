@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.tile;
 
-import io.github.tehstoneman.betterstorage.item.tile.ItemLockable;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockLockable;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedLocker;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +34,7 @@ public class TileReinforcedLocker extends TileLockable
 	protected void registerBlock()
 	{
 		GameRegistry.register( this );
-		GameRegistry.register( new ItemLockable( this ).setRegistryName( getRegistryName() ) );
+		GameRegistry.register( new ItemBlockLockable( this ).setRegistryName( getRegistryName() ) );
 	}
 
 	/*

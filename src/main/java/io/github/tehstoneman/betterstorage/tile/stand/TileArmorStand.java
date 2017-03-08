@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.tile.stand;
 
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.tile.TileContainerBetterStorage;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileArmorStand extends BlockContainerBetterStorage
+public class TileArmorStand extends TileContainerBetterStorage
 {
 	public TileArmorStand()
 	{

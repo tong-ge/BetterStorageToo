@@ -26,8 +26,8 @@ public class CreativeTabBetterStorage extends CreativeTabs
 		if( BetterStorageBlocks.CRATE != null )
 			return Item.getItemFromBlock( BetterStorageBlocks.CRATE );
 		else
-			if( BetterStorageBlocks.reinforcedChest != null )
-				return Item.getItemFromBlock( BetterStorageBlocks.reinforcedChest );
+			if( BetterStorageBlocks.REINFORCED_CHEST != null )
+				return Item.getItemFromBlock( BetterStorageBlocks.REINFORCED_CHEST );
 			else
 				return Item.getItemFromBlock( Blocks.CHEST );
 	}

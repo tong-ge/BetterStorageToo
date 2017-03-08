@@ -1,6 +1,8 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.utils.DirectionUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;

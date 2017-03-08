@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.container.SlotBetterStorage;
 import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
@@ -12,21 +13,28 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 //@ChestContainer(isLargeChest = true)
 public class ContainerBetterStorage extends Container
 {
-	private final int			columns;
-	private final int			rows;
+	private final ItemStackHandler		inventoryContainer;
+	private final IInventory			inventoryPlayer;
+	private final TileEntityContainer	tileContainer;
 
-	public final EntityPlayer	player;
-	public final IInventory		inventory;
-	public final int			separation;
+	private final int					columns;
+	private final int					rows;
 
-	private int					startHotbar	= -1;
+	public int							indexStart, indexPlayer, indexHotbar;
+
+	//public final EntityPlayer			player;
+	//public final IInventory				inventory;
+	public final int					separation;
 
 	@SideOnly( Side.CLIENT )
-	public GuiBetterStorage		updateGui;
+	public GuiBetterStorage				updateGui;
 
 	// @ChestContainer.RowSizeCallback
 	public int getColumns()
@@ -39,7 +47,7 @@ public class ContainerBetterStorage extends Container
 		return rows;
 	}
 
-	public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows, int seperation )
+	/*public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows, int seperation )
 	{
 		this.player = player;
 		this.inventory = inventory;
@@ -47,83 +55,116 @@ public class ContainerBetterStorage extends Container
 		this.rows = rows;
 		separation = seperation;
 
-		setupInventoryContainer();
-		setupInventoryPlayer();
 		inventory.openInventory( player );
-	}
 
-	public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows )
+		tileContainer = null;
+		inventoryPlayer = player.inventory;
+		inventoryContainer = null;
+	}*/
+
+	/*public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows )
 	{
 		this( player, inventory, columns, rows, 14 );
-	}
+	}*/
 
-	public ContainerBetterStorage( EntityPlayer player, InventoryTileEntity inventory )
+	/*public ContainerBetterStorage( EntityPlayer player, InventoryTileEntity inventory )
 	{
 		this( player, inventory, inventory.columns, inventory.rows );
+	}*/
+
+	public ContainerBetterStorage( EntityPlayer player, TileEntityContainer tileContainer )
+	{
+		inventoryContainer = (ItemStackHandler)tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		inventoryPlayer = player.inventory;
+		this.tileContainer = tileContainer;
+		tileContainer.onContainerOpened();
+
+		columns = tileContainer.getColumns();
+		rows = tileContainer.getRows();
+
+		indexStart = 0;
+		indexHotbar = inventoryContainer.getSlots();
+		indexPlayer = indexHotbar + 9;
+
+		for( int i = 0; i < indexHotbar; i++ )
+		{
+			final int x = i % columns * 18 + 8;
+			final int y = i / columns * 18 + 18;
+			addSlotToContainer( new SlotItemHandler( inventoryContainer, i, x, y ) );
+		}
+
+		for( int i = 0; i < 27; i++ )
+		{
+			final int x = i % 9 * 18 + 8;
+			final int y = 32 + ( indexHotbar + i ) / 9 * 18;
+			addSlotToContainer( new Slot( inventoryPlayer, i + 9, x, y ) );
+		}
+
+		for( int i = 0; i < 9; i++ )
+		{
+			final int x = i % 9 * 18 + 8;
+			final int y = 90 + indexHotbar / 9 * 18;
+			addSlotToContainer( new Slot( inventoryPlayer, i, x, y ) );
+		}
+
+		separation = 14;
+
+		//this.player = player;
+		//inventory = null;
 	}
 
-	@SideOnly( Side.CLIENT )
+	/*@SideOnly( Side.CLIENT )
 	public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows, GuiBetterStorage gui )
 	{
 		this( player, inventory, columns, rows );
 		setUpdateGui( gui );
+	}*/
+
+	@Override
+	public boolean canInteractWith( EntityPlayer playerIn )
+	{
+		return true;
 	}
+
+	@Override
+    public void onContainerClosed(EntityPlayer playerIn)
+    {
+		tileContainer.onContainerClosed();
+		super.onContainerClosed( playerIn );
+    }
 
 	public int getHeight()
 	{
 		return ( getRows() + 4 ) * 18 + separation + 29;
 	}
 
-	protected void setupInventoryContainer()
-	{
-		for( int y = 0; y < getRows(); y++ )
-			for( int x = 0; x < getColumns(); x++ )
-				addSlotToContainer( new SlotBetterStorage( this, inventory, x + y * getColumns(), 8 + x * 18, 18 + y * 18 ) );
-	}
-
-	protected void setupInventoryPlayer()
-	{
-		for( int y = 0; y < 3; y++ )
-			for( int x = 0; x < 9; x++ )
-				addSlotToContainer( new SlotBetterStorage( this, player.inventory, 9 + x + y * 9, 8 + x * 18 + ( getColumns() - 9 ) * 9,
-						getHeight() - 83 + y * 18 ) );
-		setHotbarStart();
-		for( int x = 0; x < 9; x++ )
-			addSlotToContainer( new SlotBetterStorage( this, player.inventory, x, 8 + x * 18 + ( getColumns() - 9 ) * 9, getHeight() - 25 ) );
-	}
-
-	protected void setHotbarStart()
-	{
-		startHotbar = inventorySlots.size();
-	}
-
 	/** Returns if the slot is in the inventory. */
-	protected boolean inInventory( int slot )
+	/*protected boolean inInventory( int slot )
 	{
 		return slot < inventory.getSizeInventory();
-	}
+	}*/
 
 	/** Returns the start slot where items should be transfered to from this slot. */
-	protected int transferStart( int slot )
+	/*protected int transferStart( int slot )
 	{
 		return inInventory( slot ) ? inventory.getSizeInventory() : 0;
-	}
+	}*/
 
 	/** Returns the end slot where items should be transfered to from this slot. */
-	protected int transferEnd( int slot )
+	/*protected int transferEnd( int slot )
 	{
 		return inInventory( slot ) ? inventorySlots.size() : inventory.getSizeInventory();
-	}
+	}*/
 
 	/** Returns the direction the stack should be transfered in. true = normal, false = backwards. */
-	protected boolean transferDirection( int slot )
+	/*protected boolean transferDirection( int slot )
 	{
 		return inInventory( slot );
-	}
+	}*/
 
 	/** Called when a slot is changed. */
-	public void onSlotChanged( int slot )
-	{}
+	/*public void onSlotChanged( int slot )
+	{}*/
 
 	@Override
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )
@@ -159,7 +200,7 @@ public class ContainerBetterStorage extends Container
 		return itemstack;
 	}
 
-	@Override
+	/*@Override
 	// public ItemStack slotClick( int slotId, int button, int special, EntityPlayer player )
 	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
 	{
@@ -211,34 +252,28 @@ public class ContainerBetterStorage extends Container
 					}
 
 		return super.slotClick( slotId, dragType, clickTypeIn, player );
-	}
+	}*/
 
-	@Override
-	public boolean canInteractWith( EntityPlayer player )
-	{
-		return inventory.isUseableByPlayer( player );
-	}
-
-	@Override
+	/*@Override
 	public void onContainerClosed( EntityPlayer player )
 	{
 		super.onContainerClosed( player );
 		inventory.closeInventory( player );
-	}
+	}*/
 
-	@Override
+	/*@Override
 	@SideOnly( Side.CLIENT )
 	public void updateProgressBar( int id, int val )
 	{
 		if( updateGui != null )
 			updateGui.update( id, val );
-	}
+	}*/
 
-	@SideOnly( Side.CLIENT )
+	/*@SideOnly( Side.CLIENT )
 	public void setUpdateGui( GuiBetterStorage gui )
 	{
 		updateGui = gui;
-	}
+	}*/
 
 	/**
 	 * Sends a packet to all players looking at

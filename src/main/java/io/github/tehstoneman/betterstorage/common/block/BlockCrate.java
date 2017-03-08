@@ -3,10 +3,10 @@ package io.github.tehstoneman.betterstorage.common.block;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -41,6 +41,7 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 		super( Material.WOOD );
 		setHardness( 2.0f );
 		setHarvestLevel( "axe", 0 );
+		setSoundType( SoundType.WOOD );
 
 		//@formatter:off
 		setDefaultState( blockState.getBaseState().withProperty( CONNECTED_DOWN, false )
@@ -92,7 +93,7 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 
 	/**
 	 * Checks if this block can connect with a neighboring block
-	 * 
+	 *
 	 * @param side
 	 *            Side facing toward neighbor
 	 */
@@ -168,12 +169,6 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 	}
 
 	@Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
-	{
-		//world.getTileEntity( pos ).markDirty();
-	}
-
-	@Override
 	public boolean hasComparatorInputOverride( IBlockState state )
 	{
 		return true;
@@ -182,11 +177,11 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 	@Override
 	public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
 	{
-		TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( !(tileEntity instanceof TileEntityCrate))
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( !( tileEntity instanceof TileEntityCrate ) )
 			return 0;
-		
-		TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
+
+		final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
 		return tileCrate.getComparatorSignalStrength();
 	}
 
