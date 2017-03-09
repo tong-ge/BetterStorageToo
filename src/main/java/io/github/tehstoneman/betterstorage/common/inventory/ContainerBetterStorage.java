@@ -1,12 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
+import java.util.logging.Logger;
+
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import io.github.tehstoneman.betterstorage.container.SlotBetterStorage;
-import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -29,48 +28,10 @@ public class ContainerBetterStorage extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	//public final EntityPlayer			player;
-	//public final IInventory				inventory;
 	public final int					separation;
 
 	@SideOnly( Side.CLIENT )
 	public GuiBetterStorage				updateGui;
-
-	// @ChestContainer.RowSizeCallback
-	public int getColumns()
-	{
-		return columns;
-	}
-
-	public int getRows()
-	{
-		return rows;
-	}
-
-	/*public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows, int seperation )
-	{
-		this.player = player;
-		this.inventory = inventory;
-		this.columns = columns;
-		this.rows = rows;
-		separation = seperation;
-
-		inventory.openInventory( player );
-
-		tileContainer = null;
-		inventoryPlayer = player.inventory;
-		inventoryContainer = null;
-	}*/
-
-	/*public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows )
-	{
-		this( player, inventory, columns, rows, 14 );
-	}*/
-
-	/*public ContainerBetterStorage( EntityPlayer player, InventoryTileEntity inventory )
-	{
-		this( player, inventory, inventory.columns, inventory.rows );
-	}*/
 
 	public ContainerBetterStorage( EntityPlayer player, TileEntityContainer tileContainer )
 	{
@@ -86,6 +47,7 @@ public class ContainerBetterStorage extends Container
 		indexHotbar = inventoryContainer.getSlots();
 		indexPlayer = indexHotbar + 9;
 
+		Logger.getLogger( ModInfo.modId ).info( "indexHotbar " + indexHotbar );
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % columns * 18 + 8;
@@ -93,32 +55,36 @@ public class ContainerBetterStorage extends Container
 			addSlotToContainer( new SlotItemHandler( inventoryContainer, i, x, y ) );
 		}
 
+		final int offsetX = ( columns - 9 ) / 2 * 18;
+		final int offsetY = ( rows*18 ) +18;
+
 		for( int i = 0; i < 27; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
-			final int y = 32 + ( indexHotbar + i ) / 9 * 18;
-			addSlotToContainer( new Slot( inventoryPlayer, i + 9, x, y ) );
+			final int y = 14 + ( i ) / 9 * 18;
+			addSlotToContainer( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
-			final int y = 90 + indexHotbar / 9 * 18;
-			addSlotToContainer( new Slot( inventoryPlayer, i, x, y ) );
+			final int y = 72;
+			addSlotToContainer( new Slot( inventoryPlayer, i, offsetX + x, offsetY + y ) );
 		}
 
 		separation = 14;
-
-		//this.player = player;
-		//inventory = null;
 	}
 
-	/*@SideOnly( Side.CLIENT )
-	public ContainerBetterStorage( EntityPlayer player, IInventory inventory, int columns, int rows, GuiBetterStorage gui )
+	// @ChestContainer.RowSizeCallback
+	public int getColumns()
 	{
-		this( player, inventory, columns, rows );
-		setUpdateGui( gui );
-	}*/
+		return columns;
+	}
+
+	public int getRows()
+	{
+		return rows;
+	}
 
 	@Override
 	public boolean canInteractWith( EntityPlayer playerIn )
@@ -127,11 +93,11 @@ public class ContainerBetterStorage extends Container
 	}
 
 	@Override
-    public void onContainerClosed(EntityPlayer playerIn)
-    {
+	public void onContainerClosed( EntityPlayer playerIn )
+	{
 		tileContainer.onContainerClosed();
 		super.onContainerClosed( playerIn );
-    }
+	}
 
 	public int getHeight()
 	{
@@ -139,141 +105,158 @@ public class ContainerBetterStorage extends Container
 	}
 
 	/** Returns if the slot is in the inventory. */
-	/*protected boolean inInventory( int slot )
-	{
-		return slot < inventory.getSizeInventory();
-	}*/
+	/*
+	 * protected boolean inInventory( int slot )
+	 * {
+	 * return slot < inventory.getSizeInventory();
+	 * }
+	 */
 
 	/** Returns the start slot where items should be transfered to from this slot. */
-	/*protected int transferStart( int slot )
-	{
-		return inInventory( slot ) ? inventory.getSizeInventory() : 0;
-	}*/
+	/*
+	 * protected int transferStart( int slot )
+	 * {
+	 * return inInventory( slot ) ? inventory.getSizeInventory() : 0;
+	 * }
+	 */
 
 	/** Returns the end slot where items should be transfered to from this slot. */
-	/*protected int transferEnd( int slot )
-	{
-		return inInventory( slot ) ? inventorySlots.size() : inventory.getSizeInventory();
-	}*/
+	/*
+	 * protected int transferEnd( int slot )
+	 * {
+	 * return inInventory( slot ) ? inventorySlots.size() : inventory.getSizeInventory();
+	 * }
+	 */
 
 	/** Returns the direction the stack should be transfered in. true = normal, false = backwards. */
-	/*protected boolean transferDirection( int slot )
-	{
-		return inInventory( slot );
-	}*/
+	/*
+	 * protected boolean transferDirection( int slot )
+	 * {
+	 * return inInventory( slot );
+	 * }
+	 */
 
 	/** Called when a slot is changed. */
-	/*public void onSlotChanged( int slot )
-	{}*/
+	/*
+	 * public void onSlotChanged( int slot )
+	 * {}
+	 */
 
 	@Override
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )
 	{
-		ItemStack itemstack = null;
 		final Slot slot = inventorySlots.get( index );
+		ItemStack returnStack = null;
 
 		if( slot != null && slot.getHasStack() )
 		{
-			final ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+			final ItemStack itemStack = slot.getStack();
+			returnStack = itemStack.copy();
 
-			if( index < 9 )
+			if( index < indexHotbar )
 			{
-				if( !mergeItemStack( itemstack1, 9, 45, true ) )
+				// Try to transfer from container to player
+				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
 					return null;
 			}
-			else
-				if( !mergeItemStack( itemstack1, 0, 9, false ) )
+			else // Try to transfer from player to container
+			{
+				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
 					return null;
+			}
 
-			if( itemstack1.stackSize == 0 )
-				slot.putStack( (ItemStack)null );
+			if( itemStack == null || itemStack.stackSize == 0 )
+				slot.putStack( null );
 			else
 				slot.onSlotChanged();
-
-			if( itemstack1.stackSize == itemstack.stackSize )
-				return null;
-
-			slot.onPickupFromSlot( playerIn, itemstack1 );
 		}
 
-		return itemstack;
+		return returnStack;
 	}
 
-	/*@Override
-	// public ItemStack slotClick( int slotId, int button, int special, EntityPlayer player )
-	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
-	{
-		Slot slot = null;
-		if( slotId >= 0 && slotId < inventorySlots.size() )
-			slot = inventorySlots.get( slotId );
+	/*
+	 * @Override
+	 * // public ItemStack slotClick( int slotId, int button, int special, EntityPlayer player )
+	 * public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
+	 * {
+	 * Slot slot = null;
+	 * if( slotId >= 0 && slotId < inventorySlots.size() )
+	 * slot = inventorySlots.get( slotId );
+	 * 
+	 * if( slot != null )
+	 * if( clickTypeIn == ClickType.QUICK_CRAFT )
+	 * {
+	 * if( dragType == 0 || dragType == 1 )
+	 * {
+	 * // Override default behavior to use putStack
+	 * // instead of manipulating stackSize directly.
+	 * final ItemStack slotStack = slot.getStack();
+	 * final ItemStack holding = player.inventory.getItemStack();
+	 * if( slotStack != null && holding != null && ( holding == null ? slot.canTakeStack( player ) : slot.isItemValid( holding ) )
+	 * && StackUtils.matches( slotStack, holding ) )
+	 * {
+	 * int amount = dragType == 0 ? holding.stackSize : 1;
+	 * amount = Math.min( amount, slot.getSlotStackLimit() - slotStack.stackSize );
+	 * amount = Math.min( amount, slotStack.getMaxStackSize() - slotStack.stackSize );
+	 * if( amount > 0 )
+	 * {
+	 * if( ( holding.stackSize -= amount ) <= 0 )
+	 * player.inventory.setItemStack( null );
+	 * slot.putStack( StackUtils.copyStack( slotStack, slotStack.stackSize + amount ) );
+	 * }
+	 * return slotStack;
+	 * }
+	 * }
+	 * }
+	 * else
+	 * if( clickTypeIn == ClickType.PICKUP )
+	 * // Override default shift-click so it doesn't call
+	 * // retrySlotClick, whatever that was meant for.
+	 * return slot.canTakeStack( player ) ? transferStackInSlot( player, slotId ) : null;
+	 * else
+	 * if( clickTypeIn == ClickType.QUICK_MOVE && dragType >= 0 && dragType < 9 )
+	 * {
+	 * // Override default hotbar switching to make sure
+	 * // the items can be taken and put into those slots.
+	 * if( startHotbar < 0 )
+	 * return null;
+	 * final Slot slot2 = inventorySlots.get( startHotbar + dragType );
+	 * final ItemStack stack = slot.getStack();
+	 * if( !slot2.canTakeStack( player ) || stack != null && !slot2.isItemValid( stack ) )
+	 * return null;
+	 * }
+	 * 
+	 * return super.slotClick( slotId, dragType, clickTypeIn, player );
+	 * }
+	 */
 
-		if( slot != null )
-			if( clickTypeIn == ClickType.QUICK_CRAFT )
-			{
-				if( dragType == 0 || dragType == 1 )
-				{
-					// Override default behavior to use putStack
-					// instead of manipulating stackSize directly.
-					final ItemStack slotStack = slot.getStack();
-					final ItemStack holding = player.inventory.getItemStack();
-					if( slotStack != null && holding != null && ( holding == null ? slot.canTakeStack( player ) : slot.isItemValid( holding ) )
-							&& StackUtils.matches( slotStack, holding ) )
-					{
-						int amount = dragType == 0 ? holding.stackSize : 1;
-						amount = Math.min( amount, slot.getSlotStackLimit() - slotStack.stackSize );
-						amount = Math.min( amount, slotStack.getMaxStackSize() - slotStack.stackSize );
-						if( amount > 0 )
-						{
-							if( ( holding.stackSize -= amount ) <= 0 )
-								player.inventory.setItemStack( null );
-							slot.putStack( StackUtils.copyStack( slotStack, slotStack.stackSize + amount ) );
-						}
-						return slotStack;
-					}
-				}
-			}
-			else
-				if( clickTypeIn == ClickType.PICKUP )
-					// Override default shift-click so it doesn't call
-					// retrySlotClick, whatever that was meant for.
-					return slot.canTakeStack( player ) ? transferStackInSlot( player, slotId ) : null;
-				else
-					if( clickTypeIn == ClickType.QUICK_MOVE && dragType >= 0 && dragType < 9 )
-					{
-						// Override default hotbar switching to make sure
-						// the items can be taken and put into those slots.
-						if( startHotbar < 0 )
-							return null;
-						final Slot slot2 = inventorySlots.get( startHotbar + dragType );
-						final ItemStack stack = slot.getStack();
-						if( !slot2.canTakeStack( player ) || stack != null && !slot2.isItemValid( stack ) )
-							return null;
-					}
+	/*
+	 * @Override
+	 * public void onContainerClosed( EntityPlayer player )
+	 * {
+	 * super.onContainerClosed( player );
+	 * inventory.closeInventory( player );
+	 * }
+	 */
 
-		return super.slotClick( slotId, dragType, clickTypeIn, player );
-	}*/
+	/*
+	 * @Override
+	 * 
+	 * @SideOnly( Side.CLIENT )
+	 * public void updateProgressBar( int id, int val )
+	 * {
+	 * if( updateGui != null )
+	 * updateGui.update( id, val );
+	 * }
+	 */
 
-	/*@Override
-	public void onContainerClosed( EntityPlayer player )
-	{
-		super.onContainerClosed( player );
-		inventory.closeInventory( player );
-	}*/
-
-	/*@Override
-	@SideOnly( Side.CLIENT )
-	public void updateProgressBar( int id, int val )
-	{
-		if( updateGui != null )
-			updateGui.update( id, val );
-	}*/
-
-	/*@SideOnly( Side.CLIENT )
-	public void setUpdateGui( GuiBetterStorage gui )
-	{
-		updateGui = gui;
-	}*/
+	/*
+	 * @SideOnly( Side.CLIENT )
+	 * public void setUpdateGui( GuiBetterStorage gui )
+	 * {
+	 * updateGui = gui;
+	 * }
+	 */
 
 	/**
 	 * Sends a packet to all players looking at

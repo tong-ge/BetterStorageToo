@@ -22,6 +22,23 @@ public class GuiBetterStorage extends GuiContainer
 	private final int					columns;
 	private final int					rows;
 
+	public GuiBetterStorage( ContainerBetterStorage container )
+	{
+		super( container );
+	
+		this.container = container;
+		//final IInventory inv = container.inventory;
+		//title = inv.getName();
+		title="";
+		columns = container.getColumns();
+		rows = container.getRows();
+	
+		xSize = 14 + columns * 18;
+		ySize = container.getHeight();
+	
+		//container.setUpdateGui( this );
+	}
+
 	public int getColumns()
 	{
 		return columns;
@@ -32,22 +49,7 @@ public class GuiBetterStorage extends GuiContainer
 		return rows;
 	}
 
-	public GuiBetterStorage( ContainerBetterStorage container )
-	{
-		super( container );
-
-		this.container = container;
-		//final IInventory inv = container.inventory;
-		//title = inv.getName();
-		title="";
-		columns = container.getColumns();
-		rows = container.getRows();
-
-		xSize = 14 + columns * 18;
-		ySize = container.getHeight();
-
-		//container.setUpdateGui( this );
-	}
+	
 
 	/*public GuiBetterStorage( EntityPlayer player, int columns, int rows, IInventory inventory )
 	{
