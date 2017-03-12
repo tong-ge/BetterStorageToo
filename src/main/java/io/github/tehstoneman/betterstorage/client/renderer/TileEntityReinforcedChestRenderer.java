@@ -1,20 +1,28 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.model.ModelLargeChest;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemSkull;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
-public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
+public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer< TileEntityReinforcedChest >
 {
 	private final ModelChest	chestModel		= new ModelChest();
 	private final ModelChest	largeChestModel	= new ModelLargeChest();
 
+	@Override
 	public void renderTileEntityAt( TileEntityReinforcedChest chest, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		final boolean large = chest.isConnected();
@@ -103,6 +111,10 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 		f = 1.0F - f * f * f;
 		modelchest.chestLid.rotateAngleX = -( f * ( (float)Math.PI / 2F ) );
 		modelchest.renderAll();
+
+		// chest.getAttachments().render( partialTicks );
+		renderItem( chest );
+
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 		GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F );
@@ -116,9 +128,34 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 
 	}
 
-	@Override
-	public void renderTileEntityAt( TileEntity entity, double x, double y, double z, float partialTicks, int destroyStage )
+	/** Renders attached lock on chest. Adapted from vanillia item frame **/
+	private void renderItem( TileEntityReinforcedChest chest )
 	{
-		renderTileEntityAt( (TileEntityReinforcedChest)entity, x, y, z, partialTicks, destroyStage );
+		final ItemStack itemstack = chest.getLock();
+
+		if( itemstack != null )
+		{
+			final EntityItem entityitem = new EntityItem( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			final Item item = entityitem.getEntityItem().getItem();
+			entityitem.getEntityItem().stackSize = 1;
+			entityitem.hoverStart = 0.0F;
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+
+			GlStateManager.rotate( 180.0F, 1.0F, 0.0F, 0.0F );
+			GlStateManager.scale( 0.5, 0.5, 0.5 );
+			GlStateManager.translate( chest.isConnected()? 2.0 : 1.0, -1.25,-0.1 );
+			
+			GlStateManager.pushAttrib();
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popAttrib();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
 	}
 }

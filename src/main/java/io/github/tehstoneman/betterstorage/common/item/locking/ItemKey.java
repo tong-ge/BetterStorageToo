@@ -1,25 +1,28 @@
-package io.github.tehstoneman.betterstorage.item.locking;
+package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemKey extends ItemBetterStorage implements IKey
+public class ItemKey extends ItemKeyLock implements IKey
 {
 	public ItemKey()
 	{
@@ -51,6 +54,33 @@ public class ItemKey extends ItemBetterStorage implements IKey
 	{
 		if( !world.isRemote )
 			ensureHasID( stack );
+	}
+
+	@Override
+	public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ )
+	{
+		if( !worldIn.isRemote && hand == EnumHand.MAIN_HAND )
+		{
+			final TileEntity tileEntity = worldIn.getTileEntity( pos );
+			if( tileEntity instanceof TileEntityLockable )
+			{
+				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
+				if( unlock( stack, lockable.getLock(), false ) )
+				{
+					if( playerIn.isSneaking() )
+					{
+						Logger.getLogger( ModInfo.modId ).info( "Remote " + worldIn.isRemote );
+						worldIn.spawnEntityInWorld( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
+						lockable.setLock( null );
+					}
+					else
+						lockable.useUnlocked( playerIn );
+					return EnumActionResult.SUCCESS;
+				}
+			}
+		}
+		return super.onItemUse( stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
 	}
 
 	/** Gives the key a random ID if it doesn't have one already. */
@@ -86,7 +116,7 @@ public class ItemKey extends ItemBetterStorage implements IKey
 		final UUID keyId = getID( key );
 
 		// If the lock and key IDs match, return true.
-		if( lockId == keyId )
+		if( lockId.equals( keyId ) )
 			return true;
 
 		final int lockSecurity = BetterStorageEnchantment.getLevel( lock, "security" );
@@ -154,24 +184,5 @@ public class ItemKey extends ItemBetterStorage implements IKey
 	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
 		return true;
-	}
-
-	@SideOnly( Side.CLIENT )
-	@SuppressWarnings( "unchecked" )
-	@Override
-	public void addInformation( ItemStack stack, EntityPlayer playerin, List tooltip, boolean advanced )
-	{
-		final NBTTagCompound tag = stack.getTagCompound();
-		if( tag == null )
-			tooltip.add( "Keytag not set" );
-		else
-		{
-			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-				tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
-			if( tag.hasKey( TAG_COLOR1 ) )
-				tooltip.add( "Color 1 : " + tag.getInteger( TAG_COLOR1 ) );
-			if( tag.hasKey( TAG_COLOR2 ) )
-				tooltip.add( "Color 2 : " + tag.getInteger( TAG_COLOR2 ) );
-		}
 	}
 }

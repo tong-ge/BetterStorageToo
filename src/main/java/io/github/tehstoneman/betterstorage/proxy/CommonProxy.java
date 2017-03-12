@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.proxy;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -17,7 +17,7 @@ public class CommonProxy
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 		BetterStorageBlocks.registerBlocks();
-		BetterStorageItems.initialize();
+		BetterStorageItems.registerItems();
 	}
 
 	public void initialize()

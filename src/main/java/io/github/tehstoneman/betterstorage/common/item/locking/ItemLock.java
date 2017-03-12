@@ -1,46 +1,33 @@
-package io.github.tehstoneman.betterstorage.item.locking;
+package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import java.util.List;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemLock extends ItemBetterStorage implements ILock
+public class ItemLock extends ItemKeyLock implements ILock
 {
-
-	// private IIcon iconColor, iconFullColor;
-
 	public ItemLock()
 	{
 		setMaxDamage( 64 );
 		setMaxStackSize( 1 );
 	}
-
-	/*
-	 * @Override
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * public void registerIcons(IIconRegister iconRegister) {
-	 * super.registerIcons(iconRegister);
-	 * iconColor = iconRegister.registerIcon(Constants.modId + ":lock_color");
-	 * iconFullColor = iconRegister.registerIcon(Constants.modId + ":lock_fullColor");
-	 * }
-	 */
 
 	@Override
 	public boolean isRepairable()
@@ -80,35 +67,22 @@ public class ItemLock extends ItemBetterStorage implements ILock
 			ensureHasID( stack );
 	}
 
-	/*
-	 * @SideOnly(Side.CLIENT)
-	 * 
-	 * @Override
-	 * public boolean requiresMultipleRenderPasses() { return true; }
-	 */
-
-	/*
-	 * @SideOnly(Side.CLIENT)
-	 * 
-	 * @Override
-	 * public int getColorFromItemStack(ItemStack stack, int renderPass) {
-	 * int fullColor = getFullColor(stack);
-	 * if (fullColor < 0) fullColor = 0xFFFFFF;
-	 * if (renderPass > 0) {
-	 * int color = getColor(stack);
-	 * return ((color < 0) ? fullColor : color);
-	 * } else return fullColor;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public IIcon getIcon(ItemStack stack, int renderPass) {
-	 * boolean hasFullColor = (getFullColor(stack) >= 0);
-	 * if ((renderPass > 0) && (getColor(stack) >= 0)) return iconColor;
-	 * return (hasFullColor ? iconFullColor : itemIcon);
-	 * }
-	 */
+	@Override
+	public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ )
+	{
+		if( hand == EnumHand.MAIN_HAND )
+		{
+			final TileEntity tileEntity = worldIn.getTileEntity( pos );
+			if( tileEntity instanceof TileEntityLockable )
+			{
+				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
+				if( lockable.isLockValid( stack ) )
+					lockable.setLock( stack.copy() );
+			}
+		}
+		return super.onItemUse( stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
+	}
 
 	/**
 	 * Gives the lock a random ID if it doesn't have one. <br>
@@ -172,24 +146,5 @@ public class ItemLock extends ItemBetterStorage implements ILock
 	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
 		return true;
-	}
-
-	@SideOnly( Side.CLIENT )
-	@SuppressWarnings( "unchecked" )
-	@Override
-	public void addInformation( ItemStack stack, EntityPlayer playerin, List tooltip, boolean advanced )
-	{
-		final NBTTagCompound tag = stack.getTagCompound();
-		if( tag == null )
-			tooltip.add( "Keytag not set" );
-		else
-		{
-			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-				tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
-			if( tag.hasKey( TAG_COLOR1 ) )
-				tooltip.add( "Color 1 : " + tag.getInteger( TAG_COLOR1 ) );
-			if( tag.hasKey( TAG_COLOR2 ) )
-				tooltip.add( "Color 2 : " + tag.getInteger( TAG_COLOR2 ) );
-		}
 	}
 }

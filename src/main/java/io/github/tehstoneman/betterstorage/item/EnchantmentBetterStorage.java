@@ -10,8 +10,8 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -32,7 +32,7 @@ public class EnchantmentBetterStorage extends Enchantment
 		final Map< String, Enchantment > enchs = BetterStorageEnchantment.enchantments;
 
 		// Add key enchantments
-		if( BetterStorageItems.key != null )
+		if( BetterStorageItems.KEY != null )
 		{
 			final EnumEnchantmentType key = EnumHelper.addEnchantmentType( "key" );
 
@@ -53,7 +53,7 @@ public class EnchantmentBetterStorage extends Enchantment
 		}
 
 		// Add lock enchantments
-		if( BetterStorageItems.lock != null )
+		if( BetterStorageItems.LOCK != null )
 		{
 			final EnumEnchantmentType lock = EnumHelper.addEnchantmentType( "lock" );
 

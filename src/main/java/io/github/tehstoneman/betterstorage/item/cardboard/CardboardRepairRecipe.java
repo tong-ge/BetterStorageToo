@@ -12,7 +12,7 @@ import io.github.tehstoneman.betterstorage.api.crafting.RecipeBounds;
 import io.github.tehstoneman.betterstorage.api.crafting.RecipeInputItemStack;
 import io.github.tehstoneman.betterstorage.api.crafting.RecipeInputOreDict;
 import io.github.tehstoneman.betterstorage.api.crafting.StationCrafting;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils.StackEnchantment;
 import net.minecraft.item.Item;

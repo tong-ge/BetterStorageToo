@@ -122,7 +122,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public boolean canPlayerUseContainer( EntityPlayer player )
 	{
-		return WorldUtils.isTileEntityUsableByPlayer( this, player );
+		return player.getDistanceSq( pos ) <= 64;
 	}
 
 	/** Creates and returns a Container for this container. */

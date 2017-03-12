@@ -6,8 +6,8 @@ import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -77,7 +77,7 @@ public class LockAttachment extends ItemAttachment
 	{
 		if( item == null )
 			return null;
-		final ItemStack key = new ItemStack( BetterStorageItems.key );
+		final ItemStack key = new ItemStack( BetterStorageItems.KEY );
 		ItemBetterStorage.setID( key, ItemBetterStorage.getID( item ) );
 		final int color = ItemBetterStorage.getKeyColor1( item );
 		if( color >= 0 )

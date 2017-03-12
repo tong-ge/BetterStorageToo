@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.misc;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.ItemDrinkingHelmet;
 import io.github.tehstoneman.betterstorage.utils.NbtUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;

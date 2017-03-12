@@ -2,12 +2,14 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import java.security.InvalidParameterException;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
+import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
@@ -27,6 +29,20 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 
 	protected Attachments	attachments	= new Attachments( this );
 
+	public TileEntityLockable()
+	{
+		if( !canHaveLock() )
+			return;
+		lockAttachment = attachments.add( LockAttachment.class );
+		lockAttachment.setScale( 0.5F, 1.5F );
+		setAttachmentPosition();
+	}
+
+	public boolean canHaveLock()
+	{
+		return true;
+	}
+
 	protected ItemStack getLockInternal()
 	{
 		return canHaveLock() ? lockAttachment.getItem() : null;
@@ -37,38 +53,16 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		lockAttachment.setItem( lock );
 	}
 
-	public TileEntityLockable()
-	{
-		if( !canHaveLock() )
-			return;
-		lockAttachment = attachments.add( LockAttachment.class );
-		lockAttachment.setScale( 0.5F, 1.5F );
-		setAttachmentPosition();
-	}
-
 	public EnumReinforced getMaterial()
 	{
-		// if( !canHaveMaterial() ) return null;
 		if( material == null )
 			material = EnumReinforced.byMetadata( getBlockMetadata() );
 		return material;
 	}
 
-	/*
-	 * public boolean canHaveMaterial()
-	 * {
-	 * return getBlockMetadata() == EnumReinforced.SPECIAL.getMetadata();
-	 * }
-	 */
-
-	public boolean canHaveLock()
-	{
-		return true;
-	}
+	// Attachment points
 
 	public abstract void setAttachmentPosition();
-
-	// Attachment points
 
 	@Override
 	public Attachments getAttachments()
@@ -104,8 +98,12 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	@Override
 	public boolean onBlockActivated( EntityPlayer player, int side, float hitX, float hitY, float hitZ )
 	{
-		if( !worldObj.isRemote && canHaveLock() && !canPlayerUseContainer( player ) )
-			( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
+		if( !worldObj.isRemote )
+		{
+			if( canHaveLock() && !canPlayerUseContainer( player ) )
+				( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
+			if( getLock() != null ) return false;
+		}
 		return super.onBlockActivated( player, side, hitX, hitY, hitZ );
 	}
 
@@ -206,7 +204,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	@Override
 	public void useUnlocked( EntityPlayer player )
 	{
-		//openGui( player );
+		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), worldObj, pos.getX(), pos.getY(), pos.getZ() );
 	}
 
 	@Override

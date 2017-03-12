@@ -4,7 +4,7 @@
 	{
 		"model": "betterstorage:chest.obj",
 		"custom": { "flip-v": true },
-		"textures": { "#chest": "betterstorage:models/chest/iron" }
+		"textures": { "#chest": "betterstorage:models/chest/iron", "particle" : "betterstorage:models/chest/iron" }
 	},
 	"variants":
 	{

@@ -1,11 +1,14 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -24,6 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;

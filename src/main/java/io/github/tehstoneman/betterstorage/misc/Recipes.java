@@ -4,7 +4,7 @@ import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardEnchantmentRecipe;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardRepairRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
@@ -164,52 +164,52 @@ public final class Recipes
 	private static void addItemRecipes()
 	{
 
-		if( BetterStorageItems.key != null )
+		if( BetterStorageItems.KEY != null )
 		{
 			// Key recipes
 			//@formatter:off
-			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.key ),
+			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEY ),
 					new Object[] { ".o",
 								   ".o",
 								   " o", 'o', "ingotGold",
 								   		 '.', "nuggetGold" } );
 			GameRegistry.addRecipe( keyRecipe );
-			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.key ),
+			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.KEY ),
 					new Object[] { ".o",
 								   ".o",
 								   "ko", 'o', "ingotGold",
 								   		 '.', "nuggetGold",
-								   		 'k', new ItemStack( BetterStorageItems.key ) } );
+								   		 'k', new ItemStack( BetterStorageItems.KEY ) } );
 			GameRegistry.addRecipe( keyCopyRecipe );
-			IRecipe keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.key ),
-					new Object[] { new ItemStack( BetterStorageItems.key ),
+			IRecipe keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
+					new Object[] { new ItemStack( BetterStorageItems.KEY ),
 								   "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
-			keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.key ),
-					new Object[] { new ItemStack( BetterStorageItems.key ),
+			keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
+					new Object[] { new ItemStack( BetterStorageItems.KEY ),
 								  "dye",
 								  "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
 			//@formatter:on
 
-			if( BetterStorageItems.lock != null )
+			if( BetterStorageItems.LOCK != null )
 			{
 				// Lock recipe
 				//@formatter:off
-				final IRecipe lockRecipe = new LockRecipe( new ItemStack( BetterStorageItems.lock ),
+				final IRecipe lockRecipe = new LockRecipe( new ItemStack( BetterStorageItems.LOCK ),
 						new Object[] { " g ",
 									   "gkg",
 									   "gig", 'g', "ingotGold",
-									   		  'k', new ItemStack( BetterStorageItems.key, 1, OreDictionary.WILDCARD_VALUE ),
+									   		  'k', new ItemStack( BetterStorageItems.KEY, 1, OreDictionary.WILDCARD_VALUE ),
 									   		  'i', "ingotIron" } );
 				GameRegistry.addRecipe( lockRecipe );
 				// Lock color recipe
-				IRecipe lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.lock ),
-						new Object[] { new ItemStack( BetterStorageItems.lock ),
+				IRecipe lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
+						new Object[] { new ItemStack( BetterStorageItems.LOCK ),
 									   "dye" } );
 				GameRegistry.addRecipe( lockDyeRecipe );
-				lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.lock ),
-						new Object[] { new ItemStack( BetterStorageItems.lock ),
+				lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
+						new Object[] { new ItemStack( BetterStorageItems.LOCK ),
 									  "dye",
 									  "dye" } );
 				GameRegistry.addRecipe( lockDyeRecipe );
@@ -217,10 +217,10 @@ public final class Recipes
 			}
 
 			// Keyring recipe
-			if( BetterStorageItems.keyring != null )
+			if( BetterStorageItems.KEYRING != null )
 			{
 				//@formatter:off
-				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.keyring ),
+				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEYRING ),
 						new Object[] { "...",
 									   ". .",
 									   "...", '.', "nuggetGold" } );

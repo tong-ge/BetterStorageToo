@@ -6,7 +6,7 @@ import java.util.Set;
 
 import io.github.tehstoneman.betterstorage.api.crafting.ContainerInfo;
 import io.github.tehstoneman.betterstorage.api.crafting.IRecipeInput;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;

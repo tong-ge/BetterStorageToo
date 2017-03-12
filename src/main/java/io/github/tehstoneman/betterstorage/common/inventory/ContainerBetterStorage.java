@@ -1,8 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import java.util.logging.Logger;
-
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +44,6 @@ public class ContainerBetterStorage extends Container
 		indexHotbar = inventoryContainer.getSlots();
 		indexPlayer = indexHotbar + 9;
 
-		Logger.getLogger( ModInfo.modId ).info( "indexHotbar " + indexHotbar );
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % columns * 18 + 8;
@@ -56,12 +52,12 @@ public class ContainerBetterStorage extends Container
 		}
 
 		final int offsetX = ( columns - 9 ) / 2 * 18;
-		final int offsetY = ( rows*18 ) +18;
+		final int offsetY = rows * 18 + 18;
 
 		for( int i = 0; i < 27; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
-			final int y = 14 + ( i ) / 9 * 18;
+			final int y = 14 + i / 9 * 18;
 			addSlotToContainer( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
 		}
 
@@ -159,11 +155,9 @@ public class ContainerBetterStorage extends Container
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
 					return null;
 			}
-			else // Try to transfer from player to container
-			{
+			else
 				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
 					return null;
-			}
 
 			if( itemStack == null || itemStack.stackSize == 0 )
 				slot.putStack( null );
@@ -182,7 +176,7 @@ public class ContainerBetterStorage extends Container
 	 * Slot slot = null;
 	 * if( slotId >= 0 && slotId < inventorySlots.size() )
 	 * slot = inventorySlots.get( slotId );
-	 * 
+	 *
 	 * if( slot != null )
 	 * if( clickTypeIn == ClickType.QUICK_CRAFT )
 	 * {
@@ -225,7 +219,7 @@ public class ContainerBetterStorage extends Container
 	 * if( !slot2.canTakeStack( player ) || stack != null && !slot2.isItemValid( stack ) )
 	 * return null;
 	 * }
-	 * 
+	 *
 	 * return super.slotClick( slotId, dragType, clickTypeIn, player );
 	 * }
 	 */
@@ -241,7 +235,7 @@ public class ContainerBetterStorage extends Container
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void updateProgressBar( int id, int val )
 	 * {

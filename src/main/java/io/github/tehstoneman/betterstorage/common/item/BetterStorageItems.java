@@ -1,10 +1,14 @@
-package io.github.tehstoneman.betterstorage.content;
+package io.github.tehstoneman.betterstorage.common.item;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.item.ItemBucketSlime;
-import io.github.tehstoneman.betterstorage.item.ItemDrinkingHelmet;
 import io.github.tehstoneman.betterstorage.item.ItemPresentBook;
 import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardArmor;
 import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardAxe;
@@ -13,24 +17,23 @@ import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardPickaxe;
 import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardSheet;
 import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardShovel;
 import io.github.tehstoneman.betterstorage.item.cardboard.ItemCardboardSword;
-import io.github.tehstoneman.betterstorage.item.locking.ItemKey;
-import io.github.tehstoneman.betterstorage.item.locking.ItemKeyring;
-import io.github.tehstoneman.betterstorage.item.locking.ItemLock;
-import io.github.tehstoneman.betterstorage.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public final class BetterStorageItems
 {
-	public static ItemKey				key;
-	public static ItemLock				lock;
-	public static ItemKeyring			keyring;
-	public static ItemMasterKey			masterKey;
+	public static ItemKey				KEY;
+	public static ItemMasterKey			MASTER_KEY;
+	public static ItemKeyring			KEYRING;
+	public static ItemLock				LOCK;
 	public static ItemCardboardSheet	cardboardSheet;
-	//public static ItemDrinkingHelmet	drinkingHelmet;
+	// public static ItemDrinkingHelmet drinkingHelmet;
 	public static ItemBucketSlime		slimeBucket;
 	public static ItemPresentBook		presentBook;
 
@@ -47,17 +50,30 @@ public final class BetterStorageItems
 
 	public static boolean				anyCardboardItemsEnabled;
 
-	private BetterStorageItems()
-	{}
-
-	public static void initialize()
+	public static void registerItems()
 	{
-		key = MiscUtils.conditionalNew( ItemKey.class, GlobalConfig.keyEnabled );
-		lock = MiscUtils.conditionalNew( ItemLock.class, GlobalConfig.lockEnabled );
-		keyring = MiscUtils.conditionalNew( ItemKeyring.class, GlobalConfig.keyringEnabled );
-		masterKey = MiscUtils.conditionalNew( ItemMasterKey.class, GlobalConfig.masterKeyEnabled );
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyEnabled ) )
+		{
+			KEY = (ItemKey)new ItemKey().setUnlocalizedName( ModInfo.modId + ".key" );
+			GameRegistry.register( KEY.setRegistryName( "key" ) );
+		}
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.masterKeyEnabled ) )
+		{
+			MASTER_KEY = (ItemMasterKey)new ItemMasterKey().setUnlocalizedName( ModInfo.modId + ".masterKey" );
+			GameRegistry.register( MASTER_KEY.setRegistryName( "masterKey" ) );
+		}
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyringEnabled ) )
+		{
+			KEYRING = (ItemKeyring)new ItemKeyring().setUnlocalizedName( ModInfo.modId + ".keyring" );
+			GameRegistry.register( KEYRING.setRegistryName( "keyring" ) );
+		}
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockEnabled ) )
+		{
+			LOCK = (ItemLock)new ItemLock().setUnlocalizedName( ModInfo.modId + ".lock" );
+			GameRegistry.register( LOCK.setRegistryName( "lock" ) );
+		}
 		cardboardSheet = MiscUtils.conditionalNew( ItemCardboardSheet.class, GlobalConfig.cardboardSheetEnabled );
-		//drinkingHelmet = MiscUtils.conditionalNew( ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled );
+		// drinkingHelmet = MiscUtils.conditionalNew( ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled );
 		slimeBucket = MiscUtils.conditionalNew( ItemBucketSlime.class, GlobalConfig.slimeBucketEnabled );
 		presentBook = new ItemPresentBook();
 
@@ -93,10 +109,20 @@ public final class BetterStorageItems
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		key.registerItemModels();
-		lock.registerItemModels();
-		keyring.registerItemModels();
-		masterKey.registerItemModels();
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyEnabled ) )
+			ModelLoader.setCustomModelResourceLocation( KEY, 0, new ModelResourceLocation( KEY.getRegistryName(), "inventory" ) );
+
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.masterKeyEnabled ) )
+			ModelLoader.setCustomModelResourceLocation( MASTER_KEY, 0, new ModelResourceLocation( MASTER_KEY.getRegistryName(), "inventory" ) );
+
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyringEnabled ) )
+			for( int i = 0; i < 4; i++ )
+				ModelLoader.setCustomModelResourceLocation( KEYRING, i,
+						new ModelResourceLocation( KEYRING.getRegistryName() + "_" + i, "inventory" ) );
+
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockEnabled ) )
+			ModelLoader.setCustomModelResourceLocation( LOCK, 0, new ModelResourceLocation( LOCK.getRegistryName(), "inventory" ) );
+
 		cardboardSheet.registerItemModels();
 		slimeBucket.registerItemModels();
 	}

@@ -13,9 +13,9 @@ import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRende
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLocker;
@@ -45,7 +45,7 @@ public class ClientProxy extends CommonProxy
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 
 		BetterStorageBlocks.registerItemModels();
-		// BetterStorageItems.registerItemModels();
+		BetterStorageItems.registerItemModels();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.key, BetterStorageItems.lock );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.item.recipe;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -25,13 +25,13 @@ public class CopyKeyRecipe extends ShapedOreRecipe
 			final ItemStack testStack = inv.getStackInSlot( i );
 
 			if( testStack != null )
-				if( testStack.getItem() == BetterStorageItems.key )
+				if( testStack.getItem() == BetterStorageItems.KEY )
 					itemStack = testStack;
 		}
 
 		if( itemStack != null )
 		{
-			final ItemStack resultStack = new ItemStack( BetterStorageItems.key, 1, itemStack.getMetadata() );
+			final ItemStack resultStack = new ItemStack( BetterStorageItems.KEY, 1, itemStack.getMetadata() );
 
 			if( itemStack.hasTagCompound() )
 				resultStack.setTagCompound( itemStack.getTagCompound() );
@@ -50,7 +50,7 @@ public class CopyKeyRecipe extends ShapedOreRecipe
 		{
 			final ItemStack itemStack = inv.getStackInSlot( i );
 			if( itemStack != null )
-				if( itemStack.getItem() == BetterStorageItems.key )
+				if( itemStack.getItem() == BetterStorageItems.KEY )
 				{
 					// Return original key to crafting table
 					resultStack[i] = itemStack.copy();

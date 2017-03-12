@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.item.locking;
+package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.awt.Color;
 

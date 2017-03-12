@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.misc.handlers;
 
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.item.locking.ItemKey;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
 import io.github.tehstoneman.betterstorage.utils.InventoryUtils;
 import net.minecraft.init.Items;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,7 +31,7 @@ public class CraftingHandler
 			// If it is, remove it from the crafting matrix.
 			if( modifyKey )
 			{
-				final int keyIndex = InventoryUtils.findItemSlot( event.craftMatrix, BetterStorageItems.key );
+				final int keyIndex = InventoryUtils.findItemSlot( event.craftMatrix, BetterStorageItems.KEY );
 				event.craftMatrix.setInventorySlotContents( keyIndex, null );
 			}
 

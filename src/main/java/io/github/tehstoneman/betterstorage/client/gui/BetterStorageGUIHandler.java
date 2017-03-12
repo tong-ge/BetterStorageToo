@@ -3,10 +3,10 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
-import io.github.tehstoneman.betterstorage.content.BetterStorageItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,9 +23,9 @@ public class BetterStorageGUIHandler implements IGuiHandler
 		if( ID == EnumGui.KEYRING.getGuiID() )
 		{
 			final ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring )
+			if( itemStack.getItem() != BetterStorageItems.KEYRING )
 				return null;
-			return new ContainerKeyring( player, ModInfo.containerKeyring, player.inventory.currentItem );
+			return new ContainerKeyring( player, itemStack, player.inventory.currentItem );
 		}
 		if( ID == EnumGui.CRATE.getGuiID() )
 		{
@@ -54,9 +54,9 @@ public class BetterStorageGUIHandler implements IGuiHandler
 		if( ID == EnumGui.KEYRING.getGuiID() )
 		{
 			final ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.keyring )
+			if( itemStack.getItem() != BetterStorageItems.KEYRING )
 				return null;
-			return new GuiBetterStorage( new ContainerKeyring( player, ModInfo.containerKeyring, player.inventory.currentItem ) );
+			return new GuiKeyring( new ContainerKeyring( player, itemStack, player.inventory.currentItem ) );
 		}
 		if( ID == EnumGui.CRATE.getGuiID() )
 		{

@@ -1,7 +1,5 @@
-package io.github.tehstoneman.betterstorage.item.locking;
+package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import io.github.tehstoneman.betterstorage.api.lock.IKey;
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMasterKey extends ItemBetterStorage implements IKey
+public class ItemMasterKey extends ItemKey
 {
 	public ItemMasterKey()
 	{
