@@ -17,8 +17,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class TileEntityLockable extends TileEntityConnectable implements ILockable, IHasAttachments
 {
@@ -36,6 +38,14 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		lockAttachment = attachments.add( LockAttachment.class );
 		lockAttachment.setScale( 0.5F, 1.5F );
 		setAttachmentPosition();
+	}
+
+	@Override
+	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && this.getLock() != null )
+			return false;
+		return super.hasCapability( capability, facing );
 	}
 
 	public boolean canHaveLock()

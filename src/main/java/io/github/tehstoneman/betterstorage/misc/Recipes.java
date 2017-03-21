@@ -83,17 +83,17 @@ public final class Recipes
 					//@formatter:on
 
 		// Locker recipe
-		if( BetterStorageBlocks.locker != null )
+		if( BetterStorageBlocks.LOCKER != null )
 		{
 			//@formatter:off
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.locker ),
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
 							"ooo",
 							"o |",
 							"ooo",	'o', "plankWood",
 									'|', Blocks.TRAPDOOR ) );
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.locker ),
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
 							"ooo",
 							"| o",
 							"ooo",	'o', "plankWood",
@@ -104,7 +104,7 @@ public final class Recipes
 			if( BetterStorageBlocks.reinforcedLocker != null )
 				for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
 				{
-					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.locker, BetterStorageBlocks.reinforcedLocker );
+					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.LOCKER, BetterStorageBlocks.reinforcedLocker );
 					if( recipe != null )
 						GameRegistry.addRecipe( recipe );
 				}

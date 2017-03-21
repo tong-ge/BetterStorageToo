@@ -5,7 +5,6 @@ import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedLocker;
 import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;

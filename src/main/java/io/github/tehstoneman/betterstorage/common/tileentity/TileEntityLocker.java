@@ -1,8 +1,9 @@
-package io.github.tehstoneman.betterstorage.tile.entity;
+package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import com.google.common.collect.ImmutableMap;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.utils.DirectionUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -15,6 +16,13 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.client.model.animation.Animation;
+import net.minecraftforge.common.animation.Event;
+import net.minecraftforge.common.animation.ITimeValue;
+import net.minecraftforge.common.animation.TimeValues.VariableValue;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.model.animation.CapabilityAnimation;
+import net.minecraftforge.common.model.animation.IAnimationStateMachine;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,7 +31,9 @@ public class TileEntityLocker extends TileEntityLockable
 	private static final EnumFacing[]	neighbors	= { EnumFacing.DOWN, EnumFacing.UP };
 
 	public boolean						mirror		= false;
-
+	
+	public void handleEvents(float time, Iterable<Event> pastEvents) {}
+	
 	@Override
 	@SideOnly( Side.CLIENT )
 	public AxisAlignedBB getRenderBoundingBox()
@@ -39,12 +49,6 @@ public class TileEntityLocker extends TileEntityLockable
 
 	@Override
 	public boolean canHaveLock()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHaveMaterial()
 	{
 		return false;
 	}
@@ -72,16 +76,6 @@ public class TileEntityLocker extends TileEntityLockable
 			return false;
 		final TileEntityLocker locker = (TileEntityLocker)connectable;
 		return super.canConnect( connectable ) && mirror == locker.mirror;
-	}
-
-	@Override
-	public void onBlockPlacedBeforeCheckingConnections( EntityLivingBase player, ItemStack stack )
-	{
-		super.onBlockPlacedBeforeCheckingConnections( player, stack );
-		final double angle = DirectionUtils.getRotation( getOrientation().getOpposite() );
-		final double yaw = ( player.rotationYaw % 360 + 360 ) % 360;
-		mirror = DirectionUtils.angleDifference( angle, yaw ) > 0;
-		setAttachmentPosition();
 	}
 
 	@Override
@@ -127,40 +121,5 @@ public class TileEntityLocker extends TileEntityLockable
 		super.writeToNBT( compound );
 		compound.setBoolean( "mirror", mirror );
 		return compound;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot( int index )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getField( int id )
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setField( int id, int value )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void clear()
-	{
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "betterstorage:locker_large.obj",
+		"custom": { "flip-v": true },
+		"textures": { "#locker_large": "betterstorage:models/locker_large/wood" }
+	},
+	"variants":
+	{
+		"normal": [{}],
+		"inventory": [{}]
+	}
+}

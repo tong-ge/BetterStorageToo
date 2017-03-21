@@ -1,11 +1,16 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
+import com.google.common.collect.ImmutableMap;
+
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.animation.ITimeValue;
+import net.minecraftforge.common.model.animation.IAnimationStateMachine;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy
@@ -279,5 +284,10 @@ public class CommonProxy
 	public String localize(String unlocalized, Object... args )
 	{
 		return I18n.translateToLocalFormatted( unlocalized, args );
+	}
+	
+	public IAnimationStateMachine load( ResourceLocation location, ImmutableMap<String, ITimeValue> parameters)
+	{
+		return null;
 	}
 }

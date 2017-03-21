@@ -11,7 +11,6 @@ import io.github.tehstoneman.betterstorage.tile.TileCardboardBox;
 import io.github.tehstoneman.betterstorage.tile.TileCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.TileFlintBlock;
 import io.github.tehstoneman.betterstorage.tile.TileLockableDoor;
-import io.github.tehstoneman.betterstorage.tile.TileLocker;
 import io.github.tehstoneman.betterstorage.tile.TilePresent;
 import io.github.tehstoneman.betterstorage.tile.TileReinforcedLocker;
 import io.github.tehstoneman.betterstorage.tile.stand.TileArmorStand;
@@ -27,7 +26,7 @@ public final class BetterStorageBlocks
 {
 	public static BlockCrate			CRATE;
 	public static BlockReinforcedChest	REINFORCED_CHEST;
-	public static TileLocker			locker;
+	public static BlockLocker			LOCKER;
 	public static TileArmorStand		armorStand;
 
 	public static TileCardboardBox		cardboardBox;
@@ -51,7 +50,13 @@ public final class BetterStorageBlocks
 			GameRegistry.register( REINFORCED_CHEST.setRegistryName( "reinforced_chest" ) );
 			GameRegistry.register( new ItemBlockLockable( REINFORCED_CHEST ).setRegistryName( REINFORCED_CHEST.getRegistryName() ) );
 		}
-		locker = MiscUtils.conditionalNew( TileLocker.class, GlobalConfig.lockerEnabled );
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockerEnabled ) )
+		{
+			LOCKER = (BlockLocker)new BlockLocker().setUnlocalizedName( ModInfo.modId + ".locker" );
+			GameRegistry.register( LOCKER.setRegistryName( "locker" ) );
+			GameRegistry.register( new ItemBlockLockable( LOCKER ).setRegistryName( LOCKER.getRegistryName() ) );
+		}
+
 		armorStand = MiscUtils.conditionalNew( TileArmorStand.class, GlobalConfig.armorStandEnabled );
 		cardboardBox = MiscUtils.conditionalNew( TileCardboardBox.class, GlobalConfig.cardboardBoxEnabled );
 		reinforcedLocker = MiscUtils.conditionalNew( TileReinforcedLocker.class, GlobalConfig.reinforcedLockerEnabled );
@@ -76,7 +81,10 @@ public final class BetterStorageBlocks
 					ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( REINFORCED_CHEST ), material.getMetadata(),
 							new ModelResourceLocation( REINFORCED_CHEST.getRegistryName() + "_" + material.getName(), "inventory" ) );
 
-		locker.registerItemModels();
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockerEnabled ) )
+			ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( LOCKER ), 0,
+					new ModelResourceLocation( LOCKER.getRegistryName(), "inventory" ) );
+
 		armorStand.registerItemModels();
 		cardboardBox.registerItemModels();
 		reinforcedLocker.registerItemModels();
