@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "betterstorage:locker.obj",
+		"custom": { "flip-v": true },
+		"textures":
+		{
+			"#locker": "betterstorage:models/locker/silver",
+			"#locker_large": "betterstorage:models/locker_large/silver",
+			"particle" : "betterstorage:models/locker/silver"
+		}
+	},
+	"variants":
+	{
+		"normal": [{}],
+		"inventory": [{ "model": "betterstorage:locker_closed.obj", "transform": "forge:default-block" }]
+	}
+}

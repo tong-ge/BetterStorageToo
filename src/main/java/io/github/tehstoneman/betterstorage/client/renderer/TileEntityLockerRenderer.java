@@ -6,14 +6,20 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.model.ModelLargeLocker;
 import io.github.tehstoneman.betterstorage.client.model.ModelLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
@@ -84,57 +90,10 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		GlStateManager.disableRescaleNormal();
 
 		renderDoor( locker, partialTicks );
+		renderItem( locker );
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
-
-		/*
-		 * final float scale = 1.0F / 16;
-		 *
-		 * final boolean large = locker.isConnected();
-		 * if( large && !locker.isMain() )
-		 * return;
-		 *
-		 * final int index = locker.mirror ? 1 : 0;
-		 * final ModelLocker model = large ? largeLockerModel : lockerModel;
-		 * bindTexture( locker.getResource() );
-		 *
-		 * GL11.glPushMatrix();
-		 * GL11.glEnable( GL12.GL_RESCALE_NORMAL );
-		 *
-		 * float angle = locker.prevLidAngle + ( locker.lidAngle - locker.prevLidAngle ) * partialTicks;
-		 * angle = 1.0F - angle;
-		 * angle = 1.0F - angle * angle * angle;
-		 * angle = angle * 90;
-		 *
-		 * GL11.glTranslated( x + 0.5, y + 0.5, z + 0.5 );
-		 * final int rotation = DirectionUtils.getRotation( locker.getOrientation() );
-		 * GL11.glRotatef( -rotation, 0.0F, 1.0F, 0.0F );
-		 *
-		 * GL11.glPushMatrix();
-		 * GL11.glScalef( scale, scale, scale );
-		 *
-		 * model.renderAll( locker.mirror, angle );
-		 *
-		 * GL11.glPopMatrix();
-		 *
-		 * if( locker.canHaveLock() )
-		 * {
-		 * if( angle > 0 )
-		 * {
-		 * final double seven = 7 / 16.0D;
-		 * GL11.glTranslated( locker.mirror ? seven : -seven, 0, seven );
-		 * GL11.glRotatef( locker.mirror ? angle : -angle, 0, 1, 0 );
-		 * GL11.glTranslated( locker.mirror ? -seven : seven, 0, -seven );
-		 * }
-		 * final LockAttachment a = locker.lockAttachment;
-		 * GL11.glTranslated( 0.5 - a.getX(), 0.5 - a.getY(), 0.5 - a.getZ() );
-		 * a.getRenderer().render( a, partialTicks );
-		 * }
-		 *
-		 * GL11.glDisable( GL12.GL_RESCALE_NORMAL );
-		 * GL11.glPopMatrix();
-		 */
 	}
 
 	private void renderDoor( TileEntityLocker locker, float partialTicks )
@@ -165,8 +124,42 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModel( world, getBakedModel( locker.isConnected() ),
 				world.getBlockState( locker.getPos() ), locker.getPos(), tessellator.getBuffer(), false );
 		tessellator.draw();
-
+		
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.popMatrix();
+	}
+
+	/** Renders attached lock on chest. Adapted from vanilla item frame **/
+	private void renderItem( TileEntityLocker locker )
+	{
+		final ItemStack itemstack = locker.getLock();
+
+		if( itemstack != null )
+		{
+			final EntityItem entityitem = new EntityItem( locker.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			final Item item = entityitem.getEntityItem().getItem();
+			entityitem.getEntityItem().stackSize = 1;
+			entityitem.hoverStart = 0.0F;
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+
+			GlStateManager.rotate( 180.0F, 0.0F, 1.0F, 0.0F );
+			double x = (1.0/16.0) * -3.5;
+			double y = (1.0/16.0) * (locker.isConnected()? 13.0 : 6.0 );
+			double z = (1.0/16.0) * -0.5;
+			GlStateManager.translate( x, y, z );
+			GlStateManager.scale( 0.5, 0.5, 0.5 );
+			
+			GlStateManager.pushAttrib();
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popAttrib();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
 	}
 }

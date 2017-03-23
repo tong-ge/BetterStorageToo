@@ -59,8 +59,8 @@ public final class BetterStorageItems
 		}
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.masterKeyEnabled ) )
 		{
-			MASTER_KEY = (ItemMasterKey)new ItemMasterKey().setUnlocalizedName( ModInfo.modId + ".masterKey" );
-			GameRegistry.register( MASTER_KEY.setRegistryName( "masterKey" ) );
+			MASTER_KEY = (ItemMasterKey)new ItemMasterKey().setUnlocalizedName( ModInfo.modId + ".master_key" );
+			GameRegistry.register( MASTER_KEY.setRegistryName( "master_key" ) );
 		}
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyringEnabled ) )
 		{

@@ -101,10 +101,10 @@ public final class Recipes
 			//@formatter:on
 
 			// Reinforced locker recipes
-			if( BetterStorageBlocks.reinforcedLocker != null )
+			if( BetterStorageBlocks.REINFORCED_LOCKER != null )
 				for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
 				{
-					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.LOCKER, BetterStorageBlocks.reinforcedLocker );
+					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.LOCKER, BetterStorageBlocks.REINFORCED_LOCKER );
 					if( recipe != null )
 						GameRegistry.addRecipe( recipe );
 				}
