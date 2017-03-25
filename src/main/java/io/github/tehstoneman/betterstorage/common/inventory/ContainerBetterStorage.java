@@ -99,6 +99,11 @@ public class ContainerBetterStorage extends Container
 	{
 		return ( getRows() + 4 ) * 18 + separation + 29;
 	}
+	
+	public String getName()
+	{
+		return tileContainer.getName();
+	}
 
 	/** Returns if the slot is in the inventory. */
 	/*

@@ -1,8 +1,7 @@
-package io.github.tehstoneman.betterstorage.tile.entity;
+package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,18 +14,13 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 	@SideOnly( Side.CLIENT )
 	public ResourceLocation getResource()
 	{
-		return new ResourceLocation(ModInfo.modId, "textures/models/locker" + ( isConnected() ? "_large/" : "/" ) + getMaterial().getName() + ".png");
-		//return getMaterial().getLockerResource( isConnected() );
+		return new ResourceLocation( ModInfo.modId,
+				"textures/models/locker" + ( isConnected() ? "_large/" : "/" ) + getMaterial().getName() + ".png" );
+		// return getMaterial().getLockerResource( isConnected() );
 	}
 
 	@Override
 	public boolean canHaveLock()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canHaveMaterial()
 	{
 		return true;
 	}

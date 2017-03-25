@@ -39,7 +39,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 
 	public EnumFacing getOrientation()
 	{
-		return orientation;
+		return orientation != null ? orientation : EnumFacing.NORTH;
 	}
 
 	public void setOrientation( EnumFacing orientation )
@@ -170,7 +170,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	@Override
 	public final String getName()
 	{
-		return getConnectableName() + ( isConnected() ? "Large" : "" );
+		return getConnectableName() + ( isConnected() ? "_large" : "" );
 	}
 
 	@Override

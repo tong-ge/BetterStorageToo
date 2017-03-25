@@ -29,7 +29,7 @@ public class GuiBetterStorage extends GuiContainer
 		this.container = container;
 		//final IInventory inv = container.inventory;
 		//title = inv.getName();
-		title="";
+		title=container.getName();
 		columns = container.getColumns();
 		rows = container.getRows();
 	

@@ -34,7 +34,7 @@ public final class Recipes
 	{
 		registerRecipeSorter();
 
-		addTileRecipes();
+		addBlockRecipes();
 		addItemRecipes();
 		addCardboardRecipes();
 
@@ -54,17 +54,18 @@ public final class Recipes
 		RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
 	}
 
-	private static void addTileRecipes()
+	private static void addBlockRecipes()
 	{
 		// Crate recipe
 		//@formatter:off
 		if( BetterStorageBlocks.CRATE != null )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CRATE ),
-							"o/o",
-							"/ /",
-							"o/o",	'o', "plankWood",
-									'/', "stickWood" ) );
+							new Object[] { false,
+										   "o/o",
+										   "/ /",
+										   "o/o",	'o', "plankWood",
+										   			'/', "stickWood" } ) );
 		//@formatter:on
 
 		// Reinforced chest recipes
@@ -74,12 +75,13 @@ public final class Recipes
 					//@formatter:off
 					GameRegistry.addRecipe(
 							new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() ),
-									"o#o",
-									"#C#",
-									"oOo",	'C', Blocks.CHEST,
-											'#', "logWood",
-											'o', material.getOreDictIngot(),
-											'O', material.getOreDictBlock() ) );
+									new Object[] { false,
+												   "o#o",
+												   "#C#",
+												   "oOo",	'C', Blocks.CHEST,
+												   			'#', "logWood",
+												   			'o', material.getOreDictIngot(),
+												   			'O', material.getOreDictBlock() } ) );
 					//@formatter:on
 
 		// Locker recipe
@@ -88,37 +90,38 @@ public final class Recipes
 			//@formatter:off
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
-							"ooo",
-							"o |",
-							"ooo",	'o', "plankWood",
-									'|', Blocks.TRAPDOOR ) );
-			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
-							"ooo",
-							"| o",
-							"ooo",	'o', "plankWood",
-									'|', Blocks.TRAPDOOR ) );
+							new Object[] { "ooo",
+										   "o |",
+										   "ooo",	'o', "plankWood",
+										   			'|', Blocks.TRAPDOOR } ) );
 			//@formatter:on
 
 			// Reinforced locker recipes
 			if( BetterStorageBlocks.REINFORCED_LOCKER != null )
-				for( final ContainerMaterial material : ContainerMaterial.getMaterials() )
-				{
-					final IRecipe recipe = material.getReinforcedRecipe( BetterStorageBlocks.LOCKER, BetterStorageBlocks.REINFORCED_LOCKER );
-					if( recipe != null )
-						GameRegistry.addRecipe( recipe );
-				}
+				for( final EnumReinforced material : EnumReinforced.values() )
+					if( material != EnumReinforced.SPECIAL )
+						//@formatter:off
+						GameRegistry.addRecipe(
+								new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_LOCKER, 1, material.getMetadata() ),
+										new Object[] { false,
+													   "o#o",
+													   "#C#",
+													   "oOo",	'C', BetterStorageBlocks.LOCKER,
+													   			'#', "logWood",
+													   			'o', material.getOreDictIngot(),
+													   			'O', material.getOreDictBlock() } ) );
+			//@formatter:on
 		}
 
 		// Armor stand recipe
 		//@formatter:off
-		if( BetterStorageBlocks.armorStand != null )
+		/*if( BetterStorageBlocks.armorStand != null )
 			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.armorStand ),
 					" i ",
 					"/i/",
 					" s ",	's', new ItemStack( Blocks.STONE_SLAB, 1, 0 ),
 							'i', Items.IRON_INGOT,
-							'/', Items.STICK );
+							'/', Items.STICK );*/
 
 		// Cardboard box recipe
 		if( BetterStorageBlocks.cardboardBox != null && BetterStorageItems.cardboardSheet != null )
@@ -174,6 +177,7 @@ public final class Recipes
 								   " o", 'o', "ingotGold",
 								   		 '.', "nuggetGold" } );
 			GameRegistry.addRecipe( keyRecipe );
+
 			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.KEY ),
 					new Object[] { ".o",
 								   ".o",
@@ -181,14 +185,13 @@ public final class Recipes
 								   		 '.', "nuggetGold",
 								   		 'k', new ItemStack( BetterStorageItems.KEY ) } );
 			GameRegistry.addRecipe( keyCopyRecipe );
+
 			IRecipe keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { new ItemStack( BetterStorageItems.KEY ),
-								   "dye" } );
+					new Object[] { new ItemStack( BetterStorageItems.KEY ), "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
+
 			keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { new ItemStack( BetterStorageItems.KEY ),
-								  "dye",
-								  "dye" } );
+					new Object[] { new ItemStack( BetterStorageItems.KEY ), "dye", "dye" } );
 			GameRegistry.addRecipe( keyDyeRecipe );
 			//@formatter:on
 
@@ -205,13 +208,11 @@ public final class Recipes
 				GameRegistry.addRecipe( lockRecipe );
 				// Lock color recipe
 				IRecipe lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
-						new Object[] { new ItemStack( BetterStorageItems.LOCK ),
-									   "dye" } );
+						new Object[] { new ItemStack( BetterStorageItems.LOCK ), "dye" } );
 				GameRegistry.addRecipe( lockDyeRecipe );
+
 				lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
-						new Object[] { new ItemStack( BetterStorageItems.LOCK ),
-									  "dye",
-									  "dye" } );
+						new Object[] { new ItemStack( BetterStorageItems.LOCK ), "dye", "dye" } );
 				GameRegistry.addRecipe( lockDyeRecipe );
 				//@formatter:on
 			}
@@ -221,7 +222,8 @@ public final class Recipes
 			{
 				//@formatter:off
 				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEYRING ),
-						new Object[] { "...",
+						new Object[] { false,
+									   "...",
 									   ". .",
 									   "...", '.', "nuggetGold" } );
 				GameRegistry.addRecipe( keyRingRecipe );

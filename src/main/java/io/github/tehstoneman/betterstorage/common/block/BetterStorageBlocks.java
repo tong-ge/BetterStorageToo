@@ -12,7 +12,6 @@ import io.github.tehstoneman.betterstorage.tile.TileCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.TileFlintBlock;
 import io.github.tehstoneman.betterstorage.tile.TileLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.TilePresent;
-import io.github.tehstoneman.betterstorage.tile.stand.TileArmorStand;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -28,7 +27,7 @@ public final class BetterStorageBlocks
 	public static BlockReinforcedChest	REINFORCED_CHEST;
 	public static BlockLocker			LOCKER;
 	public static BlockReinforcedLocker	REINFORCED_LOCKER;
-	public static TileArmorStand		armorStand;
+	//public static TileArmorStand		armorStand;
 
 	public static TileCardboardBox		cardboardBox;
 	public static TileCraftingStation	craftingStation;
@@ -63,7 +62,7 @@ public final class BetterStorageBlocks
 			GameRegistry.register( new ItemBlockLockable( REINFORCED_LOCKER ).setRegistryName( REINFORCED_LOCKER.getRegistryName() ) );
 		}
 
-		armorStand = MiscUtils.conditionalNew( TileArmorStand.class, GlobalConfig.armorStandEnabled );
+		//armorStand = MiscUtils.conditionalNew( TileArmorStand.class, GlobalConfig.armorStandEnabled );
 		cardboardBox = MiscUtils.conditionalNew( TileCardboardBox.class, GlobalConfig.cardboardBoxEnabled );
 		craftingStation = MiscUtils.conditionalNew( TileCraftingStation.class, GlobalConfig.craftingStationEnabled );
 		flintBlock = MiscUtils.conditionalNew( TileFlintBlock.class, GlobalConfig.flintBlockEnabled );
@@ -96,7 +95,7 @@ public final class BetterStorageBlocks
 					ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( REINFORCED_LOCKER ), material.getMetadata(),
 							new ModelResourceLocation( REINFORCED_LOCKER.getRegistryName() + "_" + material.getName(), "inventory" ) );
 
-		armorStand.registerItemModels();
+		//armorStand.registerItemModels();
 		cardboardBox.registerItemModels();
 		craftingStation.registerItemModels();
 		flintBlock.registerItemModels();

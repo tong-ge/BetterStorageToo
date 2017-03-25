@@ -7,9 +7,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
-import io.github.tehstoneman.betterstorage.api.stand.BetterStorageArmorStand;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityArmorStandRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
@@ -22,9 +20,6 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityReinforcedLocker;
-import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
-import io.github.tehstoneman.betterstorage.tile.stand.VanillaArmorStandRenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
@@ -72,12 +67,12 @@ public class ClientProxy extends CommonProxy
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
 	}
 
-	@Override
+	/*@Override
 	protected void registerArmorStandHandlers()
 	{
 		super.registerArmorStandHandlers();
 		BetterStorageArmorStand.registerRenderHandler( new VanillaArmorStandRenderHandler() );
-	}
+	}*/
 
 	private void registerRenderers()
 	{
@@ -91,7 +86,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityArmorStand.class, new TileEntityArmorStandRenderer() );
+		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityArmorStand.class, new TileEntityArmorStandRenderer() );
 		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
