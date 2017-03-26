@@ -21,7 +21,7 @@ public class PresentRecipe extends ShapedRecipes
 
 	private static ItemStack[] createRecipeInput()
 	{
-		final ItemStack box = new ItemStack( BetterStorageBlocks.cardboardBox );
+		final ItemStack box = new ItemStack( BetterStorageBlocks.CARDBOARD_BOX );
 		final ItemStack wool1 = new ItemStack( Blocks.WOOL, 1, 14 );
 		final ItemStack wool2 = new ItemStack( Blocks.WOOL, 1, 0 );
 		return new ItemStack[] { wool1, wool2, wool1, wool1, box, wool1, wool1, wool2, wool1 };
@@ -31,7 +31,7 @@ public class PresentRecipe extends ShapedRecipes
 	public boolean matches( InventoryCrafting crafting, World world )
 	{
 		final ItemStack box = crafting.getStackInSlot( 4 );
-		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageBlocks.cardboardBox ) || !StackUtils.has( box, "Items" ) )
+		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) || !StackUtils.has( box, "Items" ) )
 			return false;
 
 		final int corners = checkWoolColor( crafting, 0, 2, 6, 8 );

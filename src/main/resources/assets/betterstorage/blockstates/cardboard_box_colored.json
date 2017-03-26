@@ -1,0 +1,21 @@
+{
+    "variants":
+    {
+    	"color=white":      { "model": "betterstorage:cardboard_box_white" },
+    	"color=orange":     { "model": "betterstorage:cardboard_box_orange" },
+    	"color=magenta":    { "model": "betterstorage:cardboard_box_magenta" },
+    	"color=light_blue": { "model": "betterstorage:cardboard_box_light_blue" },
+    	"color=yellow":     { "model": "betterstorage:cardboard_box_yellow" },
+    	"color=lime":       { "model": "betterstorage:cardboard_box_lime" },
+    	"color=pink":       { "model": "betterstorage:cardboard_box_pink" },
+    	"color=gray":       { "model": "betterstorage:cardboard_box_gray" },
+    	"color=silver":     { "model": "betterstorage:cardboard_box_silver" },
+    	"color=cyan":       { "model": "betterstorage:cardboard_box_cyan" },
+    	"color=purple":     { "model": "betterstorage:cardboard_box_purple" },
+    	"color=blue":       { "model": "betterstorage:cardboard_box_blue" },
+    	"color=brown":      { "model": "betterstorage:cardboard_box_brown" },
+    	"color=green":      { "model": "betterstorage:cardboard_box_green" },
+    	"color=red":        { "model": "betterstorage:cardboard_box_red" },
+    	"color=black":      { "model": "betterstorage:cardboard_box_black" }
+    }
+}

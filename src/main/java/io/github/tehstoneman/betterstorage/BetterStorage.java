@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage;
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.common.Recipes;
 import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntities;
 import io.github.tehstoneman.betterstorage.config.Config;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
@@ -10,7 +11,6 @@ import io.github.tehstoneman.betterstorage.content.BetterStorageEntities;
 import io.github.tehstoneman.betterstorage.item.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.CreativeTabBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.DungeonLoot;
-import io.github.tehstoneman.betterstorage.misc.Recipes;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;

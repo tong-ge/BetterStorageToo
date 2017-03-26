@@ -29,8 +29,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 {
 	public ItemStackHandler	inventory;
 
-	// private final InventoryTileEntity playerInventory;
-
 	/** The custom title of this container, set by an anvil. */
 	private String			customTitle			= null;
 
@@ -49,13 +47,13 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			inventory = new ItemStackHandler( size )
 			{
 				@Override
-				protected void onContentsChanged(int slot)
+				protected void onContentsChanged( int slot )
 				{
 					TileEntityContainer.this.markDirty();
 				}
 			};
-			else
-				inventory = null;
+		else
+			inventory = null;
 	}
 
 	@Override
@@ -101,20 +99,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		return playersUsing;
 	}
 
-	/*
-	 * public InventoryTileEntity makePlayerInventory()
-	 * {
-	 * return inventory != null ? new InventoryTileEntity( this ) : null;
-	 * }
-	 */
-
-	/*
-	 * public InventoryTileEntity getPlayerInventory()
-	 * {
-	 * return playerInventory;
-	 * }
-	 */
-
 	/**
 	 * Returns if a player can use this container. This is called once before
 	 * the GUI is opened and then again every tick. Returning false when the
@@ -124,14 +108,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		return player.getDistanceSq( pos ) <= 64;
 	}
-
-	/** Creates and returns a Container for this container. */
-	/*
-	 * public ContainerBetterStorage createContainer( EntityPlayer player )
-	 * {
-	 * return new ContainerBetterStorage( player, getPlayerInventory() );
-	 * }
-	 */
 
 	// Container title related
 
@@ -197,15 +173,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), worldObj, pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
-
-	/** Opens the GUI of this container for the player. */
-	/*
-	 * public void openGui( EntityPlayer player )
-	 * {
-	 * final ContainerBetterStorage container = createContainer( player );
-	 * PlayerUtils.openGui( player, getName(), container.getColumns(), container.getRows(), getCustomTitle(), container );
-	 * }
-	 */
 
 	/**
 	 * Called when the block is picked (default: middle mouse).
@@ -418,15 +385,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			markContentsChanged();
 	}
 
-	/*
-	 * @Override
-	 * public void markDirty()
-	 * {
-	 * markDirtySuper();
-	 * super.markDirty();
-	 * }
-	 */
-
 	@Override
 	public void validate()
 	{
@@ -508,6 +466,19 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		else
 			if( lidAngle > 0.0F )
 				lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
+	}
+
+	// Inventory management
+
+	public boolean isEmpty( ItemStackHandler inventory )
+	{
+		for( int i = 0; i < inventory.getSlots(); i++ )
+		{
+			ItemStack stack = inventory.getStackInSlot( i );
+			if( stack != null && stack.stackSize > 0 )
+				return false;
+		}
+		return true;
 	}
 
 	// TileEntity synchronization

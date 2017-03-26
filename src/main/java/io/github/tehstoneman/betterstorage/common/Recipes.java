@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.misc;
+package io.github.tehstoneman.betterstorage.common;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
@@ -13,7 +13,6 @@ import io.github.tehstoneman.betterstorage.item.recipe.DyeRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.PresentRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.PresentRemoveNametagRecipe;
-import io.github.tehstoneman.betterstorage.tile.ContainerMaterial;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -38,7 +37,7 @@ public final class Recipes
 		addItemRecipes();
 		addCardboardRecipes();
 
-		GameRegistry.addRecipe( new DyeRecipe() );
+		// GameRegistry.addRecipe( new DyeRecipe() );
 		Addon.addRecipesAll();
 	}
 
@@ -110,41 +109,66 @@ public final class Recipes
 													   			'#', "logWood",
 													   			'o', material.getOreDictIngot(),
 													   			'O', material.getOreDictBlock() } ) );
-			//@formatter:on
+						//@formatter:on
 		}
 
-		// Armor stand recipe
-		//@formatter:off
-		/*if( BetterStorageBlocks.armorStand != null )
-			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.armorStand ),
-					" i ",
-					"/i/",
-					" s ",	's', new ItemStack( Blocks.STONE_SLAB, 1, 0 ),
-							'i', Items.IRON_INGOT,
-							'/', Items.STICK );*/
-
 		// Cardboard box recipe
-		if( BetterStorageBlocks.cardboardBox != null && BetterStorageItems.cardboardSheet != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.cardboardBox ),
-					"ooo",
-					"o o",
-					"ooo",	'o', "sheetCardboard" ) );
+		if( BetterStorageBlocks.CARDBOARD_BOX != null && BetterStorageItems.cardboardSheet != null )
+		{
+			//@formatter:off
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX ),
+							new Object[] { false,
+										   "ooo",
+										   "o o",
+										   "ooo",	'o', "sheetCardboard" } ) );
+
+	        final String[] dyes =
+	            {
+	                "Black",
+	                "Red",
+	                "Green",
+	                "Brown",
+	                "Blue",
+	                "Purple",
+	                "Cyan",
+	                "LightGray",
+	                "Gray",
+	                "Pink",
+	                "Lime",
+	                "Yellow",
+	                "LightBlue",
+	                "Magenta",
+	                "Orange",
+	                "White"
+	            };
+			//@formatter:on
+
+			for( int i = 0; i < 16; i++ )
+			{
+				final String dye = "dye" + dyes[i];
+				final int meta = 15 - i;
+
+				//@formatter:off
+				GameRegistry.addRecipe(
+						new ShapelessOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, meta ),
+								new Object[] { dye, BetterStorageBlocks.CARDBOARD_BOX } ) );
+				GameRegistry.addRecipe(
+						new ShapelessOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, meta ),
+								new Object[] { dye, new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, OreDictionary.WILDCARD_VALUE ) } ) );
+				//@formatter:on
+			}
+		}
 
 		// Crafting Station recipe
 		if( BetterStorageBlocks.craftingStation != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.craftingStation ),
-					"B-B",
-					"PTP",
-					"WCW",	'B', Blocks.STONEBRICK,
-							'-', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
-							'P', Blocks.PISTON,
-							'T', Blocks.CRAFTING_TABLE,
-							'W', "plankWood",
-							'C', BetterStorageBlocks.CRATE != null ? BetterStorageBlocks.CRATE : Blocks.CHEST ) );
+			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.craftingStation ), "B-B", "PTP", "WCW", 'B',
+					Blocks.STONEBRICK, '-', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, 'P', Blocks.PISTON, 'T', Blocks.CRAFTING_TABLE, 'W', "plankWood",
+					'C', BetterStorageBlocks.CRATE != null ? BetterStorageBlocks.CRATE : Blocks.CHEST ) );
 		//@formatter:on
 
 		// Present recipe
-		if( BetterStorageBlocks.present != null && BetterStorageBlocks.cardboardBox != null )
+		if( BetterStorageBlocks.present != null && BetterStorageBlocks.CARDBOARD_BOX != null )
 		{
 			GameRegistry.addRecipe( new PresentRecipe() );
 			BetterStorageCrafting.addStationRecipe( new PresentRemoveNametagRecipe() );

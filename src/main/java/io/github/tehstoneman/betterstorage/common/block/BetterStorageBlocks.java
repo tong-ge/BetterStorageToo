@@ -4,16 +4,18 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBox;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBoxColored;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockLockable;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.tile.TileCardboardBox;
 import io.github.tehstoneman.betterstorage.tile.TileCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.TileFlintBlock;
 import io.github.tehstoneman.betterstorage.tile.TileLockableDoor;
 import io.github.tehstoneman.betterstorage.tile.TilePresent;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
@@ -23,17 +25,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BetterStorageBlocks
 {
-	public static BlockCrate			CRATE;
-	public static BlockReinforcedChest	REINFORCED_CHEST;
-	public static BlockLocker			LOCKER;
-	public static BlockReinforcedLocker	REINFORCED_LOCKER;
-	//public static TileArmorStand		armorStand;
-
-	public static TileCardboardBox		cardboardBox;
-	public static TileCraftingStation	craftingStation;
-	public static TileFlintBlock		flintBlock;
-	public static TileLockableDoor		lockableDoor;
-	public static TilePresent			present;
+	public static BlockCrate				CRATE;
+	public static BlockReinforcedChest		REINFORCED_CHEST;
+	public static BlockLocker				LOCKER;
+	public static BlockReinforcedLocker		REINFORCED_LOCKER;
+	public static BlockCardboardBox			CARDBOARD_BOX;
+	public static BlockCardboardBoxColored	CARDBOARD_BOX_COLORED;
+	public static TileCraftingStation		craftingStation;
+	public static TileFlintBlock			flintBlock;
+	public static TileLockableDoor			lockableDoor;
+	public static TilePresent				present;
 
 	public static void registerBlocks()
 	{
@@ -61,9 +62,19 @@ public final class BetterStorageBlocks
 			GameRegistry.register( REINFORCED_LOCKER.setRegistryName( "reinforced_locker" ) );
 			GameRegistry.register( new ItemBlockLockable( REINFORCED_LOCKER ).setRegistryName( REINFORCED_LOCKER.getRegistryName() ) );
 		}
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxEnabled ) )
+		{
+			CARDBOARD_BOX = (BlockCardboardBox)new BlockCardboardBox().setUnlocalizedName( ModInfo.modId + ".cardboard_box" );
+			GameRegistry.register( CARDBOARD_BOX.setRegistryName( "cardboard_box" ) );
+			GameRegistry.register( new ItemBlockCardboardBox( CARDBOARD_BOX ).setRegistryName( CARDBOARD_BOX.getRegistryName() ) );
 
-		//armorStand = MiscUtils.conditionalNew( TileArmorStand.class, GlobalConfig.armorStandEnabled );
-		cardboardBox = MiscUtils.conditionalNew( TileCardboardBox.class, GlobalConfig.cardboardBoxEnabled );
+			CARDBOARD_BOX_COLORED = (BlockCardboardBoxColored)new BlockCardboardBoxColored()
+					.setUnlocalizedName( ModInfo.modId + ".cardboard_box_colored" );
+			GameRegistry.register( CARDBOARD_BOX_COLORED.setRegistryName( "cardboard_box_colored" ) );
+			GameRegistry
+					.register( new ItemBlockCardboardBoxColored( CARDBOARD_BOX_COLORED ).setRegistryName( CARDBOARD_BOX_COLORED.getRegistryName() ) );
+		}
+
 		craftingStation = MiscUtils.conditionalNew( TileCraftingStation.class, GlobalConfig.craftingStationEnabled );
 		flintBlock = MiscUtils.conditionalNew( TileFlintBlock.class, GlobalConfig.flintBlockEnabled );
 		lockableDoor = MiscUtils.conditionalNew( TileLockableDoor.class, GlobalConfig.lockableDoorEnabled );
@@ -95,8 +106,16 @@ public final class BetterStorageBlocks
 					ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( REINFORCED_LOCKER ), material.getMetadata(),
 							new ModelResourceLocation( REINFORCED_LOCKER.getRegistryName() + "_" + material.getName(), "inventory" ) );
 
-		//armorStand.registerItemModels();
-		cardboardBox.registerItemModels();
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxEnabled ) )
+		{
+			ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( CARDBOARD_BOX ), 0,
+					new ModelResourceLocation( CARDBOARD_BOX.getRegistryName(), "inventory" ) );
+
+			for( final EnumDyeColor color : EnumDyeColor.values() )
+				ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( CARDBOARD_BOX_COLORED ), color.getMetadata(),
+						new ModelResourceLocation( CARDBOARD_BOX.getRegistryName() + "_" + color.getName(), "inventory" ) );
+		}
+
 		craftingStation.registerItemModels();
 		flintBlock.registerItemModels();
 		lockableDoor.registerItemModels();

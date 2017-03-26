@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.item.tile;
+package io.github.tehstoneman.betterstorage.common.item;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,6 @@ import java.util.List;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.IContainerItem;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.item.IDyeableItem;
 import io.github.tehstoneman.betterstorage.utils.LanguageUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.block.Block;
@@ -15,12 +14,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class ItemCardboardBox extends ItemBlock implements IContainerItem, IDyeableItem
+public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 {
-	public ItemCardboardBox( Block block )
+	public ItemBlockCardboardBox( Block block )
 	{
 		super( block );
 		setMaxStackSize( 1 );
@@ -42,63 +43,56 @@ public class ItemCardboardBox extends ItemBlock implements IContainerItem, IDyea
 		return 1 - (float)StackUtils.get( stack, maxUses, "uses" ) / maxUses;
 	}
 
-	/*
-	 * @Override
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * public int getColorFromItemStack(ItemStack stack, int renderPass) {
-	 * return StackUtils.get(stack, 0x705030, "display", "color");
-	 * }
-	 */
-
-	@Override
-	public boolean canDye( ItemStack stack )
-	{
-		return true;
-	}
-
 	@Override
 	@SideOnly( Side.CLIENT )
 	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
 	{
 		final int maxUses = getUses();
-		final boolean hasItems = StackUtils.has( stack, "Items" );
+		final boolean hasItems = stack.hasTagCompound() && stack.getTagCompound().hasKey( "Inventory" );
 
 		if( !hasItems && BetterStorage.globalConfig.getBoolean( GlobalConfig.enableHelpTooltips ) )
 			list.add( LanguageUtils.translateTooltip( "cardboardBox.useHint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
 
-		/*
-		 * if (maxUses > 1)
-		 * list.add(EnumChatFormatting.DARK_GRAY.toString() + EnumChatFormatting.ITALIC +
-		 * LanguageUtils.translateTooltip("cardboardBox.uses",
-		 * "%USES%", StackUtils.get(stack, maxUses, "uses").toString()));
-		 */
+		if( maxUses > 1 )
+		{
+			int uses = maxUses;
+			if( stack.hasTagCompound() && stack.getTagCompound().hasKey( "uses" ) )
+				uses = Math.min( maxUses, stack.getTagCompound().getInteger( "uses" ) );
+			list.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC
+					+ BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.uses", uses ) );
+		}
 
 		if( !hasItems )
 			return;
 		if( !BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxShowContents ) )
 		{
-			list.add( LanguageUtils.translateTooltip( "cardboardBox.containsItems" ) );
+			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.containsItems" ) );
 			return;
 		}
-		// Show the contents in the cardboard box as tooltip.
 
-		// Using 27 instead of getRows() here because
-		// rows setting is not synced to the client.
-		final ItemStack[] contents = StackUtils.getStackContents( stack, 27 );
+		final ItemStackHandler contents = new ItemStackHandler( 9 );
+		contents.deserializeNBT( stack.getTagCompound().getCompoundTag( "Inventory" ) );
+
 		final int limit = advancedTooltips || GuiScreen.isShiftKeyDown() ? 6 : 3;
 
-		final List< DisplayNameStack > items = new ArrayList< >();
-		outerLoop:
-		for( int i = 0; i < contents.length; i++ )
+		final List< DisplayNameStack > items = new ArrayList<>();
+
+		for( int i = 0; i < contents.getSlots(); i++ )
 		{
-			final ItemStack contentStack = contents[i];
-			if( contentStack == null )
-				continue;
-			for( final DisplayNameStack itemsStack : items )
-				if( itemsStack.matchAndAdd( contentStack ) )
-					continue outerLoop;
-			items.add( new DisplayNameStack( contentStack ) );
+			final ItemStack contentStack = contents.getStackInSlot( i );
+			if( contentStack != null )
+			{
+				boolean added = false;
+				if( items.size() > 0 )
+					for( int j = 0; j < items.size(); j++ )
+						if( items.get( j ).matchAndAdd( contentStack ) )
+						{
+							added = true;
+							break;
+						}
+				if( !added )
+					items.add( new DisplayNameStack( contentStack ) );
+			}
 		}
 
 		Collections.sort( items );

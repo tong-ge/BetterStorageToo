@@ -19,7 +19,7 @@ public final class ModInfo
 	public static final String	containerLocker				= "container." + modId + ".locker";
 	public static final String	containerReinforcedLocker	= "container." + modId + ".reinforced_locker";
 	public static final String	containerArmorStand			= "container." + modId + ".armorStand";
-	public static final String	containerCardboardBox		= "container." + modId + ".cardboardBox";
+	public static final String	containerCardboardBox		= "container." + modId + ".cardboard_box";
 	public static final String	containerCraftingStation	= "container." + modId + ".craftingStation";
 	public static final String	containerPresent			= "container." + modId + ".present";
 

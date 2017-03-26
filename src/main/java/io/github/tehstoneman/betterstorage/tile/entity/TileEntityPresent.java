@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.tile.entity;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

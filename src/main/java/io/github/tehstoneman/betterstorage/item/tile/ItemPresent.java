@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.item.tile;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.block.Block;
@@ -11,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemPresent extends ItemCardboardBox
+public class ItemPresent extends ItemBlockCardboardBox
 {
 	public ItemPresent( Block block )
 	{
