@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.item;
+package io.github.tehstoneman.betterstorage.common.item;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;

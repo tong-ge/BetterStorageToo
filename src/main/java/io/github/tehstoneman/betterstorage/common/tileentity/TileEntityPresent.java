@@ -1,18 +1,19 @@
-package io.github.tehstoneman.betterstorage.tile.entity;
+package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import java.util.logging.Logger;
+
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ITickable;
 
-public class TileEntityPresent extends TileEntityCardboardBox
+public class TileEntityPresent extends TileEntityCardboardBox implements ITickable
 {
 
 	public static final String	TAG_COLOR_INNER		= "presentColorInner";
@@ -37,7 +38,7 @@ public class TileEntityPresent extends TileEntityCardboardBox
 	@Override
 	protected ItemStack getItemDropped()
 	{
-		return !destroyed ? new ItemStack( BetterStorageBlocks.present ) : null;
+		return !destroyed ? new ItemStack( BetterStorageBlocks.PRESENT ) : null;
 	}
 
 	@Override
@@ -50,12 +51,12 @@ public class TileEntityPresent extends TileEntityCardboardBox
 		compound.setBoolean( TAG_SKOJANZA_MODE, skojanzaMode );
 		if( nameTag != null )
 			compound.setString( TAG_NAMETAG, nameTag );
-		StackUtils.remove( stack, "display", "color" );
-		compound.setInteger( "color", color );
+		// StackUtils.remove( stack, "display", "color" );
+		// compound.setInteger( "color", color );
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		breakPause = Math.max( 0, breakPause - 1 );
 		if( breakPause <= 0 )
@@ -68,21 +69,29 @@ public class TileEntityPresent extends TileEntityCardboardBox
 	public void onBlockPlaced( EntityLivingBase player, ItemStack stack )
 	{
 		super.onBlockPlaced( player, stack );
-		colorInner = StackUtils.get( stack, (byte)14, TAG_COLOR_INNER );
-		colorOuter = StackUtils.get( stack, (byte)0, TAG_COLOR_OUTER );
-		skojanzaMode = StackUtils.get( stack, (byte)0, TAG_SKOJANZA_MODE ) > 0;
-		nameTag = StackUtils.get( stack, (String)null, TAG_NAMETAG );
-		color = StackUtils.get( stack, -1, "color" );
+		if( stack.hasTagCompound() )
+		{
+			final NBTTagCompound compound = stack.getTagCompound();
+			if( compound.hasKey( TAG_COLOR_INNER ) )
+				colorInner = compound.getByte( TAG_COLOR_INNER );
+			if( compound.hasKey( TAG_COLOR_OUTER ) )
+				colorOuter = compound.getByte( TAG_COLOR_OUTER );
+			if( compound.hasKey( TAG_SKOJANZA_MODE ) )
+				skojanzaMode = compound.getByte( TAG_SKOJANZA_MODE ) > 0;
+			if( compound.hasKey( TAG_NAMETAG ) )
+				nameTag = compound.getString( TAG_NAMETAG );
+			// color = StackUtils.get( stack, -1, "color" );
+		}
 		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, colorInner, SetBlockFlag.SEND_TO_CLIENT);
 	}
 
 	@Override
 	public boolean onBlockActivated( EntityPlayer player, int side, float hitX, float hitY, float hitZ )
 	{
-
 		final ItemStack holding = player.getHeldItemMainhand();
 		if( holding == null )
 		{
+			Logger.getLogger( ModInfo.modId ).info( "Present hit : " + breakPause );
 
 			if( breakPause > 0 )
 				return false;
@@ -120,19 +129,25 @@ public class TileEntityPresent extends TileEntityCardboardBox
 			if( !destroyed )
 				return true;
 
-			/*
-			 * if (BetterStorageTiles.cardboardBox != null) {
-			 * if (worldObj.setBlock(xCoord, yCoord, zCoord, BetterStorageTiles.cardboardBox)) {
-			 * TileEntityCardboardBox box = WorldUtils.get(worldObj, xCoord, yCoord, zCoord, TileEntityCardboardBox.class);
-			 * box.uses = ItemCardboardBox.getUses();
-			 * box.color = color;
-			 * System.arraycopy(contents, 0, box.contents, 0, contents.length);
-			 * } else for (ItemStack stack : contents)
-			 * WorldUtils.dropStackFromBlock(worldObj, xCoord, yCoord, zCoord, stack);
-			 * } else if (worldObj.setBlockToAir(xCoord, yCoord, zCoord))
-			 * for (ItemStack stack : contents)
-			 * WorldUtils.dropStackFromBlock(worldObj, xCoord, yCoord, zCoord, stack);
-			 */
+			//if( BetterStorageBlocks.CARDBOARD_BOX != null )
+				//if( worldObj.setBlockState( pos, BetterStorageBlocks.CARDBOARD_BOX.getDefaultState() ) )
+				//{
+					// TileEntityCardboardBox box = WorldUtils.get(worldObj, xCoord, yCoord, zCoord, TileEntityCardboardBox.class);
+					// box.uses = ItemBlockCardboardBox.getUses();
+					// box.color = color;
+					// System.arraycopy(contents, 0, box.contents, 0, contents.length);
+				//}
+				//else
+					for( int i = 0; i < inventory.getSlots(); i++ )
+					{
+						final ItemStack stack = inventory.getStackInSlot( i );
+						if( stack != null && stack.stackSize > 0 )
+						{
+							final EntityItem entityItem = new EntityItem( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack );
+							worldObj.spawnEntityInWorld( entityItem );
+						}
+					}
+
 			return true;
 
 		}
@@ -153,38 +168,42 @@ public class TileEntityPresent extends TileEntityCardboardBox
 		 * return false;
 		 * }
 		 * } else
-		 */ return false;
+		 */
+		return false;
 	}
 
 	@Override
 	public void dropContents()
 	{}
 
-	@Override
-	@SideOnly( Side.CLIENT )
-	public void onBlockRenderAsItem( ItemStack stack )
-	{
-		final NBTTagCompound compound = stack.getTagCompound();
-		colorInner = StackUtils.get( stack, (byte)14, TAG_COLOR_INNER );
-		colorOuter = StackUtils.get( stack, (byte)0, TAG_COLOR_OUTER );
-		skojanzaMode = StackUtils.get( stack, (byte)0, TAG_SKOJANZA_MODE ) > 0;
-		nameTag = StackUtils.get( stack, (String)null, TAG_NAMETAG );
-	}
+	/*
+	 * @Override
+	 *
+	 * @SideOnly( Side.CLIENT )
+	 * public void onBlockRenderAsItem( ItemStack stack )
+	 * {
+	 * final NBTTagCompound compound = stack.getTagCompound();
+	 * colorInner = StackUtils.get( stack, (byte)14, TAG_COLOR_INNER );
+	 * colorOuter = StackUtils.get( stack, (byte)0, TAG_COLOR_OUTER );
+	 * skojanzaMode = StackUtils.get( stack, (byte)0, TAG_SKOJANZA_MODE ) > 0;
+	 * nameTag = StackUtils.get( stack, (String)null, TAG_NAMETAG );
+	 * }
+	 */
 
 	// Tile entity synchronization
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
+	public NBTTagCompound getUpdateTag()
 	{
-		final NBTTagCompound compound = new NBTTagCompound();
-		if( color >= 0 )
-			compound.setInteger( "color", color );
+		final NBTTagCompound compound = super.getUpdateTag();
+
 		compound.setByte( TAG_COLOR_INNER, (byte)colorInner );
 		compound.setByte( TAG_COLOR_OUTER, (byte)colorOuter );
 		compound.setBoolean( TAG_SKOJANZA_MODE, skojanzaMode );
 		if( nameTag != null )
 			compound.setString( TAG_NAMETAG, nameTag );
-		return new SPacketUpdateTileEntity( pos, 0, compound );
+
+		return compound;
 	}
 
 	@Override
@@ -192,6 +211,17 @@ public class TileEntityPresent extends TileEntityCardboardBox
 	{
 		super.onDataPacket( net, packet );
 		final NBTTagCompound compound = packet.getNbtCompound();
+		colorInner = compound.getByte( TAG_COLOR_INNER );
+		colorOuter = compound.getByte( TAG_COLOR_OUTER );
+		skojanzaMode = compound.getBoolean( TAG_SKOJANZA_MODE );
+		nameTag = compound.hasKey( TAG_NAMETAG ) ? compound.getString( TAG_NAMETAG ) : null;
+	}
+
+	@Override
+	public void handleUpdateTag( NBTTagCompound compound )
+	{
+		super.handleUpdateTag( compound );
+
 		colorInner = compound.getByte( TAG_COLOR_INNER );
 		colorOuter = compound.getByte( TAG_COLOR_OUTER );
 		skojanzaMode = compound.getBoolean( TAG_SKOJANZA_MODE );

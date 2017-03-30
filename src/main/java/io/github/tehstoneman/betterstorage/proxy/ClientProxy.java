@@ -15,12 +15,13 @@ import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedC
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.ItemCardboardColor;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
 import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
@@ -66,7 +67,19 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
+				BetterStorageItems.KEY,
+				BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
+				BetterStorageItems.CARDBOARD_AXE,
+				BetterStorageItems.CARDBOARD_BOOTS,
+				BetterStorageItems.CARDBOARD_CHESTPLATE,
+				BetterStorageItems.CARDBOARD_HELMET,
+				BetterStorageItems.CARDBOARD_HOE,
+				BetterStorageItems.CARDBOARD_LEGGINGS,
+				BetterStorageItems.CARDBOARD_PICKAXE,
+				BetterStorageItems.CARDBOARD_SHOVEL,
+				BetterStorageItems.CARDBOARD_SWORD );
 		//Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new ItemCardboardColor(), ItemBlock.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) );
 	}
 
@@ -79,20 +92,14 @@ public class ClientProxy extends CommonProxy
 
 	private void registerRenderers()
 	{
-		// registerItemRenderer(BetterStorageTiles.reinforcedLocker, new ItemRendererContainer(TileEntityReinforcedLocker.class));
-
-		// registerItemRenderer(BetterStorageTiles.cardboardBox, new ItemRendererCardboardBox(BetterStorageTiles.cardboardBox));
-		// registerItemRenderer(BetterStorageTiles.present, new ItemRendererContainer(TileEntityPresent.class));
-
 		// RenderingRegistry.registerEntityRenderingHandler(EntityFrienderman.class, new RenderFrienderman());
 		// RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
 
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityArmorStand.class, new TileEntityArmorStandRenderer() );
 		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
+		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
 		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
 		Addon.registerRenderersAll();
 
@@ -158,49 +165,6 @@ public class ClientProxy extends CommonProxy
 	 * GL11.glDisable(GL11.GL_BLEND);
 	 *
 	 * event.setCanceled(true);
-	 *
-	 * }
-	 */
-
-	/*
-	 * private AxisAlignedBB getArmorStandHighlightBox(EntityPlayer player, World world, int x, int y, int z, Vec3 hitVec) {
-	 *
-	 * int metadata = world.getBlockMetadata(x, y, z);
-	 * if (metadata > 0) y -= 1;
-	 *
-	 * TileEntityArmorStand armorStand = WorldUtils.get(world, x, y, z, TileEntityArmorStand.class);
-	 * if (armorStand == null) return null;
-	 *
-	 * int slot = Math.max(0, Math.min(3, (int)((hitVec.yCoord - y) * 2)));
-	 *
-	 * double minX = x + 2 / 16.0;
-	 * double minY = y + slot / 2.0;
-	 * double minZ = z + 2 / 16.0;
-	 * double maxX = x + 14 / 16.0;
-	 * double maxY = y + slot / 2.0 + 0.5;
-	 * double maxZ = z + 14 / 16.0;
-	 *
-	 * EnumArmorStandRegion region = EnumArmorStandRegion.values()[slot];
-	 * for (ArmorStandEquipHandler handler : BetterStorageArmorStand.getEquipHandlers(region)) {
-	 * ItemStack item = armorStand.getItem(handler);
-	 * if (player.isSneaking()) {
-	 * // Check if we can swap the player's equipped armor with armor stand's.
-	 * ItemStack equipped = handler.getEquipment(player);
-	 * if (((item == null) && (equipped == null)) ||
-	 * ((item != null) && !handler.isValidItem(player, item)) ||
-	 * ((equipped != null) && !handler.isValidItem(player, equipped)) ||
-	 * !handler.canSetEquipment(player, item)) continue;
-	 * return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-	 * } else {
-	 * // Check if we can swap the player's held item with armor stand's.
-	 * ItemStack holding = player.getCurrentEquippedItem();
-	 * if (((item == null) && (holding == null)) ||
-	 * ((holding != null) && !handler.isValidItem(player, holding))) continue;
-	 * return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-	 * }
-	 * }
-	 *
-	 * return AxisAlignedBB.getBoundingBox(minX, y, minZ, maxX, y + 2, maxZ);
 	 *
 	 * }
 	 */

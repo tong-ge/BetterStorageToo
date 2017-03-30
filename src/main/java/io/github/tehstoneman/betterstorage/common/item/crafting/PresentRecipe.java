@@ -1,7 +1,7 @@
-package io.github.tehstoneman.betterstorage.item.recipe;
+package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
@@ -16,7 +16,7 @@ public class PresentRecipe extends ShapedRecipes
 
 	public PresentRecipe()
 	{
-		super( 3, 3, createRecipeInput(), new ItemStack( BetterStorageBlocks.present ) );
+		super( 3, 3, createRecipeInput(), new ItemStack( BetterStorageBlocks.PRESENT ) );
 	}
 
 	private static ItemStack[] createRecipeInput()
@@ -54,7 +54,7 @@ public class PresentRecipe extends ShapedRecipes
 		final boolean skojanzaMode = leftRight == colorOuter;
 		final ItemStack box = crafting.getStackInSlot( 4 );
 
-		final ItemStack present = new ItemStack( BetterStorageBlocks.present );
+		final ItemStack present = new ItemStack( BetterStorageBlocks.PRESENT );
 		final NBTTagCompound compound = box.getTagCompound().copy();
 		compound.setByte( TileEntityPresent.TAG_COLOR_INNER, (byte)colorInner );
 		compound.setByte( TileEntityPresent.TAG_COLOR_OUTER, (byte)colorOuter );

@@ -1,30 +1,19 @@
-package io.github.tehstoneman.betterstorage.item.recipe;
+package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.item.IDyeableItem;
+import io.github.tehstoneman.betterstorage.api.IDyeableItem;
 import io.github.tehstoneman.betterstorage.utils.DyeUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class DyeRecipe implements IRecipe
 {
-	@Override
-	public int getRecipeSize()
-	{
-		return 10;
-	}
-
-	@Override
-	public ItemStack getRecipeOutput()
-	{
-		return null;
-	}
-
 	@Override
 	public boolean matches( InventoryCrafting crafting, World world )
 	{
@@ -49,6 +38,18 @@ public class DyeRecipe implements IRecipe
 					return false;
 		}
 		return hasArmor && hasDyes;
+	}
+
+	@Override
+	public int getRecipeSize()
+	{
+		return 10;
+	}
+
+	@Override
+	public ItemStack getRecipeOutput()
+	{
+		return null;
 	}
 
 	@Override

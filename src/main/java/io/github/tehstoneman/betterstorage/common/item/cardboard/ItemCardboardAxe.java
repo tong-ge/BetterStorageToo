@@ -1,57 +1,48 @@
-package io.github.tehstoneman.betterstorage.item.cardboard;
+package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemHoe;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ItemCardboardHoe extends ItemHoe implements ICardboardItem
+public class ItemCardboardAxe extends ItemAxe implements ICardboardItem
 {
 
 	private String name;
 
-	public ItemCardboardHoe()
+	public ItemCardboardAxe()
 	{
-		super( ItemCardboardSheet.toolMaterial );
-		setCreativeTab( BetterStorage.creativeTab );
-		setUnlocalizedName( ModInfo.modId + "." + getItemName() );
-		GameRegistry.registerItem( this, getItemName() );
+		//super( ItemCardboardSheet.toolMaterial );
+		super( ToolMaterial.WOOD );
 	}
-
-	/** Returns the name of this item, for example "drinkingHelmet". */
-	public String getItemName()
-	{
-		return name != null ? name : ( name = MiscUtils.getName( this ) );
-	}
-
-	/*
-	 * @Override
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * public void registerIcons(IIconRegister iconRegister) {
-	 * itemIcon = iconRegister.registerIcon(Constants.modId + ":" + getItemName());
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * public int getColorFromItemStack(ItemStack stack, int renderPass) {
-	 * return StackUtils.get(stack, 0x705030, "display", "color");
-	 * }
-	 */
 
 	@Override
 	public boolean canDye( ItemStack stack )
 	{
 		return true;
+	}
+
+	@Override
+	public int getColor( ItemStack stack )
+	{
+		final NBTTagCompound nbttagcompound = stack.getTagCompound();
+
+		if( nbttagcompound != null )
+		{
+			final NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag( "display" );
+
+			if( nbttagcompound1 != null && nbttagcompound1.hasKey( "color", 3 ) )
+				return nbttagcompound1.getInteger( "color" );
+		}
+		return 0x705030;
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

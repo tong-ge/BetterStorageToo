@@ -33,11 +33,11 @@ public class RecipeInputEnchantedBook implements IRecipeInput
 		if( validEnchantments == null )
 		{
 			validEnchantments = new HashSet<>();
-			final ItemStack[] items = { new ItemStack( BetterStorageItems.cardboardHelmet ), new ItemStack( BetterStorageItems.cardboardChestplate ),
-					new ItemStack( BetterStorageItems.cardboardLeggings ), new ItemStack( BetterStorageItems.cardboardBoots ),
-					new ItemStack( BetterStorageItems.cardboardSword ), new ItemStack( BetterStorageItems.cardboardPickaxe ),
-					new ItemStack( BetterStorageItems.cardboardShovel ), new ItemStack( BetterStorageItems.cardboardAxe ),
-					new ItemStack( BetterStorageItems.cardboardHoe ) };
+			final ItemStack[] items = { new ItemStack( BetterStorageItems.cardboardHelmet ), new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE ),
+					new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS ), new ItemStack( BetterStorageItems.CARDBOARD_BOOTS ),
+					new ItemStack( BetterStorageItems.CARDBOARD_SWORD ), new ItemStack( BetterStorageItems.CARDBOARD_PICKAXE ),
+					new ItemStack( BetterStorageItems.CARDBOARD_SHOVEL ), new ItemStack( BetterStorageItems.CARDBOARD_AXE ),
+					new ItemStack( BetterStorageItems.CARDBOARD_HOE ) };
 			/*
 			 * for (Enchantment ench : Enchantment.enchantmentsList) {
 			 * if ((ench == null) || !ench.isAllowedOnBooks()) continue;

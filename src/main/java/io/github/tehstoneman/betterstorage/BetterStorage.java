@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage;
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
-import io.github.tehstoneman.betterstorage.common.Recipes;
+import io.github.tehstoneman.betterstorage.common.item.crafting.Recipes;
 import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntities;
 import io.github.tehstoneman.betterstorage.config.Config;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;

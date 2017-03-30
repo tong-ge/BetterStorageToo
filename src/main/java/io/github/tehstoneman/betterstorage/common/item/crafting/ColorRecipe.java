@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.item.recipe;
+package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
 import net.minecraft.init.Items;

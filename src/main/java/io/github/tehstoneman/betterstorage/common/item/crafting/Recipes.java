@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.common;
+package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
@@ -7,11 +7,6 @@ import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinfo
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardEnchantmentRecipe;
 import io.github.tehstoneman.betterstorage.item.cardboard.CardboardRepairRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.ColorRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.CopyKeyRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.DyeRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.LockRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.PresentRecipe;
 import io.github.tehstoneman.betterstorage.item.recipe.PresentRemoveNametagRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -113,7 +108,7 @@ public final class Recipes
 		}
 
 		// Cardboard box recipe
-		if( BetterStorageBlocks.CARDBOARD_BOX != null && BetterStorageItems.cardboardSheet != null )
+		if( BetterStorageBlocks.CARDBOARD_BOX != null && BetterStorageItems.CARDBOARD_SHEET != null )
 		{
 			//@formatter:off
 			GameRegistry.addRecipe(
@@ -168,7 +163,7 @@ public final class Recipes
 		//@formatter:on
 
 		// Present recipe
-		if( BetterStorageBlocks.present != null && BetterStorageBlocks.CARDBOARD_BOX != null )
+		if( BetterStorageBlocks.PRESENT != null && BetterStorageBlocks.CARDBOARD_BOX != null )
 		{
 			GameRegistry.addRecipe( new PresentRecipe() );
 			BetterStorageCrafting.addStationRecipe( new PresentRemoveNametagRecipe() );
@@ -262,95 +257,100 @@ public final class Recipes
 
 	private static void addCardboardRecipes()
 	{
+		//@formatter:off
 		// Cardboard sheet recipe
-		if( BetterStorageItems.cardboardSheet != null )
+		if( BetterStorageItems.CARDBOARD_SHEET != null )
 		{
-			//@formatter:off
-			final IRecipe cardboardSheetRecipe = new ShapelessOreRecipe( new ItemStack( BetterStorageItems.cardboardSheet, 4 ),
-					new Object[] { "paper",     "paper", "paper",
-								   "paper", "slimeball", "paper",
-								   "paper",     "paper", "paper" } );
-			GameRegistry.addRecipe( cardboardSheetRecipe );
-			//@formatter:on
+			GameRegistry.addRecipe(
+					new ShapelessOreRecipe(  new ItemStack( BetterStorageItems.CARDBOARD_SHEET, 4 ),
+							new Object[] { "paper",     "paper", "paper",
+									   	   "paper", "slimeball", "paper",
+									   	   "paper",     "paper", "paper" } ) );
 		}
 
 		// Cardboard helmet recipe
 		//@formatter:off
-		if( BetterStorageItems.cardboardHelmet != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardHelmet ),
-					"ooo",
-					"o o",	'o', "sheetCardboard" ) );
+		if( BetterStorageItems.CARDBOARD_HELMET != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HELMET ),
+							new Object[]{ false,
+										  "ooo",
+										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard chestplate recipe
-		if( BetterStorageItems.cardboardChestplate != null )
+		if( BetterStorageItems.CARDBOARD_CHESTPLATE != null )
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardChestplate ),
-							"o o",
-							"ooo",
-							"ooo",	'o', "sheetCardboard" ) );
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE ),
+							new Object[]{ false,
+										  "o o",
+										  "ooo",
+										  "ooo",	'o', "sheetCardboard" } ) );
 
 		// Cardboard leggings recipe
-		if( BetterStorageItems.cardboardLeggings != null )
+		if( BetterStorageItems.CARDBOARD_LEGGINGS != null )
 			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardLeggings ),
-							"ooo",
-							"o o",
-							"o o",	'o', "sheetCardboard" ) );
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS ),
+							new Object[]{ false,
+										  "ooo",
+										  "o o",
+										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard boots recipe
-		if( BetterStorageItems.cardboardBoots != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardBoots ),
-					"o o",
-					"o o",	'o', "sheetCardboard" ) );
+		if( BetterStorageItems.CARDBOARD_BOOTS != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_BOOTS ),
+							new Object[]{ false,
+										  "o o",
+										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard sword recipe
-		if( BetterStorageItems.cardboardSword != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardSword ),
-					"o",
-					"o",
-					"/",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
+		if( BetterStorageItems.CARDBOARD_SWORD != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SWORD ),
+							new Object[]{ false,
+										  "o",
+										  "o",
+										  "/",	'o', "sheetCardboard",
+										  		'/', "stickWood" } ) );
 
 		// Cardboard pickaxe recipe
-		if( BetterStorageItems.cardboardPickaxe != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardPickaxe ),
-					"ooo",
-					" / ",
-					" / ",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
+		if( BetterStorageItems.CARDBOARD_PICKAXE != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_PICKAXE ),
+							new Object[]{ false,
+										  "ooo",
+										  " / ",
+										  " / ",	'o', "sheetCardboard",
+										  			'/', "stickWood" } ) );
 
 		// Cardboard shovel recipe
-		if( BetterStorageItems.cardboardShovel != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardShovel ),
-					"o",
-					"/",
-					"/",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
+		if( BetterStorageItems.CARDBOARD_SHOVEL != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SHOVEL ),
+							new Object[]{ false,
+										  "o",
+										  "/",
+										  "/",	'o', "sheetCardboard",
+								  				'/', "stickWood" } ) );
 
 		// Cardboard axe recipe
-		if( BetterStorageItems.cardboardAxe != null )
-		{
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardAxe ),
-					"oo",
-					"o/",
-					" /",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardAxe ),
-					"oo",
-					"/o",
-					"/ ",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
-		}
+		if( BetterStorageItems.CARDBOARD_AXE != null )
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_AXE ),
+							new Object[] { "oo",
+										   "o/",
+										   " /",	'o', "sheetCardboard",
+										   			'/', "stickWood" } ) );
 
 		// Cardboard hoe recipe
-		if( BetterStorageItems.cardboardHoe != null )
+		if( BetterStorageItems.CARDBOARD_HOE != null )
 		{
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardHoe ),
+			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
 					"oo",
 					" /",
 					" /",	'o', "sheetCardboard",
 							'/', Items.STICK ) );
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.cardboardHoe ),
+			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
 					"oo",
 					"/ ",
 					"/ ",	'o', "sheetCardboard",
@@ -364,7 +364,7 @@ public final class Recipes
 			BetterStorageCrafting.addStationRecipe( new CardboardEnchantmentRecipe() );
 
 			// Crafting Station: Add cardboard repair recipe
-			if( BetterStorageItems.cardboardSheet != null )
+			if( BetterStorageItems.CARDBOARD_SHEET != null )
 				BetterStorageCrafting.addStationRecipe( new CardboardRepairRecipe() );
 		}
 	}

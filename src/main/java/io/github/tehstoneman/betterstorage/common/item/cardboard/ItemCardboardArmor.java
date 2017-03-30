@@ -1,17 +1,18 @@
-package io.github.tehstoneman.betterstorage.item.cardboard;
+package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-import io.github.tehstoneman.betterstorage.item.ItemArmorBetterStorage;
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.misc.Resources;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 
-public class ItemCardboardArmor extends ItemArmorBetterStorage implements ICardboardItem, ISpecialArmor
+public class ItemCardboardArmor extends ItemArmor implements ICardboardItem, ISpecialArmor
 {
 
 	private static final String[] armorText = { "Helmet", "Chestplate", "Leggings", "Boots" };
@@ -20,21 +21,6 @@ public class ItemCardboardArmor extends ItemArmorBetterStorage implements ICardb
 	{
 		super( ItemCardboardSheet.armorMaterial, 0, armorType );
 	}
-
-	@Override
-	public String getItemName()
-	{
-		return "cardboard" + armorText[armorType.getIndex()];
-	}
-
-	/*
-	 * @Override
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * public void registerIcons(IIconRegister iconRegister) {
-	 * itemIcon = iconRegister.registerIcon(Constants.modId + ":" + getItemName());
-	 * }
-	 */
 
 	@Override
 	public String getArmorTexture( ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type )
@@ -46,7 +32,16 @@ public class ItemCardboardArmor extends ItemArmorBetterStorage implements ICardb
 	@Override
 	public int getColor( ItemStack stack )
 	{
-		return StackUtils.get( stack, 0x705030, "display", "color" );
+		final NBTTagCompound nbttagcompound = stack.getTagCompound();
+
+		if( nbttagcompound != null )
+		{
+			final NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag( "display" );
+
+			if( nbttagcompound1 != null && nbttagcompound1.hasKey( "color", 3 ) )
+				return nbttagcompound1.getInteger( "color" );
+		}
+		return 0x705030;
 	}
 
 	@Override

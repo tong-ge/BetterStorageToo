@@ -4,7 +4,6 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityCraftingStation;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class BetterStorageTileEntities

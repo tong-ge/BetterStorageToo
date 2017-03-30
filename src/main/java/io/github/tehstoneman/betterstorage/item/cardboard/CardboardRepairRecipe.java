@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
 import io.github.tehstoneman.betterstorage.api.crafting.IRecipeInput;
 import io.github.tehstoneman.betterstorage.api.crafting.IStationRecipe;
@@ -116,19 +117,19 @@ public class CardboardRepairRecipe implements IStationRecipe
 		 * makeInput(sampleInputs, stack, BetterStorageItems.cardboardSheet);
 		 * }
 		 */
-		makeInput( sampleInputs, new ItemStack( BetterStorageItems.cardboardPickaxe, 1, 32 ), BetterStorageItems.cardboardSheet );
+		makeInput( sampleInputs, new ItemStack( BetterStorageItems.CARDBOARD_PICKAXE, 1, 32 ), BetterStorageItems.CARDBOARD_SHEET );
 		makeInput( sampleInputs, new ItemStack( BetterStorageItems.cardboardHelmet, 1, 11 ),
-				new ItemStack( BetterStorageItems.cardboardChestplate, 1, 16 ), BetterStorageItems.cardboardSheet,
-				new ItemStack( BetterStorageItems.cardboardLeggings, 1, 15 ), new ItemStack( BetterStorageItems.cardboardBoots, 1, 13 ) );
+				new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE, 1, 16 ), BetterStorageItems.CARDBOARD_SHEET,
+				new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS, 1, 15 ), new ItemStack( BetterStorageItems.CARDBOARD_BOOTS, 1, 13 ) );
 		makeInput( sampleInputs, new ItemStack( BetterStorageItems.cardboardHelmet, 1, 11 * 2 ),
-				new ItemStack( BetterStorageItems.cardboardChestplate, 1, 16 * 2 ), BetterStorageItems.cardboardSheet,
-				new ItemStack( BetterStorageItems.cardboardLeggings, 1, 15 * 2 ), new ItemStack( BetterStorageItems.cardboardBoots, 1, 13 * 2 ),
-				BetterStorageItems.cardboardSheet );
+				new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE, 1, 16 * 2 ), BetterStorageItems.CARDBOARD_SHEET,
+				new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS, 1, 15 * 2 ), new ItemStack( BetterStorageItems.CARDBOARD_BOOTS, 1, 13 * 2 ),
+				BetterStorageItems.CARDBOARD_SHEET );
 		makeInput( sampleInputs, new ItemStack( BetterStorageItems.cardboardHelmet, 1, 11 * 3 ),
-				new ItemStack( BetterStorageItems.cardboardChestplate, 1, 16 * 3 ), BetterStorageItems.cardboardSheet,
-				new ItemStack( BetterStorageItems.cardboardLeggings, 1, 15 * 3 ), new ItemStack( BetterStorageItems.cardboardBoots, 1, 13 * 3 ),
-				BetterStorageItems.cardboardSheet, new ItemStack( BetterStorageItems.cardboardShovel, 1, 32 ),
-				new ItemStack( BetterStorageItems.cardboardHoe, 1, 32 ), BetterStorageItems.cardboardSheet );
+				new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE, 1, 16 * 3 ), BetterStorageItems.CARDBOARD_SHEET,
+				new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS, 1, 15 * 3 ), new ItemStack( BetterStorageItems.CARDBOARD_BOOTS, 1, 13 * 3 ),
+				BetterStorageItems.CARDBOARD_SHEET, new ItemStack( BetterStorageItems.CARDBOARD_SHOVEL, 1, 32 ),
+				new ItemStack( BetterStorageItems.CARDBOARD_HOE, 1, 32 ), BetterStorageItems.CARDBOARD_SHEET );
 		return sampleInputs;
 	}
 

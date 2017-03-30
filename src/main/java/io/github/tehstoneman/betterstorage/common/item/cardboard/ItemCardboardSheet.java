@@ -1,19 +1,17 @@
-package io.github.tehstoneman.betterstorage.item.cardboard;
+package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
-import net.minecraft.block.state.IBlockState;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class ItemCardboardSheet extends ItemBetterStorage
+public class ItemCardboardSheet extends Item
 {
 	public static final ToolMaterial	toolMaterial	= EnumHelper.addToolMaterial( "cardboard", 0, 64, 2.0F, -0.5F, 0 );
-	public static final ArmorMaterial	armorMaterial	= EnumHelper.addArmorMaterial( "cardboard", "cardboard", 5, new int[] { 1, 2, 2, 1 }, 0,
+	public static final ArmorMaterial	armorMaterial	= EnumHelper.addArmorMaterial( "cardboard", ModInfo.modId + ":cardboard", 5, new int[] { 1, 2, 2, 1 }, 0,
 			SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F );
 
 	public ItemCardboardSheet()
@@ -64,8 +62,10 @@ public class ItemCardboardSheet extends ItemBetterStorage
 		return true;
 	}
 
-	/*public static boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
-	{
-		return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
-	}*/
+	/*
+	 * public static boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
+	 * {
+	 * return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
+	 * }
+	 */
 }

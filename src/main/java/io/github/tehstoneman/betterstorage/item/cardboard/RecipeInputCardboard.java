@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.item.cardboard;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.crafting.ContainerInfo;
 import io.github.tehstoneman.betterstorage.api.crafting.IRecipeInput;
 import net.minecraft.item.ItemStack;

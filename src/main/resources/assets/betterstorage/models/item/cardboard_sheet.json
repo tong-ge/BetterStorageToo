@@ -2,6 +2,6 @@
 	"parent": "item/generated",
 	"textures":
 	{
-		"layer0": "betterstorage:items/cardboardSheet"
+		"layer0": "betterstorage:items/cardboard_sheet"
 	}
 }

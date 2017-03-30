@@ -1,20 +1,19 @@
-package io.github.tehstoneman.betterstorage.item.tile;
+package io.github.tehstoneman.betterstorage.common.item;
 
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBox;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemPresent extends ItemBlockCardboardBox
+public class ItemBlockPresent extends ItemBlockCardboardBox
 {
-	public ItemPresent( Block block )
+	public ItemBlockPresent( Block block )
 	{
 		super( block );
 	}
@@ -33,7 +32,7 @@ public class ItemPresent extends ItemBlockCardboardBox
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly(Side.CLIENT)
 	 * public int getColorFromItemStack(ItemStack stack, int renderPass) { return 0xFFFFFF; }
 	 */
@@ -42,9 +41,12 @@ public class ItemPresent extends ItemBlockCardboardBox
 	@SideOnly( Side.CLIENT )
 	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
 	{
-		final String nameTag = StackUtils.get( stack, null, TileEntityPresent.TAG_NAMETAG );
-		if( nameTag != null )
-			list.add( "for " + nameTag );
+		if( stack.hasTagCompound() )
+		{
+			final NBTTagCompound compound = stack.getTagCompound();
+			if( compound.hasKey( TileEntityPresent.TAG_NAMETAG ) )
+				list.add( "for " + compound.getString( TileEntityPresent.TAG_NAMETAG ) );
+		}
 	}
 
 	@Override

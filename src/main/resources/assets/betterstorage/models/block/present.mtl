@@ -1,0 +1,14 @@
+# Blender MTL File: 'present.blend'
+# Material Count: 2
+
+newmtl present_red
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+d 1.000000
+map_Kd betterstorage:models/present_red
+
+newmtl present_white
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+d 1.000000
+map_Kd betterstorage:models/present_white

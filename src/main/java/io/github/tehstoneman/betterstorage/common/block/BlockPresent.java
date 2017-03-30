@@ -2,24 +2,30 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.Random;
 
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockPresent;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCardboardBox extends BlockContainerBetterStorage
+public class BlockPresent extends BlockContainerBetterStorage
 {
-	public BlockCardboardBox()
+	public BlockPresent()
 	{
 		super( Material.WOOD );
+		setCreativeTab( null );
 
-		setHardness( 0.8f );
-		setSoundType( SoundType.CLOTH );
+		setHardness( 0.75f );
+		setSoundType(SoundType.CLOTH);
 	}
 
 	@Override
@@ -41,6 +47,13 @@ public class BlockCardboardBox extends BlockContainerBetterStorage
 	}
 
 	@Override
+	@SideOnly( Side.CLIENT )
+	public EnumBlockRenderType getRenderType( IBlockState state )
+	{
+		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
 	public int quantityDropped( Random rand )
 	{
 		return 0;
@@ -49,6 +62,6 @@ public class BlockCardboardBox extends BlockContainerBetterStorage
 	@Override
 	public TileEntity createNewTileEntity( World world, int metadata )
 	{
-		return new TileEntityCardboardBox();
+		return new TileEntityPresent();
 	}
 }

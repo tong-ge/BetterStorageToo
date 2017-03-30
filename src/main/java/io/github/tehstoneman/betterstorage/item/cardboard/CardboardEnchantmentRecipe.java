@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
 import io.github.tehstoneman.betterstorage.api.crafting.IRecipeInput;
 import io.github.tehstoneman.betterstorage.api.crafting.IStationRecipe;

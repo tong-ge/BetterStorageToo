@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.common.item.ItemArmorBetterStorage;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
 import io.github.tehstoneman.betterstorage.utils.LanguageUtils;

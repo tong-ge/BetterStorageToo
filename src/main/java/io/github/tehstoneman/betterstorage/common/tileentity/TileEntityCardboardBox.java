@@ -113,12 +113,12 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return compound;
 	}
 
-	@Override
+	/*@Override
 	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		final NBTTagCompound compound = getUpdateTag();
 		return new SPacketUpdateTileEntity( pos, 0, compound );
-	}
+	}*/
 
 	@Override
 	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )

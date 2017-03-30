@@ -4,8 +4,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import io.github.tehstoneman.betterstorage.client.model.ModelPresent;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.misc.Resources;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityPresent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -24,7 +24,7 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 	private static final double	NAMETAG_RENDER_RANGE	= 3.0;
 	private static final double	NAMETAG_RENDER_RANGE_SQ	= NAMETAG_RENDER_RANGE * NAMETAG_RENDER_RANGE;
 
-	private final ModelPresent	model					= new ModelPresent();
+	//private final ModelPresent	model					= new ModelPresent();
 
 	@Override
 	public void renderTileEntityAt( TileEntity entity, double x, double y, double z, float par8, int destroyStage )
@@ -49,7 +49,7 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 		GL11.glDepthFunc( GL11.GL_EQUAL );
 		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		texMan.bindTexture( Resources.texturePresentOverlay );
-		model.render( 1 );
+		//model.render( 1 );
 
 		GL11.glDepthFunc( GL11.GL_LEQUAL );
 		GL11.glDisable( GL11.GL_BLEND );
@@ -78,8 +78,7 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 		// GL11.glTranslatef(icon.getMinU(), icon.getMinV(), 0);
 		// GL11.glScalef((icon.getMaxU() - icon.getMinU()), (icon.getMaxV() - icon.getMinV()), 1);
 
-		for( final int layer : layers )
-			model.render( layer );
+		//for( final int layer : layers ) model.render( layer );
 
 		GL11.glPopMatrix();
 		GL11.glMatrixMode( GL11.GL_MODELVIEW );

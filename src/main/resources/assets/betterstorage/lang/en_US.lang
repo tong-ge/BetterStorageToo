@@ -26,16 +26,16 @@ enchantment.betterstorage.lock.trigger=Trigger
 
 # Items
 item.betterstorage.bucketSlime.name=Slime in a Bucket
-item.betterstorage.cardboardAxe.name=Cardboard Axe
-item.betterstorage.cardboardBoots.name=Cardboard Boots
-item.betterstorage.cardboardChestplate.name=Cardboard Chestplate
-item.betterstorage.cardboardHelmet.name=Cardboard Helmet
-item.betterstorage.cardboardHoe.name=Cardboard Hoe
-item.betterstorage.cardboardLeggings.name=Cardboard Leggings
-item.betterstorage.cardboardPickaxe.name=Cardboard Pickaxe
-item.betterstorage.cardboardSheet.name=Cardboard Sheet
-item.betterstorage.cardboardShovel.name=Cardboard Shovel
-item.betterstorage.cardboardSword.name=Cardboard Sword
+item.betterstorage.cardboard_axe.name=Cardboard Axe
+item.betterstorage.cardboard_boots.name=Cardboard Boots
+item.betterstorage.cardboard_chestplate.name=Cardboard Chestplate
+item.betterstorage.cardboard_helmet.name=Cardboard Helmet
+item.betterstorage.cardboard_hoe.name=Cardboard Hoe
+item.betterstorage.cardboard_leggings.name=Cardboard Leggings
+item.betterstorage.cardboard_pickaxe.name=Cardboard Pickaxe
+item.betterstorage.cardboard_sheet.name=Cardboard Sheet
+item.betterstorage.cardboard_shovel.name=Cardboard Shovel
+item.betterstorage.cardboard_sword.name=Cardboard Sword
 item.betterstorage.drinkingHelmet.name=Drinking Helmet
 item.betterstorage.key.name=Key
 item.betterstorage.keyring.name=Keyring
