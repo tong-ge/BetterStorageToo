@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.common.inventory.Region;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import io.github.tehstoneman.betterstorage.misc.Region;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;

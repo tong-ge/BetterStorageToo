@@ -2,11 +2,9 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.awt.Color;
 
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class KeyColor implements IItemColor
 {
@@ -20,7 +18,7 @@ public class KeyColor implements IItemColor
 		case 1:
 			return ItemBetterStorage.getKeyColor1( stack );
 		case 2:
-			return  Color.WHITE.getRGB();
+			return Color.WHITE.getRGB();
 		}
 		return Color.WHITE.getRGB();
 	}

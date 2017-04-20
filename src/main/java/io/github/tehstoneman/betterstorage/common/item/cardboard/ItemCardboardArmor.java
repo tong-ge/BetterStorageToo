@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
-import io.github.tehstoneman.betterstorage.misc.Resources;
+import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 
-public class ItemCardboardArmor extends ItemArmor implements ICardboardItem, ISpecialArmor
+public class ItemCardboardArmor extends ItemArmor implements /*ICardboardItem,*/ ISpecialArmor
 {
 
 	private static final String[] armorText = { "Helmet", "Chestplate", "Leggings", "Boots" };
@@ -44,11 +44,11 @@ public class ItemCardboardArmor extends ItemArmor implements ICardboardItem, ISp
 		return 0x705030;
 	}
 
-	@Override
+	/*@Override
 	public boolean canDye( ItemStack stack )
 	{
 		return true;
-	}
+	}*/
 
 	// ISpecialArmor implementation
 	// Makes sure cardboard armor doesn't get destroyed,

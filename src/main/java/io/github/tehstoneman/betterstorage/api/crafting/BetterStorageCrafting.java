@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 public final class BetterStorageCrafting
 {
@@ -21,14 +22,14 @@ public final class BetterStorageCrafting
 	}
 
 	/** Creates and returns a crafting matching the input, or null if none was found. */
-	public static StationCrafting findMatchingStationCrafting( ItemStack[] input )
+	public static StationCrafting findMatchingStationCrafting( ItemStack[] craftingIn )
 	{
-		final RecipeBounds bounds = new RecipeBounds( input );
+		final RecipeBounds bounds = new RecipeBounds( craftingIn );
 		for( final IStationRecipe recipe : recipes )
 		{
-			final StationCrafting crafting = recipe.checkMatch( input, bounds );
-			if( crafting != null )
-				return crafting;
+			final StationCrafting craftingOut = recipe.checkMatch( craftingIn, bounds );
+			if( craftingOut != null )
+				return craftingOut;
 		}
 		return null;
 	}

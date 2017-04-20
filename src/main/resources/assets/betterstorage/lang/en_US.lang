@@ -1,5 +1,5 @@
 # Containers
-container.betterstorage.craftingStation=Crafting Station
+container.betterstorage.crafting_station=Crafting Station
 container.betterstorage.cardboard_box=Cardboard Box
 container.betterstorage.crate=Storage Crate
 container.betterstorage.crate.capacity=%% Capacity
@@ -64,8 +64,7 @@ tc.research_name.betterstorage.magicstorage=Magical Storage
 tc.research_text.betterstorage.magicstorage=Enchanting your containers
 
 # Blocks
-tile.betterstorage.craftingStation.name=Crafting Station
-tile.betterstorage.armorStand.name=Armor Stand
+tile.betterstorage.crafting_station.name=Crafting Station
 tile.betterstorage.cardboard_box.name=Cardboard Box
 tile.betterstorage.cardboard_box_colored.black.name=Black Cardboard Box
 tile.betterstorage.cardboard_box_colored.blue.name=Blue Cardboard Box

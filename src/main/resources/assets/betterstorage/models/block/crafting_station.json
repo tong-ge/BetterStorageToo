@@ -1,0 +1,9 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures":
+    {
+        "bottom": "betterstorage:blocks/crafting_station_bottom_0",
+        "top": "betterstorage:blocks/crafting_station_top",
+        "side": "betterstorage:blocks/crafting_station"
+    }
+}

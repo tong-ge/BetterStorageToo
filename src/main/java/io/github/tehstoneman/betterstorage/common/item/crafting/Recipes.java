@@ -1,13 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import io.github.tehstoneman.betterstorage.addon.Addon;
-import io.github.tehstoneman.betterstorage.api.crafting.BetterStorageCrafting;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.item.cardboard.CardboardEnchantmentRecipe;
-import io.github.tehstoneman.betterstorage.item.cardboard.CardboardRepairRecipe;
-import io.github.tehstoneman.betterstorage.item.recipe.PresentRemoveNametagRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -156,28 +152,39 @@ public final class Recipes
 		}
 
 		// Crafting Station recipe
-		if( BetterStorageBlocks.craftingStation != null )
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.craftingStation ), "B-B", "PTP", "WCW", 'B',
-					Blocks.STONEBRICK, '-', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, 'P', Blocks.PISTON, 'T', Blocks.CRAFTING_TABLE, 'W', "plankWood",
-					'C', BetterStorageBlocks.CRATE != null ? BetterStorageBlocks.CRATE : Blocks.CHEST ) );
-		//@formatter:on
-
+		/*if( BetterStorageBlocks.CRAFTING_STATION != null )
+			//@formatter:off
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CRAFTING_STATION ),
+							new Object[]{ false,
+										  "B-B",
+										  "PTP",
+										  "WCW",	'B', Blocks.STONEBRICK,
+										  			'-', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE,
+										  			'P', Blocks.PISTON,
+										  			'T', "workbench",
+										  			'W', "plankWood",
+										  			'C', BetterStorageBlocks.CRATE != null ? BetterStorageBlocks.CRATE : "chestWood" } ) );
+			//@formatter:on
+*/
 		// Present recipe
-		if( BetterStorageBlocks.PRESENT != null && BetterStorageBlocks.CARDBOARD_BOX != null )
-		{
-			GameRegistry.addRecipe( new PresentRecipe() );
-			BetterStorageCrafting.addStationRecipe( new PresentRemoveNametagRecipe() );
-		}
+		/*
+		 * if( BetterStorageBlocks.PRESENT != null && BetterStorageBlocks.CARDBOARD_BOX != null )
+		 * {
+		 * GameRegistry.addRecipe( new PresentRecipe() );
+		 * BetterStorageCrafting.addStationRecipe( new PresentRemoveNametagRecipe() );
+		 * }
+		 */
 
 		// Flint Block recipe
-		if( BetterStorageBlocks.flintBlock != null )
+		if( BetterStorageBlocks.BLOCK_FLINT != null )
 		{
 			//@formatter:off
-			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.flintBlock ),
-					"ooo",
-					"ooo",
-					"ooo",	'o', Items.FLINT );
-			GameRegistry.addShapelessRecipe( new ItemStack( Items.FLINT, 9 ), BetterStorageBlocks.flintBlock );
+			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.BLOCK_FLINT ),
+					new Object[]{ "ooo",
+								  "ooo",
+								  "ooo",	'o', Items.FLINT } );
+			GameRegistry.addShapelessRecipe( new ItemStack( Items.FLINT, 9 ), BetterStorageBlocks.BLOCK_FLINT );
 			//@formatter:on
 		}
 
@@ -260,13 +267,11 @@ public final class Recipes
 		//@formatter:off
 		// Cardboard sheet recipe
 		if( BetterStorageItems.CARDBOARD_SHEET != null )
-		{
 			GameRegistry.addRecipe(
 					new ShapelessOreRecipe(  new ItemStack( BetterStorageItems.CARDBOARD_SHEET, 4 ),
 							new Object[] { "paper",     "paper", "paper",
 									   	   "paper", "slimeball", "paper",
 									   	   "paper",     "paper", "paper" } ) );
-		}
 
 		// Cardboard helmet recipe
 		//@formatter:off
@@ -344,28 +349,24 @@ public final class Recipes
 
 		// Cardboard hoe recipe
 		if( BetterStorageItems.CARDBOARD_HOE != null )
-		{
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
-					"oo",
-					" /",
-					" /",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
-			GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
-					"oo",
-					"/ ",
-					"/ ",	'o', "sheetCardboard",
-							'/', Items.STICK ) );
-		}
+			GameRegistry.addRecipe(
+					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
+							new Object[]{ "oo",
+									" /",
+									" /",	'o', "sheetCardboard",
+											'/', "stickWood" } ) );
 		//@formatter:on
 
-		if( BetterStorageItems.anyCardboardItemsEnabled )
-		{
-			// Crafting Station: Add cardboard enchantment recipe
-			BetterStorageCrafting.addStationRecipe( new CardboardEnchantmentRecipe() );
-
-			// Crafting Station: Add cardboard repair recipe
-			if( BetterStorageItems.CARDBOARD_SHEET != null )
-				BetterStorageCrafting.addStationRecipe( new CardboardRepairRecipe() );
-		}
+		/*
+		 * if( BetterStorageItems.anyCardboardItemsEnabled )
+		 * {
+		 * // Crafting Station: Add cardboard enchantment recipe
+		 * BetterStorageCrafting.addStationRecipe( new CardboardEnchantmentRecipe() );
+		 * 
+		 * // Crafting Station: Add cardboard repair recipe
+		 * if( BetterStorageItems.CARDBOARD_SHEET != null )
+		 * BetterStorageCrafting.addStationRecipe( new CardboardRepairRecipe() );
+		 * }
+		 */
 	}
 }

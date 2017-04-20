@@ -4,10 +4,7 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
-import io.github.tehstoneman.betterstorage.tile.ContainerMaterial;
-import io.github.tehstoneman.betterstorage.tile.TileLockable;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
@@ -30,17 +27,19 @@ public class ItemBlockLockable extends ItemBlock
 	public String getItemStackDisplayName( ItemStack stack )
 	{
 		final Block block = Block.getBlockFromItem( stack.getItem() );
-		if( block instanceof TileLockable )
-		{
-			if( !( (TileLockable)Block.getBlockFromItem( stack.getItem() ) ).hasMaterial() )
-				return super.getItemStackDisplayName( stack );
-
-			final ContainerMaterial material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
-
-			final String name = I18n.format( getUnlocalizedName() + ".name.full" );
-			final String materialName = I18n.format( "material." + ModInfo.modId + "." + material.name );
-			return name.replace( "%MATERIAL%", materialName );
-		}
+		/*
+		 * if( block instanceof TileLockable )
+		 * {
+		 * if( !( (TileLockable)Block.getBlockFromItem( stack.getItem() ) ).hasMaterial() )
+		 * return super.getItemStackDisplayName( stack );
+		 * 
+		 * final ContainerMaterial material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
+		 * 
+		 * final String name = I18n.format( getUnlocalizedName() + ".name.full" );
+		 * final String materialName = I18n.format( "material." + ModInfo.modId + "." + material.name );
+		 * return name.replace( "%MATERIAL%", materialName );
+		 * }
+		 */
 
 		if( block instanceof BlockLockable )
 		{
@@ -54,8 +53,8 @@ public class ItemBlockLockable extends ItemBlock
 	}
 
 	@Override
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        return super.getUnlocalizedName() + "." + EnumReinforced.byMetadata( stack.getMetadata() ).getName();
-    }
+	public String getUnlocalizedName( ItemStack stack )
+	{
+		return super.getUnlocalizedName() + "." + EnumReinforced.byMetadata( stack.getMetadata() ).getName();
+	}
 }

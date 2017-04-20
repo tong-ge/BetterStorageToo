@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 
 public interface IStationRecipe
 {
@@ -12,7 +13,7 @@ public interface IStationRecipe
 	 * If the input matches this recipe, returns a new station crafting
 	 * instance, specifically for this input, or null if it didn't match.
 	 */
-	StationCrafting checkMatch( ItemStack[] input, RecipeBounds bounds );
+	StationCrafting checkMatch( ItemStack[] craftingIn, RecipeBounds bounds );
 
 	// NEI related functions
 

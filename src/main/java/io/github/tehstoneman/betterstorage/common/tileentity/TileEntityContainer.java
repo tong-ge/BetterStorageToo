@@ -474,7 +474,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		for( int i = 0; i < inventory.getSlots(); i++ )
 		{
-			ItemStack stack = inventory.getStackInSlot( i );
+			final ItemStack stack = inventory.getStackInSlot( i );
 			if( stack != null && stack.stackSize > 0 )
 				return false;
 		}

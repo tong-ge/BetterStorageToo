@@ -1,22 +1,14 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.misc.Resources;
+import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.animation.Event;
-import net.minecraftforge.common.animation.TimeValues;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.model.animation.CapabilityAnimation;
-import net.minecraftforge.common.model.animation.IAnimationStateMachine;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,37 +17,43 @@ public class TileEntityLocker extends TileEntityLockable
 	private static final EnumFacing[]	neighbors	= { EnumFacing.DOWN, EnumFacing.UP };
 
 	public boolean						mirror		= false;
-	
-	//private final TimeValues.VariableValue open;
-	//private final IAnimationStateMachine asm;
-	
+
+	// private final TimeValues.VariableValue open;
+	// private final IAnimationStateMachine asm;
+
 	public TileEntityLocker()
 	{
-		/*if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
-		{
-			open = new TimeValues.VariableValue( 0 );
-			asm = ModelLoaderRegistry.loadASM( new ResourceLocation(ModInfo.modId, "asms/block/locker.json" ), ImmutableMap.of("open", open) );
-		}
-		else
-		{
-			open = null;
-			asm = null;
-		}*/
+		/*
+		 * if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
+		 * {
+		 * open = new TimeValues.VariableValue( 0 );
+		 * asm = ModelLoaderRegistry.loadASM( new ResourceLocation(ModInfo.modId, "asms/block/locker.json" ), ImmutableMap.of("open", open) );
+		 * }
+		 * else
+		 * {
+		 * open = null;
+		 * asm = null;
+		 * }
+		 */
 	}
 
 	@Override
 	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
 	{
-		/*if( capability == CapabilityAnimation.ANIMATION_CAPABILITY )
-			return true;*/
+		/*
+		 * if( capability == CapabilityAnimation.ANIMATION_CAPABILITY )
+		 * return true;
+		 */
 		return super.hasCapability( capability, facing );
 	}
 
 	@Override
 	public <T> T getCapability( Capability< T > capability, EnumFacing facing )
 	{
-		/*if( capability == CapabilityAnimation.ANIMATION_CAPABILITY )
-			return CapabilityAnimation.ANIMATION_CAPABILITY.cast( asm );*/
+		/*
+		 * if( capability == CapabilityAnimation.ANIMATION_CAPABILITY )
+		 * return CapabilityAnimation.ANIMATION_CAPABILITY.cast( asm );
+		 */
 		return super.getCapability( capability, facing );
 	}
 

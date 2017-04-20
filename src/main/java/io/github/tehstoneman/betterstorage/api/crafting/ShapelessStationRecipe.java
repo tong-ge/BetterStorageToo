@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class ShapelessStationRecipe implements IStationRecipe
 {
@@ -81,7 +82,7 @@ public class ShapelessStationRecipe implements IStationRecipe
 		inputLoop:
 		for( int i = 0; i < input.length; i++ )
 		{
-			final ItemStack item = input[i];
+			final ItemStack item = input[ i ];
 			if( item == null )
 				continue;
 			final Iterator< IRecipeInput > iter = checklist.iterator();

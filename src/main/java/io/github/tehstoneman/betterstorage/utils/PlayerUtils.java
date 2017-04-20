@@ -1,10 +1,6 @@
 package io.github.tehstoneman.betterstorage.utils;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
-import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -38,33 +34,38 @@ public final class PlayerUtils
 		// player.openContainer.addCraftingToCrafters(player);
 	}
 
-	@SideOnly( Side.CLIENT )
-	public static void openGui( EntityPlayer player, String name, int columns, int rows, String title )
-	{
-		final GuiScreen gui = createGuiFromName( player, name, columns, rows, title );
-		Minecraft.getMinecraft().displayGuiScreen( gui );
-	}
+	/*
+	 * @SideOnly( Side.CLIENT )
+	 * public static void openGui( EntityPlayer player, String name, int columns, int rows, String title )
+	 * {
+	 * final GuiScreen gui = createGuiFromName( player, name, columns, rows, title );
+	 * Minecraft.getMinecraft().displayGuiScreen( gui );
+	 * }
+	 */
 
-	@SideOnly( Side.CLIENT )
-	private static GuiScreen createGuiFromName( EntityPlayer player, String name, int columns, int rows, String title )
-	{
-		final boolean localized = !title.isEmpty();
-		if( !localized )
-			title = name;
-
-		if( name.equals( ModInfo.containerKeyring ) )
-			return new GuiBetterStorage( new ContainerKeyring( player, title, columns ) );
-		/*
-		 * else if (name.startsWith(Constants.containerThaumiumChest))
-		 * return new GuiThaumiumChest(player, columns, rows, title, localized);
-		 * else if (name.equals(Constants.containerCardboardBox))
-		 * return new GuiBetterStorage(player, columns, rows, new InventoryWrapper(
-		 * new InventoryCardboardBox(new ItemStack[columns * rows]), title, localized));
-		 * else if (name.equals(Constants.containerCraftingStation))
-		 * return new GuiCraftingStation(player, title, localized);
-		 * else
-		 */
-
-		return new GuiBetterStorage( player, columns, rows, title, localized );
-	}
+	/*
+	 * @SideOnly( Side.CLIENT )
+	 * private static GuiScreen createGuiFromName( EntityPlayer player, String name, int columns, int rows, String title )
+	 * {
+	 * final boolean localized = !title.isEmpty();
+	 * if( !localized )
+	 * title = name;
+	 * 
+	 * if( name.equals( ModInfo.containerKeyring ) )
+	 * return new GuiBetterStorage( new ContainerKeyring( player, title, columns ) );
+	 * else
+	 * if( name.startsWith( Constants.containerThaumiumChest ) )
+	 * return new GuiThaumiumChest( player, columns, rows, title, localized );
+	 * else
+	 * if( name.equals( Constants.containerCardboardBox ) )
+	 * return new GuiBetterStorage( player, columns, rows,
+	 * new InventoryWrapper( new InventoryCardboardBox( new ItemStack[columns * rows] ), title, localized ) );
+	 * else
+	 * if( name.equals( Constants.containerCraftingStation ) )
+	 * return new GuiCraftingStation( player, title, localized );
+	 * else
+	 * 
+	 * return new GuiBetterStorage( player, columns, rows, title, localized );
+	 * }
+	 */
 }

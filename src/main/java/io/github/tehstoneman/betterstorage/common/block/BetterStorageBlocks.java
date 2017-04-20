@@ -8,12 +8,7 @@ import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCardboardBoxColored;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockLockable;
-import io.github.tehstoneman.betterstorage.common.item.ItemBlockPresent;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.tile.TileCraftingStation;
-import io.github.tehstoneman.betterstorage.tile.TileFlintBlock;
-import io.github.tehstoneman.betterstorage.tile.TileLockableDoor;
-import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
@@ -31,11 +26,11 @@ public final class BetterStorageBlocks
 	public static BlockReinforcedLocker		REINFORCED_LOCKER;
 	public static BlockCardboardBox			CARDBOARD_BOX;
 	public static BlockCardboardBoxColored	CARDBOARD_BOX_COLORED;
-	public static BlockPresent				PRESENT;
+	// public static BlockPresent PRESENT;
 
-	public static TileCraftingStation		craftingStation;
-	public static TileFlintBlock			flintBlock;
-	public static TileLockableDoor			lockableDoor;
+	// public static BlockCraftingStation CRAFTING_STATION;
+	public static BlockFlintBlock			BLOCK_FLINT;
+	// public static BlockLockableDoor LOCKABLE_DOOR;
 
 	public static void registerBlocks()
 	{
@@ -75,16 +70,37 @@ public final class BetterStorageBlocks
 			GameRegistry
 					.register( new ItemBlockCardboardBoxColored( CARDBOARD_BOX_COLORED ).setRegistryName( CARDBOARD_BOX_COLORED.getRegistryName() ) );
 		}
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.presentEnabled ) )
-		{
-			PRESENT = (BlockPresent)new BlockPresent().setUnlocalizedName( ModInfo.modId + ".present" );
-			GameRegistry.register( PRESENT.setRegistryName( "present" ) );
-			GameRegistry.register( new ItemBlockPresent( PRESENT ).setRegistryName( PRESENT.getRegistryName() ) );
-		}
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.presentEnabled ) )
+		 * {
+		 * PRESENT = (BlockPresent)new BlockPresent().setUnlocalizedName( ModInfo.modId + ".present" );
+		 * GameRegistry.register( PRESENT.setRegistryName( "present" ) );
+		 * GameRegistry.register( new ItemBlockPresent( PRESENT ).setRegistryName( PRESENT.getRegistryName() ) );
+		 * }
+		 */
 
-		craftingStation = MiscUtils.conditionalNew( TileCraftingStation.class, GlobalConfig.craftingStationEnabled );
-		flintBlock = MiscUtils.conditionalNew( TileFlintBlock.class, GlobalConfig.flintBlockEnabled );
-		lockableDoor = MiscUtils.conditionalNew( TileLockableDoor.class, GlobalConfig.lockableDoorEnabled );
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.craftingStationEnabled ) )
+		 * {
+		 * CRAFTING_STATION = (BlockCraftingStation)new BlockCraftingStation().setUnlocalizedName( ModInfo.modId + ".crafting_station" );
+		 * GameRegistry.register( CRAFTING_STATION.setRegistryName( "crafting_station" ) );
+		 * GameRegistry.register( new ItemBlockPresent( CRAFTING_STATION ).setRegistryName( CRAFTING_STATION.getRegistryName() ) );
+		 * }
+		 */
+
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.flintBlockEnabled ) )
+		{
+			BLOCK_FLINT = (BlockFlintBlock)new BlockFlintBlock().setUnlocalizedName( ModInfo.modId + ".block_flint" );
+			GameRegistry.register( BLOCK_FLINT.setRegistryName( "block_flint" ) );
+			GameRegistry.register( new ItemBlock( BLOCK_FLINT ).setRegistryName( BLOCK_FLINT.getRegistryName() ) );
+		}
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockableDoorEnabled ) )
+		 * {
+		 * LOCKABLE_DOOR = (BlockLockableDoor)new BlockLockableDoor().setUnlocalizedName( ModInfo.modId + ".lockable_door" );
+		 * GameRegistry.register( LOCKABLE_DOOR.setRegistryName( "lockable_door" ) );
+		 * }
+		 */
 
 		Addon.initializeTilesAll();
 	}
@@ -122,12 +138,20 @@ public final class BetterStorageBlocks
 						new ModelResourceLocation( CARDBOARD_BOX.getRegistryName() + "_" + color.getName(), "inventory" ) );
 		}
 
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.presentEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( PRESENT ), 0,
-					new ModelResourceLocation( PRESENT.getRegistryName(), "inventory" ) );
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.presentEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( PRESENT ), 0,
+		 * new ModelResourceLocation( PRESENT.getRegistryName(), "inventory" ) );
+		 */
 
-		craftingStation.registerItemModels();
-		flintBlock.registerItemModels();
-		lockableDoor.registerItemModels();
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.craftingStationEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( CRAFTING_STATION ), 0,
+		 * new ModelResourceLocation( CRAFTING_STATION.getRegistryName(), "inventory" ) );
+		 */
+
+		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.flintBlockEnabled ) )
+			ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( BLOCK_FLINT ), 0,
+					new ModelResourceLocation( BLOCK_FLINT.getRegistryName(), "inventory" ) );
 	}
 }

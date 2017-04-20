@@ -8,24 +8,17 @@ import com.google.common.collect.ImmutableMap;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.addon.Addon;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityPresentRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.item.ItemCardboardColor;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
 import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
-import io.github.tehstoneman.betterstorage.misc.handlers.KeyBindingHandler;
-import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -57,7 +50,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.initialize();
 
-		new KeyBindingHandler();
+		// new KeyBindingHandler();
 
 		registerRenderers();
 	}
@@ -67,28 +60,23 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
-				BetterStorageItems.KEY,
-				BetterStorageItems.LOCK );
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
-				BetterStorageItems.CARDBOARD_AXE,
-				BetterStorageItems.CARDBOARD_BOOTS,
-				BetterStorageItems.CARDBOARD_CHESTPLATE,
-				BetterStorageItems.CARDBOARD_HELMET,
-				BetterStorageItems.CARDBOARD_HOE,
-				BetterStorageItems.CARDBOARD_LEGGINGS,
-				BetterStorageItems.CARDBOARD_PICKAXE,
-				BetterStorageItems.CARDBOARD_SHOVEL,
-				BetterStorageItems.CARDBOARD_SWORD );
-		//Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new ItemCardboardColor(), ItemBlock.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
+				BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,
+				BetterStorageItems.CARDBOARD_HOE, BetterStorageItems.CARDBOARD_LEGGINGS, BetterStorageItems.CARDBOARD_PICKAXE,
+				BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD );
+		// Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new ItemCardboardColor(), ItemBlock.getItemFromBlock(
+		// BetterStorageBlocks.CARDBOARD_BOX ) );
 	}
 
-	/*@Override
-	protected void registerArmorStandHandlers()
-	{
-		super.registerArmorStandHandlers();
-		BetterStorageArmorStand.registerRenderHandler( new VanillaArmorStandRenderHandler() );
-	}*/
+	/*
+	 * @Override
+	 * protected void registerArmorStandHandlers()
+	 * {
+	 * super.registerArmorStandHandlers();
+	 * BetterStorageArmorStand.registerRenderHandler( new VanillaArmorStandRenderHandler() );
+	 * }
+	 */
 
 	private void registerRenderers()
 	{
@@ -97,9 +85,9 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
-		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
+		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
+		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
+		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
 		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
 		Addon.registerRenderersAll();
 
@@ -252,7 +240,7 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public IAnimationStateMachine load( ResourceLocation location, ImmutableMap<String, ITimeValue> parameters)
+	public IAnimationStateMachine load( ResourceLocation location, ImmutableMap< String, ITimeValue > parameters )
 	{
 		return ModelLoaderRegistry.loadASM( location, parameters );
 	}

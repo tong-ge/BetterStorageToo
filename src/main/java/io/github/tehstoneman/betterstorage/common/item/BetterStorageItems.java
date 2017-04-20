@@ -15,9 +15,6 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.item.ItemBucketSlime;
-import io.github.tehstoneman.betterstorage.item.ItemPresentBook;
-import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.client.model.ModelLoader;
@@ -46,8 +43,8 @@ public final class BetterStorageItems
 	public static ItemCardboardHoe		CARDBOARD_HOE;
 
 	// public static ItemDrinkingHelmet drinkingHelmet;
-	public static ItemBucketSlime		slimeBucket;
-	public static ItemPresentBook		presentBook;
+	// public static ItemBucketSlime SLIME_BUCKET;
+	// public static ItemPresentBook PRESENT_BOOK;
 
 	public static boolean				anyCardboardItemsEnabled;
 
@@ -132,8 +129,14 @@ public final class BetterStorageItems
 		}
 
 		// drinkingHelmet = MiscUtils.conditionalNew( ItemDrinkingHelmet.class, GlobalConfig.drinkingHelmetEnabled );
-		slimeBucket = MiscUtils.conditionalNew( ItemBucketSlime.class, GlobalConfig.slimeBucketEnabled );
-		presentBook = new ItemPresentBook();
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.slimeBucketEnabled ) )
+		 * {
+		 * SLIME_BUCKET = (ItemBucketSlime)new ItemBucketSlime().setUnlocalizedName( ModInfo.modId + ".slime_bucket" );
+		 * GameRegistry.register( SLIME_BUCKET.setRegistryName( "slime_bucket" ) );
+		 * }
+		 */
+		// PRESENT_BOOK = new ItemPresentBook();
 
 		anyCardboardItemsEnabled = BetterStorageItems.CARDBOARD_HELMET != null || BetterStorageItems.CARDBOARD_CHESTPLATE != null
 				|| BetterStorageItems.CARDBOARD_LEGGINGS != null || BetterStorageItems.CARDBOARD_BOOTS != null
@@ -195,12 +198,14 @@ public final class BetterStorageItems
 			ModelLoader.setCustomModelResourceLocation( CARDBOARD_PICKAXE, 0,
 					new ModelResourceLocation( CARDBOARD_PICKAXE.getRegistryName(), "inventory" ) );
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardAxeEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_AXE, 0,
-					new ModelResourceLocation( CARDBOARD_AXE.getRegistryName(), "inventory" ) );
+			ModelLoader.setCustomModelResourceLocation( CARDBOARD_AXE, 0, new ModelResourceLocation( CARDBOARD_AXE.getRegistryName(), "inventory" ) );
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHoeEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_HOE, 0,
-					new ModelResourceLocation( CARDBOARD_HOE.getRegistryName(), "inventory" ) );
+			ModelLoader.setCustomModelResourceLocation( CARDBOARD_HOE, 0, new ModelResourceLocation( CARDBOARD_HOE.getRegistryName(), "inventory" ) );
 
-		slimeBucket.registerItemModels();
+		/*
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.slimeBucketEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( SLIME_BUCKET, 0,
+		 * new ModelResourceLocation( SLIME_BUCKET.getRegistryName(), "inventory" ) );
+		 */
 	}
 }

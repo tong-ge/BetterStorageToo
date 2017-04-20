@@ -1,17 +1,11 @@
 package io.github.tehstoneman.betterstorage.utils;
 
-import java.util.List;
-
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import io.github.tehstoneman.betterstorage.inventory.InventoryTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -140,32 +134,36 @@ public final class WorldUtils
 	}
 
 	/** Counts and returns the number of players who're accessing a tile entity. */
-	public static int syncPlayersUsing( TileEntity te, int playersUsing, IInventory playerInventory )
-	{
-		if( !te.getWorld().isRemote && playersUsing != 0 )
-		{
-			playersUsing = 0;
-			final List< EntityPlayer > players = te.getWorld().getEntitiesWithinAABB( EntityPlayer.class, getAABB( te, 5 ) );
-			for( final EntityPlayer player : players )
-				if( player.openContainer instanceof ContainerBetterStorage )
-				{
-					final IInventory inventory = ( (ContainerBetterStorage)player.openContainer ).inventory;
-					if( inventory == playerInventory )
-						playersUsing++;
-					else
-						if( inventory instanceof InventoryTileEntity )
-							if( ( (InventoryTileEntity)inventory ).mainTileEntity == te )
-								playersUsing++;
-				}
-		}
-		return playersUsing;
-	}
+	/*
+	 * public static int syncPlayersUsing( TileEntity te, int playersUsing, IInventory playerInventory )
+	 * {
+	 * if( !te.getWorld().isRemote && playersUsing != 0 )
+	 * {
+	 * playersUsing = 0;
+	 * final List< EntityPlayer > players = te.getWorld().getEntitiesWithinAABB( EntityPlayer.class, getAABB( te, 5 ) );
+	 * for( final EntityPlayer player : players )
+	 * if( player.openContainer instanceof ContainerBetterStorage )
+	 * {
+	 * final IInventory inventory = ( (ContainerBetterStorage)player.openContainer ).inventory;
+	 * if( inventory == playerInventory )
+	 * playersUsing++;
+	 * else
+	 * if( inventory instanceof InventoryTileEntity )
+	 * if( ( (InventoryTileEntity)inventory ).mainTileEntity == te )
+	 * playersUsing++;
+	 * }
+	 * }
+	 * return playersUsing;
+	 * }
+	 */
 
 	/** Counts and returns the number of players who're accessing a tile entity. */
-	public static int syncPlayersUsing( TileEntityContainer te, int numUsingPlayers )
-	{
-		return syncPlayersUsing( te, numUsingPlayers, te.getPlayerInventory() );
-	}
+	/*
+	 * public static int syncPlayersUsing( TileEntityContainer te, int numUsingPlayers )
+	 * {
+	 * return syncPlayersUsing( te, numUsingPlayers, te.getPlayerInventory() );
+	 * }
+	 */
 
 	/** This will perform a {@link World#notifyBlockOfNeighborChange()} on every adjacent block including the block at x|y|z. */
 

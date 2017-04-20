@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.api.crafting;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class RecipeBounds
 {
@@ -24,13 +25,13 @@ public class RecipeBounds
 		this.maxY = maxY;
 	}
 
-	public RecipeBounds( ItemStack[] input )
+	public RecipeBounds( ItemStack[] craftingIn )
 	{
 		int minX = 2, maxX = -1;
 		int minY = 2, maxY = -1;
 		for( int x = 0; x <= 2; x++ )
 			for( int y = 0; y <= 2; y++ )
-				if( input[x + y * 3] != null )
+				if( craftingIn[ x + y * 3 ] != null )
 				{
 					minX = Math.min( minX, x );
 					maxX = Math.max( maxX, x );

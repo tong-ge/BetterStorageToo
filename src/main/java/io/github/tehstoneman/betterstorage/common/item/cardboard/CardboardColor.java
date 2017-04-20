@@ -14,6 +14,8 @@ public class CardboardColor implements IItemColor
 		if( stack.getItem() instanceof ICardboardItem )
 			return ( (ICardboardItem)stack.getItem() ).getColor( stack );
 		else
-			return Color.WHITE.getRGB();
+			if( stack.getItem() instanceof ItemCardboardArmor )
+				return ( (ItemCardboardArmor)stack.getItem() ).getColor( stack );
+		return Color.WHITE.getRGB();
 	}
 }

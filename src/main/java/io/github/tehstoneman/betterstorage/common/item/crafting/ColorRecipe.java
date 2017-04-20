@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;

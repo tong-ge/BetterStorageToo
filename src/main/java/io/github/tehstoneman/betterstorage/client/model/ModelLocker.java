@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import io.github.tehstoneman.betterstorage.misc.Resources;
+import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

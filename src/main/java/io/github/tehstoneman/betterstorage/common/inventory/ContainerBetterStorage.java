@@ -99,7 +99,7 @@ public class ContainerBetterStorage extends Container
 	{
 		return ( getRows() + 4 ) * 18 + separation + 29;
 	}
-	
+
 	public String getName()
 	{
 		return tileContainer.getName();
@@ -138,10 +138,8 @@ public class ContainerBetterStorage extends Container
 	 */
 
 	/** Called when a slot is changed. */
-	/*
-	 * public void onSlotChanged( int slot )
-	 * {}
-	 */
+	public void onSlotChanged( int slot )
+	{}
 
 	@Override
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )

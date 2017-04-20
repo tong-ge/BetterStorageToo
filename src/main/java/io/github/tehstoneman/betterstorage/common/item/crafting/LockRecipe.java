@@ -1,9 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-import java.util.UUID;
-
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.item.ItemBetterStorage;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -16,7 +13,7 @@ public class LockRecipe extends ShapedOreRecipe
 	public LockRecipe( ItemStack result, Object[] recipe )
 	{
 		super( result, recipe );
-		this.mirrored = false;
+		mirrored = false;
 	}
 
 	@Override

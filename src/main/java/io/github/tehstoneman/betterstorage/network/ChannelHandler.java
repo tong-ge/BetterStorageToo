@@ -1,9 +1,6 @@
 package io.github.tehstoneman.betterstorage.network;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.network.packet.PacketDrinkingHelmetUse;
-import io.github.tehstoneman.betterstorage.network.packet.PacketLockHit;
-import io.github.tehstoneman.betterstorage.network.packet.PacketPresentOpen;
 import io.github.tehstoneman.betterstorage.network.packet.PacketSyncSetting;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,10 +21,10 @@ public class ChannelHandler extends SimpleNetworkWrapper
 		// register(3, Side.CLIENT, PacketBackpackIsOpen.class);
 		// register(4, Side.SERVER, PacketBackpackOpen.class);
 		// register(5, Side.CLIENT, PacketBackpackStack.class);
-		register( 6, Side.SERVER, PacketDrinkingHelmetUse.class );
-		register( 7, Side.SERVER, PacketLockHit.class );
+		// register( 6, Side.SERVER, PacketDrinkingHelmetUse.class );
+		// register( 7, Side.SERVER, PacketLockHit.class );
 		register( 8, Side.CLIENT, PacketSyncSetting.class );
-		register( 9, Side.CLIENT, PacketPresentOpen.class );
+		// register( 9, Side.CLIENT, PacketPresentOpen.class );
 	}
 
 	public <T extends IMessage & IMessageHandler< T, IMessage >> void register( int id, Side receivingSide, Class< T > messageClass )

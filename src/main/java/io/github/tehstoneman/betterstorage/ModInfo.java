@@ -4,8 +4,8 @@ public final class ModInfo
 {
 	public static final String	modId						= "betterstorage";
 	public static final String	modName						= "BetterStorage";
-	public static final String	modVersion					= "1.0.0.0-beta1";
-	public static final String	dependencies				= "required-after:Forge; after:Thaumcraft; after:JEI;";
+	public static final String	modVersion					= "1.0.0.0";
+	public static final String	dependencies				= "required-after:Forge@[12.18.2.2114,); after:JEI;";
 	public static final String	acceptedMC					= "1.10.2";
 	public static final String	guiFactory					= "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory";
 	public static final String	updateJson					= "http://tehstoneman.github.io/" + modId + ".json";
@@ -20,7 +20,7 @@ public final class ModInfo
 	public static final String	containerReinforcedLocker	= "container." + modId + ".reinforced_locker";
 	public static final String	containerArmorStand			= "container." + modId + ".armorStand";
 	public static final String	containerCardboardBox		= "container." + modId + ".cardboard_box";
-	public static final String	containerCraftingStation	= "container." + modId + ".craftingStation";
+	public static final String	containerCraftingStation	= "container." + modId + ".crafting_station";
 	public static final String	containerPresent			= "container." + modId + ".present";
 
 	public static final String	containerKeyring			= "container." + modId + ".keyring";

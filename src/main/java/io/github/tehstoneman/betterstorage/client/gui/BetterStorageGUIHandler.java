@@ -1,12 +1,11 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import io.github.tehstoneman.betterstorage.container.ContainerKeyring;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -45,6 +44,17 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return new ContainerBetterStorage( player, chest );
 			}
 		}
+		/*
+		 * if( ID == EnumGui.CRAFTING.getGuiID() )
+		 * {
+		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+		 * if( tileEntity instanceof TileEntityCraftingStation )
+		 * {
+		 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
+		 * return new ContainerCraftingStation( player, station );
+		 * }
+		 * }
+		 */
 		return null;
 	}
 
@@ -76,15 +86,27 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return new GuiBetterStorage( new ContainerBetterStorage( player, chest ) );
 			}
 		}
+		/*
+		 * if( ID == EnumGui.CRAFTING.getGuiID() )
+		 * {
+		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+		 * if( tileEntity instanceof TileEntityCraftingStation )
+		 * {
+		 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
+		 * return new GuiCraftingStation( new ContainerCraftingStation( player, station ) );
+		 * }
+		 * }
+		 */
 		return null;
 	}
 
 	public static enum EnumGui implements IStringSerializable
 	{
 		//@formatter:off
-		KEYRING( 0, "keyring" ),
-		CRATE(   1, "crate" ),
-		GENERAL( 2, "general" );
+		KEYRING(  0, "keyring" ),
+		CRATE(    1, "crate" ),
+		GENERAL(  2, "general" ),
+		CRAFTING( 3, "crafting" );
 		//@formatter:on
 
 		private final int				guiID;
