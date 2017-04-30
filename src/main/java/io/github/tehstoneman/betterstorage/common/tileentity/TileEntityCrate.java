@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.inventory.Region;
@@ -18,6 +19,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -38,7 +40,8 @@ public class TileEntityCrate extends TileEntity
 	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
 	{
 		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return true;
+			if( facing == null || BetterStorage.config.enableCrateInventoryInterface )
+				return true;
 		return super.hasCapability( capability, facing );
 	}
 
@@ -46,14 +49,15 @@ public class TileEntityCrate extends TileEntity
 	public <T> T getCapability( Capability< T > capability, EnumFacing facing )
 	{
 		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return (T)getCrateStackHandler();
+			if( facing == null || BetterStorage.config.enableCrateInventoryInterface )
+				return (T)getCrateStackHandler();
 		return super.getCapability( capability, facing );
 	}
 
 	/** Helper function to add crate to handler */
 	public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
 	{
-		if( !worldObj.isRemote && pileID == null )
+		if( !getWorld().isRemote && pileID == null )
 		{
 			getCrateStackHandler().addCrate( this );
 			markDirty();
@@ -63,8 +67,8 @@ public class TileEntityCrate extends TileEntity
 	/** Get the crate stack handler for this tile entity. */
 	public CrateStackHandler getCrateStackHandler()
 	{
-		final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
-		if( worldObj.isRemote )
+		final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
+		if( getWorld().isRemote )
 			return new CrateStackHandler( getCapacity() );
 		final CrateStackHandler handler = collection.getCratePile( pileID );
 		handler.sendUpdatesTo( this );
@@ -76,7 +80,7 @@ public class TileEntityCrate extends TileEntity
 	{
 		if( pileID == null )
 		{
-			final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
+			final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
 			final CrateStackHandler handler = collection.createCratePile();
 			pileID = handler.getPileID();
 		}
@@ -99,20 +103,20 @@ public class TileEntityCrate extends TileEntity
 		final int x = pos.getX(), y = pos.getY(), z = pos.getZ();
 
 		// Destroy all crates above.
-		final TileEntity tileEntity = worldObj.getTileEntity( pos.up() );
+		final TileEntity tileEntity = getWorld().getTileEntity( pos.up() );
 		if( tileEntity instanceof TileEntityCrate )
 		{
 			final TileEntityCrate crateAbove = (TileEntityCrate)tileEntity;
 			if( crateAbove != null && crateAbove.getPileID().equals( pileID ) )
 			{
 				final CrateStackHandler handler = getCrateStackHandler();
-				final ItemStack[] overflow = handler.removeCrate( crateAbove );
-				if( overflow != null )
+				final NonNullList< ItemStack > overflow = handler.removeCrate( crateAbove );
+				if( !overflow.isEmpty() )
 					for( final ItemStack stack : overflow )
-						if( stack != null && stack.stackSize > 0 )
-							worldObj.spawnEntityInWorld( new EntityItem( worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), stack ) );
-				worldObj.setBlockToAir( pos.up() );
-				worldObj.spawnEntityInWorld( new EntityItem( worldObj, x, y + 1, z, new ItemStack( BetterStorageBlocks.CRATE ) ) );
+						if( !stack.isEmpty() )
+							getWorld().spawnEntity( new EntityItem( getWorld(), pos.getX(), pos.getY() + 1, pos.getZ(), stack ) );
+				getWorld().setBlockToAir( pos.up() );
+				getWorld().spawnEntity( new EntityItem( getWorld(), x, y + 1, z, new ItemStack( BetterStorageBlocks.CRATE ) ) );
 			}
 		}
 
@@ -129,7 +133,7 @@ public class TileEntityCrate extends TileEntity
 
 		// The first crate set will keep the original pile data.
 		// All other sets will get new pile data objects.
-		final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
+		final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
 		for( int i = 1; i < crateSets.size(); i++ )
 		{
 			final HashSet< TileEntityCrate > set = crateSets.get( i );
@@ -139,16 +143,16 @@ public class TileEntityCrate extends TileEntity
 			for( TileEntityCrate newCrate : set )
 			{
 				newHandler.addCrate( newCrate );
-				final ItemStack[] overflow = handler.removeCrate( newCrate );
-				if( overflow != null )
+				final NonNullList< ItemStack > overflow = handler.removeCrate( newCrate );
+				if( !overflow.isEmpty() )
 					for( final ItemStack stack : overflow )
-						if( stack != null )
+						if( !stack.isEmpty() )
 							newHandler.addItems( stack );
 
 				// Add all crates above the base crate.
 				while( true )
 				{
-					newCrate = (TileEntityCrate)worldObj.getTileEntity( newCrate.getPos().up() );
+					newCrate = (TileEntityCrate)getWorld().getTileEntity( newCrate.getPos().up() );
 					if( newCrate == null )
 						break;
 					newHandler.addCrate( newCrate );
@@ -160,7 +164,7 @@ public class TileEntityCrate extends TileEntity
 		// Trim the original map to the size it actually is.
 		// This is needed because the crates may not be removed in
 		// order, from outside to inside.
-		handler.trimRegion( worldObj );
+		handler.trimRegion( getWorld() );
 		notifyRegionUpdate( handler.getRegion(), getPileID() );
 	}
 
@@ -177,7 +181,7 @@ public class TileEntityCrate extends TileEntity
 			final int nz = z + dir.getFrontOffsetZ();
 
 			// Continue if this neighbor block is not part of the crate pile.
-			final TileEntity tileEntity = worldObj.getTileEntity( pos.add( dir.getDirectionVec() ) );
+			final TileEntity tileEntity = getWorld().getTileEntity( pos.add( dir.getDirectionVec() ) );
 			if( tileEntity instanceof TileEntityCrate )
 			{
 				final TileEntityCrate neighborCrate = (TileEntityCrate)tileEntity;
@@ -210,7 +214,7 @@ public class TileEntityCrate extends TileEntity
 	/** Checks crate connections */
 	private void checkConnections( int x, int y, int z, UUID pileID, HashSet< TileEntityCrate > set )
 	{
-		final TileEntityCrate crate = (TileEntityCrate)worldObj.getTileEntity( new BlockPos( x, y, z ) );
+		final TileEntityCrate crate = (TileEntityCrate)getWorld().getTileEntity( new BlockPos( x, y, z ) );
 		if( crate == null || !pileID.equals( crate.getPileID() ) || set.contains( crate ) )
 			return;
 		set.add( crate );
@@ -221,11 +225,11 @@ public class TileEntityCrate extends TileEntity
 	/** Tries to connect a crate to the given side */
 	public boolean attemptConnect( EnumFacing side )
 	{
-		if( worldObj.isRemote || side == EnumFacing.UP )
+		if( getWorld().isRemote || side == EnumFacing.UP )
 			return false;
 		final BlockPos neighbourPos = pos.add( side.getDirectionVec() );
 
-		final TileEntity tileEntity = worldObj.getTileEntity( neighbourPos );
+		final TileEntity tileEntity = getWorld().getTileEntity( neighbourPos );
 		if( tileEntity instanceof TileEntityCrate )
 		{
 			final TileEntityCrate crateClicked = (TileEntityCrate)tileEntity;
@@ -249,11 +253,11 @@ public class TileEntityCrate extends TileEntity
 	{
 		for( final BlockPos blockPos : BlockPos.getAllInBox( region.posMin, region.posMax ) )
 		{
-			final TileEntity te = worldObj.getTileEntity( blockPos );
+			final TileEntity te = getWorld().getTileEntity( blockPos );
 			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
 			{
-				final IBlockState state = worldObj.getBlockState( blockPos );
-				worldObj.notifyBlockUpdate( blockPos, state, state, 3 );
+				final IBlockState state = getWorld().getBlockState( blockPos );
+				getWorld().notifyBlockUpdate( blockPos, state, state, 3 );
 			}
 		}
 	}
@@ -267,7 +271,7 @@ public class TileEntityCrate extends TileEntity
 	public void invalidate()
 	{
 		super.invalidate();
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return;
 		checkPileConnections( getPileID() );
 	}
@@ -275,7 +279,7 @@ public class TileEntityCrate extends TileEntity
 	/** Get the number of crates connected to this tile entity */
 	public int getNumCrates()
 	{
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return numCrates;
 		return getCrateStackHandler().getNumCrates();
 	}
@@ -290,7 +294,7 @@ public class TileEntityCrate extends TileEntity
 	/** Get the total capacity this tile entity */
 	public int getCapacity()
 	{
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return capacity;
 		return getCrateStackHandler().getCapacity();
 	}
@@ -300,7 +304,7 @@ public class TileEntityCrate extends TileEntity
 	/** Get the comparator level of this tile entity */
 	public int getComparatorSignalStrength()
 	{
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return 0;
 		final CrateStackHandler handler = getCrateStackHandler();
 		return handler.getOccupiedSlots() > 0 ? 1 + handler.getOccupiedSlots() * 14 / handler.getCapacity() : 0;
@@ -309,7 +313,7 @@ public class TileEntityCrate extends TileEntity
 	@Override
 	public void markDirty()
 	{
-		final CrateStackCollection collection = CrateStackCollection.getCollection( worldObj );
+		final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
 		collection.markDirty();
 		super.markDirty();
 	}
@@ -345,7 +349,7 @@ public class TileEntityCrate extends TileEntity
 		numCrates = compound.getInteger( "NumCrates" );
 		capacity = compound.getInteger( "Capacity" );
 
-		worldObj.markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
+		getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
 	}
 
 	@Override

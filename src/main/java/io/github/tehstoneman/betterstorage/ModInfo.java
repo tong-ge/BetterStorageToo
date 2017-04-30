@@ -3,10 +3,10 @@ package io.github.tehstoneman.betterstorage;
 public final class ModInfo
 {
 	public static final String	modId						= "betterstorage";
-	public static final String	modName						= "BetterStorage";
-	public static final String	modVersion					= "1.0.0.0";
-	public static final String	dependencies				= "required-after:Forge@[12.18.2.2114,); after:JEI;";
-	public static final String	acceptedMC					= "1.10.2";
+	public static final String	modName						= "BetterStorageToo";
+	public static final String	modVersion					= "2.0.0.0";
+	public static final String	dependencies				= "required-after:forge@[13.20.0.2228,); after:JEI;";
+	public static final String	acceptedMC					= "1.11.2";
 	public static final String	guiFactory					= "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory";
 	public static final String	updateJson					= "http://tehstoneman.github.io/" + modId + ".json";
 

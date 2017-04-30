@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -85,7 +84,7 @@ public class ContainerCrate extends Container
 	public ItemStack transferStackInSlot( EntityPlayer player, int index )
 	{
 		final Slot slot = inventorySlots.get( index );
-		ItemStack returnStack = null;
+		ItemStack returnStack = ItemStack.EMPTY;
 
 		if( slot != null && slot.getHasStack() )
 		{
@@ -96,18 +95,18 @@ public class ContainerCrate extends Container
 			{
 				// Try to transfer from crate to player
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
-					return null;
+					return ItemStack.EMPTY;
 			}
 			else // Try to transfer from player to crate
 			{
 				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-					return null;
-				if( itemStack.stackSize > 0 )
+					return ItemStack.EMPTY;
+				if( itemStack.getCount() > 0 )
 					inventoryCrate.addItems( itemStack );
 			}
 
-			if( itemStack == null || itemStack.stackSize == 0 )
-				slot.putStack( null );
+			if( itemStack.isEmpty() )
+				slot.putStack( ItemStack.EMPTY );
 			else
 				slot.onSlotChanged();
 		}

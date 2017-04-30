@@ -3,8 +3,8 @@ package io.github.tehstoneman.betterstorage.common.block;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -15,10 +15,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -27,7 +29,7 @@ import net.minecraftforge.fml.common.Optional.Method;
 import vazkii.botania.api.mana.ILaputaImmobile;
 
 @Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
-public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImmobile
+public class BlockCrate extends BlockBetterStorage implements ITileEntityProvider, ILaputaImmobile
 {
 	public static final PropertyBool	CONNECTED_DOWN	= PropertyBool.create( "down" );
 	public static final PropertyBool	CONNECTED_UP	= PropertyBool.create( "up" );
@@ -38,7 +40,7 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 
 	public BlockCrate()
 	{
-		super( Material.WOOD );
+		super( "crate", Material.WOOD );
 		setHardness( 2.0f );
 		setHarvestLevel( "axe", 0 );
 		setSoundType( SoundType.WOOD );
@@ -51,6 +53,12 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 												  .withProperty( CONNECTED_EAST, false )
 												  .withProperty( CONNECTED_WEST, false ) );
 		//@formatter:on
+	}
+
+	@Override
+	protected ItemBlock getItemBlock()
+	{
+		return new ItemBlockCrate( this );
 	}
 
 	@Override
@@ -141,13 +149,13 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 	}
 
 	@Override
-	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem,
-			EnumFacing side, float hitX, float hitY, float hitZ )
+	public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ )
 	{
-		if( world.isRemote )
+		if( worldIn.isRemote )
 			return true;
-		final TileEntityCrate tileEntityCrate = (TileEntityCrate)world.getTileEntity( pos );
-		player.openGui( ModInfo.modId, EnumGui.CRATE.getGuiID(), world, pos.getX(), pos.getY(), pos.getZ() );
+		final TileEntityCrate tileEntityCrate = (TileEntityCrate)worldIn.getTileEntity( pos );
+		playerIn.openGui( ModInfo.modId, EnumGui.CRATE.getGuiID(), worldIn, pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
 
@@ -159,11 +167,12 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 		{
 			final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
 			final CrateStackHandler handler = tileCrate.getCrateStackHandler();
-			final ItemStack[] overflow = handler.removeCrate( tileCrate );
-			if( overflow != null )
+			final NonNullList< ItemStack > overflow = handler.removeCrate( tileCrate );
+			tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
+			if( !overflow.isEmpty() )
 				for( final ItemStack stack : overflow )
-					if( stack != null && stack.stackSize > 0 )
-						world.spawnEntityInWorld( new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack ) );
+					if( !stack.isEmpty() )
+						world.spawnEntity( new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack ) );
 		}
 		return super.removedByPlayer( state, world, pos, player, willHarvest );
 	}

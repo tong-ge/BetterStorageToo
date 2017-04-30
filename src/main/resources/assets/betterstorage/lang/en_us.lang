@@ -1,0 +1,17 @@
+# Containers
+container.betterstorage.crate=Storage Crate
+container.betterstorage.crate.capacity=%% Capacity
+
+# Creative tab
+itemGroup.betterstorage=Better Storage Too
+
+# Blocks
+tile.betterstorage.crate.name=Storage Crate
+tile.betterstorage.crate.name.tooltip=Enable or disable storage crates
+
+# Config
+config.betterstorage.category.block=Blocks
+config.betterstorage.category.block.tooltip=Change whether a certain Block is active.
+
+config.betterstorage.general.enableCrateInventoryInterface=Crate Inventory Interface
+config.betterstorage.general.enableCrateInventoryInterface.tooltip=If enabled, exposes a special block view of crates, so items can be moved in and out by automated systems.

@@ -1,15 +1,15 @@
-BetterStorage
-=============
+BetterStorageToo
+================
 
-.. is a [Minecraft](http://minecraft.net/) mod which adds more storage options. It aims
+.. is a continuation of CopyGirl's Better Storage [Minecraft](http://minecraft.net/) mod which adds more storage options. It aims
 for fun, interesting and balanced features which would fit well into vanilla Minecraft,
 but also work nicely together with other mods. Information about all its features can be
 found in the [Minecraft Forums thread](http://www.minecraftforum.net/topic/1548203-/).
 
-BetterStorage is licensed under the MIT license, so feel free to modify and distribute
+BetterStorageToo is licensed under the MIT license, so feel free to modify and distribute
 it all you want. If you're planning to contribute features to the master repository,
-I'd appreciate if you talk to me first. You can reach me on the forums, via
-[email](mailto:halfnerd.copygirl@gmail.com) or on [IRC](irc://irc.esper.net/#obsidian).
+I'd appreciate if you talk to me first. You can reach me on the forums, or via
+[email](mailto:tehstoneman@gmail.com).
 
 Setting up the Development Environment
 --------------------------------------

@@ -12,6 +12,7 @@ import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
@@ -63,7 +64,7 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		int count = 0;
 		for( final ItemStack stack : stacks )
-			if( stack != null )
+			if( !stack.isEmpty() )
 				count++;
 		return count;
 	}
@@ -96,10 +97,10 @@ public class CrateStackHandler extends ItemStackHandler
 	/** Tries to fit contents into full stacks, and moves empty slots to the end of the inventory */
 	public void consolidateStacks()
 	{
-		for( int i = 1; i < stacks.length; i++ )
-			if( stacks[i] != null )
-				if( mergeItemStack( stacks[i], 0, i ) == 0 )
-					stacks[i] = null;
+		for( int i = 1; i < stacks.size(); i++ )
+			if( !stacks.get( i ).isEmpty() )
+				if( mergeItemStack( stacks.get( i ), 0, i ) == 0 )
+					stacks.set( i, ItemStack.EMPTY );
 	}
 
 	/** Merges partial stacks into each other */
@@ -108,37 +109,38 @@ public class CrateStackHandler extends ItemStackHandler
 		int i = startIndex;
 
 		if( stack.isStackable() )
-			while( stack.stackSize > 0 && i < endIndex )
+			while( stack.getCount() > 0 && i < endIndex )
 			{
-				final ItemStack itemstack = stacks[i];
+				final ItemStack itemstack = stacks.get( i );
 
-				if( itemstack == null )
+				if( itemstack.isEmpty() )
 				{
-					stacks[i] = stack.copy();
-					stack.stackSize = 0;
+					stacks.set( i, stack.copy() );
+					stack.setCount( 0 );
 					break;
 				}
 				else
 					if( ItemStack.areItemsEqual( stack, itemstack ) )
 					{
-						final int newSize = itemstack.stackSize + stack.stackSize;
+						final int newSize = itemstack.getCount() + stack.getCount();
 
 						if( newSize <= stack.getMaxStackSize() )
 						{
-							stack.stackSize = 0;
-							itemstack.stackSize = newSize;
+							stack.setCount( 0 );
+							itemstack.setCount( newSize );
 						}
 						else
-							if( itemstack.stackSize < stack.getMaxStackSize() )
+							if( itemstack.getCount() < stack.getMaxStackSize() )
 							{
-								stack.stackSize -= stack.getMaxStackSize() - itemstack.stackSize;
-								itemstack.stackSize = stack.getMaxStackSize();
+								final int count = stack.getMaxStackSize() - itemstack.getCount();
+								stack.setCount( stack.getCount() - count );
+								itemstack.setCount( stack.getMaxStackSize() );
 							}
 					}
 
 				++i;
 			}
-		return stack.stackSize;
+		return stack.getCount();
 	}
 
 	/** Returns if the crate can be added to the crate pile. */
@@ -200,7 +202,7 @@ public class CrateStackHandler extends ItemStackHandler
 		else
 			region.expandToContain( crate );
 		numCrates++;
-		stacks = Arrays.copyOf( stacks, this.getCapacity() );
+		stacks = copyStack( stacks, this.getCapacity() );
 		crate.setPileID( getPileID() );
 		// setSize( getCapacity() );
 	}
@@ -211,11 +213,11 @@ public class CrateStackHandler extends ItemStackHandler
 	 *
 	 * @return Overflow contents
 	 */
-	public ItemStack[] removeCrate( TileEntityCrate crate )
+	public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
 	{
 		if( numCrates > 1 )
 		{
-			final ItemStack[] overflow = Arrays.copyOfRange( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.length );
+			final NonNullList< ItemStack > overflow = copyStack( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.size() );
 			setNumCrates( numCrates - 1 );
 			CrateStackCollection.getCollection( crate.getWorld() ).markDirty();
 			return overflow;
@@ -237,7 +239,7 @@ public class CrateStackHandler extends ItemStackHandler
 	public void setNumCrates( int numCrates )
 	{
 		this.numCrates = numCrates;
-		stacks = Arrays.copyOf( stacks, this.getCapacity() );
+		stacks = copyStack( stacks, this.getCapacity() );
 	}
 
 	/** Returns the ID of this handler */
@@ -255,7 +257,7 @@ public class CrateStackHandler extends ItemStackHandler
 	/** Returns a randomized copy of the inventory */
 	public ItemStack[] getRandomStacks( int count )
 	{
-		final List< ItemStack > items = Arrays.asList( stacks );
+		final List< ItemStack > items = stacks.subList( 0, stacks.size() );
 		Collections.shuffle( items );
 		return (ItemStack[])Arrays.copyOf( items.toArray(), count );
 	}
@@ -268,11 +270,11 @@ public class CrateStackHandler extends ItemStackHandler
 	public void removeItems( ItemStack itemStack )
 	{
 		int i = 0;
-		while( i < stacks.length && !ItemStack.areItemStacksEqual( stacks[i], itemStack ) )
+		while( i < stacks.size() && !ItemStack.areItemStacksEqual( stacks.get( i ), itemStack ) )
 			i++;
 
-		if( i < stacks.length && stacks[i] != null )
-			stacks[i] = null;
+		if( i < stacks.size() && !stacks.get( i ).isEmpty() )
+			stacks.set( i, ItemStack.EMPTY );
 	}
 
 	/**
@@ -282,11 +284,11 @@ public class CrateStackHandler extends ItemStackHandler
 	public void addItems( ItemStack stack )
 	{
 		int i = 0;
-		while( i < stacks.length && stacks[i] != null )
+		while( i < stacks.size() && !stacks.get( i ).isEmpty() )
 			i++;
 
-		if( i < stacks.length && stacks[i] == null )
-			stacks[i] = stack.copy();
+		if( i < stacks.size() && !stacks.get( i ).isEmpty() )
+			stacks.set( i, stack.copy() );
 	}
 
 	/**
@@ -317,8 +319,22 @@ public class CrateStackHandler extends ItemStackHandler
 	@Override
 	public void setSize( int size )
 	{
-		stacks = Arrays.copyOf( stacks, size );
+		stacks = copyStack( stacks, size );
 		indexSlots = getShuffledIndexes( size );
+	}
+
+	public NonNullList< ItemStack > copyStack( NonNullList< ItemStack > stackIn, int size )
+	{
+		return copyStack( stackIn, 0, size );
+	}
+
+	public NonNullList< ItemStack > copyStack( NonNullList< ItemStack > stackIn, int from, int to )
+	{
+		final int size = to - from;
+		final NonNullList< ItemStack > stackOut = NonNullList.withSize( size, ItemStack.EMPTY );
+		for( int i = 0; i < Math.min( size, stackIn.size() ); i++ )
+			stackOut.set( i, stackIn.get( i + from ) );
+		return stackOut;
 	}
 
 	@Override
@@ -389,7 +405,7 @@ public class CrateStackHandler extends ItemStackHandler
 		if( doShuffle )
 		{
 			consolidateStacks();
-			indexSlots = getShuffledIndexes( stacks.length );
+			indexSlots = getShuffledIndexes( stacks.size() );
 		}
 		if( crateToUpdate != null )
 			crateToUpdate.markDirty();
@@ -398,7 +414,7 @@ public class CrateStackHandler extends ItemStackHandler
 	@Override
 	protected void onLoad()
 	{
-		indexSlots = getShuffledIndexes( stacks.length );
+		indexSlots = getShuffledIndexes( stacks.size() );
 	}
 
 	@Override

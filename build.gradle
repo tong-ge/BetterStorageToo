@@ -57,13 +57,8 @@ repositories
 {
     maven
     {
-        name "RX14"
-        url "http://mvn.rx14.co.uk/repo/"
-    }
-    ivy
-    {
-        name "Thaumcraft"
-        artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-([classifier]-)[revision].[ext]"
+        name 'JEI'
+        url "http://dvs1.progwml6.com/files/maven"
     }
     ivy
     {
@@ -72,8 +67,19 @@ repositories
     }
     maven
     {
-        name 'prog'
-        url "http://dvs1.progwml6.com/files/maven"
+        name "RX14"
+        url "http://mvn.rx14.co.uk/repo/"
+    }
+    ivy
+    {
+        name "Thaumcraft"
+        //artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-([classifier]-)[revision].[ext]"
+        // https://dl.dropboxusercontent.com/u/47135879/Baubles-1.11-1.4.3-api.zip
+        url "https://dl.dropboxusercontent.com/u/47135879"
+        layout "pattern",
+        {
+        	artifact "[module]-[revision].[ext]"
+        }
     }
 	ivy
 	{
@@ -82,15 +88,19 @@ repositories
     }
 }
 
-dependencies {
-    //compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
+dependencies
+{
     //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
     //compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
+
+    runtime "com.azanor.baubles:Baubles:${config.baubles_version}-deobf"
+
     compile name: "Botania"           , group: "vazkii.botania", version: botania_version, classifier: "deobf"
-    //runtime name: "Baubles"           , group: "com.azanor.baubles", version: baubles_version, classifier: "deobf"
+    //compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
     //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
 
     deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"
+
     runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
 }
 

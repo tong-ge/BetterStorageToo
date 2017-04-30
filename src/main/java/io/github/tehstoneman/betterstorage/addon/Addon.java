@@ -3,14 +3,12 @@ package io.github.tehstoneman.betterstorage.addon;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.addon.jei.JEIAddon;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Addon
 {
-	private static final List< Addon > addons = new ArrayList< >();
+	private static final List< Addon > addons = new ArrayList<>();
 
 	public static void initialize()
 	{
@@ -18,7 +16,6 @@ public abstract class Addon
 		// if (Loader.isModLoaded("NotEnoughItems")) new NEIAddon();
 		// if (Loader.isModLoaded("armourersWorkshop")) new AWAddon();
 		// if (Loader.isModLoaded("MineTweaker3")) new MineTweakerAddon();
-		if (Loader.isModLoaded("JEI")) new JEIAddon();
 	}
 
 	public static void setupConfigsAll()

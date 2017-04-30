@@ -33,11 +33,11 @@ public class CrateStackCollection extends WorldSavedData
 	/** Gets or creates a CratePileCollection for the world. */
 	public static CrateStackCollection getCollection( World worldIn )
 	{
-		CrateStackCollection collection = (CrateStackCollection)worldIn.loadItemData( CrateStackCollection.class, filename );
+		CrateStackCollection collection = (CrateStackCollection)worldIn.loadData( CrateStackCollection.class, filename );
 		if( collection == null )
 		{
 			collection = new CrateStackCollection();
-			worldIn.setItemData( filename, collection );
+			worldIn.setData( filename, collection );
 		}
 		return collection;
 	}

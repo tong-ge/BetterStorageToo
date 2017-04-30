@@ -1,13 +1,9 @@
 package io.github.tehstoneman.betterstorage.client;
 
-import java.util.List;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,26 +17,14 @@ public class CreativeTabBetterStorage extends CreativeTabs
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public Item getTabIconItem()
+	public ItemStack getTabIconItem()
 	{
 		if( BetterStorageBlocks.CRATE != null )
-			return Item.getItemFromBlock( BetterStorageBlocks.CRATE );
+			return new ItemStack( BetterStorageBlocks.CRATE );
 		else
 			if( BetterStorageBlocks.REINFORCED_CHEST != null )
-				return Item.getItemFromBlock( BetterStorageBlocks.REINFORCED_CHEST );
+				return new ItemStack( BetterStorageBlocks.REINFORCED_CHEST );
 			else
-				return Item.getItemFromBlock( Blocks.CHEST );
-	}
-
-	@Override
-	@SideOnly( Side.CLIENT )
-	public void displayAllRelevantItems( List< ItemStack > list )
-	{
-		// super.displayAllRelevantItems( list );
-		for( final Item item : Item.REGISTRY )
-			if( item != null )
-				if( item.getUnlocalizedName().contains( ModInfo.modId ) )
-					item.getSubItems( item, this, list );
-		addEnchantmentBooksToList( list, BetterStorageEnchantment.getType( "key" ), BetterStorageEnchantment.getType( "lock" ) );
+				return new ItemStack( Blocks.CHEST );
 	}
 }

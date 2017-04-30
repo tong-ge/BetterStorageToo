@@ -166,11 +166,11 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public boolean onBlockActivated( EntityPlayer player, int side, float hitX, float hitY, float hitZ )
 	{
-		if( worldObj.isRemote )
+		if( this.getWorld().isRemote )
 			return true;
 		if( !canPlayerUseContainer( player ) )
 			return true;
-		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), worldObj, pos.getX(), pos.getY(), pos.getZ() );
+		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), this.getWorld(), pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
 
@@ -214,8 +214,8 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			for( int i = 0; i < inventory.getSlots(); i++ )
 			{
 				final ItemStack stack = inventory.getStackInSlot( i );
-				if( stack != null && stack.stackSize > 0 )
-					worldObj.spawnEntityInWorld( new EntityItem( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack ) );
+				if( !stack.isEmpty() )
+					this.getWorld().spawnEntity( new EntityItem( this.getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack ) );
 			}
 	}
 
@@ -282,13 +282,13 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	/** Returns the strong redstone signal power going into this block. */
 	protected int getStrongRedstoneSignal()
 	{
-		return worldObj.getStrongPower( pos );
+		return this.getWorld().getStrongPower( pos );
 	}
 
 	/** Returns the weak redstone signal power going into this block. */
 	protected int getWeakRedstoneSignal()
 	{
-		return worldObj.isBlockIndirectlyGettingPowered( pos );
+		return this.getWorld().isBlockIndirectlyGettingPowered( pos );
 	}
 
 	// Comparator related
@@ -314,7 +314,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public int getComparatorSignalStrength()
 	{
-		if( worldObj.isRemote )
+		if( this.getWorld().isRemote )
 			return 0;
 
 		int i = 0;
@@ -326,13 +326,13 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 
 			if( itemstack != null )
 			{
-				f += (float)itemstack.stackSize / itemstack.getMaxStackSize();
+				f += (float)itemstack.getCount() / itemstack.getMaxStackSize();
 				++i;
 			}
 		}
 
 		f = f / inventory.getSlots();
-		return MathHelper.floor_float( f * 14.0F ) + ( i > 0 ? 1 : 0 );
+		return MathHelper.floor( f * 14.0F ) + ( i > 0 ? 1 : 0 );
 	}
 
 	/**
@@ -369,7 +369,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		compAccessed = false;
 		compContentsChanged = false;
-		WorldUtils.notifyBlocksAround( worldObj, pos.getX(), pos.getY(), pos.getZ() );
+		WorldUtils.notifyBlocksAround( this.getWorld(), pos.getX(), pos.getY(), pos.getZ() );
 	}
 
 	/**
@@ -378,9 +378,9 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public void markDirtySuper()
 	{
-		if( worldObj == null || worldObj.isRemote )
+		if( this.getWorld() == null || this.getWorld().isRemote )
 			return;
-		worldObj.markChunkDirty( new BlockPos( pos ), this );
+		this.getWorld().markChunkDirty( new BlockPos( pos ), this );
 		if( hasComparatorAccessed() )
 			markContentsChanged();
 	}
@@ -406,8 +406,8 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	/** Returns if the container should synchronize playersUsing over the network, called each tick. */
 	protected boolean syncPlayersUsing()
 	{
-		return !worldObj.isRemote && doesSyncPlayers() && ( ticksExisted + pos.getX() + pos.getY() + pos.getZ() & 0xFF ) == 0;
-		// && worldObj.doChunksNearChunkExist( pos, 16 );
+		return !this.getWorld().isRemote && doesSyncPlayers() && ( ticksExisted + pos.getX() + pos.getY() + pos.getZ() & 0xFF ) == 0;
+		// && this.getWorld().doChunksNearChunkExist( pos, 16 );
 	}
 
 	/** Synchronizes playersUsing over the network. */
@@ -415,7 +415,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		if( !doesSyncPlayers() )
 			return;
-		worldObj.addBlockEvent( pos, getBlockType(), 0, playersUsing );
+		this.getWorld().addBlockEvent( pos, getBlockType(), 0, playersUsing );
 	}
 
 	@Override
@@ -475,7 +475,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		for( int i = 0; i < inventory.getSlots(); i++ )
 		{
 			final ItemStack stack = inventory.getStackInSlot( i );
-			if( stack != null && stack.stackSize > 0 )
+			if( !stack.isEmpty() )
 				return false;
 		}
 		return true;
@@ -506,7 +506,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		handleUpdateTag( packet.getNbtCompound() );
 
-		worldObj.markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
+		this.getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
 	}
 
 	@Override
@@ -557,7 +557,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public void markForUpdate()
 	{
-		worldObj.notifyBlockUpdate( pos, worldObj.getBlockState( pos ), worldObj.getBlockState( pos ), 3 );
+		this.getWorld().notifyBlockUpdate( pos, this.getWorld().getBlockState( pos ), this.getWorld().getBlockState( pos ), 3 );
 		markDirty();
 	}
 

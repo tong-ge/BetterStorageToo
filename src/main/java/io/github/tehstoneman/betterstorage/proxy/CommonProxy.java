@@ -3,23 +3,22 @@ package io.github.tehstoneman.betterstorage.proxy;
 import com.google.common.collect.ImmutableMap;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.common.model.animation.IAnimationStateMachine;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
@@ -29,14 +28,19 @@ public class CommonProxy
 	public void preInit()
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
-		BetterStorageBlocks.registerBlocks();
-		BetterStorageItems.registerItems();
+
+		// Register blocks and items
+		if( BetterStorage.config.crateEnabled )
+			BetterStorageBlocks.CRATE = new BlockCrate();
+
+		// Register tile entities
+		GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
 	}
 
 	public void initialize()
 	{
 
-		MinecraftForge.EVENT_BUS.register( this );
+		// MinecraftForge.EVENT_BUS.register( this );
 		// FMLCommonHandler.instance().bus().register(this);
 
 		// if (BetterStorage.globalConfig.getBoolean(GlobalConfig.enableChristmasEvent)) new ChristmasEventHandler();
@@ -57,12 +61,12 @@ public class CommonProxy
 	@SubscribeEvent
 	public void onPlayerInteract( PlayerInteractEvent event )
 	{
-		final World world = event.getEntity().worldObj;
+		// final World world = event.getEntity().worldObj;
 		final BlockPos pos = event.getPos();
 		final EntityPlayer player = event.getEntityPlayer();
 		final ItemStack holding = player.getHeldItemMainhand();
-		final IBlockState state = world.getBlockState( pos );
-		final Block block = state.getBlock();
+		// final IBlockState state = world.getBlockState( pos );
+		// final Block block = state.getBlock();
 		// final boolean leftClick = event.action == Action.LEFT_CLICK_BLOCK;
 		// final boolean rightClick = event.action == Action.RIGHT_CLICK_BLOCK;
 
@@ -97,7 +101,7 @@ public class CommonProxy
 		 * StackUtils.remove( holding, "display", "color" );
 		 * world.setBlockMetadataWithNotify( x, y, z, metadata - 1, 2 );
 		 * world.func_147453_f( x, y, z, block );
-		 * 
+		 *
 		 * event.useBlock = Result.DENY;
 		 * event.useItem = Result.DENY;
 		 * }
@@ -118,7 +122,7 @@ public class CommonProxy
 		 * final MovingObjectPosition target = WorldUtils.rayTrace( player, 1F );
 		 * if( target != null && getIronDoorHightlightBox( player, world, x, y, z, target.hitVec, block ) != null )
 		 * {
-		 * 
+		 *
 		 * int meta = world.getBlockMetadata( x, y, z );
 		 * boolean isMirrored;
 		 * if( meta >= 8 )
@@ -129,7 +133,7 @@ public class CommonProxy
 		 * }
 		 * else
 		 * isMirrored = world.getBlockMetadata( x, y + 1, z ) == 9;
-		 * 
+		 *
 		 * final int rotation = meta & 3;
 		 * ForgeDirection orientation = rotation == 0 ? ForgeDirection.WEST
 		 * : rotation == 1 ? ForgeDirection.NORTH : rotation == 2 ? ForgeDirection.EAST : ForgeDirection.SOUTH;
@@ -137,16 +141,16 @@ public class CommonProxy
 		 * : orientation == ForgeDirection.NORTH ? ForgeDirection.WEST
 		 * : orientation == ForgeDirection.EAST ? ForgeDirection.NORTH : ForgeDirection.EAST
 		 * : orientation;
-		 * 
+		 *
 		 * world.setBlock( x, y, z, BetterStorageTiles.lockableDoor, 0, SetBlockFlag.SEND_TO_CLIENT );
 		 * world.setBlock( x, y + 1, z, BetterStorageTiles.lockableDoor, 8, SetBlockFlag.SEND_TO_CLIENT );
-		 * 
+		 *
 		 * final TileEntityLockableDoor te = WorldUtils.get( world, x, y, z, TileEntityLockableDoor.class );
 		 * te.orientation = orientation;
 		 * te.isOpen = isMirrored;
 		 * te.isMirrored = isMirrored;
 		 * te.setLock( holding );
-		 * 
+		 *
 		 * player.inventory.setInventorySlotContents( player.inventory.currentItem, null );
 		 * }
 		 * }

@@ -18,7 +18,7 @@ public class CrateSlotHandler extends SlotItemHandler
 	@Override
 	public boolean isItemValid( ItemStack stack )
 	{
-		if( stack == null )
+		if( stack.isEmpty() )
 			return false;
 
 		final IItemHandler handler = getItemHandler();
@@ -29,13 +29,13 @@ public class CrateSlotHandler extends SlotItemHandler
 		ItemStack remainder;
 		final ItemStack currentStack = crateHandler.getStackInSlotFixed( index );
 
-		crateHandler.setStackInSlotFixed( index, null );
+		crateHandler.setStackInSlotFixed( index, ItemStack.EMPTY );
 
 		remainder = crateHandler.insertItemFixed( index, stack, true );
 
 		crateHandler.setStackInSlotFixed( index, currentStack );
 
-		return remainder == null || remainder.stackSize < stack.stackSize;
+		return remainder.isEmpty() || remainder.getCount() < stack.getCount();
 	}
 
 	@Override
@@ -72,17 +72,17 @@ public class CrateSlotHandler extends SlotItemHandler
 
 		final ItemStack maxAdd = stack.copy();
 		final int maxInput = stack.getMaxStackSize();
-		maxAdd.stackSize = maxInput;
+		maxAdd.setCount( maxInput );
 
 		final ItemStack currentStack = crateHandler.getStackInSlotFixed( index );
 
-		crateHandler.setStackInSlotFixed( index, null );
+		crateHandler.setStackInSlotFixed( index, ItemStack.EMPTY );
 
 		final ItemStack remainder = crateHandler.insertItemFixed( index, maxAdd, true );
 
 		crateHandler.setStackInSlotFixed( index, currentStack );
 
-		return maxInput - ( remainder != null ? remainder.stackSize : 0 );
+		return maxInput - ( !remainder.isEmpty() ? remainder.getCount() : 0 );
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class CrateSlotHandler extends SlotItemHandler
 			return super.canTakeStack( playerIn );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
-		return crateHandler.extractItemFixed( index, 1, true ) != null;
+		return !crateHandler.extractItemFixed( index, 1, true ).isEmpty();
 	}
 
 	@Override
