@@ -160,6 +160,7 @@ public class BlockCrate extends Block implements ITileEntityProvider, ILaputaImm
 			final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
 			final CrateStackHandler handler = tileCrate.getCrateStackHandler();
 			final ItemStack[] overflow = handler.removeCrate( tileCrate );
+			tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
 			if( overflow != null )
 				for( final ItemStack stack : overflow )
 					if( stack != null && stack.stackSize > 0 )
