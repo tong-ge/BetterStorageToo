@@ -1,8 +1,8 @@
 # Blender MTL File: 'chest.blend'
-# Material Count: 1
+# Material Count: 2
 
 newmtl chest
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 d 1.000000
-map_Kd betterstorage:models/chest/iron
+map_Kd betterstorage:models/chest/base

@@ -17,11 +17,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockContainerBetterStorage extends Block implements ITileEntityProvider
+public abstract class BlockContainerBetterStorage extends BlockBetterStorage implements ITileEntityProvider
 {
-	protected BlockContainerBetterStorage( Material material )
+	protected BlockContainerBetterStorage( String name, Material material )
 	{
-		super( material );
+		super( name, material );
 		isBlockContainer = true;
 	}
 

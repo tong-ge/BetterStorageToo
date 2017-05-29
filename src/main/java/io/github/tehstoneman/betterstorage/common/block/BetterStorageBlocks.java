@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,9 +19,6 @@ public final class BetterStorageBlocks
 
 	public static void registerBlocks()
 	{
-		if( BetterStorage.config.crateEnabled )
-			CRATE = new BlockCrate();
-
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.craftingStationEnabled ) )
 		 * {
@@ -54,8 +50,10 @@ public final class BetterStorageBlocks
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		if( BetterStorage.config.crateEnabled )
+		if( CRATE != null )
 			CRATE.registerItemModels();
+		if( REINFORCED_CHEST != null )
+			REINFORCED_CHEST.registerItemModels();
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.reinforcedChestEnabled ) )

@@ -5,13 +5,29 @@ container.betterstorage.crate.capacity=%% Capacity
 # Creative tab
 itemGroup.betterstorage=Better Storage Too
 
+# Container materials
+material.betterstorage.iron=Iron
+material.betterstorage.gold=Gold
+material.betterstorage.diamond=Diamond
+material.betterstorage.emerald=Emerald
+material.betterstorage.copper=Copper
+material.betterstorage.tin=Tin
+material.betterstorage.silver=Silver
+material.betterstorage.steel=Steel
+material.betterstorage.zinc=Zinc
+
 # Blocks
+tile.betterstorage.reinforced_chest.name=Reinforced Chest
+tile.betterstorage.crate.name.tooltip=Enable or disable reinforced chests.
+tile.betterstorage.reinforced_chest.name.full=Reinforced %s Chest
 tile.betterstorage.crate.name=Storage Crate
-tile.betterstorage.crate.name.tooltip=Enable or disable storage crates
+tile.betterstorage.crate.name.tooltip=Enable or disable storage crates.
 
 # Config
 config.betterstorage.category.block=Blocks
 config.betterstorage.category.block.tooltip=Change whether a certain Block is active.
 
+config.betterstorage.general.reinforcedColumns=Reinforced Columns
+config.betterstorage.general.reinforcedColumns.tooltip=Number of columns in reinforced chests and lockers. Valid values are 9, 11 and 13.
 config.betterstorage.general.enableCrateInventoryInterface=Crate Inventory Interface
 config.betterstorage.general.enableCrateInventoryInterface.tooltip=If enabled, exposes a special block view of crates, so items can be moved in and out by automated systems.

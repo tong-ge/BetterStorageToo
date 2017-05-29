@@ -41,20 +41,20 @@ public class ItemBlockLockable extends ItemBlock
 		 * }
 		 */
 
-		if( block instanceof BlockLockable )
+		/*if( block instanceof BlockLockable )
 		{
 			final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
 
 			final String materialName = BetterStorage.proxy.localize( "material." + ModInfo.modId + "." + material.getName() );
 			final String name = BetterStorage.proxy.localize( getUnlocalizedName() + ".name.full", materialName );
 			return name.trim();
-		}
+		}*/
 		return super.getItemStackDisplayName( stack );
 	}
 
 	@Override
 	public String getUnlocalizedName( ItemStack stack )
 	{
-		return super.getUnlocalizedName() + "." + EnumReinforced.byMetadata( stack.getMetadata() ).getName();
+		return super.getUnlocalizedName();// + "." + EnumReinforced.byMetadata( stack.getMetadata() ).getName();
 	}
 }

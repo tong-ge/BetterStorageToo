@@ -35,7 +35,7 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return new ContainerCrate( player, crate );
 			}
 		}
-		/*if( ID == EnumGui.GENERAL.getGuiID() )
+		if( ID == EnumGui.GENERAL.getGuiID() )
 		{
 			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
 			if( tileEntity instanceof TileEntityContainer )
@@ -43,7 +43,7 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				final TileEntityContainer chest = (TileEntityContainer)tileEntity;
 				return new ContainerBetterStorage( player, chest );
 			}
-		}*/
+		}
 		/*
 		 * if( ID == EnumGui.CRAFTING.getGuiID() )
 		 * {
@@ -77,7 +77,7 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return new GuiCrate( crate, new ContainerCrate( player, crate ) );
 			}
 		}
-		/*if( ID == EnumGui.GENERAL.getGuiID() )
+		if( ID == EnumGui.GENERAL.getGuiID() )
 		{
 			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
 			if( tileEntity instanceof TileEntityContainer )
@@ -85,7 +85,7 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				final TileEntityContainer chest = (TileEntityContainer)tileEntity;
 				return new GuiBetterStorage( new ContainerBetterStorage( player, chest ) );
 			}
-		}*/
+		}
 		/*
 		 * if( ID == EnumGui.CRAFTING.getGuiID() )
 		 * {

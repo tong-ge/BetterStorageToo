@@ -21,7 +21,7 @@ public class EnchantmentIdSetting extends IntegerSetting
 			if( ( id = ( id + 1 ) % 256 ) == value )
 				throw new RuntimeException( "No free enchantment ID found." );
 		if( id != value )
-			BetterStorage.log.info( String.format( "Enchantment ID %s for %s already used, using next free id %s instead.", value, fullName, id ) );
+			BetterStorage.logger.info( String.format( "Enchantment ID %s for %s already used, using next free id %s instead.", value, fullName, id ) );
 		return value = id;
 	}
 }

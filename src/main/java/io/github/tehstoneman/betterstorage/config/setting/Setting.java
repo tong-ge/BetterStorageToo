@@ -121,7 +121,7 @@ public abstract class Setting<T> extends DummyConfigElement
 		if( warning != null )
 		{
 			setValue( defaultValue );
-			BetterStorage.log.warn( String.format( "Config setting %s is invalid: %s. Using default value: %s.", fullName, warning, defaultValue ) );
+			BetterStorage.logger.warn( String.format( "Config setting %s is invalid: %s. Using default value: %s.", fullName, warning, defaultValue ) );
 		}
 	}
 

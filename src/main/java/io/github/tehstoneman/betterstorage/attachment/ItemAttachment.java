@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class ItemAttachment extends Attachment
 {
 
-	protected ItemStack	item		= null;
+	protected ItemStack	item		= ItemStack.EMPTY;
 	public float		scale		= 1.0F;
 	public float		scaleDepth	= 1.0F;
 

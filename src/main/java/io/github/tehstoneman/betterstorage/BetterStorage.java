@@ -2,10 +2,13 @@ package io.github.tehstoneman.betterstorage;
 
 import org.apache.logging.log4j.Logger;
 
+import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.client.CreativeTabBetterStorage;
+import io.github.tehstoneman.betterstorage.common.block.ReinforcedMaterial;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
 import io.github.tehstoneman.betterstorage.utils.BetterStorageEventHandler;
+import io.github.tehstoneman.betterstorage.utils.MaterialRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -37,7 +40,7 @@ public class BetterStorage
 
 	public static SimpleNetworkWrapper	simpleNetworkWrapper;
 
-	public static Logger				log;
+	public static Logger				logger;
 
 	public static CreativeTabs			creativeTab;
 
@@ -50,7 +53,7 @@ public class BetterStorage
 		final int messageID = 0;
 		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
 
-		log = event.getModLog();
+		logger = event.getModLog();
 		creativeTab = new CreativeTabBetterStorage();
 
 		config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
@@ -62,6 +65,9 @@ public class BetterStorage
 		// Addon.setupConfigsAll();
 		// globalConfig.load();
 		// globalConfig.save();
+		
+		// Initialize API
+		BetterStorageAPI.materials = new MaterialRegistry();
 
 		proxy.preInit();
 

@@ -12,7 +12,7 @@ public final class Resources
 	public static final ResourceLocation	enchantedEffect				= new ResourceLocation( "textures/misc/enchanted_item_glint.png" );
 
 	public static final ResourceLocation	containerCrate				= new BetterStorageResource( "textures/gui/crate.png" );
-	public static final ResourceLocation	containerReinforcedChest	= new BetterStorageResource( "textures/gui/reinforcedChest.png" );
+	public static final ResourceLocation	containerReinforcedChest	= new BetterStorageResource( "textures/gui/reinforcedchest.png" );
 	public static final ResourceLocation	containerCraftingStation	= new BetterStorageResource( "textures/gui/craftingStation.png" );
 
 	public static final ResourceLocation	textureLocker				= new BetterStorageResource( "textures/models/locker/wood.png" );

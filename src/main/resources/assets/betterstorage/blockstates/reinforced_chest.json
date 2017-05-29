@@ -2,20 +2,19 @@
 	"forge_marker": 1,
 	"defaults":
 	{
-		"model": "betterstorage:chest.obj",
-		"custom": { "flip-v": true },
-		"textures": { "#chest": "betterstorage:models/chest/iron" }
+		"model": "betterstorage:chest_base",
+		"textures": { "particle" : "betterstorage:models/chest/base" }
 	},
 	"variants":
 	{
 		"normal": [{}],
-		"inventory": [{ "transform": "forge:default-block" }],
+		"inventory": [{ "model": "betterstorage:chest_item.obj", "custom": { "flip-v": true }, "transform": "forge:default-block" }],
 		"facing":
 		{
 			"north": {},
-			"south": {},
-			"east": {},
-			"west": {}
+			"east": { "y": 90 },
+			"south": { "y": 180 },
+			"west": { "y": 270 }
 		},
 		"material":
 		{
@@ -29,6 +28,11 @@
 			"silver": {},
 			"zinc": {},
 			"steel": {}
+		},
+		"static":
+		{
+			"true": {},
+			"false": { "model": "betterstorage:chest_lid" }
 		}
 	}
 }

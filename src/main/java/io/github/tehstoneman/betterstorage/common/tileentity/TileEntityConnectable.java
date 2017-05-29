@@ -2,9 +2,7 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
-import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -45,8 +43,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public void setOrientation( EnumFacing orientation )
 	{
 		this.orientation = orientation;
-		if( worldObj != null )
-			worldObj.notifyBlockUpdate( pos, worldObj.getBlockState( pos ), worldObj.getBlockState( pos ), 3 );
+		if( getWorld() != null )
+			getWorld().notifyBlockUpdate( pos, getWorld().getBlockState( pos ), getWorld().getBlockState( pos ), 3 );
 	}
 
 	public EnumFacing getConnected()
@@ -57,8 +55,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public void setConnected( EnumFacing connected )
 	{
 		this.connected = connected;
-		if( worldObj != null )
-			worldObj.notifyBlockUpdate( pos, worldObj.getBlockState( pos ), worldObj.getBlockState( pos ), 3 );
+		if( getWorld() != null )
+			getWorld().notifyBlockUpdate( pos, getWorld().getBlockState( pos ), getWorld().getBlockState( pos ), 3 );
 		markDirty();
 	}
 
@@ -86,8 +84,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		final TileEntityConnectable connectable = getConnectedTileEntity();
 		if( connectable != null )
 			return connectable;
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.enableWarningMessages ) )
-			BetterStorage.log.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
+		if( BetterStorage.config.enableWarningMessages )
+			BetterStorage.logger.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
 					pos.getZ() );
 		return this;
 	}
@@ -95,9 +93,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	/** Returns the connected container. */
 	public TileEntityConnectable getConnectedTileEntity()
 	{
-		if( worldObj == null || !isConnected() )
+		if( getWorld() == null || !isConnected() )
 			return null;
-		final TileEntity tileEntity = worldObj.getTileEntity( pos.offset( getConnected() ) );
+		final TileEntity tileEntity = getWorld().getTileEntity( pos.offset( getConnected() ) );
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
 	}
 
@@ -115,7 +113,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	/** Connects the container to any other containers nearby, if possible. */
 	public void checkForConnections()
 	{
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return;
 		TileEntityConnectable connectableFound = null;
 		EnumFacing dirFound = null;
@@ -124,7 +122,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 			final int x = pos.getX() + dir.getFrontOffsetX();
 			final int y = pos.getY() + dir.getFrontOffsetY();
 			final int z = pos.getZ() + dir.getFrontOffsetZ();
-			final TileEntityConnectable connectable = WorldUtils.get( worldObj, x, y, z, TileEntityConnectable.class );
+			final TileEntityConnectable connectable = WorldUtils.get( getWorld(), x, y, z, TileEntityConnectable.class );
 			if( !canConnect( connectable ) )
 				continue;
 			if( connectableFound != null )
@@ -154,8 +152,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 			connectable.markForUpdate();
 		}
 		else
-			if( BetterStorage.globalConfig.getBoolean( GlobalConfig.enableWarningMessages ) )
-				BetterStorage.log.warn( "getConnectedTileEntity() returned null in disconnect(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
+			if( BetterStorage.config.enableWarningMessages )
+				BetterStorage.logger.warn( "getConnectedTileEntity() returned null in disconnect(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
 						pos.getZ() );
 	}
 
@@ -211,7 +209,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	@Override
 	public int getComparatorSignalStrength()
 	{
-		if( worldObj.isRemote )
+		if( getWorld().isRemote )
 			return 0;
 
 		if( !isConnected() )
@@ -226,7 +224,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 
 			if( itemstack != null )
 			{
-				f += (float)itemstack.stackSize / itemstack.getMaxStackSize();
+				f += (float)itemstack.getCount() / itemstack.getMaxStackSize();
 				++i;
 			}
 		}
@@ -239,13 +237,13 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 
 			if( itemstack != null )
 			{
-				f += (float)itemstack.stackSize / itemstack.getMaxStackSize();
+				f += (float)itemstack.getCount() / itemstack.getMaxStackSize();
 				++i;
 			}
 		}
 
 		f = f / ( inventory.getSlots() + otherInventory.getSlots() );
-		return MathHelper.floor_float( f * 14.0F ) + ( i > 0 ? 1 : 0 );
+		return MathHelper.floor( f * 14.0F ) + ( i > 0 ? 1 : 0 );
 	}
 
 	// Update entity
@@ -272,14 +270,14 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 			}
 		}
 
-		final float pitch = worldObj.rand.nextFloat() * 0.1F + 0.9F;
+		final float pitch = getWorld().rand.nextFloat() * 0.1F + 0.9F;
 
 		// Play sound when opening
 		if( lidAngle > 0.0F && prevLidAngle == 0.0F )
-			worldObj.playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, pitch );
+			getWorld().playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, pitch );
 		// Play sound when closing
 		if( lidAngle < 0.5F && prevLidAngle >= 0.5F )
-			worldObj.playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, pitch );
+			getWorld().playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, pitch );
 	}
 
 	// IInventory stuff
@@ -294,14 +292,14 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public void markDirty()
 	{
 		super.markDirty();
-		if( isConnected() && worldObj != null )
+		if( isConnected() && getWorld() != null )
 		{
 			final TileEntity connected = getConnectedTileEntity();
 			connected.updateContainingBlockInfo();
-			worldObj.markChunkDirty( connected.getPos(), this );
+			getWorld().markChunkDirty( connected.getPos(), this );
 
 			if( connected.getBlockType() != Blocks.AIR )
-				worldObj.updateComparatorOutputLevel( connected.getPos(), connected.getBlockType() );
+				getWorld().updateComparatorOutputLevel( connected.getPos(), connected.getBlockType() );
 		}
 	}
 
