@@ -295,9 +295,4 @@ public class CommonProxy
 	{
 		return I18n.translateToLocalFormatted( unlocalized, args );
 	}
-
-	public IAnimationStateMachine load( ResourceLocation location, ImmutableMap< String, ITimeValue > parameters )
-	{
-		return null;
-	}
 }

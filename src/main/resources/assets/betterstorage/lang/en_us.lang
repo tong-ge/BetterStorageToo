@@ -1,6 +1,8 @@
 # Containers
 container.betterstorage.crate=Storage Crate
 container.betterstorage.crate.capacity=%% Capacity
+container.betterstorage.reinforced_chest=Reinforced Chest
+container.betterstorage.reinforced_chest_large=Large Reinforced Chest
 
 # Creative tab
 itemGroup.betterstorage=Better Storage Too

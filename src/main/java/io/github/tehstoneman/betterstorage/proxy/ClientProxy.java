@@ -101,10 +101,4 @@ public class ClientProxy extends CommonProxy
 	{
 		return I18n.format( unlocalized, args );
 	}
-
-	@Override
-	public IAnimationStateMachine load( ResourceLocation location, ImmutableMap< String, ITimeValue > parameters )
-	{
-		return ModelLoaderRegistry.loadASM( location, parameters );
-	}
 }

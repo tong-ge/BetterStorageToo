@@ -20,7 +20,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -108,8 +107,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	// TileEntityContainer stuff
 
 	@Override
-	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
-			float hitY, float hitZ )
+	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+			float hitZ )
 	{
 		if( !getWorld().isRemote )
 		{
@@ -161,7 +160,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void onBlockRenderAsItem( ItemStack stack )
 	 * {
@@ -299,6 +298,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public NBTTagCompound getUpdateTag()
 	{
 		final NBTTagCompound compound = super.getUpdateTag();
+		if( material != null )
+			compound.setString( "Material", material.getName() );
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -312,6 +313,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void handleUpdateTag( NBTTagCompound compound )
 	{
 		super.handleUpdateTag( compound );
+		if( compound.hasKey( "Material" ) )
+			material = EnumReinforced.byName( compound.getString( "Material" ) );
 		if( canHaveLock() )
 		{
 			final ItemStack itemStack = ItemStack.EMPTY;
@@ -327,6 +330,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public NBTTagCompound writeToNBT( NBTTagCompound compound )
 	{
 		super.writeToNBT( compound );
+		if( material != null )
+			compound.setString( "Material", material.getName() );
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -340,6 +345,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void readFromNBT( NBTTagCompound compound )
 	{
 		super.readFromNBT( compound );
+		if( compound.hasKey( "Material" ) )
+			material = EnumReinforced.byName( compound.getString( "Material" ) );
 		if( canHaveLock() )
 		{
 			final ItemStack itemStack = ItemStack.EMPTY;

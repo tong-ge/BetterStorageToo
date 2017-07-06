@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.api.internal;
 
 import java.util.Set;
 
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.block.ReinforcedMaterial;
 import net.minecraft.item.ItemStack;
 
@@ -23,7 +24,7 @@ public interface IMaterialRegistry
 	 * @param name
 	 * @return
 	 */
-	public ReinforcedMaterial get( String name );
+	public EnumReinforced get( String name );
 
 	/**
 	 * Returns the material for the given ItemStack
@@ -31,7 +32,7 @@ public interface IMaterialRegistry
 	 * @param stack
 	 * @return
 	 */
-	public ReinforcedMaterial getMaterial( ItemStack stack );
+	public EnumReinforced getMaterial( ItemStack stack );
 
 	/**
 	 * Return a list of currently registered materials

@@ -1,5 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
@@ -206,24 +210,38 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	public static enum EnumReinforced implements IStringSerializable
 	{
 		//@formatter:off
-		IRON	( "iron", "ingotIron", "blockIron" ),
-		GOLD	( "gold", "ingotGold", "blockGold" ),
-		DIAMOND	( "diamond", "gemDiamond", "blockDiamond" ),
-		EMERALD	( "emerald", "gemEmerald", "blockEmerald" ),
+		IRON	( 0, "iron", "ingotIron", "blockIron" ),
+		GOLD	( 1, "gold", "ingotGold", "blockGold" ),
+		DIAMOND	( 2, "diamond", "gemDiamond", "blockDiamond" ),
+		EMERALD	( 3, "emerald", "gemEmerald", "blockEmerald" ),
 		//SPECIAL	( "special", "",""),
-		COPPER	( "copper", "ingotCopper", "blockCopper" ),
-		TIN		( "tin", "ingotTin", "blockTin" ),
-		SILVER	( "silver", "ingotSilver", "blockSilver" ),
-		ZINC	( "zinc", "ingotZinc", "blockZinc" ),
-		STEEL	( "steel", "ingotSteel", "blockSteel" );
+		COPPER	( 4, "copper", "ingotCopper", "blockCopper" ),
+		TIN		( 5, "tin", "ingotTin", "blockTin" ),
+		SILVER	( 6, "silver", "ingotSilver", "blockSilver" ),
+		ZINC	( 7, "zinc", "ingotZinc", "blockZinc" ),
+		STEEL	( 8, "steel", "ingotSteel", "blockSteel" );
 		//@formatter:on
 
-		private final String	name;
-		private final String	ingot;
-		private final String	block;
+		private final int								meta;
+		private final String							name;
+		private final String							ingot;
+		private final String							block;
 
-		private EnumReinforced( String name, String ingot, String block )
+		private static EnumReinforced[]					META_LOOKUP	= new EnumReinforced[values().length];
+		private static Map< String, EnumReinforced >	NAME_LOOKUP	= new HashMap< >();
+
+		static
 		{
+			for( final EnumReinforced material : values() )
+			{
+				META_LOOKUP[material.getMetadata()] = material;
+				NAME_LOOKUP.put( material.name, material );
+			}
+		}
+
+		private EnumReinforced( int meta, String name, String ingot, String block )
+		{
+			this.meta = meta;
 			this.name = name;
 			this.ingot = ingot;
 			this.block = block;
@@ -241,6 +259,11 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 			return name;
 		}
 
+		public int getMetadata()
+		{
+			return meta;
+		}
+
 		public String getOreDictIngot()
 		{
 			return ingot;
@@ -249,6 +272,21 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		public String getOreDictBlock()
 		{
 			return block;
+		}
+
+		public String getUnlocalizedName()
+		{
+			return "material." + ModInfo.modId + "." + name;
+		}
+
+		public static EnumReinforced byMetadata( int meta )
+		{
+			return META_LOOKUP[meta];
+		}
+
+		public static EnumReinforced byName( String name )
+		{
+			return NAME_LOOKUP.get( name );
 		}
 	}
 }

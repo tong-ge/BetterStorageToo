@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "betterstorage:chest_item.obj",
+		"custom": { "flip-v": true },
+		"textures": { "#material" : "betterstorage:models/chest/zinc", "particle" : "betterstorage:models/chest/zinc" }
+	},
+	"variants":
+	{
+		"normal": [{}],
+		"inventory": [{ "transform": "forge:default-block" }]
+	}
+}

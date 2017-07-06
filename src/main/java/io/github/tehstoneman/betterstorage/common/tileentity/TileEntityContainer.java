@@ -1,5 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import java.util.logging.Logger;
+
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -426,10 +428,12 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	public boolean receiveClientEvent( int event, int value )
 	{
 		if( event == 0 )
+		{
 			playersUsing = value;
+		}
 		return true;
 	}
-
+	
 	/** Called when a player opens this container. */
 	public void onContainerOpened()
 	{

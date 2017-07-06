@@ -6,6 +6,7 @@ import java.util.Set;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.internal.IMaterialRegistry;
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.block.ReinforcedMaterial;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -45,21 +46,22 @@ public class MaterialRegistry implements IMaterialRegistry
 	}
 
 	@Override
-	public ReinforcedMaterial get( String name )
+	public EnumReinforced get( String name )
 	{
-		return materialMap.get( name );
+		return EnumReinforced.byName( name );
 	}
 
 	@Override
-	public ReinforcedMaterial getMaterial( ItemStack stack )
+	public EnumReinforced getMaterial( ItemStack stack )
 	{
-		if( stack.hasTagCompound() )
+		return EnumReinforced.byMetadata( stack.getMetadata() );
+		/*if( stack.hasTagCompound() )
 		{
 			final NBTTagCompound compound = stack.getTagCompound();
 			if( compound.hasKey( ReinforcedMaterial.TAG_NAME ) )
 				return get( compound.getString( ReinforcedMaterial.TAG_NAME ) );
 		}
-		return null;
+		return null;*/
 	}
 	
 	@Override
