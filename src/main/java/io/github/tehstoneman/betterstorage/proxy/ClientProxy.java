@@ -3,20 +3,20 @@ package io.github.tehstoneman.betterstorage.proxy;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.common.animation.ITimeValue;
-import net.minecraftforge.common.model.animation.IAnimationStateMachine;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,6 +32,13 @@ public class ClientProxy extends CommonProxy
 		super.preInit();
 
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
+
+		final StateMap.Builder builder = new StateMap.Builder();
+		builder.withName( BlockDoor.HINGE );
+		builder.withSuffix( "_locker" );
+		final StateMapperBase lockerState = builder.build();
+
+		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, lockerState );
 
 		BetterStorageBlocks.registerItemModels();
 		// BetterStorageItems.registerItemModels();
@@ -69,7 +76,7 @@ public class ClientProxy extends CommonProxy
 		// RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
 
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );

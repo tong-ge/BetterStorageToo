@@ -1,0 +1,25 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "betterstorage:locker.obj",
+		"custom": { "flip-v": true }
+	},
+	"variants":
+	{
+		"normal": [{}],
+		"inventory": [{ "model": "betterstorage:locker_closed.obj", "transform": "forge:default-block" }],
+		"facing":
+		{
+			"north": {},
+			"east": { "y": 90 },
+			"south": { "y": 180 },
+			"west": { "y": 270 }
+		},
+		"static":
+		{
+			"true": {},
+			"false": { "model": "betterstorage:locker_door_right.obj" }
+		}
+	}
+}

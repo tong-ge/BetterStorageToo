@@ -7,8 +7,10 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
+import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,10 +38,13 @@ public class CommonProxy
 			BetterStorageBlocks.CRATE = new BlockCrate();
 		if( BetterStorage.config.reinforcedChestEnabled )
 			BetterStorageBlocks.REINFORCED_CHEST = new BlockReinforcedChest();
+		if( BetterStorage.config.lockerEnabled )
+			BetterStorageBlocks.LOCKER = new BlockLocker();
 
 		// Register tile entities
 		GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
 		GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
+		GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
 	}
 
 	public void initialize()

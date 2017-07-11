@@ -13,7 +13,7 @@ public final class DirectionUtils
 	/** Gets the EnumFacing from the direction an entity is facing. */
 	public static EnumFacing getOrientation( Entity entity )
 	{
-		final int dir = MathHelper.floor_double( entity.rotationYaw * 4.0 / 360.0 + 0.5 ) & 3;
+		final int dir = MathHelper.floor( entity.rotationYaw * 4.0 / 360.0 + 0.5 ) & 3;
 		switch( dir )
 		{
 		case 1:

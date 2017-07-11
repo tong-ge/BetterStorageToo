@@ -54,6 +54,8 @@ public final class BetterStorageBlocks
 			CRATE.registerItemModels();
 		if( REINFORCED_CHEST != null )
 			REINFORCED_CHEST.registerItemModels();
+		if( LOCKER != null )
+			LOCKER.registerItemModels();
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.reinforcedChestEnabled ) )

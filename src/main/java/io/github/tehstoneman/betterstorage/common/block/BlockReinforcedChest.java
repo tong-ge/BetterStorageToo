@@ -10,6 +10,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,8 +32,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -51,13 +50,28 @@ public class BlockReinforcedChest extends BlockContainerBetterStorage // BlockLo
 		setHarvestLevel( "axe", 2 );
 		setSoundType( SoundType.WOOD );
 
-		setDefaultState(
-				blockState.getBaseState().withProperty( BlockHorizontal.FACING, EnumFacing.NORTH ).withProperty( MATERIAL, EnumReinforced.IRON ) );
+		//@formatter:off
+		setDefaultState( blockState.getBaseState().withProperty( BlockHorizontal.FACING, EnumFacing.NORTH )
+												  .withProperty( MATERIAL, EnumReinforced.IRON )
+												  .withProperty( Properties.StaticProperty, true ) );
+		//@formatter:on
 	}
 
 	public BlockReinforcedChest()
 	{
 		this( Material.WOOD );
+	}
+
+	@Override
+	public boolean isOpaqueCube( IBlockState state )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube( IBlockState state )
+	{
+		return false;
 	}
 
 	@Override
@@ -67,10 +81,9 @@ public class BlockReinforcedChest extends BlockContainerBetterStorage // BlockLo
 	}
 
 	@Override
-	protected ExtendedBlockState createBlockState()
+	public BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState( this, new IProperty[] { BlockHorizontal.FACING, MATERIAL, Properties.StaticProperty },
-				new IUnlistedProperty[] { Properties.AnimationProperty } );
+		return new BlockStateContainer( this, new IProperty[] { BlockHorizontal.FACING, MATERIAL, Properties.StaticProperty } );
 	}
 
 	@Override
@@ -131,18 +144,6 @@ public class BlockReinforcedChest extends BlockContainerBetterStorage // BlockLo
 		}
 		if( tileentity instanceof TileEntityConnectable )
 			( (TileEntityConnectable)tileentity ).onBlockPlaced( placer, stack );
-	}
-
-	@Override
-	public boolean isOpaqueCube( IBlockState state )
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube( IBlockState state )
-	{
-		return false;
 	}
 
 	@Override
@@ -220,6 +221,6 @@ public class BlockReinforcedChest extends BlockContainerBetterStorage // BlockLo
 			final TileEntityReinforcedChest chest = (TileEntityReinforcedChest)tileentity;
 			material = chest.getMaterial();
 		}
-		return new ItemStack( Item.getItemFromBlock(this), 1, material.getMetadata() );
+		return new ItemStack( Item.getItemFromBlock( this ), 1, material.getMetadata() );
 	}
 }

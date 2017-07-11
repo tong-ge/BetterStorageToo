@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import scala.actors.threadpool.Arrays;
 
 public class BetterStorageConfig
 {
@@ -14,6 +15,7 @@ public class BetterStorageConfig
 	// Block settings
 	public boolean				crateEnabled;
 	public boolean				reinforcedChestEnabled;
+	public boolean				lockerEnabled;
 
 	// General settings
 	public int					reinforcedColumns;
@@ -79,6 +81,8 @@ public class BetterStorageConfig
 				.setLanguageKey( "tile.betterstorage.crate.name" ).setRequiresMcRestart( true );
 		final Property propReinforcedChestEnabled = config.get( CATEGORY_BLOCKS, "reinforcedChestEnabled", true )
 				.setLanguageKey( "tile.betterstorage.reinforced_chest.name" ).setRequiresMcRestart( true );
+		final Property propLockerEnabled = config.get( CATEGORY_BLOCKS, "lockerEnabled", true )
+				.setLanguageKey( "tile.betterstorage.locker.name" ).setRequiresMcRestart( true );
 
 		// Reinforced chest settings
 		final Property propReinforcedColumns = config.get( Configuration.CATEGORY_GENERAL, "reinforcedColumns", "13",
@@ -94,17 +98,24 @@ public class BetterStorageConfig
 		final Property propEnableWarningMessages = config.get( Configuration.CATEGORY_GENERAL, "enableWarningMessages", false,
 				"If disabled, prevents certain warning messages from being logged to the console." )
 				.setLanguageKey( "config.betterstorage.general.enableWarningMessages" );
-		//@formatter:on
 
 		// Define property order
-		// List<String> propOrderGeneral = new ArrayList<String>();
-		// List<String> propOrdeBlocks = new ArrayList<String>();
+		config.setCategoryPropertyOrder( Configuration.CATEGORY_GENERAL,
+				Arrays.asList( new String[] { "reinforcedColumns",
+											  "enableCrateInventoryInterface",
+											  "enableWarningMessages" } ) );
+		config.setCategoryPropertyOrder( CATEGORY_BLOCKS,
+				Arrays.asList( new String[] { "crateEnabled",
+											  "reinforcedChestEnabled",
+											  "lockerEnabled" } ) );
+		//@formatter:on
 
 		// Read properties
 		if( readFieldsFromConfig )
 		{
 			crateEnabled = propCrateEnabled.getBoolean();
 			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
+			lockerEnabled = propLockerEnabled.getBoolean();
 
 			reinforcedColumns = propReinforcedColumns.getInt();
 			enableCrateInventoryInterface = propCrateInventoryInterface.getBoolean();
@@ -114,6 +125,7 @@ public class BetterStorageConfig
 		// Save properties to file
 		propCrateEnabled.set( crateEnabled );
 		propReinforcedChestEnabled.set( reinforcedChestEnabled );
+		propLockerEnabled.set( lockerEnabled );
 
 		propReinforcedColumns.set( reinforcedColumns );
 		propReinforcedChestEnabled.set( enableCrateInventoryInterface );

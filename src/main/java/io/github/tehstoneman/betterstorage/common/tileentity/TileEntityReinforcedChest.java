@@ -33,6 +33,10 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	 * }
 	 */
 
+	// TileEntityConnactable stuff
+	
+	private static EnumFacing[] neighbors = { EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.SOUTH };
+
 	@Override
 	public void setAttachmentPosition()
 	{
@@ -49,8 +53,6 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	}
 
 	// TileEntityConnactable stuff
-
-	private static EnumFacing[] neighbors = { EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.SOUTH };
 
 	@Override
 	protected String getConnectableName()

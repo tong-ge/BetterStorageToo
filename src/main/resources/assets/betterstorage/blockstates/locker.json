@@ -8,19 +8,6 @@
 	"variants":
 	{
 		"normal": [{}],
-		"inventory": [{ "model": "betterstorage:locker_closed.obj", "transform": "forge:default-block" }],
-		"facing":
-		{
-			"north": {},
-			"east": { "y": 90 },
-			"south": { "y": 180 },
-			"west": { "y": 270 }
-		},
-		"part":
-		{
-			"single": {},
-			"bottom": { "model": "betterstorage:locker_large_bottom.obj" },
-			"top": { "model": "betterstorage:locker_large_top.obj" }
-		}
+		"inventory": [{ "model": "betterstorage:locker_closed.obj", "transform": "forge:default-block" }]
 	}
 }
