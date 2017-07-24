@@ -1,7 +1,7 @@
 BetterStorageToo
 ================
 
-.. is a continuation of CopyGirl's Better Storage [Minecraft](http://minecraft.net/) mod which adds more storage options. It aims
+.. is a continuation of copygirl's Better Storage [Minecraft](http://minecraft.net/) mod which adds more storage options. It aims
 for fun, interesting and balanced features which would fit well into vanilla Minecraft,
 but also work nicely together with other mods. Information about all its features can be
 found in the [Minecraft Forums thread](http://www.minecraftforum.net/topic/1548203-/).
