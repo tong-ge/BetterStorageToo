@@ -2,7 +2,8 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
-import io.github.tehstoneman.betterstorage.utils.WorldUtils;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -21,8 +23,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class TileEntityConnectable extends TileEntityContainer
 {
-	private EnumFacing	orientation	= null;
-	private EnumFacing	connected	= null;
+	protected BlockPos connectedPos = null;
 
 	@Override
 	public <T> T getCapability( Capability< T > capability, EnumFacing facing )
@@ -37,27 +38,19 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 
 	public EnumFacing getOrientation()
 	{
+		final IBlockState state = world.getBlockState( getPos() );
+		final EnumFacing orientation = state.getValue( BlockHorizontal.FACING );
 		return orientation != null ? orientation : EnumFacing.NORTH;
 	}
 
-	public void setOrientation( EnumFacing orientation )
+	public BlockPos getConnected()
 	{
-		this.orientation = orientation;
-		if( getWorld() != null )
-			getWorld().notifyBlockUpdate( pos, getWorld().getBlockState( pos ), getWorld().getBlockState( pos ), 3 );
+		return connectedPos;
 	}
 
-	public EnumFacing getConnected()
+	public void setConnected( BlockPos connected )
 	{
-		return connected;
-	}
-
-	public void setConnected( EnumFacing connected )
-	{
-		this.connected = connected;
-		if( getWorld() != null )
-			getWorld().notifyBlockUpdate( pos, getWorld().getBlockState( pos ), getWorld().getBlockState( pos ), 3 );
-		markDirty();
+		connectedPos = connected;
 	}
 
 	/** Returns the possible directions the container can connect to. */
@@ -72,8 +65,12 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	/** Returns if this container is the main container, or not connected to another container. */
 	public boolean isMain()
 	{
-		final EnumFacing connected = getConnected();
-		return !isConnected() || connected.getFrontOffsetX() + connected.getFrontOffsetY() + connected.getFrontOffsetZ() > 0;
+		if( isConnected() )
+		{
+			final BlockPos connected = getConnected();
+			return connected.getX() > pos.getX() || connected.getY() > pos.getY() || connected.getZ() > pos.getZ();
+		}
+		return true;
 	}
 
 	/** Returns the main container. */
@@ -85,8 +82,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		if( connectable != null )
 			return connectable;
 		if( BetterStorage.config.enableWarningMessages )
-			BetterStorage.logger.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
-					pos.getZ() );
+			BetterStorage.logger.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(),
+					pos.getY(), pos.getZ() );
 		return this;
 	}
 
@@ -95,7 +92,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	{
 		if( getWorld() == null || !isConnected() )
 			return null;
-		final TileEntity tileEntity = getWorld().getTileEntity( pos.offset( getConnected() ) );
+		final TileEntity tileEntity = getWorld().getTileEntity( getConnected() );
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
 	}
 
@@ -103,11 +100,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public boolean canConnect( TileEntityConnectable connectable )
 	{
 		return connectable != null && // check for null
+				!isConnected() && !connectable.isConnected() && // Make sure the containers are not already connected.
 				getBlockType() == connectable.getBlockType() && // check for same block type
-				getOrientation() == connectable.getOrientation() && // check for same orientation
-				getBlockMetadata() == connectable.getBlockMetadata() && // check for same material
-				// Make sure the containers are not already connected.
-				!isConnected() && !connectable.isConnected();
+				getOrientation() == connectable.getOrientation(); // check for same orientation
 	}
 
 	/** Connects the container to any other containers nearby, if possible. */
@@ -115,28 +110,23 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	{
 		if( getWorld().isRemote )
 			return;
-		TileEntityConnectable connectableFound = null;
-		EnumFacing dirFound = null;
 		for( final EnumFacing dir : getPossibleNeighbors() )
-		{
-			final int x = pos.getX() + dir.getFrontOffsetX();
-			final int y = pos.getY() + dir.getFrontOffsetY();
-			final int z = pos.getZ() + dir.getFrontOffsetZ();
-			final TileEntityConnectable connectable = WorldUtils.get( getWorld(), x, y, z, TileEntityConnectable.class );
-			if( !canConnect( connectable ) )
-				continue;
-			if( connectableFound != null )
-				return;
-			connectableFound = connectable;
-			dirFound = dir;
-		}
-		if( connectableFound == null )
-			return;
-		setConnected( dirFound );
-		connectableFound.setConnected( dirFound.getOpposite() );
-		// Mark the block for an update, sends description packet to players.
-		markForUpdate();
-		connectableFound.markForUpdate();
+			if( !isConnected() )
+			{
+				final TileEntity tileentity = world.getTileEntity( pos.offset( dir ) );
+				if( tileentity instanceof TileEntityConnectable )
+				{
+					final TileEntityConnectable connectable = (TileEntityConnectable)tileentity;
+					if( canConnect( connectable ) )
+					{
+						setConnected( connectable.getPos() );
+						connectable.setConnected( getPos() );
+						// Mark the block for an update, sends description packet to players.
+						markForUpdate();
+						connectable.markForUpdate();
+					}
+				}
+			}
 	}
 
 	/** Disconnects the container from its connected container, if it has one. */
@@ -189,7 +179,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public final void onBlockPlaced( EntityLivingBase player, ItemStack stack )
 	{
 		super.onBlockPlaced( player, stack );
-		setOrientation( player.getHorizontalFacing().getOpposite() );
 		checkForConnections();
 	}
 
@@ -309,10 +298,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public NBTTagCompound getUpdateTag()
 	{
 		final NBTTagCompound compound = super.getUpdateTag();
-		if( getOrientation() != null )
-			compound.setByte( "orientation", (byte)getOrientation().getIndex() );
 		if( getConnected() != null )
-			compound.setByte( "connected", (byte)getConnected().getIndex() );
+			compound.setLong( "connected", getConnected().toLong() );
 		return compound;
 	}
 
@@ -320,12 +307,10 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public void handleUpdateTag( NBTTagCompound compound )
 	{
 		super.handleUpdateTag( compound );
-		if( compound.hasKey( "orientation" ) )
-			setOrientation( EnumFacing.getFront( compound.getByte( "orientation" ) ) );
 		if( compound.hasKey( "connected" ) )
-			connected = EnumFacing.getFront( compound.getByte( "connected" ) );
+			connectedPos = BlockPos.fromLong( compound.getLong( "connected" ) );
 		else
-			connected = null;
+			connectedPos = null;
 	}
 
 	// Reading from / writing to NBT
@@ -334,10 +319,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public NBTTagCompound writeToNBT( NBTTagCompound compound )
 	{
 		super.writeToNBT( compound );
-		if( getOrientation() != null )
-			compound.setByte( "orientation", (byte)getOrientation().getIndex() );
 		if( getConnected() != null )
-			compound.setByte( "connected", (byte)getConnected().getIndex() );
+			compound.setLong( "connected", getConnected().toLong() );
 		return compound;
 	}
 
@@ -345,9 +328,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public void readFromNBT( NBTTagCompound compound )
 	{
 		super.readFromNBT( compound );
-		if( compound.hasKey( "orientation" ) )
-			setOrientation( EnumFacing.getFront( compound.getByte( "orientation" ) ) );
 		if( compound.hasKey( "connected" ) )
-			setConnected( EnumFacing.getFront( compound.getByte( "connected" ) ) );
+			setConnected( BlockPos.fromLong( compound.getLong( "connected" ) ) );
+		else
+			setConnected( null );
 	}
 }

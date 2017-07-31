@@ -61,8 +61,7 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage imp
 			float hitX, float hitY, float hitZ )
 	{
 		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityContainer )
-			return ( (TileEntityContainer)tileEntity ).onBlockActivated( playerIn, side.getIndex(), hitX, hitY, hitZ );
+		//if( tileEntity instanceof TileEntityContainer ) return ( (TileEntityContainer)tileEntity ).onBlockActivated( playerIn, side.getIndex(), hitX, hitY, hitZ );
 
 		return false;
 	}

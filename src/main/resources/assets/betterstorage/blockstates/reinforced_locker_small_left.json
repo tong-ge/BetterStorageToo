@@ -1,0 +1,103 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"model": "betterstorage:locker.obj",
+		"custom": { "flip-v": true }
+	},
+	"variants":
+	{
+		"normal": [{}],
+		"inventory": [{ "model": "betterstorage:locker_closed.obj", "transform": "forge:default-block" }],
+		"material":
+		{
+			"iron":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/iron",
+					"#locker_large": "betterstorage:models/locker_large/iron",
+					"particle" : "betterstorage:models/locker/iron"
+				}
+			},
+			"gold":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/gold",
+					"#locker_large": "betterstorage:models/locker_large/gold",
+					"particle" : "betterstorage:models/locker/gold"
+				}
+			},
+			"diamond":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/diamond",
+					"#locker_large": "betterstorage:models/locker_large/diamond",
+					"particle" : "betterstorage:models/locker/diamond"
+				}
+			},
+			"emerald":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/emerald",
+					"#locker_large": "betterstorage:models/locker_large/emerald",
+					"particle" : "betterstorage:models/locker/emerald"
+				}
+			},
+			"special": {},
+			"copper":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/copper",
+					"#locker_large": "betterstorage:models/locker_large/copper",
+					"particle" : "betterstorage:models/locker/copper"
+				}
+			},
+			"tin":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/tin",
+					"#locker_large": "betterstorage:models/locker_large/tin",
+					"particle" : "betterstorage:models/locker/tin"
+				}
+			},
+			"silver":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/silver",
+					"#locker_large": "betterstorage:models/locker_large/silver",
+					"particle" : "betterstorage:models/locker/silver"
+				}
+			},
+			"zinc":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/zinc",
+					"#locker_large": "betterstorage:models/locker_large/zinc",
+					"particle" : "betterstorage:models/locker/zinc"
+				}
+			},
+			"steel":
+			{
+				"textures":
+				{
+					"#material": "betterstorage:models/locker/steel",
+					"#locker_large": "betterstorage:models/locker_large/steel",
+					"particle" : "betterstorage:models/locker/steel"
+				}
+			}
+		},
+		"static":
+		{
+			"true": {},
+			"false": { "model": "betterstorage:locker_door_left.obj" }
+		}
+	}
+}

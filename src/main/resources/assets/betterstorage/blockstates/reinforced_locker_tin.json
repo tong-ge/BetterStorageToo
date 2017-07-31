@@ -4,12 +4,7 @@
 	{
 		"model": "betterstorage:locker.obj",
 		"custom": { "flip-v": true },
-		"textures":
-		{
-			"#locker": "betterstorage:models/locker/tin",
-			"#locker_large": "betterstorage:models/locker_large/tin",
-			"particle" : "betterstorage:models/locker/tin"
-		}
+		"textures": { "#material": "betterstorage:models/locker/tin" }
 	},
 	"variants":
 	{

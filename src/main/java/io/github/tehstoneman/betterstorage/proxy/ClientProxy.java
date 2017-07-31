@@ -7,9 +7,11 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -24,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public class ClientProxy extends CommonProxy
 {
-	public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
+	//public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
 
 	@Override
 	public void preInit()
@@ -33,12 +35,10 @@ public class ClientProxy extends CommonProxy
 
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 
-		final StateMap.Builder builder = new StateMap.Builder();
-		builder.withName( BlockDoor.HINGE );
-		builder.withSuffix( "_locker" );
-		final StateMapperBase lockerState = builder.build();
-
-		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, lockerState );
+		SizeStateMap sizeStateMap = new SizeStateMap();
+		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_CHEST, sizeStateMap );
+		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, sizeStateMap );
+		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_LOCKER, sizeStateMap );
 
 		BetterStorageBlocks.registerItemModels();
 		// BetterStorageItems.registerItemModels();
@@ -77,7 +77,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
 		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());

@@ -2,39 +2,23 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityReinforcedChest extends TileEntityLockable
 {
-	/*
-	 * @Override
-	 *
-	 * @SideOnly( Side.CLIENT )
-	 * public AxisAlignedBB getRenderBoundingBox()
-	 * {
-	 * if( isConnected() )
-	 * {
-	 * final EnumFacing connected = getConnected();
-	 * if( connected == EnumFacing.NORTH )
-	 * return new AxisAlignedBB( 0.0625F, 0.0F, 0.0F, 0.9375F, 14F / 16F, 0.9375F );
-	 * else
-	 * if( connected == EnumFacing.SOUTH )
-	 * return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 14F / 16F, 1.0F );
-	 * else
-	 * if( connected == EnumFacing.WEST )
-	 * return new AxisAlignedBB( 0.0F, 0.0F, 0.0625F, 0.9375F, 14F / 16F, 0.9375F );
-	 * else
-	 * if( connected == EnumFacing.EAST )
-	 * return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 1.0F, 14F / 16F, 0.9375F );
-	 * }
-	 *
-	 * return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 14F / 16F, 0.9375F );
-	 * }
-	 */
+	@Override
+	@SideOnly( Side.CLIENT )
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return new AxisAlignedBB( pos.add( -1, 0, -1 ), pos.add( 2, 2, 2 ) );
+	}
 
 	// TileEntityConnactable stuff
-	
+
 	private static EnumFacing[] neighbors = { EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.SOUTH };
 
 	@Override
@@ -63,7 +47,9 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	@Override
 	public EnumFacing[] getPossibleNeighbors()
 	{
-		return neighbors;
+		final EnumFacing facing = getOrientation();
+		return new EnumFacing[] { facing.rotateY(), facing.rotateYCCW() };
+		// return neighbors;
 	}
 
 	public void setCustomInventoryName( String displayName )
@@ -71,9 +57,46 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 		// TODO Auto-generated method stub
 	}
 
-	public void setMaterial( EnumReinforced reinforcedMaterial )
+	/*
+	 * public boolean canConnect( TileEntityConnectable connectable )
+	 * {
+	 * if( connectable instanceof TileEntityReinforcedChest )
+	 * return connectable != null && // check for null
+	 * !isConnected() && !connectable.isConnected() && // Make sure the containers are not already connected.
+	 * getBlockType() == connectable.getBlockType() && // check for same block type
+	 * getOrientation() == connectable.getOrientation() && // check for same orientation
+	 * getMaterial() == ((TileEntityReinforcedChest)connectable).getMaterial(); // check for same material
+	 * return super.canConnect( connectable );
+	 * }
+	 */
+
+	// TileEntity synchronization
+
+	@Override
+	public NBTTagCompound getUpdateTag()
 	{
-		material = reinforcedMaterial;
-		markDirty();
+		final NBTTagCompound compound = super.getUpdateTag();
+		return compound;
+	}
+
+	@Override
+	public void handleUpdateTag( NBTTagCompound compound )
+	{
+		super.handleUpdateTag( compound );
+	}
+
+	// Reading from / writing to NBT
+
+	@Override
+	public NBTTagCompound writeToNBT( NBTTagCompound compound )
+	{
+		super.writeToNBT( compound );
+		return compound;
+	}
+
+	@Override
+	public void readFromNBT( NBTTagCompound compound )
+	{
+		super.readFromNBT( compound );
 	}
 }

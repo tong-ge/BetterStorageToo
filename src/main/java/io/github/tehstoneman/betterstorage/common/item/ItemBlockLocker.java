@@ -43,7 +43,6 @@ public class ItemBlockLocker extends ItemBlock
             int i = enumfacing.getFrontOffsetX();
             int j = enumfacing.getFrontOffsetZ();
             boolean flag = i < 0 && hitZ < 0.5F || i > 0 && hitZ > 0.5F || j < 0 && hitX > 0.5F || j > 0 && hitX < 0.5F;
-	    	Logger.getLogger( ModInfo.modId ).info( "Facing " + facing + " : Flag " + flag );
 
             int meta = this.getMetadata(itemstack.getMetadata());
             IBlockState state = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, player, hand);

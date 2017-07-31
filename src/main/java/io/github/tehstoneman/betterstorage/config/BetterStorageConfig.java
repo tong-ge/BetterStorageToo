@@ -16,6 +16,7 @@ public class BetterStorageConfig
 	public boolean				crateEnabled;
 	public boolean				reinforcedChestEnabled;
 	public boolean				lockerEnabled;
+	public boolean				reinforcedLockerEnabled;
 
 	// General settings
 	public int					reinforcedColumns;
@@ -83,6 +84,8 @@ public class BetterStorageConfig
 				.setLanguageKey( "tile.betterstorage.reinforced_chest.name" ).setRequiresMcRestart( true );
 		final Property propLockerEnabled = config.get( CATEGORY_BLOCKS, "lockerEnabled", true )
 				.setLanguageKey( "tile.betterstorage.locker.name" ).setRequiresMcRestart( true );
+		final Property propReinforcedLockerEnabled = config.get( CATEGORY_BLOCKS, "reinforcedLockerEnabled", true )
+				.setLanguageKey( "tile.betterstorage.reinforced_locker.name" ).setRequiresMcRestart( true );
 
 		// Reinforced chest settings
 		final Property propReinforcedColumns = config.get( Configuration.CATEGORY_GENERAL, "reinforcedColumns", "13",
@@ -107,7 +110,8 @@ public class BetterStorageConfig
 		config.setCategoryPropertyOrder( CATEGORY_BLOCKS,
 				Arrays.asList( new String[] { "crateEnabled",
 											  "reinforcedChestEnabled",
-											  "lockerEnabled" } ) );
+											  "lockerEnabled",
+											  "reinforcedLockerEnabled" } ) );
 		//@formatter:on
 
 		// Read properties
@@ -116,6 +120,7 @@ public class BetterStorageConfig
 			crateEnabled = propCrateEnabled.getBoolean();
 			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
 			lockerEnabled = propLockerEnabled.getBoolean();
+			reinforcedLockerEnabled = propReinforcedLockerEnabled.getBoolean();
 
 			reinforcedColumns = propReinforcedColumns.getInt();
 			enableCrateInventoryInterface = propCrateInventoryInterface.getBoolean();
@@ -126,6 +131,7 @@ public class BetterStorageConfig
 		propCrateEnabled.set( crateEnabled );
 		propReinforcedChestEnabled.set( reinforcedChestEnabled );
 		propLockerEnabled.set( lockerEnabled );
+		propReinforcedLockerEnabled.set( reinforcedLockerEnabled );
 
 		propReinforcedColumns.set( reinforcedColumns );
 		propReinforcedChestEnabled.set( enableCrateInventoryInterface );

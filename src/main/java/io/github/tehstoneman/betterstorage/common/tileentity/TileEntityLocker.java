@@ -10,6 +10,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,10 +22,11 @@ public class TileEntityLocker extends TileEntityLockable
 
 	public boolean						mirror		= false;
 
+	@Override
 	@SideOnly( Side.CLIENT )
-	public ResourceLocation getResource()
+	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return isConnected() ? Resources.textureLockerLarge : Resources.textureLocker;
+		return new AxisAlignedBB( pos.add( -1, 0, -1 ), pos.add( 2, 2, 2 ) );
 	}
 
 	@Override

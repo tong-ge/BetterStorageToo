@@ -1,8 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-import io.github.tehstoneman.betterstorage.addon.Addon;
+import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -22,14 +21,14 @@ public final class Recipes
 
 	public static void add()
 	{
-		registerRecipeSorter();
+		// registerRecipeSorter();
 
 		addBlockRecipes();
-		addItemRecipes();
-		addCardboardRecipes();
+		// addItemRecipes();
+		// addCardboardRecipes();
 
 		// GameRegistry.addRecipe( new DyeRecipe() );
-		Addon.addRecipesAll();
+		// Addon.addRecipesAll();
 	}
 
 	private static void registerRecipeSorter()
@@ -61,17 +60,16 @@ public final class Recipes
 		// Reinforced chest recipes
 		if( BetterStorageBlocks.REINFORCED_CHEST != null )
 			for( final EnumReinforced material : EnumReinforced.values() )
-				if( material != EnumReinforced.SPECIAL )
-					//@formatter:off
-					GameRegistry.addRecipe(
-							new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() ),
-									new Object[] { false,
-												   "o#o",
-												   "#C#",
-												   "oOo",	'C', Blocks.CHEST,
-												   			'#', "logWood",
-												   			'o', material.getOreDictIngot(),
-												   			'O', material.getOreDictBlock() } ) );
+				//@formatter:off
+				GameRegistry.addRecipe(
+						new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() ),
+								new Object[] { false,
+											   "o#o",
+											   "#C#",
+											   "oOo",	'C', Blocks.CHEST,
+											   			'#', "logWood",
+											   			'o', material.getOreDictIngot(),
+											   			'O', material.getOreDictBlock() } ) );
 					//@formatter:on
 
 		// Locker recipe
@@ -89,17 +87,16 @@ public final class Recipes
 			// Reinforced locker recipes
 			if( BetterStorageBlocks.REINFORCED_LOCKER != null )
 				for( final EnumReinforced material : EnumReinforced.values() )
-					if( material != EnumReinforced.SPECIAL )
-						//@formatter:off
-						GameRegistry.addRecipe(
-								new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_LOCKER, 1, material.getMetadata() ),
-										new Object[] { false,
-													   "o#o",
-													   "#C#",
-													   "oOo",	'C', BetterStorageBlocks.LOCKER,
-													   			'#', "logWood",
-													   			'o', material.getOreDictIngot(),
-													   			'O', material.getOreDictBlock() } ) );
+					//@formatter:off
+					GameRegistry.addRecipe(
+							new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_LOCKER, 1, material.getMetadata() ),
+									new Object[] { false,
+												   "o#o",
+												   "#C#",
+												   "oOo",	'C', BetterStorageBlocks.LOCKER,
+												   			'#', "logWood",
+												   			'o', material.getOreDictIngot(),
+												   			'O', material.getOreDictBlock() } ) );
 						//@formatter:on
 		}
 
@@ -362,7 +359,7 @@ public final class Recipes
 		 * {
 		 * // Crafting Station: Add cardboard enchantment recipe
 		 * BetterStorageCrafting.addStationRecipe( new CardboardEnchantmentRecipe() );
-		 * 
+		 *
 		 * // Crafting Station: Add cardboard repair recipe
 		 * if( BetterStorageItems.CARDBOARD_SHEET != null )
 		 * BetterStorageCrafting.addStationRecipe( new CardboardRepairRecipe() );

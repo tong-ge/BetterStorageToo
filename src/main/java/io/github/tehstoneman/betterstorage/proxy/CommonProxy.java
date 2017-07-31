@@ -1,7 +1,5 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
@@ -9,16 +7,16 @@ import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.item.crafting.Recipes;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.common.animation.ITimeValue;
-import net.minecraftforge.common.model.animation.IAnimationStateMachine;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -39,16 +37,22 @@ public class CommonProxy
 		if( BetterStorage.config.reinforcedChestEnabled )
 			BetterStorageBlocks.REINFORCED_CHEST = new BlockReinforcedChest();
 		if( BetterStorage.config.lockerEnabled )
+		{
 			BetterStorageBlocks.LOCKER = new BlockLocker();
+			if( BetterStorage.config.reinforcedLockerEnabled )
+				BetterStorageBlocks.REINFORCED_LOCKER = new BlockReinforcedLocker();
+		}
 
 		// Register tile entities
 		GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
 		GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
 		GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
+		GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
 	}
 
 	public void initialize()
 	{
+		Recipes.add();
 
 		// MinecraftForge.EVENT_BUS.register( this );
 		// FMLCommonHandler.instance().bus().register(this);

@@ -1,10 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
+import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
@@ -14,65 +12,73 @@ import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.Properties;
 
 public abstract class BlockLockable extends BlockContainerBetterStorage
 {
-	public static final PropertyDirection	FACING		= BlockHorizontal.FACING;
-	public static final PropertyEnum		MATERIAL	= PropertyEnum.create( "material", EnumReinforced.class );
+	public static final PropertyEnum	MATERIAL	= PropertyEnum.create( "material", EnumReinforced.class );
+	public static final PropertyBool	CONNECTED	= PropertyBool.create( "connected" );
 
 	protected BlockLockable( String name, Material material )
 	{
 		super( name, material );
-		setDefaultState( blockState.getBaseState().withProperty( FACING, EnumFacing.NORTH ).withProperty( MATERIAL, EnumReinforced.IRON ) );
 	}
 
-	/*
-	 * @Override
-	 * public void getSubBlocks( Item item, CreativeTabs tab, NonNullList<ItemStack> list )
-	 * {
-	 * for( final EnumReinforced material : EnumReinforced.values() )
-	 * if( material != EnumReinforced.SPECIAL )
-	 * list.add( new ItemStack( item, 1, material.getMetadata() ) );
-	 * }
-	 */
+	@Override
+	public void getSubBlocks( Item item, CreativeTabs tab, NonNullList< ItemStack > list )
+	{
+		for( final EnumReinforced material : EnumReinforced.values() )
+		{
+			final ItemStack itemstack = new ItemStack( item, 1, material.getMetadata() );
+			list.add( itemstack );
+		}
+	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		final IProperty[] listedProperties = new IProperty[] { FACING, MATERIAL };
-		return new BlockStateContainer( this, listedProperties );
+		return new BlockStateContainer( this, new IProperty[] { BlockHorizontal.FACING, MATERIAL, Properties.StaticProperty, CONNECTED } );
 	}
 
-	/*
-	 * @Override
-	 * public IBlockState getStateFromMeta( int meta )
-	 * {
-	 * return getDefaultState().withProperty( MATERIAL, EnumReinforced.byMetadata( meta ) );
-	 * }
-	 */
+	@Override
+	public EnumBlockRenderType getRenderType( IBlockState state )
+	{
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
 
-	/*
-	 * @Override
-	 * public int getMetaFromState( IBlockState state )
-	 * {
-	 * return ( (EnumReinforced)state.getValue( MATERIAL ) ).getMetadata();
-	 * }
-	 */
+	@Override
+	public IBlockState getStateFromMeta( int meta )
+	{
+		final EnumFacing facing = EnumFacing.getFront( ( meta & 3 ) + 2 );
+		final boolean hidden = ( meta & 4 ) != 0;
+		return getDefaultState().withProperty( BlockHorizontal.FACING, facing );
+	}
+
+	@Override
+	public int getMetaFromState( IBlockState state )
+	{
+		final int meta = state.getValue( BlockHorizontal.FACING ).getIndex() - 2 & 3;
+		return meta;
+	}
 
 	@Override
 	public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos )
@@ -80,19 +86,29 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		final TileEntity tileEntity = worldIn.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityLockable )
 		{
-			final TileEntityLockable chest = (TileEntityLockable)tileEntity;
-			if( chest.getOrientation() != null )
-				state = state.withProperty( FACING, chest.getOrientation() );
+			final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
+			if( lockable.getMaterial() != null )
+				state = state.withProperty( MATERIAL, lockable.getMaterial() );
+			state = state.withProperty( CONNECTED, lockable.isConnected() );
 		}
-		return state;
+		return state.withProperty( Properties.StaticProperty, true );
 	}
 
 	@Override
 	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
 	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityConnectable )
-			( (TileEntityConnectable)tileEntity ).onBlockPlaced( placer, stack );
+		worldIn.setBlockState( pos, state.withProperty( BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite() ), 2 );
+
+		final TileEntity tileentity = worldIn.getTileEntity( pos );
+
+		if( tileentity instanceof TileEntityLockable )
+		{
+			final TileEntityLockable lockable = (TileEntityLockable)tileentity;
+			lockable.setMaterial( BetterStorageAPI.materials.get( stack ) );
+		}
+
+		if( tileentity instanceof TileEntityConnectable )
+			( (TileEntityConnectable)tileentity ).onBlockPlaced( placer, stack );
 		else
 			super.onBlockPlacedBy( worldIn, pos, state, placer, stack );
 	}
@@ -207,86 +223,17 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	 * }
 	 */
 
-	public static enum EnumReinforced implements IStringSerializable
+	@Override
+	public ItemStack getPickBlock( IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player )
 	{
-		//@formatter:off
-		IRON	( 0, "iron", "ingotIron", "blockIron" ),
-		GOLD	( 1, "gold", "ingotGold", "blockGold" ),
-		DIAMOND	( 2, "diamond", "gemDiamond", "blockDiamond" ),
-		EMERALD	( 3, "emerald", "gemEmerald", "blockEmerald" ),
-		//SPECIAL	( "special", "",""),
-		COPPER	( 4, "copper", "ingotCopper", "blockCopper" ),
-		TIN		( 5, "tin", "ingotTin", "blockTin" ),
-		SILVER	( 6, "silver", "ingotSilver", "blockSilver" ),
-		ZINC	( 7, "zinc", "ingotZinc", "blockZinc" ),
-		STEEL	( 8, "steel", "ingotSteel", "blockSteel" );
-		//@formatter:on
+		final TileEntity tileentity = world.getTileEntity( pos );
+		EnumReinforced material = EnumReinforced.IRON;
 
-		private final int								meta;
-		private final String							name;
-		private final String							ingot;
-		private final String							block;
-
-		private static EnumReinforced[]					META_LOOKUP	= new EnumReinforced[values().length];
-		private static Map< String, EnumReinforced >	NAME_LOOKUP	= new HashMap< >();
-
-		static
+		if( tileentity instanceof TileEntityLockable )
 		{
-			for( final EnumReinforced material : values() )
-			{
-				META_LOOKUP[material.getMetadata()] = material;
-				NAME_LOOKUP.put( material.name, material );
-			}
+			final TileEntityLockable lockable = (TileEntityLockable)tileentity;
+			material = lockable.getMaterial();
 		}
-
-		private EnumReinforced( int meta, String name, String ingot, String block )
-		{
-			this.meta = meta;
-			this.name = name;
-			this.ingot = ingot;
-			this.block = block;
-		}
-
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-
-		@Override
-		public String getName()
-		{
-			return name;
-		}
-
-		public int getMetadata()
-		{
-			return meta;
-		}
-
-		public String getOreDictIngot()
-		{
-			return ingot;
-		}
-
-		public String getOreDictBlock()
-		{
-			return block;
-		}
-
-		public String getUnlocalizedName()
-		{
-			return "material." + ModInfo.modId + "." + name;
-		}
-
-		public static EnumReinforced byMetadata( int meta )
-		{
-			return META_LOOKUP[meta];
-		}
-
-		public static EnumReinforced byName( String name )
-		{
-			return NAME_LOOKUP.get( name );
-		}
+		return new ItemStack( Item.getItemFromBlock( this ), 1, material.getMetadata() );
 	}
 }

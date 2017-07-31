@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
+import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
@@ -40,7 +40,7 @@ import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockLocker extends BlockContainerBetterStorage
+public class BlockLocker extends BlockLockable
 {
 	public BlockLocker(Material material)
 	{
@@ -54,7 +54,8 @@ public class BlockLocker extends BlockContainerBetterStorage
 		//@formatter:off
 		setDefaultState( blockState.getBaseState().withProperty( BlockHorizontal.FACING, EnumFacing.NORTH )
 												  .withProperty( Properties.StaticProperty, true )
-												  .withProperty( BlockDoor.HINGE, BlockDoor.EnumHingePosition.LEFT ));
+												  .withProperty( BlockDoor.HINGE, BlockDoor.EnumHingePosition.LEFT )
+												  .withProperty( BlockLockable.CONNECTED, false ) );
 		//@formatter:on
 	}
 
@@ -79,14 +80,13 @@ public class BlockLocker extends BlockContainerBetterStorage
 	@SideOnly( Side.CLIENT )
 	public EnumBlockRenderType getRenderType( IBlockState state )
 	{
-		return EnumBlockRenderType.MODEL;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
 	public BlockStateContainer createBlockState()
 	{
-		final IProperty[] listedProperties = new IProperty[] { BlockHorizontal.FACING, Properties.StaticProperty, BlockDoor.HINGE };
-		return new BlockStateContainer( this, listedProperties );
+		return new BlockStateContainer( this, new IProperty[] { BlockHorizontal.FACING, Properties.StaticProperty, BlockDoor.HINGE, CONNECTED } );
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class BlockLocker extends BlockContainerBetterStorage
 			return super.getBoundingBox( state, world, pos );
 
 		final TileEntityLocker chest = (TileEntityLocker)tileEntity;
-		if( chest.isConnected() )
+		/*if( chest.isConnected() )
 		{
 			final EnumFacing connected = chest.getConnected();
 			if( connected == EnumFacing.NORTH )
@@ -176,7 +176,7 @@ public class BlockLocker extends BlockContainerBetterStorage
 					else
 						if( connected == EnumFacing.EAST )
 							return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 1.0F, 14F / 16F, 0.9375F );
-		}
+		}*/
 
 		return super.getBoundingBox( state, world, pos );
 	}

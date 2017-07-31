@@ -10,13 +10,6 @@
 	{
 		"normal": [{}],
 		"inventory": [{ "model": "betterstorage:chest_item.obj", "custom": { "flip-v": true }, "transform": "forge:default-block" }],
-		"facing":
-		{
-			"north": {},
-			"east": { "y": 90 },
-			"south": { "y": 180 },
-			"west": { "y": 270 }
-		},
 		"material":
 		{
 			"iron": {},
@@ -33,12 +26,6 @@
 		{
 			"true": {},
 			"false": { "model": "betterstorage:chest_lid.obj" }
-		},
-		"connected":
-		{
-			"small": {},
-			"large": {},
-			"hidden": {}
 		}
 	}
 }

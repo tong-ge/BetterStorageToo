@@ -4,12 +4,7 @@
 	{
 		"model": "betterstorage:locker.obj",
 		"custom": { "flip-v": true },
-		"textures":
-		{
-			"#locker": "betterstorage:models/locker/iron",
-			"#locker_large": "betterstorage:models/locker_large/iron",
-			"particle" : "betterstorage:models/locker/iron"
-		}
+		"textures": { "#material": "betterstorage:models/locker/iron" }
 	},
 	"variants":
 	{

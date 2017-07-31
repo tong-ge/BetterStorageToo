@@ -2,8 +2,11 @@
 container.betterstorage.crate=Storage Crate
 container.betterstorage.crate.capacity=%% Capacity
 container.betterstorage.locker=Locker
+container.betterstorage.locker_large=Large Locker
 container.betterstorage.reinforced_chest=Reinforced Chest
 container.betterstorage.reinforced_chest_large=Large Reinforced Chest
+container.betterstorage.reinforced_locker=Reinforced Locker
+container.betterstorage.reinforced_locker_large=Large Reinforced Locker
 
 # Creative tab
 itemGroup.betterstorage=Better Storage Too
@@ -27,6 +30,9 @@ tile.betterstorage.locker.name.tooltip=Enable or disable lockers.
 tile.betterstorage.reinforced_chest.name=Reinforced Chest
 tile.betterstorage.reinforced_chest.name.full=Reinforced %s Chest
 tile.betterstorage.reinforced_chest.name.tooltip=Enable or disable reinforced chests.
+tile.betterstorage.reinforced_locker.name=Reinforced Locker
+tile.betterstorage.reinforced_locker.name.full=Reinforced %s Locker
+tile.betterstorage.reinforced_locker.name.tooltip=Enable or disable reinforced lockers.\n(No effect if lockers are disabled)
 
 # Config
 config.betterstorage.category.block=Blocks

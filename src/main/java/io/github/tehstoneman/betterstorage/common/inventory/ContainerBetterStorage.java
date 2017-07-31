@@ -145,7 +145,7 @@ public class ContainerBetterStorage extends Container
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )
 	{
 		final Slot slot = inventorySlots.get( index );
-		ItemStack returnStack = null;
+		ItemStack returnStack = ItemStack.EMPTY;
 
 		if( slot != null && slot.getHasStack() )
 		{
@@ -162,8 +162,8 @@ public class ContainerBetterStorage extends Container
 				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
 					return null;
 
-			if( itemStack == null || itemStack.stackSize == 0 )
-				slot.putStack( null );
+			if( itemStack.isEmpty() )
+				slot.putStack( ItemStack.EMPTY );
 			else
 				slot.onSlotChanged();
 		}

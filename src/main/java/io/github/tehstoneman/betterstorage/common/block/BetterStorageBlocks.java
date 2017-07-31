@@ -56,28 +56,8 @@ public final class BetterStorageBlocks
 			REINFORCED_CHEST.registerItemModels();
 		if( LOCKER != null )
 			LOCKER.registerItemModels();
-
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.reinforcedChestEnabled ) )
-		 * for( final EnumReinforced material : EnumReinforced.values() )
-		 * if( material != EnumReinforced.SPECIAL )
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( REINFORCED_CHEST ), material.getMetadata(),
-		 * new ModelResourceLocation( REINFORCED_CHEST.getRegistryName() + "_" + material.getName(), "inventory" ) );
-		 */
-
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockerEnabled ) )
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( LOCKER ), 0,
-		 * new ModelResourceLocation( LOCKER.getRegistryName(), "inventory" ) );
-		 */
-
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.reinforcedLockerEnabled ) )
-		 * for( final EnumReinforced material : EnumReinforced.values() )
-		 * if( material != EnumReinforced.SPECIAL )
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( REINFORCED_LOCKER ), material.getMetadata(),
-		 * new ModelResourceLocation( REINFORCED_LOCKER.getRegistryName() + "_" + material.getName(), "inventory" ) );
-		 */
+		if( REINFORCED_LOCKER != null )
+			REINFORCED_LOCKER.registerItemModels();
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxEnabled ) )

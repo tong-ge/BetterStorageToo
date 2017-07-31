@@ -1,8 +1,10 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import java.security.InvalidParameterException;
+import java.util.logging.Logger;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
@@ -10,7 +12,6 @@ import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -71,6 +72,12 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		return material;
 	}
 
+	public void setMaterial( EnumReinforced reinforcedMaterial )
+	{
+		material = reinforcedMaterial;
+		markDirty();
+	}
+
 	// Attachment points
 
 	public abstract void setAttachmentPosition();
@@ -81,21 +88,25 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		return ( (TileEntityLockable)getMainTileEntity() ).attachments;
 	}
 
-	@Override
-	public void setOrientation( EnumFacing orientation )
-	{
-		super.setOrientation( orientation );
-		if( canHaveLock() )
-			lockAttachment.setDirection( orientation );
-	}
+	/*
+	 * @Override
+	 * public void setOrientation( EnumFacing orientation )
+	 * {
+	 * super.setOrientation( orientation );
+	 * if( canHaveLock() )
+	 * lockAttachment.setDirection( orientation );
+	 * }
+	 */
 
-	@Override
-	public void setConnected( EnumFacing connected )
-	{
-		super.setConnected( connected );
-		if( canHaveLock() )
-			setAttachmentPosition();
-	}
+	/*
+	 * @Override
+	 * public void setConnected( EnumFacing connected )
+	 * {
+	 * super.setConnected( connected );
+	 * if( canHaveLock() )
+	 * setAttachmentPosition();
+	 * }
+	 */
 
 	@Override
 	public void update()
@@ -184,7 +195,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		if( !( connectable instanceof TileEntityLockable ) )
 			return false;
 		final TileEntityLockable lockable = (TileEntityLockable)connectable;
-		return super.canConnect( connectable ) && material == lockable.material && getLock() == null && lockable.getLock() == null;
+		return super.canConnect( connectable ) && material == lockable.material && getLock() == ItemStack.EMPTY
+				&& lockable.getLock() == ItemStack.EMPTY;
 	}
 
 	// ILockable implementation
@@ -299,7 +311,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	{
 		final NBTTagCompound compound = super.getUpdateTag();
 		if( material != null )
-			compound.setString( "Material", material.getName() );
+			compound.setString( "material", material.getName() );
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -313,8 +325,8 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void handleUpdateTag( NBTTagCompound compound )
 	{
 		super.handleUpdateTag( compound );
-		if( compound.hasKey( "Material" ) )
-			material = EnumReinforced.byName( compound.getString( "Material" ) );
+		if( compound.hasKey( "material" ) )
+			material = EnumReinforced.byName( compound.getString( "material" ) );
 		if( canHaveLock() )
 		{
 			final ItemStack itemStack = ItemStack.EMPTY;
@@ -331,7 +343,10 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	{
 		super.writeToNBT( compound );
 		if( material != null )
-			compound.setString( "Material", material.getName() );
+		{
+			compound.setString( "material", material.getName() );
+			//Logger.getLogger( ModInfo.modId ).info( "Material : " + material.getName() );
+		}
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -345,8 +360,11 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	public void readFromNBT( NBTTagCompound compound )
 	{
 		super.readFromNBT( compound );
-		if( compound.hasKey( "Material" ) )
-			material = EnumReinforced.byName( compound.getString( "Material" ) );
+		if( compound.hasKey( "material" ) )
+		{
+			material = EnumReinforced.byName( compound.getString( "material" ) );
+			//Logger.getLogger( ModInfo.modId ).info( "NBT : " + compound.getString( "material" ) + "\nMaterial : " + material.getName() );
+		}
 		if( canHaveLock() )
 		{
 			final ItemStack itemStack = ItemStack.EMPTY;
