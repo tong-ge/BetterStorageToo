@@ -46,11 +46,15 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	@Override
 	public void getSubBlocks( Item item, CreativeTabs tab, NonNullList< ItemStack > list )
 	{
-		for( final EnumReinforced material : EnumReinforced.values() )
-		{
-			final ItemStack itemstack = new ItemStack( item, 1, material.getMetadata() );
-			list.add( itemstack );
-		}
+		final BlockStateContainer container = getBlockState();
+		if( container.getProperties().contains( MATERIAL ) )
+			for( final EnumReinforced material : EnumReinforced.values() )
+			{
+				final ItemStack itemstack = new ItemStack( item, 1, material.getMetadata() );
+				list.add( itemstack );
+			}
+		else
+			super.getSubBlocks( item, tab, list );
 	}
 
 	@Override

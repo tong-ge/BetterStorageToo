@@ -154,7 +154,7 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		// Can't expand if there's not enough crates in the bounding box.
 		final int volume = region.volume();
-		if( numCrates < volume - 1 )
+		if( numCrates < volume )
 			return false;
 
 		final int width = region.width();

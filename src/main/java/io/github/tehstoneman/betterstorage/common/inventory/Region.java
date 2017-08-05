@@ -88,6 +88,19 @@ public class Region
 		expandToContain( entity.getPos() );
 	}
 
+	/** Contract the region by the given size */
+	public void contract( BlockPos posMin, BlockPos posMax )
+	{
+		//@formatter:off
+		this.posMin.add( new BlockPos( Math.min( posMin.getX(), posMax.getX() ),
+									   Math.min( posMin.getY(), posMax.getY() ),
+									   Math.min( posMin.getZ(), posMax.getZ() ) ) );
+		this.posMax.subtract( new BlockPos(	Math.max( posMin.getX(), posMax.getX() ),
+											Math.max( posMin.getY(), posMax.getY() ),
+											Math.max( posMin.getZ(), posMax.getZ() ) ) );
+		//@formatter:on
+	}
+
 	/** Checks if the region contains the giving position */
 	public boolean contains( BlockPos pos )
 	{
@@ -113,8 +126,8 @@ public class Region
 	/** Convert NBT data to region for deserialization */
 	public static Region fromCompound( NBTTagCompound compound )
 	{
-		final BlockPos posMin = BlockPos.fromLong( compound.getInteger( "posMin.getX()" ) );
-		final BlockPos posMax = BlockPos.fromLong( compound.getInteger( "posMax.getX()" ) );
+		final BlockPos posMin = BlockPos.fromLong( compound.getLong( "posMin" ) );
+		final BlockPos posMax = BlockPos.fromLong( compound.getLong( "posMax" ) );
 		return new Region( posMin, posMax );
 	}
 

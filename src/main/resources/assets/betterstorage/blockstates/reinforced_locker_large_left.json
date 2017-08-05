@@ -15,7 +15,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/iron",
+					"#material": "betterstorage:models/locker/iron",
 					"particle" : "betterstorage:models/locker/iron"
 				}
 			},
@@ -23,7 +23,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/gold",
+					"#material": "betterstorage:models/locker/gold",
 					"particle" : "betterstorage:models/locker/gold"
 				}
 			},
@@ -31,7 +31,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/diamond",
+					"#material": "betterstorage:models/locker/diamond",
 					"particle" : "betterstorage:models/locker/diamond"
 				}
 			},
@@ -39,7 +39,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/emerald",
+					"#material": "betterstorage:models/locker/emerald",
 					"particle" : "betterstorage:models/locker/emerald"
 				}
 			},
@@ -48,7 +48,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/copper",
+					"#material": "betterstorage:models/locker/copper",
 					"particle" : "betterstorage:models/locker/copper"
 				}
 			},
@@ -56,7 +56,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/tin",
+					"#material": "betterstorage:models/locker/tin",
 					"particle" : "betterstorage:models/locker/tin"
 				}
 			},
@@ -64,7 +64,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/silver",
+					"#material": "betterstorage:models/locker/silver",
 					"particle" : "betterstorage:models/locker/silver"
 				}
 			},
@@ -72,7 +72,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/zinc",
+					"#material": "betterstorage:models/locker/zinc",
 					"particle" : "betterstorage:models/locker/zinc"
 				}
 			},
@@ -80,7 +80,7 @@
 			{
 				"textures":
 				{
-					"#material": "betterstorage:models/locker_large/steel",
+					"#material": "betterstorage:models/locker/steel",
 					"particle" : "betterstorage:models/locker/steel"
 				}
 			}

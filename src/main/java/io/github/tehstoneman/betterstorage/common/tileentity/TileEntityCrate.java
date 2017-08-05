@@ -129,7 +129,11 @@ public class TileEntityCrate extends TileEntity
 		// If there's more than one crate set, they need to split.
 		final List< HashSet< TileEntityCrate > > crateSets = getCrateSets( x, y, z, pileID );
 		if( crateSets.size() <= 1 )
+		{
+			handler.trimRegion( getWorld() );
+			notifyRegionUpdate( handler.getRegion(), getPileID() );
 			return;
+		}
 
 		// The first crate set will keep the original pile data.
 		// All other sets will get new pile data objects.

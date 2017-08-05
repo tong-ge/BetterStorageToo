@@ -67,13 +67,13 @@ public class BlockLocker extends BlockLockable
 	@Override
 	public boolean isOpaqueCube( IBlockState state )
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isFullCube( IBlockState state )
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -123,13 +123,6 @@ public class BlockLocker extends BlockLockable
 		if( tileentity instanceof TileEntityLocker )
 		{
 			final TileEntityLocker locker = (TileEntityLocker)tileentity;
-			/*if( !locker.isConnected() )
-				state = state.withProperty( PART, EnumLockerPart.SINGLE );
-			else
-				if( locker.isMain() )
-					state = state.withProperty( PART, EnumLockerPart.BOTTOM );
-				else
-					state = state.withProperty( PART, EnumLockerPart.TOP );*/
 		}
 
 		return state.withProperty( Properties.StaticProperty, true );
@@ -152,33 +145,6 @@ public class BlockLocker extends BlockLockable
 			( (TileEntityConnectable)tileentity ).onBlockPlaced( placer, stack );
 		else
 			super.onBlockPlacedBy( worldIn, pos, state, placer, stack );
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess world, BlockPos pos )
-	{
-		final TileEntity tileEntity = world.getTileEntity( pos );
-		if( !( tileEntity instanceof TileEntityLocker ) )
-			return super.getBoundingBox( state, world, pos );
-
-		final TileEntityLocker chest = (TileEntityLocker)tileEntity;
-		/*if( chest.isConnected() )
-		{
-			final EnumFacing connected = chest.getConnected();
-			if( connected == EnumFacing.NORTH )
-				return new AxisAlignedBB( 0.0625F, 0.0F, 0.0F, 0.9375F, 14F / 16F, 0.9375F );
-			else
-				if( connected == EnumFacing.SOUTH )
-					return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 14F / 16F, 1.0F );
-				else
-					if( connected == EnumFacing.WEST )
-						return new AxisAlignedBB( 0.0F, 0.0F, 0.0625F, 0.9375F, 14F / 16F, 0.9375F );
-					else
-						if( connected == EnumFacing.EAST )
-							return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 1.0F, 14F / 16F, 0.9375F );
-		}*/
-
-		return super.getBoundingBox( state, world, pos );
 	}
 
 	@Override
@@ -218,56 +184,5 @@ public class BlockLocker extends BlockLockable
 	protected ItemBlock getItemBlock()
 	{
 		return new ItemBlockLocker( this );
-	}
-
-	/*@Override
-	@SideOnly( Side.CLIENT )
-	public void registerItemModels()
-	{
-		  ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ModInfo.modId+ ":locker","inventory");
-		  ModelLoader.setCustomModelResourceLocation(getItemBlock(), 0, itemModelResourceLocation);
-	}*/
-
-	public static enum EnumLockerPart implements IStringSerializable
-	{
-		//@formatter:off
-		SINGLE	( 0, "single" ),
-		BOTTOM	( 1, "bottom" ),
-		TOP		( 2, "top" );
-		//@formatter:on
-
-		private final int						meta;
-		private final String					name;
-		private static final EnumLockerPart[]	META_LOOKUP	= new EnumLockerPart[values().length];
-
-		private EnumLockerPart( int meta, String name )
-		{
-			this.meta = meta;
-			this.name = name;
-		}
-
-		@Override
-		public String getName()
-		{
-			return name;
-		}
-
-		public int getMetadata()
-		{
-			return meta;
-		}
-
-		public static EnumLockerPart byMetadata( int meta )
-		{
-			if( meta <= 0 || meta >= META_LOOKUP.length )
-				meta = 0;
-			return META_LOOKUP[meta];
-		}
-
-		static
-		{
-			for( final EnumLockerPart part : values() )
-				META_LOOKUP[part.getMetadata()] = part;
-		}
 	}
 }

@@ -65,25 +65,6 @@ public class BlockReinforcedLocker extends BlockLockable
 	}
 
 	@Override
-	public boolean isOpaqueCube( IBlockState state )
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube( IBlockState state )
-	{
-		return false;
-	}
-
-	@Override
-	@SideOnly( Side.CLIENT )
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
 	public BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer( this, new IProperty[] { BlockHorizontal.FACING, BlockLockable.MATERIAL, Properties.StaticProperty, BlockDoor.HINGE, CONNECTED } );
