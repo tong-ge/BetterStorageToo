@@ -10,12 +10,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -60,7 +65,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 
 		renderBase( chest, partialTicks, destroyStage, state );
 		renderLid( chest, partialTicks, destroyStage, state );
-		// renderLock( chest );
+		renderItem( chest, partialTicks, destroyStage, state );
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
@@ -123,5 +128,39 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.popMatrix();
+	}
+
+	/** Renders attached lock on chest. Adapted from vanilla item frame **/
+	private void renderItem( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, IBlockState state )
+	{
+		final ItemStack itemstack = chest.getLock();
+
+		if( !itemstack.isEmpty() )
+		{
+			final EntityItem entityitem = new EntityItem( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			final Item item = entityitem.getEntityItem().getItem();
+			// entityitem.getEntityItem().stackSize = 1;
+			entityitem.hoverStart = 0.0F;
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+
+			GlStateManager.rotate( 180.0F, 0.0F, 1.0F, 0.0F );
+			final double x = chest.isConnected() ? 0F : -8.0 / 16.0;
+			final double y = 6.0 / 16.0;
+			final double z = -0.5 / 16.0;
+			GlStateManager.translate( x, y, z );
+			GlStateManager.scale( 0.5, 0.5, 0.5 );
+
+			GlStateManager.pushAttrib();
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popAttrib();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
 	}
 }

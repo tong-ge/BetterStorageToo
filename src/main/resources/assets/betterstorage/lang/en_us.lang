@@ -30,13 +30,29 @@ tile.betterstorage.locker.name.tooltip=Enable or disable lockers.
 tile.betterstorage.reinforced_chest.name=Reinforced Chest
 tile.betterstorage.reinforced_chest.name.full=Reinforced %s Chest
 tile.betterstorage.reinforced_chest.name.tooltip=Enable or disable reinforced chests.
+tile.betterstorage.flint_block.name=Block of Flint
+tile.betterstorage.flint_block.name.tooltip=Enable or disable block of flint.
+tile.betterstorage.lockable_door.name=Locked Iron Door
+tile.betterstorage.lockable_door.name.tooltip=Enable or disable lockable doors.\n(Requires keys enabled)
 tile.betterstorage.reinforced_locker.name=Reinforced Locker
 tile.betterstorage.reinforced_locker.name.full=Reinforced %s Locker
 tile.betterstorage.reinforced_locker.name.tooltip=Enable or disable reinforced lockers.\n(No effect if lockers are disabled)
 
+# Items
+item.betterstorage.key.name=Key
+item.betterstorage.key.name.tooltip=Enable or disable keys.
+item.betterstorage.keyring.name=Keyring
+item.betterstorage.keyring.name.tooltip=Enable or disable keyrings.\n(Requires keys enabled)
+item.betterstorage.lock.name=Lock
+item.betterstorage.lock.name.tooltip=Enable or disable locks.\n(Requires keys enabled)
+item.betterstorage.master_key.name=Master Key
+item.betterstorage.master_key.name.tooltip=Enable or disable master key.\n(Requires keys enabled)
+
 # Config
 config.betterstorage.category.block=Blocks
 config.betterstorage.category.block.tooltip=Change whether a certain Block is active.
+config.betterstorage.category.item=Items
+config.betterstorage.category.item.tooltip=Change whether a certain Item is active.
 
 config.betterstorage.general.enableCrateInventoryInterface=Crate Inventory Interface
 config.betterstorage.general.enableCrateInventoryInterface.tooltip=If enabled, exposes a special block view of crates, so items can be moved in and out by automated systems.

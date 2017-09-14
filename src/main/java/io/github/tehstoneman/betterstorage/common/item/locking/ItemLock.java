@@ -6,10 +6,17 @@ import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +32,7 @@ public class ItemLock extends ItemKeyLock implements ILock
 {
 	public ItemLock()
 	{
+		super( "lock" );
 		setMaxDamage( 64 );
 		setMaxStackSize( 1 );
 	}
@@ -68,20 +76,65 @@ public class ItemLock extends ItemKeyLock implements ILock
 	}
 
 	@Override
-	public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ )
+	public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
+			float hitZ )
 	{
 		if( hand == EnumHand.MAIN_HAND )
 		{
+			final ItemStack stack = playerIn.getHeldItem( hand );
+			IBlockState blockState = worldIn.getBlockState( pos );
+			Block block = blockState.getBlock();
+
+			if( block == Blocks.IRON_DOOR )
+			{
+				if( blockState.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
+				{
+					pos = pos.down();
+					blockState = worldIn.getBlockState( pos );
+					block = blockState.getBlock();
+				}
+
+				//@formatter:off
+				worldIn.setBlockState( pos, BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
+						.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
+						.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
+						.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
+						.withProperty( BlockDoor.HALF, EnumDoorHalf.LOWER ) );
+				worldIn.setBlockState( pos.up(), BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
+						.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
+						.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
+						.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
+						.withProperty( BlockDoor.HALF, EnumDoorHalf.UPPER ) );
+				//@formatter:on
+
+				final TileEntity tileEntity = worldIn.getTileEntity( pos );
+				if( tileEntity instanceof TileEntityLockableDoor )
+				{
+					final TileEntityLockableDoor lockable = (TileEntityLockableDoor)tileEntity;
+					if( lockable.isLockValid( stack ) )
+					{
+						lockable.setLock( stack.copy() );
+						if( !playerIn.isCreative() )
+							playerIn.setHeldItem( hand, ItemStack.EMPTY );
+						return EnumActionResult.SUCCESS;
+					}
+				}
+			}
+
 			final TileEntity tileEntity = worldIn.getTileEntity( pos );
 			if( tileEntity instanceof TileEntityLockable )
 			{
 				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
 				if( lockable.isLockValid( stack ) )
+				{
 					lockable.setLock( stack.copy() );
+					if( !playerIn.isCreative() )
+						playerIn.setHeldItem( hand, ItemStack.EMPTY );
+					return EnumActionResult.SUCCESS;
+				}
 			}
 		}
-		return super.onItemUse( stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
+		return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
 	}
 
 	/**
@@ -132,7 +185,7 @@ public class ItemLock extends ItemKeyLock implements ILock
 			int damage = shock;
 			if( pick )
 				damage *= 3;
-			player.attackEntityFrom( DamageSource.magic, damage );
+			player.attackEntityFrom( DamageSource.MAGIC, damage );
 			if( shock >= 3 && !open )
 				player.setFire( 3 );
 		}

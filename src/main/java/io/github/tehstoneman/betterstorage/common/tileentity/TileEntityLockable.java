@@ -1,7 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import java.security.InvalidParameterException;
-import java.util.logging.Logger;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
@@ -315,7 +314,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
-			if( lock != null )
+			if( !lock.isEmpty() )
 				compound.setTag( "lock", lock.writeToNBT( new NBTTagCompound() ) );
 		}
 		return compound;
@@ -329,9 +328,9 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 			material = EnumReinforced.byName( compound.getString( "material" ) );
 		if( canHaveLock() )
 		{
-			final ItemStack itemStack = ItemStack.EMPTY;
+			ItemStack itemStack = ItemStack.EMPTY;
 			if( compound.hasKey( "lock" ) )
-				itemStack.deserializeNBT( compound.getCompoundTag( "lock" ) );
+				itemStack = new ItemStack( compound.getCompoundTag( "lock" ) );
 			setLockInternal( itemStack );
 		}
 	}
@@ -343,10 +342,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	{
 		super.writeToNBT( compound );
 		if( material != null )
-		{
 			compound.setString( "material", material.getName() );
-			//Logger.getLogger( ModInfo.modId ).info( "Material : " + material.getName() );
-		}
 		if( canHaveLock() )
 		{
 			final ItemStack lock = getLockInternal();
@@ -361,15 +357,12 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	{
 		super.readFromNBT( compound );
 		if( compound.hasKey( "material" ) )
-		{
 			material = EnumReinforced.byName( compound.getString( "material" ) );
-			//Logger.getLogger( ModInfo.modId ).info( "NBT : " + compound.getString( "material" ) + "\nMaterial : " + material.getName() );
-		}
 		if( canHaveLock() )
 		{
-			final ItemStack itemStack = ItemStack.EMPTY;
+			ItemStack itemStack = ItemStack.EMPTY;
 			if( compound.hasKey( "lock" ) )
-				itemStack.deserializeNBT( compound.getCompoundTag( "lock" ) );
+				itemStack = new ItemStack( compound.getCompoundTag( "lock" ) );
 			setLockInternal( itemStack );
 		}
 	}

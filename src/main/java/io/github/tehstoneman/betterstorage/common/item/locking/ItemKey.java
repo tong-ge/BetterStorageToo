@@ -7,7 +7,12 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockDoor.EnumDoorHalf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -26,6 +31,13 @@ public class ItemKey extends ItemKeyLock implements IKey
 {
 	public ItemKey()
 	{
+		this( "key" );
+	}
+
+	public ItemKey( String name )
+	{
+		super( name );
+
 		setMaxDamage( 0 );
 		setMaxStackSize( 1 );
 	}
@@ -57,22 +69,32 @@ public class ItemKey extends ItemKeyLock implements IKey
 	}
 
 	@Override
-	public EnumActionResult onItemUse( ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+	public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
 			float hitX, float hitY, float hitZ )
 	{
 		if( !worldIn.isRemote && hand == EnumHand.MAIN_HAND )
 		{
-			final TileEntity tileEntity = worldIn.getTileEntity( pos );
-			if( tileEntity instanceof TileEntityLockable )
+			ItemStack stack = playerIn.getHeldItem( hand );
+			TileEntity tileEntity = worldIn.getTileEntity( pos );
+			if( tileEntity == null )
 			{
-				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
+				IBlockState state = worldIn.getBlockState( pos );
+				if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER)
+				{
+					pos = pos.down();
+					tileEntity = worldIn.getTileEntity( pos );
+				}
+			}
+			
+			if( tileEntity instanceof ILockable )
+			{
+				final ILockable lockable = (ILockable)tileEntity;
 				if( unlock( stack, lockable.getLock(), false ) )
 				{
 					if( playerIn.isSneaking() )
 					{
-						Logger.getLogger( ModInfo.modId ).info( "Remote " + worldIn.isRemote );
-						worldIn.spawnEntityInWorld( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
-						lockable.setLock( null );
+						worldIn.spawnEntity( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
+						lockable.setLock( ItemStack.EMPTY );
 					}
 					else
 						lockable.useUnlocked( playerIn );
@@ -80,7 +102,7 @@ public class ItemKey extends ItemKeyLock implements IKey
 				}
 			}
 		}
-		return super.onItemUse( stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
+		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
 	}
 
 	/** Gives the key a random ID if it doesn't have one already. */

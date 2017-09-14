@@ -4,6 +4,8 @@ import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -43,8 +45,9 @@ public class LockRecipe extends ShapedOreRecipe
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems( InventoryCrafting inv )
+	public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
 	{
+		final NonNullList< ItemStack > ret = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
 		final ItemStack[] resultStack = new ItemStack[inv.getSizeInventory()];
 
 		for( int i = 0; i < resultStack.length; ++i )
@@ -52,16 +55,13 @@ public class LockRecipe extends ShapedOreRecipe
 			final ItemStack itemStack = inv.getStackInSlot( i );
 			if( itemStack != null )
 				if( itemStack.getItem() == BetterStorageItems.KEY )
-				{
 					// Return original key to crafting table
-					resultStack[i] = itemStack.copy();
-					resultStack[i].stackSize = 1;
-				}
+					ret.set( i, itemStack.copy() );
 				else
-					resultStack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem( itemStack );
+					ret.set( i, ForgeHooks.getContainerItem( itemStack ) );
 		}
 
-		return resultStack;
+		return ret;
 	}
 
 	public static LockRecipe createLockRecipe()

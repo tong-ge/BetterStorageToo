@@ -23,10 +23,6 @@ public class BlockBetterStorage extends Block
 		setCreativeTab( BetterStorage.creativeTab );
 
 		this.name = name;
-
-		setUnlocalizedName( ModInfo.modId + "." + name );
-		this.setRegistryName( name );
-		registerBlock();
 	}
 
 	/** Returns the name of this tile, for example "craftingStation". */
@@ -42,8 +38,10 @@ public class BlockBetterStorage extends Block
 	}
 
 	/** Registers the block in the GameRegistry. */
-	protected void registerBlock()
+	public void registerBlock()
 	{
+		setUnlocalizedName( ModInfo.modId + "." + name );
+		this.setRegistryName( name );
 		GameRegistry.register( this );
 
 		final ItemBlock itemBlock = getItemBlock();

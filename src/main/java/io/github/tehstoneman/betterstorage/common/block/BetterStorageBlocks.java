@@ -1,21 +1,22 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BetterStorageBlocks
 {
-	public static BlockCrate				CRATE;
-	public static BlockReinforcedChest		REINFORCED_CHEST;
-	public static BlockLocker				LOCKER;
-	public static BlockReinforcedLocker		REINFORCED_LOCKER;
+	public static BlockCrate				CRATE				= new BlockCrate();
+	public static BlockReinforcedChest		REINFORCED_CHEST	= new BlockReinforcedChest();
+	public static BlockLocker				LOCKER				= new BlockLocker();
+	public static BlockReinforcedLocker		REINFORCED_LOCKER	= new BlockReinforcedLocker();
+	public static BlockFlintBlock			BLOCK_FLINT			= new BlockFlintBlock();
+	public static BlockLockableDoor			LOCKABLE_DOOR		= new BlockLockableDoor();
 	public static BlockCardboardBox			CARDBOARD_BOX;
 	public static BlockCardboardBoxColored	CARDBOARD_BOX_COLORED;
 	// public static BlockPresent PRESENT;
 
 	// public static BlockCraftingStation CRAFTING_STATION;
-	public static BlockFlintBlock			BLOCK_FLINT;
-	// public static BlockLockableDoor LOCKABLE_DOOR;
 
 	public static void registerBlocks()
 	{
@@ -28,36 +29,24 @@ public final class BetterStorageBlocks
 		 * }
 		 */
 
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.flintBlockEnabled ) )
-		 * {
-		 * BLOCK_FLINT = (BlockFlintBlock)new BlockFlintBlock().setUnlocalizedName( ModInfo.modId + ".block_flint" );
-		 * GameRegistry.register( BLOCK_FLINT.setRegistryName( "block_flint" ) );
-		 * GameRegistry.register( new ItemBlock( BLOCK_FLINT ).setRegistryName( BLOCK_FLINT.getRegistryName() ) );
-		 * }
-		 */
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockableDoorEnabled ) )
-		 * {
-		 * LOCKABLE_DOOR = (BlockLockableDoor)new BlockLockableDoor().setUnlocalizedName( ModInfo.modId + ".lockable_door" );
-		 * GameRegistry.register( LOCKABLE_DOOR.setRegistryName( "lockable_door" ) );
-		 * }
-		 */
-
 		// Addon.initializeTilesAll();
 	}
 
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		if( CRATE != null )
+		if( BetterStorage.config.crateEnabled )
 			CRATE.registerItemModels();
-		if( REINFORCED_CHEST != null )
+		if( BetterStorage.config.reinforcedChestEnabled )
 			REINFORCED_CHEST.registerItemModels();
-		if( LOCKER != null )
+		if( BetterStorage.config.lockerEnabled )
+		{
 			LOCKER.registerItemModels();
-		if( REINFORCED_LOCKER != null )
-			REINFORCED_LOCKER.registerItemModels();
+			if( BetterStorage.config.reinforcedLockerEnabled )
+				REINFORCED_LOCKER.registerItemModels();
+		}
+		if( BetterStorage.config.flintBlockEnabled )
+			BLOCK_FLINT.registerItemModels();
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxEnabled ) )
@@ -83,10 +72,5 @@ public final class BetterStorageBlocks
 		 * new ModelResourceLocation( CRAFTING_STATION.getRegistryName(), "inventory" ) );
 		 */
 
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.flintBlockEnabled ) )
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( BLOCK_FLINT ), 0,
-		 * new ModelResourceLocation( BLOCK_FLINT.getRegistryName(), "inventory" ) );
-		 */
 	}
 }

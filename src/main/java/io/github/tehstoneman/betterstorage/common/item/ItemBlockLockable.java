@@ -1,9 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable.EnumReinforced;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -32,23 +28,25 @@ public class ItemBlockLockable extends ItemBlock
 		 * {
 		 * if( !( (TileLockable)Block.getBlockFromItem( stack.getItem() ) ).hasMaterial() )
 		 * return super.getItemStackDisplayName( stack );
-		 * 
+		 *
 		 * final ContainerMaterial material = ContainerMaterial.getMaterial( stack, ContainerMaterial.iron );
-		 * 
+		 *
 		 * final String name = I18n.format( getUnlocalizedName() + ".name.full" );
 		 * final String materialName = I18n.format( "material." + ModInfo.modId + "." + material.name );
 		 * return name.replace( "%MATERIAL%", materialName );
 		 * }
 		 */
 
-		/*if( block instanceof BlockLockable )
-		{
-			final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
-
-			final String materialName = BetterStorage.proxy.localize( "material." + ModInfo.modId + "." + material.getName() );
-			final String name = BetterStorage.proxy.localize( getUnlocalizedName() + ".name.full", materialName );
-			return name.trim();
-		}*/
+		/*
+		 * if( block instanceof BlockLockable )
+		 * {
+		 * final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
+		 * 
+		 * final String materialName = BetterStorage.proxy.localize( "material." + ModInfo.modId + "." + material.getName() );
+		 * final String name = BetterStorage.proxy.localize( getUnlocalizedName() + ".name.full", materialName );
+		 * return name.trim();
+		 * }
+		 */
 		return super.getItemStackDisplayName( stack );
 	}
 

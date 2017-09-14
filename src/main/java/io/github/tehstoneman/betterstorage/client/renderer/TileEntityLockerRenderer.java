@@ -65,7 +65,7 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 
 		renderBase( locker, partialTicks, destroyStage, state );
 		renderDoor( locker, partialTicks, destroyStage, state );
-		// renderLock( chest );
+		renderItem( locker, partialTicks, destroyStage, state );
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
@@ -128,12 +128,14 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		blockRenderer.getBlockModelRenderer().renderModel( world, model, state, locker.getPos(), tessellator.getBuffer(), false );
 		tessellator.draw();
 
+		//renderItem( locker, partialTicks, destroyStage, state );
+
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.popMatrix();
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
-	private void renderItem( TileEntityLocker locker )
+	private void renderItem( TileEntityLocker locker, float partialTicks, int destroyStage, IBlockState state )
 	{
 		final ItemStack itemstack = locker.getLock();
 
@@ -141,17 +143,25 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		{
 			final EntityItem entityitem = new EntityItem( locker.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
 			final Item item = entityitem.getEntityItem().getItem();
-			// entityitem.getEntityItem().stackSize = 1;
-			entityitem.hoverStart = 0.0F;
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 
+			float openAngle = locker.prevLidAngle + ( locker.lidAngle - locker.prevLidAngle ) * partialTicks;
+			openAngle = 1.0F - openAngle;
+			openAngle = 1.0F - openAngle * openAngle * openAngle;
+			openAngle = openAngle * 90;
+
 			final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+			final boolean left = state.getValue( BlockDoor.HINGE ) == EnumHingePosition.LEFT;
+
+			GlStateManager.translate( left ? 15F / 16F : 1F / 16F, 0, 1.0 / 16.0 );
+			GlStateManager.rotate( left ? -openAngle : openAngle, 0, 1, 0 );
+			GlStateManager.translate( left ? -15F / 16F : -1F / 16F, 0, -1.0 / 16.0 );
 
 			GlStateManager.rotate( 180.0F, 0.0F, 1.0F, 0.0F );
-			final double x = 1.0 / 16.0 * -3.5;
-			final double y = 1.0 / 16.0 * ( locker.isConnected() ? 13.0 : 6.0 );
-			final double z = 1.0 / 16.0 * -0.5;
+			final double x = left ? -3.5 / 16.0 : -12.5 / 16.0;
+			final double y = locker.isConnected() ? 12.0  / 16.0 : 6.0  / 16.0;
+			final double z = -0.5 / 16.0;
 			GlStateManager.translate( x, y, z );
 			GlStateManager.scale( 0.5, 0.5, 0.5 );
 

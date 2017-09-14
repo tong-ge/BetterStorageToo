@@ -25,10 +25,10 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public final class BetterStorageItems
 {
-	public static ItemKey				KEY;
-	public static ItemMasterKey			MASTER_KEY;
-	public static ItemKeyring			KEYRING;
-	public static ItemLock				LOCK;
+	public static ItemKey				KEY = new ItemKey();
+	public static ItemMasterKey			MASTER_KEY = new ItemMasterKey();
+	public static ItemKeyring			KEYRING = new ItemKeyring();
+	public static ItemLock				LOCK = new ItemLock();
 	public static ItemCardboardSheet	CARDBOARD_SHEET;
 
 	public static ItemCardboardArmor	CARDBOARD_HELMET;
@@ -50,27 +50,6 @@ public final class BetterStorageItems
 
 	public static void registerItems()
 	{
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyEnabled ) )
-		{
-			KEY = (ItemKey)new ItemKey().setUnlocalizedName( ModInfo.modId + ".key" );
-			GameRegistry.register( KEY.setRegistryName( "key" ) );
-		}
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.masterKeyEnabled ) )
-		{
-			MASTER_KEY = (ItemMasterKey)new ItemMasterKey().setUnlocalizedName( ModInfo.modId + ".master_key" );
-			GameRegistry.register( MASTER_KEY.setRegistryName( "master_key" ) );
-		}
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyringEnabled ) )
-		{
-			KEYRING = (ItemKeyring)new ItemKeyring().setUnlocalizedName( ModInfo.modId + ".keyring" );
-			GameRegistry.register( KEYRING.setRegistryName( "keyring" ) );
-		}
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockEnabled ) )
-		{
-			LOCK = (ItemLock)new ItemLock().setUnlocalizedName( ModInfo.modId + ".lock" );
-			GameRegistry.register( LOCK.setRegistryName( "lock" ) );
-		}
-
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSheetEnabled ) )
 		{
 			CARDBOARD_SHEET = (ItemCardboardSheet)new ItemCardboardSheet().setUnlocalizedName( ModInfo.modId + ".cardboard_sheet" );
@@ -152,25 +131,25 @@ public final class BetterStorageItems
 
 	private static ItemCardboardArmor conditionalNewArmor( String configName, EntityEquipmentSlot armorType )
 	{
-		if( !BetterStorage.globalConfig.getBoolean( configName ) )
-			return null;
+		//if( !BetterStorage.globalConfig.getBoolean( configName ) ) return null;
 		return new ItemCardboardArmor( armorType );
 	}
 
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( KEY, 0, new ModelResourceLocation( KEY.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.masterKeyEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( MASTER_KEY, 0, new ModelResourceLocation( MASTER_KEY.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.keyringEnabled ) )
-			for( int i = 0; i < 4; i++ )
-				ModelLoader.setCustomModelResourceLocation( KEYRING, i,
-						new ModelResourceLocation( KEYRING.getRegistryName() + "_" + i, "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.lockEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( LOCK, 0, new ModelResourceLocation( LOCK.getRegistryName(), "inventory" ) );
-
+		if( BetterStorage.config.keyEnabled )
+		{
+			KEY.registerItemModels();
+			if( BetterStorage.config.masterKeyEnabled)
+				MASTER_KEY.registerItemModels();
+			if( BetterStorage.config.keyringEnabled )
+				KEYRING.registerItemModels();
+			if( BetterStorage.config.lockEnabled )
+				LOCK.registerItemModels();
+				//ModelLoader.setCustomModelResourceLocation( LOCK, 0, new ModelResourceLocation( LOCK.getRegistryName(), "inventory" ) );
+		}
+		/*
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSheetEnabled ) )
 			ModelLoader.setCustomModelResourceLocation( CARDBOARD_SHEET, 0,
 					new ModelResourceLocation( CARDBOARD_SHEET.getRegistryName(), "inventory" ) );
@@ -201,6 +180,7 @@ public final class BetterStorageItems
 			ModelLoader.setCustomModelResourceLocation( CARDBOARD_AXE, 0, new ModelResourceLocation( CARDBOARD_AXE.getRegistryName(), "inventory" ) );
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHoeEnabled ) )
 			ModelLoader.setCustomModelResourceLocation( CARDBOARD_HOE, 0, new ModelResourceLocation( CARDBOARD_HOE.getRegistryName(), "inventory" ) );
+		*/
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.slimeBucketEnabled ) )

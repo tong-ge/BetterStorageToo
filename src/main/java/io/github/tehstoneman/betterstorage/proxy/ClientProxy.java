@@ -1,22 +1,19 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageRenderingHandler;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -26,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public class ClientProxy extends CommonProxy
 {
-	//public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
+	// public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
 
 	@Override
 	public void preInit()
@@ -35,13 +32,13 @@ public class ClientProxy extends CommonProxy
 
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 
-		SizeStateMap sizeStateMap = new SizeStateMap();
+		final SizeStateMap sizeStateMap = new SizeStateMap();
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_CHEST, sizeStateMap );
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, sizeStateMap );
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_LOCKER, sizeStateMap );
 
 		BetterStorageBlocks.registerItemModels();
-		// BetterStorageItems.registerItemModels();
+		BetterStorageItems.registerItemModels();
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		// Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
 		/*
 		 * Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
 		 * BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,
@@ -78,7 +75,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
 		// RenderingRegistry.registerBlockHandler(new TileLockableDoorRenderingHandler());
 		// Addon.registerRenderersAll();

@@ -4,21 +4,16 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
-import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
-import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
-import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.crafting.Recipes;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import io.github.tehstoneman.betterstorage.event.Events;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -33,28 +28,50 @@ public class CommonProxy
 
 		// Register blocks and items
 		if( BetterStorage.config.crateEnabled )
-			BetterStorageBlocks.CRATE = new BlockCrate();
+		{
+			BetterStorageBlocks.CRATE.registerBlock();
+			GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
+		}
 		if( BetterStorage.config.reinforcedChestEnabled )
-			BetterStorageBlocks.REINFORCED_CHEST = new BlockReinforcedChest();
+		{
+			BetterStorageBlocks.REINFORCED_CHEST.registerBlock();
+			GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
+		}
 		if( BetterStorage.config.lockerEnabled )
 		{
-			BetterStorageBlocks.LOCKER = new BlockLocker();
+			BetterStorageBlocks.LOCKER.registerBlock();
+			GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
 			if( BetterStorage.config.reinforcedLockerEnabled )
-				BetterStorageBlocks.REINFORCED_LOCKER = new BlockReinforcedLocker();
+			{
+				BetterStorageBlocks.REINFORCED_LOCKER.registerBlock();
+				GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
+			}
 		}
+		if( BetterStorage.config.flintBlockEnabled )
+			BetterStorageBlocks.BLOCK_FLINT.registerBlock();
 
-		// Register tile entities
-		GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
-		GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
-		GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
-		GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
+		if( BetterStorage.config.keyEnabled )
+		{
+			BetterStorageItems.KEY.register();
+			if( BetterStorage.config.masterKeyEnabled )
+				BetterStorageItems.MASTER_KEY.register();
+			if( BetterStorage.config.keyringEnabled )
+				BetterStorageItems.KEYRING.register();
+			if( BetterStorage.config.lockEnabled )
+				BetterStorageItems.LOCK.register();
+			if( BetterStorage.config.lockableDoorEnabled )
+			{
+				BetterStorageBlocks.LOCKABLE_DOOR.registerBlock();
+				GameRegistry.registerTileEntity( TileEntityLockableDoor.class, ModInfo.lockableDoor );
+			}
+		}
 	}
 
 	public void initialize()
 	{
 		Recipes.add();
 
-		// MinecraftForge.EVENT_BUS.register( this );
+		MinecraftForge.EVENT_BUS.register( Events.class );
 		// FMLCommonHandler.instance().bus().register(this);
 
 		// if (BetterStorage.globalConfig.getBoolean(GlobalConfig.enableChristmasEvent)) new ChristmasEventHandler();
@@ -64,122 +81,6 @@ public class CommonProxy
 
 	public void postInit()
 	{}
-
-	/*
-	 * @SubscribeEvent
-	 * public void onWorldUnload(Unload event) {
-	 * CratePileCollection.unload(event.world);
-	 * }
-	 */
-
-	@SubscribeEvent
-	public void onPlayerInteract( PlayerInteractEvent event )
-	{
-		// final World world = event.getEntity().worldObj;
-		final BlockPos pos = event.getPos();
-		final EntityPlayer player = event.getEntityPlayer();
-		final ItemStack holding = player.getHeldItemMainhand();
-		// final IBlockState state = world.getBlockState( pos );
-		// final Block block = state.getBlock();
-		// final boolean leftClick = event.action == Action.LEFT_CLICK_BLOCK;
-		// final boolean rightClick = event.action == Action.RIGHT_CLICK_BLOCK;
-
-		// Interact with attachments.
-		/*
-		 * if( leftClick || rightClick )
-		 * {
-		 * final IHasAttachments hasAttachments = WorldUtils.get( world, x, y, z, IHasAttachments.class );
-		 * if( hasAttachments != null )
-		 * {
-		 * final EnumAttachmentInteraction interactionType = event.action == Action.LEFT_CLICK_BLOCK ? EnumAttachmentInteraction.attack
-		 * : EnumAttachmentInteraction.use;
-		 * if( hasAttachments.getAttachments().interact( WorldUtils.rayTrace( player, 1.0F ), player, interactionType ) )
-		 * {
-		 * event.useBlock = Result.DENY;
-		 * event.useItem = Result.DENY;
-		 * }
-		 * }
-		 * }
-		 */
-
-		// Use cauldron to remove color from dyable items
-		/*
-		 * if( rightClick && block == Blocks.CAULDRON )
-		 * {
-		 * final int metadata = world.getBlockMetadata( x, y, z );
-		 * if( metadata > 0 )
-		 * {
-		 * final IDyeableItem dyeable = holding != null && holding.getItem() instanceof IDyeableItem ? (IDyeableItem)holding.getItem() : null;
-		 * if( dyeable != null && dyeable.canDye( holding ) )
-		 * {
-		 * StackUtils.remove( holding, "display", "color" );
-		 * world.setBlockMetadataWithNotify( x, y, z, metadata - 1, 2 );
-		 * world.func_147453_f( x, y, z, block );
-		 *
-		 * event.useBlock = Result.DENY;
-		 * event.useItem = Result.DENY;
-		 * }
-		 * }
-		 * }
-		 */
-
-		// Prevent players from breaking blocks with broken cardboard items.
-		/*
-		 * if( leftClick && holding != null && holding.getItem() instanceof ICardboardItem && !ItemCardboardSheet.isEffective( holding ) )
-		 * event.useItem = Result.DENY;
-		 */
-
-		// Attach locks to iron doors.
-		/*
-		 * if( !world.isRemote && BetterStorageTiles.lockableDoor != null && rightClick && block == Blocks.iron_door )
-		 * {
-		 * final MovingObjectPosition target = WorldUtils.rayTrace( player, 1F );
-		 * if( target != null && getIronDoorHightlightBox( player, world, x, y, z, target.hitVec, block ) != null )
-		 * {
-		 *
-		 * int meta = world.getBlockMetadata( x, y, z );
-		 * boolean isMirrored;
-		 * if( meta >= 8 )
-		 * {
-		 * isMirrored = meta == 9;
-		 * y -= 1;
-		 * meta = world.getBlockMetadata( x, y, z );
-		 * }
-		 * else
-		 * isMirrored = world.getBlockMetadata( x, y + 1, z ) == 9;
-		 *
-		 * final int rotation = meta & 3;
-		 * ForgeDirection orientation = rotation == 0 ? ForgeDirection.WEST
-		 * : rotation == 1 ? ForgeDirection.NORTH : rotation == 2 ? ForgeDirection.EAST : ForgeDirection.SOUTH;
-		 * orientation = isMirrored ? orientation == ForgeDirection.WEST ? ForgeDirection.SOUTH
-		 * : orientation == ForgeDirection.NORTH ? ForgeDirection.WEST
-		 * : orientation == ForgeDirection.EAST ? ForgeDirection.NORTH : ForgeDirection.EAST
-		 * : orientation;
-		 *
-		 * world.setBlock( x, y, z, BetterStorageTiles.lockableDoor, 0, SetBlockFlag.SEND_TO_CLIENT );
-		 * world.setBlock( x, y + 1, z, BetterStorageTiles.lockableDoor, 8, SetBlockFlag.SEND_TO_CLIENT );
-		 *
-		 * final TileEntityLockableDoor te = WorldUtils.get( world, x, y, z, TileEntityLockableDoor.class );
-		 * te.orientation = orientation;
-		 * te.isOpen = isMirrored;
-		 * te.isMirrored = isMirrored;
-		 * te.setLock( holding );
-		 *
-		 * player.inventory.setInventorySlotContents( player.inventory.currentItem, null );
-		 * }
-		 * }
-		 */
-
-		// Prevent eating of slime buckets after capturing them.
-		/*
-		 * if( preventSlimeBucketUse )
-		 * {
-		 * event.setCanceled( true );
-		 * preventSlimeBucketUse = false;
-		 * }
-		 */
-
-	}
 
 	/*
 	 * protected AxisAlignedBB getIronDoorHightlightBox(EntityPlayer player, World world, int x, int y, int z, Vec3 hitVec, Block block) {

@@ -51,6 +51,14 @@ minecraft
 	}
 
     mappings = "${config.mappings_version}"
+
+    replaceIn "src/main/java/io/github/tehstoneman/betterstorage/ModInfo.java"
+    replace "@minecraft_version@", config.minecraft_version
+    replace "@mod_major_version@", config.mod_major_version
+    replace "@api_major_version@", config.api_major_version
+    replace "@minor_version@", config.minor_version
+    replace "@patch_version@", config.patch_version
+    replace "@forge_version@", config.forge_version
 }
 
 repositories

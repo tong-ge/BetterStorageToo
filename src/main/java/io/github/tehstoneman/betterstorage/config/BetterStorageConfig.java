@@ -11,12 +11,21 @@ public class BetterStorageConfig
 	private final Configuration	config;
 
 	public static final String	CATEGORY_BLOCKS	= "blocks";
+	public static final String	CATEGORY_ITEMS	= "items";
 
 	// Block settings
 	public boolean				crateEnabled;
 	public boolean				reinforcedChestEnabled;
 	public boolean				lockerEnabled;
 	public boolean				reinforcedLockerEnabled;
+	public boolean lockableDoorEnabled;
+	public boolean				flintBlockEnabled;
+
+	// Item settings
+	public boolean				keyEnabled;
+	public boolean				masterKeyEnabled;
+	public boolean				keyringEnabled;
+	public boolean				lockEnabled;
 
 	// General settings
 	public int					reinforcedColumns;
@@ -86,6 +95,20 @@ public class BetterStorageConfig
 				.setLanguageKey( "tile.betterstorage.locker.name" ).setRequiresMcRestart( true );
 		final Property propReinforcedLockerEnabled = config.get( CATEGORY_BLOCKS, "reinforcedLockerEnabled", true )
 				.setLanguageKey( "tile.betterstorage.reinforced_locker.name" ).setRequiresMcRestart( true );
+		final Property propLockableDoorEnabled = config.get(  CATEGORY_BLOCKS, "lockableDoorEnabled", true )
+				.setLanguageKey( "tile.betterstorage.lockable_door.name" ).setRequiresMcRestart( true );
+		final Property propFlintBlockEnabled = config.get( CATEGORY_BLOCKS, "flintBlockEnabled", true )
+				.setLanguageKey( "tile.betterstorage.flint_block.name" ).setRequiresMcRestart( true );
+
+		// Items
+		final Property propKeyEnabled = config.get( CATEGORY_ITEMS, "keyEnabled", true )
+				.setLanguageKey( "item.betterstorage.key.name" ).setRequiresMcRestart( true );
+		final Property propMasterKeyEnabled = config.get( CATEGORY_ITEMS, "masterKeyEnabled", true )
+				.setLanguageKey( "item.betterstorage.master_key.name" ).setRequiresMcRestart( true );
+		final Property propKeyringEnabled = config.get( CATEGORY_ITEMS, "keyringEnabled", true )
+				.setLanguageKey( "item.betterstorage.keyring.name" ).setRequiresMcRestart( true );
+		final Property propLockEnabled = config.get( CATEGORY_ITEMS, "lockEnabled", true )
+				.setLanguageKey( "item.betterstorage.lock.name" ).setRequiresMcRestart( true );
 
 		// Reinforced chest settings
 		final Property propReinforcedColumns = config.get( Configuration.CATEGORY_GENERAL, "reinforcedColumns", "13",
@@ -111,7 +134,14 @@ public class BetterStorageConfig
 				Arrays.asList( new String[] { "crateEnabled",
 											  "reinforcedChestEnabled",
 											  "lockerEnabled",
-											  "reinforcedLockerEnabled" } ) );
+											  "reinforcedLockerEnabled",
+											  "lockableDoorEnabled",
+											  "flintBlockEnabled" } ) );
+		config.setCategoryPropertyOrder( CATEGORY_ITEMS,
+				Arrays.asList( new String[] { "keyEnabled",
+											  "masterKeyEnabled",
+											  "keyringEnabled",
+											  "lockEnabled" } ) );
 		//@formatter:on
 
 		// Read properties
@@ -121,6 +151,13 @@ public class BetterStorageConfig
 			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
 			lockerEnabled = propLockerEnabled.getBoolean();
 			reinforcedLockerEnabled = propReinforcedLockerEnabled.getBoolean();
+			lockableDoorEnabled = propLockableDoorEnabled.getBoolean();
+			flintBlockEnabled = propFlintBlockEnabled.getBoolean();
+
+			keyEnabled = propKeyEnabled.getBoolean();
+			masterKeyEnabled = propMasterKeyEnabled.getBoolean();
+			keyringEnabled = propKeyringEnabled.getBoolean();
+			lockEnabled = propLockEnabled.getBoolean();
 
 			reinforcedColumns = propReinforcedColumns.getInt();
 			enableCrateInventoryInterface = propCrateInventoryInterface.getBoolean();
@@ -132,6 +169,13 @@ public class BetterStorageConfig
 		propReinforcedChestEnabled.set( reinforcedChestEnabled );
 		propLockerEnabled.set( lockerEnabled );
 		propReinforcedLockerEnabled.set( reinforcedLockerEnabled );
+		propLockableDoorEnabled.set( lockableDoorEnabled );
+		propFlintBlockEnabled.set( flintBlockEnabled );
+
+		propKeyEnabled.set( keyEnabled );
+		propMasterKeyEnabled.set( masterKeyEnabled );
+		propKeyringEnabled.set( keyringEnabled );
+		propLockEnabled.set( lockEnabled );
 
 		propReinforcedColumns.set( reinforcedColumns );
 		propReinforcedChestEnabled.set( enableCrateInventoryInterface );

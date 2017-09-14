@@ -3,6 +3,8 @@ package io.github.tehstoneman.betterstorage.common.item.crafting;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /*
@@ -42,24 +44,21 @@ public class CopyKeyRecipe extends ShapedOreRecipe
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems( InventoryCrafting inv )
+	public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
 	{
-		final ItemStack[] resultStack = new ItemStack[inv.getSizeInventory()];
+		final NonNullList< ItemStack > ret = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
 
-		for( int i = 0; i < resultStack.length; ++i )
+		for( int i = 0; i < ret.size(); ++i )
 		{
 			final ItemStack itemStack = inv.getStackInSlot( i );
 			if( itemStack != null )
 				if( itemStack.getItem() == BetterStorageItems.KEY )
-				{
-					// Return original key to crafting table
-					resultStack[i] = itemStack.copy();
-					resultStack[i].stackSize = 1;
-				}
+					// resultStack[i].setCount( 1 );
+					ret.set( i, itemStack.copy() );
 				else
-					resultStack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem( itemStack );
+					ret.set( i, ForgeHooks.getContainerItem( itemStack ) );
 		}
 
-		return resultStack;
+		return ret;
 	}
 }

@@ -3,32 +3,25 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 import java.util.List;
 import java.util.UUID;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.utils.MiscUtils;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** Common base class for locks and keys **/
-public abstract class ItemKeyLock extends Item
+public abstract class ItemKeyLock extends ItemBetterStorage
 {
 
 	public static final String	TAG_COLOR1		= "color1";
 	public static final String	TAG_COLOR2		= "color2";
 	public static final String	TAG_KEYLOCK_ID	= "keyid";
 
-	private String				name;
-
-	public ItemKeyLock()
+	public ItemKeyLock( String name )
 	{
+		super( name );
 		setMaxStackSize( 1 );
 	}
 
@@ -100,16 +93,16 @@ public abstract class ItemKeyLock extends Item
 	public void addInformation( ItemStack stack, EntityPlayer playerin, List tooltip, boolean advanced )
 	{
 		final NBTTagCompound tag = stack.getTagCompound();
-		if( tag == null )
-			tooltip.add( "Keytag not set" );
-		else
+		if( tag != null )
 		{
-			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-				tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
+			/*
+			 * if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+			 * tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
+			 */
 			if( tag.hasKey( TAG_COLOR1 ) )
-				tooltip.add( "Color 1 : " + tag.getInteger( TAG_COLOR1 ) );
+				tooltip.add( "Color 1 : #" + Integer.toHexString( tag.getInteger( TAG_COLOR1 ) ).toUpperCase() );
 			if( tag.hasKey( TAG_COLOR2 ) )
-				tooltip.add( "Color 2 : " + tag.getInteger( TAG_COLOR2 ) );
+				tooltip.add( "Color 2 : #" + Integer.toHexString( tag.getInteger( TAG_COLOR2 ) ).toUpperCase() );
 		}
 	}
 }

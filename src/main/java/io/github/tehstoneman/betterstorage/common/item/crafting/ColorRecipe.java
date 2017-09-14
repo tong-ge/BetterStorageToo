@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;
@@ -43,9 +44,9 @@ public class ColorRecipe extends ShapelessOreRecipe
 			final ItemStack resultStack = itemIn.copy();
 
 			if( color1 != -1 )
-				ItemBetterStorage.setKeyColor1( resultStack, color1 );
+				ItemKeyLock.setKeyColor1( resultStack, color1 );
 			if( color2 != -1 )
-				ItemBetterStorage.setKeyColor2( resultStack, color2 );
+				ItemKeyLock.setKeyColor2( resultStack, color2 );
 
 			return resultStack;
 		}

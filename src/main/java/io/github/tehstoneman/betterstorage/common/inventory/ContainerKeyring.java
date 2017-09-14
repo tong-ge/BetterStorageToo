@@ -6,31 +6,32 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 //@InventoryContainer
 public class ContainerKeyring extends Container
 {
-	private final IInventory		inventoryPlayer;
-	private final InventoryKeyring	inventoryKeyRing;
-	private final int				protectedIndex;
+	private final IInventory			inventoryPlayer;
+	private final KeyringStackHandler	inventoryKeyRing;
+	private final int					protectedIndex;
 
-	public int						indexStart, indexPlayer, indexHotbar;
+	public int							indexStart, indexPlayer, indexHotbar;
 
 	public ContainerKeyring( EntityPlayer player, ItemStack keyring, int protectedIndex )
 	{
 		inventoryPlayer = player.inventory;
-		inventoryKeyRing = new InventoryKeyring( keyring );
+		inventoryKeyRing = (KeyringStackHandler)keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
 		this.protectedIndex = protectedIndex;
 
 		indexStart = 0;
-		indexHotbar = inventoryKeyRing.getSizeInventory();
+		indexHotbar = inventoryKeyRing.getSlots();
 		indexPlayer = indexHotbar + 9;
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = i / 9 * 18 + 18;
-			addSlotToContainer( new SlotKeyRing( inventoryKeyRing, i, x, y ) );
+			addSlotToContainer( new KeyringSlotHandler( inventoryKeyRing, i, x, y ) );
 		}
 
 		for( int i = 0; i < 27; i++ )
@@ -52,7 +53,7 @@ public class ContainerKeyring extends Container
 	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
 	{
 		if( slotId >= 0 && getSlot( slotId ) != null && getSlot( slotId ).getStack() == player.getHeldItemMainhand() )
-			return null;
+			return ItemStack.EMPTY;
 		return super.slotClick( slotId, dragType, clickTypeIn, player );
 	}
 
@@ -66,7 +67,7 @@ public class ContainerKeyring extends Container
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )
 	{
 		final Slot slot = inventorySlots.get( index );
-		ItemStack returnStack = null;
+		ItemStack returnStack = ItemStack.EMPTY;
 
 		if( slot != null && slot.getHasStack() )
 		{
@@ -77,18 +78,25 @@ public class ContainerKeyring extends Container
 			{
 				// Try to transfer from container to player
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
-					return null;
+					return ItemStack.EMPTY;
 			}
 			else
 				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-					return null;
+					return ItemStack.EMPTY;
 
-			if( itemStack == null || itemStack.stackSize == 0 )
-				slot.putStack( null );
+			if( itemStack.isEmpty() )
+				slot.putStack( ItemStack.EMPTY );
 			else
 				slot.onSlotChanged();
 		}
 
 		return returnStack;
+	}
+
+	@Override
+	public void onContainerClosed( EntityPlayer playerIn )
+	{
+		super.onContainerClosed( playerIn );
+		inventoryKeyRing.updateCount();
 	}
 }

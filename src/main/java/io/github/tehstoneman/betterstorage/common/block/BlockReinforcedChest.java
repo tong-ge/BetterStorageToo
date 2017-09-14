@@ -117,7 +117,7 @@ public class BlockReinforcedChest extends BlockLockable
 			if( tileentity instanceof TileEntityReinforcedChest )
 			{
 				final TileEntityReinforcedChest chest = (TileEntityReinforcedChest)tileentity;
-				chest.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
+				return chest.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
 			}
 		}
 		return true;

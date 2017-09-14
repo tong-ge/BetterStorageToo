@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
@@ -21,10 +22,10 @@ public final class Recipes
 
 	public static void add()
 	{
-		// registerRecipeSorter();
+		registerRecipeSorter();
 
 		addBlockRecipes();
-		// addItemRecipes();
+		addItemRecipes();
 		// addCardboardRecipes();
 
 		// GameRegistry.addRecipe( new DyeRecipe() );
@@ -35,7 +36,7 @@ public final class Recipes
 	{
 		// RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
-		RecipeSorter.register( "betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "" );
+		// RecipeSorter.register( "betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "" );
 		RecipeSorter.register( "betterstorage:lockcolorrecipe", LockRecipe.class, Category.SHAPELESS, "" );
 
 		RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
@@ -47,7 +48,7 @@ public final class Recipes
 	{
 		// Crate recipe
 		//@formatter:off
-		if( BetterStorageBlocks.CRATE != null )
+		if( BetterStorage.config.crateEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CRATE ),
 							new Object[] { false,
@@ -58,7 +59,7 @@ public final class Recipes
 		//@formatter:on
 
 		// Reinforced chest recipes
-		if( BetterStorageBlocks.REINFORCED_CHEST != null )
+		if( BetterStorage.config.reinforcedChestEnabled )
 			for( final EnumReinforced material : EnumReinforced.values() )
 				//@formatter:off
 				GameRegistry.addRecipe(
@@ -73,7 +74,7 @@ public final class Recipes
 					//@formatter:on
 
 		// Locker recipe
-		if( BetterStorageBlocks.LOCKER != null )
+		if( BetterStorage.config.lockerEnabled )
 		{
 			//@formatter:off
 			GameRegistry.addRecipe(
@@ -85,7 +86,7 @@ public final class Recipes
 			//@formatter:on
 
 			// Reinforced locker recipes
-			if( BetterStorageBlocks.REINFORCED_LOCKER != null )
+			if( BetterStorage.config.reinforcedLockerEnabled )
 				for( final EnumReinforced material : EnumReinforced.values() )
 					//@formatter:off
 					GameRegistry.addRecipe(
@@ -174,7 +175,7 @@ public final class Recipes
 		 */
 
 		// Flint Block recipe
-		if( BetterStorageBlocks.BLOCK_FLINT != null )
+		if( BetterStorage.config.flintBlockEnabled )
 		{
 			//@formatter:off
 			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.BLOCK_FLINT ),
@@ -190,7 +191,7 @@ public final class Recipes
 	private static void addItemRecipes()
 	{
 
-		if( BetterStorageItems.KEY != null )
+		if( BetterStorage.config.keyEnabled )
 		{
 			// Key recipes
 			//@formatter:off
@@ -218,7 +219,7 @@ public final class Recipes
 			GameRegistry.addRecipe( keyDyeRecipe );
 			//@formatter:on
 
-			if( BetterStorageItems.LOCK != null )
+			if( BetterStorage.config.lockEnabled )
 			{
 				// Lock recipe
 				//@formatter:off
@@ -241,7 +242,7 @@ public final class Recipes
 			}
 
 			// Keyring recipe
-			if( BetterStorageItems.KEYRING != null )
+			if( BetterStorage.config.keyringEnabled )
 			{
 				//@formatter:off
 				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEYRING ),

@@ -9,6 +9,7 @@ import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -85,7 +86,7 @@ public class DyeRecipe implements IRecipe
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems( InventoryCrafting inv )
+	public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
 	{
 		// TODO Auto-generated method stub
 		return null;

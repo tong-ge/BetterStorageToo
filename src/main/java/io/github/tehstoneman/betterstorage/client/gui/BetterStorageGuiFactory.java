@@ -54,19 +54,15 @@ public class BetterStorageGuiFactory implements IModGuiFactory
 		{
 			configElements = new ArrayList<>();
 
-			// final ArrayList< IConfigElement > itemCategory = new ArrayList< >();
-			// final ArrayList< IConfigElement > enchantmentCategory = new ArrayList< >();
-
 			final Configuration config = BetterStorage.config.getConfig();
 			final ConfigElement generalCategory = new ConfigElement( config.getCategory( Configuration.CATEGORY_GENERAL ) );
 			final ConfigElement blockCategory = new ConfigElement( config.getCategory( BetterStorageConfig.CATEGORY_BLOCKS ) );
-			// itemCategory.addAll( BetterStorage.globalConfig.getSettings( "item" ).values() );
-			// blockCategory.addAll( BetterStorage.config.getSettings( "block" ).values() );
+			final ConfigElement itemCategory = new ConfigElement( config.getCategory( BetterStorageConfig.CATEGORY_ITEMS ) );
 			// enchantmentCategory.addAll( BetterStorage.globalConfig.getSettings( "enchantment" ).values() );
 
 			configElements.addAll( generalCategory.getChildElements() );
-			// configElements.add( new DummyConfigElement.DummyCategoryElement( "item", "config.betterstorage.category.item", itemCategory ) );
 			configElements.add( new DummyCategoryElement( "block", "config.betterstorage.category.block", blockCategory.getChildElements() ) );
+			configElements.add( new DummyCategoryElement( "item", "config.betterstorage.category.item", itemCategory.getChildElements() ) );
 			// configElements.add( new DummyConfigElement.DummyCategoryElement( "enchantment", "config.betterstorage.category.enchantment", enchantmentCategory
 			// ) );
 		}
