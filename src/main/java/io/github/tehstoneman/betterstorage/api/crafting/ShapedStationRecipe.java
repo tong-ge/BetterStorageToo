@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ShapedStationRecipe implements IStationRecipe
 {
@@ -171,8 +170,8 @@ public class ShapedStationRecipe implements IStationRecipe
 
 				final int adjustedIndex = bounds.minX + x + ( bounds.minY + y ) * 3;
 				final IRecipeInput recipeStack = recipeInput[mx + y * recipeWidth];
-				final ItemStack inputStack = input[ adjustedIndex ];
-				if( recipeStack == null ? inputStack != null : !recipeStack.matches( inputStack ) || inputStack.stackSize < recipeStack.getAmount() )
+				final ItemStack inputStack = input[adjustedIndex];
+				if( recipeStack == null ? inputStack != null : !recipeStack.matches( inputStack ) || inputStack.getCount() < recipeStack.getAmount() )
 					return false;
 			}
 		return true;

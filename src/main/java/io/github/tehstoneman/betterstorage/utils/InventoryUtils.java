@@ -64,7 +64,7 @@ public final class InventoryUtils
 	/** Returns a list of items of the specific type in the inventory. */
 	public static List< ItemStack > findItems( IInventory inventory, Item item )
 	{
-		final List< ItemStack > list = new ArrayList< >();
+		final List< ItemStack > list = new ArrayList<>();
 		for( int i = 0; i < inventory.getSizeInventory(); i++ )
 		{
 			final ItemStack stack = inventory.getStackInSlot( i );
@@ -77,7 +77,7 @@ public final class InventoryUtils
 	/** Returns a list of slot indices which hold a specific item type in the inventory. */
 	public static List< Integer > findItemSlots( IInventory inventory, Item item )
 	{
-		final List< Integer > list = new ArrayList< >();
+		final List< Integer > list = new ArrayList<>();
 		for( int i = 0; i < inventory.getSizeInventory(); i++ )
 		{
 			final ItemStack stack = inventory.getStackInSlot( i );
@@ -90,7 +90,7 @@ public final class InventoryUtils
 	/** Returns a list of dyes in the inventory. */
 	public static List< ItemStack > findDyes( IInventory inventory )
 	{
-		final List< ItemStack > list = new ArrayList< >();
+		final List< ItemStack > list = new ArrayList<>();
 		for( int i = 0; i < inventory.getSizeInventory(); i++ )
 		{
 			final ItemStack stack = inventory.getStackInSlot( i );
@@ -116,18 +116,18 @@ public final class InventoryUtils
 			for( int i = 0; i < inventory.getSizeInventory(); i++ )
 			{
 				final ItemStack invStack = inventory.getStackInSlot( i );
-				if( StackUtils.matches( stack, invStack ) && invStack.stackSize < maxStackSize )
+				if( StackUtils.matches( stack, invStack ) && invStack.getCount() < maxStackSize )
 				{
-					final int amount = Math.min( invStack.stackSize + stack.stackSize, maxStackSize );
+					final int amount = Math.min( invStack.getCount() + stack.getCount(), maxStackSize );
 					final ItemStack testStack = StackUtils.copyStack( stack, amount );
 					if( inventory.isItemValidForSlot( i, testStack ) )
 					{
-						stack.stackSize -= testStack.stackSize - invStack.stackSize;
+						stack.setCount( stack.getCount() - testStack.getCount() - invStack.getCount() );
 						if( doAdd )
 							inventory.setInventorySlotContents( i, testStack );
 					}
 				}
-				if( stack.stackSize <= 0 )
+				if( stack.getCount() <= 0 )
 					return true;
 			}
 		// Try to put the stack into empty slots.
@@ -136,15 +136,15 @@ public final class InventoryUtils
 			final ItemStack invStack = inventory.getStackInSlot( i );
 			if( invStack == null )
 			{
-				final ItemStack testStack = StackUtils.copyStack( stack, Math.min( stack.stackSize, maxStackSize ) );
+				final ItemStack testStack = StackUtils.copyStack( stack, Math.min( stack.getCount(), maxStackSize ) );
 				if( inventory.isItemValidForSlot( i, testStack ) )
 				{
-					stack.stackSize -= testStack.stackSize;
+					stack.setCount( stack.getCount() - testStack.getCount() );
 					if( doAdd )
 						inventory.setInventorySlotContents( i, testStack );
 				}
 			}
-			if( stack.stackSize <= 0 )
+			if( stack.getCount() <= 0 )
 				return true;
 		}
 		return false;

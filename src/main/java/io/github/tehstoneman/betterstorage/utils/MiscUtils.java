@@ -11,20 +11,6 @@ public final class MiscUtils
 	private MiscUtils()
 	{}
 
-	public static <T> T conditionalNew( Class< T > theClass, String configName )
-	{
-		if( !BetterStorage.globalConfig.getBoolean( configName ) )
-			return null;
-		try
-		{
-			return theClass.getConstructor().newInstance();
-		}
-		catch( final Exception e )
-		{
-			throw new RuntimeException( e );
-		}
-	}
-
 	/**
 	 * Gets the name of an item from its class name. <br>
 	 * For example: <code>ItemDrinkingHelmet</code> => <code>drinkingHelmet</code>

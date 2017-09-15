@@ -15,7 +15,7 @@ public final class PlayerUtils
 	@SideOnly( Side.CLIENT )
 	public static EntityPlayer getLocalPlayer()
 	{
-		return Minecraft.getMinecraft().thePlayer;
+		return Minecraft.getMinecraft().player;
 	}
 
 	public static void openGui( EntityPlayer pl, String name, int columns, int rows, String title, Container container )
@@ -50,7 +50,7 @@ public final class PlayerUtils
 	 * final boolean localized = !title.isEmpty();
 	 * if( !localized )
 	 * title = name;
-	 * 
+	 *
 	 * if( name.equals( ModInfo.containerKeyring ) )
 	 * return new GuiBetterStorage( new ContainerKeyring( player, title, columns ) );
 	 * else
@@ -64,7 +64,7 @@ public final class PlayerUtils
 	 * if( name.equals( Constants.containerCraftingStation ) )
 	 * return new GuiCraftingStation( player, title, localized );
 	 * else
-	 * 
+	 *
 	 * return new GuiBetterStorage( player, columns, rows, title, localized );
 	 * }
 	 */

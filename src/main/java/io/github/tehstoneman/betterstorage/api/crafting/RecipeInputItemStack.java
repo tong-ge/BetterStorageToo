@@ -39,7 +39,7 @@ public class RecipeInputItemStack extends RecipeInputBase
 	@Override
 	public int getAmount()
 	{
-		return stack.stackSize;
+		return stack.getCount();
 	}
 
 	@Override

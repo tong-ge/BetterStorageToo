@@ -26,7 +26,7 @@ public final class WorldUtils
 	@SideOnly( Side.CLIENT )
 	public static World getLocalWorld()
 	{
-		return Minecraft.getMinecraft().theWorld;
+		return Minecraft.getMinecraft().world;
 	}
 
 	public static AxisAlignedBB getAABB( TileEntity entity, double minX, double minY, double minZ, double maxX, double maxY, double maxZ )
@@ -47,10 +47,10 @@ public final class WorldUtils
 	/** Spawns an ItemStack in the world. */
 	public static EntityItem spawnItem( World world, double x, double y, double z, ItemStack stack )
 	{
-		if( stack == null || stack.stackSize <= 0 )
+		if( stack == null || stack.getCount() <= 0 )
 			return null;
 		final EntityItem item = new EntityItem( world, x, y, z, stack );
-		world.spawnEntityInWorld( item );
+		world.spawnEntity( item );
 		return item;
 	}
 
@@ -90,7 +90,7 @@ public final class WorldUtils
 		if( player == null )
 		{
 			final double y = entity.posY + entity.getEyeHeight() - 0.3;
-			item = spawnItem( entity.worldObj, entity.posX, y, entity.posZ, stack );
+			item = spawnItem( entity.world, entity.posX, y, entity.posZ, stack );
 			if( item == null )
 				return null;
 			// item.delayBeforeCanPickup = 40;
@@ -171,13 +171,13 @@ public final class WorldUtils
 	{
 		final Block block = world.getBlockState( new BlockPos( x, y, z ) ).getBlock();
 		// world.notifyNeighborsOfStateChange( pos, blockType );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x + 1, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x - 1, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y + 1, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y - 1, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z + 1 ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z - 1 ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x + 1, y, z ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x - 1, y, z ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y + 1, z ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y - 1, z ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z + 1 ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z - 1 ), block, true );
 	}
 
 	// Misc functions
@@ -191,7 +191,7 @@ public final class WorldUtils
 		final Vec3d start = new Vec3d( player.posX, player.posY + 1.62 - player.getYOffset(), player.posZ );
 		final Vec3d look = player.getLook( 1.0F );
 		final Vec3d end = start.addVector( look.xCoord * range, look.yCoord * range, look.zCoord * range );
-		final RayTraceResult target = player.worldObj.rayTraceBlocks( start, end );
+		final RayTraceResult target = player.world.rayTraceBlocks( start, end );
 		Attachments.playerLocal.remove();
 		return target;
 	}

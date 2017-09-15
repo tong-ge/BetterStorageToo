@@ -85,14 +85,14 @@ public final class NbtUtils
 			final NBTTagCompound item = items.getCompoundTagAt( i );
 			final int slot = item.getByte( "Slot" ) & 255;
 			if( slot >= 0 && slot < contents.length )
-				contents[slot] = ItemStack.loadItemStackFromNBT( item );
+				contents[slot] = new ItemStack( item );
 		}
 	}
 
 	public static void readItems( List< ItemStack > list, NBTTagList items )
 	{
 		for( int i = 0; i < items.tagCount(); i++ )
-			list.add( ItemStack.loadItemStackFromNBT( items.getCompoundTagAt( i ) ) );
+			list.add( new ItemStack( items.getCompoundTagAt( i ) ) );
 	}
 
 	public static NBTTagList writeItems( ItemStack[] contents )

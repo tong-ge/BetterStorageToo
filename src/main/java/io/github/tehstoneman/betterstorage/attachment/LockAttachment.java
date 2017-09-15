@@ -7,8 +7,7 @@ import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
-import io.github.tehstoneman.betterstorage.config.GlobalConfig;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.item.EntityItem;
@@ -78,13 +77,13 @@ public class LockAttachment extends ItemAttachment
 		if( item == null )
 			return null;
 		final ItemStack key = new ItemStack( BetterStorageItems.KEY );
-		ItemBetterStorage.setID( key, ItemBetterStorage.getID( item ) );
-		final int color = ItemBetterStorage.getKeyColor1( item );
+		ItemKeyLock.setID( key, ItemKeyLock.getID( item ) );
+		final int color = ItemKeyLock.getKeyColor1( item );
 		if( color >= 0 )
-			ItemBetterStorage.setKeyColor1( key, color );
-		final int fullColor = ItemBetterStorage.getKeyColor2( item );
+			ItemKeyLock.setKeyColor1( key, color );
+		final int fullColor = ItemKeyLock.getKeyColor2( item );
 		if( fullColor >= 0 )
-			ItemBetterStorage.setKeyColor2( key, fullColor );
+			ItemKeyLock.setKeyColor2( key, fullColor );
 		return key;
 	}
 
@@ -102,7 +101,7 @@ public class LockAttachment extends ItemAttachment
 		 * if (holding.stackSize <= 0)
 		 * player.destroyCurrentEquippedItem();
 		 */
-		if( !player.worldObj.isRemote )
+		if( !player.world.isRemote )
 		{
 			if( canHurt )
 			{
@@ -161,7 +160,7 @@ public class LockAttachment extends ItemAttachment
 
 	private boolean use( EntityPlayer player, ItemStack holding )
 	{
-		if( player.worldObj.isRemote )
+		if( player.world.isRemote )
 			return false;
 
 		final ILockable lockable = (ILockable)tileEntity;
@@ -193,7 +192,7 @@ public class LockAttachment extends ItemAttachment
 					final double x = ( box.minX + box.maxX ) / 2;
 					final double y = ( box.minY + box.maxY ) / 2;
 					final double z = ( box.minZ + box.maxZ ) / 2;
-					final EntityItem item = WorldUtils.spawnItem( player.worldObj, x, y, z, lock );
+					final EntityItem item = WorldUtils.spawnItem( player.world, x, y, z, lock );
 					lockable.setLock( null );
 				}
 				else
@@ -207,7 +206,7 @@ public class LockAttachment extends ItemAttachment
 
 	private boolean canHurtLock( ItemStack stack )
 	{
-		if( stack == null || !BetterStorage.globalConfig.getBoolean( GlobalConfig.lockBreakable ) )
+		if( stack == null || !BetterStorage.config.LOCK_BREAKABLE )
 			return false;
 		final Item item = stack.getItem();
 		return item instanceof ItemSword || item instanceof ItemPickaxe || item instanceof ItemAxe;

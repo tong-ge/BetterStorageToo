@@ -238,7 +238,7 @@ public final class StackUtils
 			return false;
 		for( final StackEnchantment stackEnch : stackEnchants )
 			if( newEnchant.ench == stackEnch.ench ? newEnchant.getLevel() <= stackEnch.getLevel()
-					: !newEnchant.ench.canApplyTogether( stackEnch.ench ) || !stackEnch.ench.canApplyTogether( newEnchant.ench ) )
+					: !newEnchant.ench.func_191560_c( stackEnch.ench ) || !stackEnch.ench.func_191560_c( newEnchant.ench ) )
 				return false;
 		return true;
 	}
@@ -299,7 +299,7 @@ public final class StackUtils
 	 */
 	public static int calcNumStacks( ItemStack stack )
 	{
-		return calcNumStacks( stack, stack.stackSize );
+		return calcNumStacks( stack, stack.getCount() );
 	}
 
 	/**
@@ -319,7 +319,7 @@ public final class StackUtils
 			for( final ItemStack itemsStack : items )
 				if( StackUtils.matches( contentStack, itemsStack ) )
 				{
-					itemsStack.stackSize += contentStack.stackSize;
+					itemsStack.setCount( itemsStack.getCount() + contentStack.getCount() );
 					continue outerLoop;
 				}
 			items.add( contentStack );

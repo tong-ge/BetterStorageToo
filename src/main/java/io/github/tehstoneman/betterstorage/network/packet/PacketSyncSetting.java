@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.network.packet;
 
 import java.io.IOException;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.config.Config;
 import io.github.tehstoneman.betterstorage.network.AbstractPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,19 +31,19 @@ public class PacketSyncSetting extends AbstractPacket< PacketSyncSetting >
 	@Override
 	public void encode( PacketBuffer buffer ) throws IOException
 	{
-		buffer.writeNBTTagCompoundToBuffer( data );
+		buffer.writeCompoundTag( data );
 	}
 
 	@Override
 	public void decode( PacketBuffer buffer ) throws IOException
 	{
-		data = buffer.readNBTTagCompoundFromBuffer();
+		data = buffer.readCompoundTag();
 	}
 
 	@Override
 	public void handle( EntityPlayer player )
 	{
-		BetterStorage.globalConfig.read( data );
+		// BetterStorage.config.read( data );
 	}
 
 }
