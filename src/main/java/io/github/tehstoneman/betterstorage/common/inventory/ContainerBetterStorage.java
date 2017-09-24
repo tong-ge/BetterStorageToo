@@ -156,11 +156,11 @@ public class ContainerBetterStorage extends Container
 			{
 				// Try to transfer from container to player
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
-					return null;
+					return ItemStack.EMPTY;
 			}
 			else
 				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-					return null;
+					return ItemStack.EMPTY;
 
 			if( itemStack.isEmpty() )
 				slot.putStack( ItemStack.EMPTY );

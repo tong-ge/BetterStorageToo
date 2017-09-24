@@ -1,21 +1,20 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-import java.awt.Color;
-
-import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class CardboardColor implements IItemColor
 {
 	@Override
 	public int getColorFromItemstack( ItemStack stack, int tintIndex )
 	{
-		if( stack.getItem() instanceof ICardboardItem )
-			return ( (ICardboardItem)stack.getItem() ).getColor( stack );
-		else
-			if( stack.getItem() instanceof ItemCardboardArmor )
-				return ( (ItemCardboardArmor)stack.getItem() ).getColor( stack );
-		return Color.WHITE.getRGB();
+		if( stack.hasTagCompound() )
+		{
+			final NBTTagCompound tag = stack.getTagCompound();
+			if( tag.hasKey( "color" ) )
+				return tag.getInteger( "color" );
+		}
+		return 0x6e522b;
 	}
 }

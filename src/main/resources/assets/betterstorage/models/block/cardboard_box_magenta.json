@@ -1,9 +1,0 @@
-{
-    "parent": "betterstorage:block/cardboard_box",
-    "textures":
-    {
-        "particle": "betterstorage:blocks/cardboard_box_side_magenta",
-        "side": "betterstorage:blocks/cardboard_box_side_magenta",
-        "end": "betterstorage:blocks/cardboard_box_magenta"
-    }
-}

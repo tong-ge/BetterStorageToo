@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
@@ -26,24 +27,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockLockableDoor extends BlockBetterStorage
 {
-    protected static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D);
-    protected static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D);
-    protected static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
-    protected static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB	SOUTH_AABB	= new AxisAlignedBB( 0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D );
+	protected static final AxisAlignedBB	NORTH_AABB	= new AxisAlignedBB( 0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D );
+	protected static final AxisAlignedBB	WEST_AABB	= new AxisAlignedBB( 0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D );
+	protected static final AxisAlignedBB	EAST_AABB	= new AxisAlignedBB( 0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D );
 
-    public BlockLockableDoor()
+	public BlockLockableDoor()
 	{
 		super( "lockable_door", Material.IRON );
 
 		setCreativeTab( null );
-		//setHardness( 8.0F );
-		//setResistance( 20.0F );
-		//setHarvestLevel( "axe", 2 );
+		// setHardness( 8.0F );
+		// setResistance( 20.0F );
+		// setHarvestLevel( "axe", 2 );
 
 		//@formatter:off
 		setDefaultState( blockState.getBaseState().withProperty( BlockDoor.FACING, EnumFacing.NORTH )
@@ -53,60 +55,72 @@ public class BlockLockableDoor extends BlockBetterStorage
 		//@formatter:on
 	}
 
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        state = state.getActualState(source, pos);
-        EnumFacing enumfacing = (EnumFacing)state.getValue(BlockDoor.FACING);
-        boolean flag = !((Boolean)state.getValue(BlockDoor.OPEN)).booleanValue();
-        boolean flag1 = state.getValue(BlockDoor.HINGE) == EnumHingePosition.RIGHT;
+	@Override
+	public void registerBlock()
+	{
+		setUnlocalizedName( ModInfo.modId + "." + name );
+		this.setRegistryName( name );
+		GameRegistry.register( this );
+	}
 
-        switch (enumfacing)
-        {
-            case EAST:
-            default:
-                return flag ? EAST_AABB : (flag1 ? NORTH_AABB : SOUTH_AABB);
-            case SOUTH:
-                return flag ? SOUTH_AABB : (flag1 ? EAST_AABB : WEST_AABB);
-            case WEST:
-                return flag ? WEST_AABB : (flag1 ? SOUTH_AABB : NORTH_AABB);
-            case NORTH:
-                return flag ? NORTH_AABB : (flag1 ? WEST_AABB : EAST_AABB);
-        }
-    }
+	@Override
+	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos )
+	{
+		state = state.getActualState( source, pos );
+		final EnumFacing enumfacing = state.getValue( BlockDoor.FACING );
+		final boolean flag = !state.getValue( BlockDoor.OPEN ).booleanValue();
+		final boolean flag1 = state.getValue( BlockDoor.HINGE ) == EnumHingePosition.RIGHT;
 
-    @Override
+		switch( enumfacing )
+		{
+		case EAST:
+		default:
+			return flag ? EAST_AABB : flag1 ? NORTH_AABB : SOUTH_AABB;
+		case SOUTH:
+			return flag ? SOUTH_AABB : flag1 ? EAST_AABB : WEST_AABB;
+		case WEST:
+			return flag ? WEST_AABB : flag1 ? SOUTH_AABB : NORTH_AABB;
+		case NORTH:
+			return flag ? NORTH_AABB : flag1 ? WEST_AABB : EAST_AABB;
+		}
+	}
+
+	@Override
 	public BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer( this, new IProperty[] { BlockDoor.FACING, BlockDoor.OPEN, BlockDoor.HINGE, BlockDoor.HALF } );
 	}
 
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube( IBlockState state )
+	{
+		return false;
+	}
 
-    public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
-    {
-    	IBlockState state = worldIn.getBlockState( pos );
-        return state.getValue( BlockDoor.OPEN );
-    }
+	@Override
+	public boolean isPassable( IBlockAccess worldIn, BlockPos pos )
+	{
+		final IBlockState state = worldIn.getBlockState( pos );
+		return state.getValue( BlockDoor.OPEN );
+	}
 
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isFullCube( IBlockState state )
+	{
+		return false;
+	}
 
-    public static int getCloseSound()
-    {
-        return 1011;
-    }
+	public static int getCloseSound()
+	{
+		return 1011;
+	}
 
-    public static int getOpenSound()
-    {
-        return 1005;
-    }
+	public static int getOpenSound()
+	{
+		return 1005;
+	}
 
-    @Override
+	@Override
 	public IBlockState getStateFromMeta( int meta )
 	{
 		return ( meta & 8 ) > 0
@@ -201,9 +215,9 @@ public class BlockLockableDoor extends BlockBetterStorage
 	{
 		if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
 			pos = pos.down();
-		TileEntity tileentity = world.getTileEntity( pos );
+		final TileEntity tileentity = world.getTileEntity( pos );
 		if( tileentity instanceof TileEntityLockableDoor )
-			return ((TileEntityLockableDoor)tileentity).onBlockActivated( world, pos, player, side, hitX, hitY, hitZ );
+			return ( (TileEntityLockableDoor)tileentity ).onBlockActivated( world, pos, player, side, hitX, hitY, hitZ );
 		return false;
 	}
 
@@ -232,51 +246,52 @@ public class BlockLockableDoor extends BlockBetterStorage
 		return new ItemStack( Items.IRON_DOOR );
 	}
 
-    public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
-    {
-        BlockPos blockpos = pos.down();
-        BlockPos blockpos1 = pos.up();
-
-        if (player.capabilities.isCreativeMode && state.getValue(BlockDoor.HALF) == EnumDoorHalf.UPPER && worldIn.getBlockState(blockpos).getBlock() == this)
-        {
-            worldIn.setBlockToAir(blockpos);
-        }
-
-        if (state.getValue(BlockDoor.HALF) == EnumDoorHalf.LOWER && worldIn.getBlockState(blockpos1).getBlock() == this)
-        {
-            if (player.capabilities.isCreativeMode)
-            {
-                worldIn.setBlockToAir(pos);
-            }
-            
-            worldIn.setBlockToAir(blockpos1);
-        }
-    }
-
-    public void breakBlock( World worldIn, BlockPos pos, IBlockState state )
-    {
-        TileEntity tileentity = worldIn.getTileEntity( pos );
-        if( tileentity instanceof TileEntityLockableDoor )
-        {
-        	TileEntityLockableDoor lockable = (TileEntityLockableDoor)tileentity;
-        	ItemStack lock = lockable.getLock();
-        	if( !lock.isEmpty() )
-        		worldIn.spawnEntity( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lock ) );
-        }
-        super.breakBlock( worldIn, pos, state );
-    }
-    /*@Override
-	public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest )
+	@Override
+	public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player )
 	{
-		return world.setBlockToAir( pos );
+		final BlockPos blockpos = pos.down();
+		final BlockPos blockpos1 = pos.up();
+
+		if( player.capabilities.isCreativeMode && state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER
+				&& worldIn.getBlockState( blockpos ).getBlock() == this )
+			worldIn.setBlockToAir( blockpos );
+
+		if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER && worldIn.getBlockState( blockpos1 ).getBlock() == this )
+		{
+			if( player.capabilities.isCreativeMode )
+				worldIn.setBlockToAir( pos );
+
+			worldIn.setBlockToAir( blockpos1 );
+		}
 	}
 
 	@Override
-	public void breakBlock( World world, BlockPos pos, IBlockState state )
+	public void breakBlock( World worldIn, BlockPos pos, IBlockState state )
 	{
-		// if (meta > 0) return;
-		super.breakBlock( world, pos, state );
-	}*/
+		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		if( tileentity instanceof TileEntityLockableDoor )
+		{
+			final TileEntityLockableDoor lockable = (TileEntityLockableDoor)tileentity;
+			final ItemStack lock = lockable.getLock();
+			if( !lock.isEmpty() )
+				worldIn.spawnEntity( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lock ) );
+		}
+		super.breakBlock( worldIn, pos, state );
+	}
+	/*
+	 * @Override
+	 * public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest )
+	 * {
+	 * return world.setBlockToAir( pos );
+	 * }
+	 * 
+	 * @Override
+	 * public void breakBlock( World world, BlockPos pos, IBlockState state )
+	 * {
+	 * // if (meta > 0) return;
+	 * super.breakBlock( world, pos, state );
+	 * }
+	 */
 
 	@Override
 	public void onNeighborChange( IBlockAccess world, BlockPos pos, BlockPos neighbor )
@@ -311,11 +326,12 @@ public class BlockLockableDoor extends BlockBetterStorage
 		return EnumBlockRenderType.MODEL;
 	}
 
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.CUTOUT;
-    }
+	@Override
+	@SideOnly( Side.CLIENT )
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT;
+	}
 
 	/*
 	 * @Override
@@ -352,12 +368,11 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * }
 	 */
 
-	
-	  @Override
-	  public TileEntity createTileEntity(World world, IBlockState state) {
-	  return (state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER ? new TileEntityLockableDoor() : null);
-	  }
-	 
+	@Override
+	public TileEntity createTileEntity( World world, IBlockState state )
+	{
+		return state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER ? new TileEntityLockableDoor() : null;
+	}
 
 	@Override
 	public boolean hasTileEntity( IBlockState state )

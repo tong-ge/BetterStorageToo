@@ -1,12 +1,14 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageColorHandler;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
 import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
@@ -14,6 +16,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -49,6 +52,7 @@ public class ClientProxy extends CommonProxy
 		// new KeyBindingHandler();
 
 		registerRenderers();
+		BetterStorageColorHandler.registerColorHandlers();
 	}
 
 	@Override
@@ -57,6 +61,7 @@ public class ClientProxy extends CommonProxy
 		super.postInit();
 
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), ItemBlock.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) );
 		/*
 		 * Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
 		 * BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,

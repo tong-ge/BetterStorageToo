@@ -6,6 +6,7 @@ import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.crafting.Recipes;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CommonProxy
 {
@@ -64,6 +66,19 @@ public class CommonProxy
 				BetterStorageBlocks.LOCKABLE_DOOR.registerBlock();
 				GameRegistry.registerTileEntity( TileEntityLockableDoor.class, ModInfo.lockableDoor );
 			}
+		}
+
+		if( BetterStorage.config.cardboardSheetEnabled )
+		{
+			BetterStorageItems.CARDBOARD_SHEET.register();
+			OreDictionary.registerOre( "sheetCardboard", BetterStorageItems.CARDBOARD_SHEET );
+		}
+
+		if( BetterStorage.config.cardboardBoxEnabled )
+		{
+			BetterStorageBlocks.CARDBOARD_BOX.registerBlock();
+			//BetterStorageBlocks.CARDBOARD_BOX_COLORED.registerBlock();
+			GameRegistry.registerTileEntity( TileEntityCardboardBox.class, ModInfo.containerCardboardBox );
 		}
 	}
 

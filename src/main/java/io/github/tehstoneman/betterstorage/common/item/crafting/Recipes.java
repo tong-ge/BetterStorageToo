@@ -26,9 +26,11 @@ public final class Recipes
 
 		addBlockRecipes();
 		addItemRecipes();
-		// addCardboardRecipes();
+		addCardboardRecipes();
 
-		// GameRegistry.addRecipe( new DyeRecipe() );
+		// Misc. recipes
+		GameRegistry.addRecipe( new CardboardColorRecipe() );
+		GameRegistry.addRecipe( new KeyColorRecipe() );
 		// Addon.addRecipesAll();
 	}
 
@@ -36,12 +38,8 @@ public final class Recipes
 	{
 		// RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
-		// RecipeSorter.register( "betterstorage:dyerecipe", DyeRecipe.class, Category.SHAPELESS, "" );
-		RecipeSorter.register( "betterstorage:lockcolorrecipe", LockRecipe.class, Category.SHAPELESS, "" );
-
-		RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
-		RecipeSorter.register( "betterstorage:colorkeyrecipe", ColorRecipe.class, Category.SHAPELESS, "" );
-		RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
+		//RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
+		//RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
 	}
 
 	private static void addBlockRecipes()
@@ -102,7 +100,7 @@ public final class Recipes
 		}
 
 		// Cardboard box recipe
-		if( BetterStorageBlocks.CARDBOARD_BOX != null && BetterStorageItems.CARDBOARD_SHEET != null )
+		if( BetterStorage.config.cardboardBoxEnabled )
 		{
 			//@formatter:off
 			GameRegistry.addRecipe(
@@ -111,42 +109,7 @@ public final class Recipes
 										   "ooo",
 										   "o o",
 										   "ooo",	'o', "sheetCardboard" } ) );
-
-	        final String[] dyes =
-	            {
-	                "Black",
-	                "Red",
-	                "Green",
-	                "Brown",
-	                "Blue",
-	                "Purple",
-	                "Cyan",
-	                "LightGray",
-	                "Gray",
-	                "Pink",
-	                "Lime",
-	                "Yellow",
-	                "LightBlue",
-	                "Magenta",
-	                "Orange",
-	                "White"
-	            };
 			//@formatter:on
-
-			for( int i = 0; i < 16; i++ )
-			{
-				final String dye = "dye" + dyes[i];
-				final int meta = 15 - i;
-
-				//@formatter:off
-				GameRegistry.addRecipe(
-						new ShapelessOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, meta ),
-								new Object[] { dye, BetterStorageBlocks.CARDBOARD_BOX } ) );
-				GameRegistry.addRecipe(
-						new ShapelessOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, meta ),
-								new Object[] { dye, new ItemStack( BetterStorageBlocks.CARDBOARD_BOX_COLORED, 1, OreDictionary.WILDCARD_VALUE ) } ) );
-				//@formatter:on
-			}
 		}
 
 		// Crafting Station recipe
@@ -210,15 +173,6 @@ public final class Recipes
 								   		 'k', new ItemStack( BetterStorageItems.KEY ) } );
 			GameRegistry.addRecipe( keyCopyRecipe );
 
-			IRecipe keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { new ItemStack( BetterStorageItems.KEY ), "dye" } );
-			GameRegistry.addRecipe( keyDyeRecipe );
-
-			keyDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { new ItemStack( BetterStorageItems.KEY ), "dye", "dye" } );
-			GameRegistry.addRecipe( keyDyeRecipe );
-			//@formatter:on
-
 			if( BetterStorage.config.lockEnabled )
 			{
 				// Lock recipe
@@ -227,18 +181,9 @@ public final class Recipes
 						new Object[] { " g ",
 									   "gkg",
 									   "gig", 'g', "ingotGold",
-									   		  'k', new ItemStack( BetterStorageItems.KEY, 1, OreDictionary.WILDCARD_VALUE ),
+									   		  'k', new ItemStack( BetterStorageItems.KEY ),
 									   		  'i', "ingotIron" } );
 				GameRegistry.addRecipe( lockRecipe );
-				// Lock color recipe
-				IRecipe lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
-						new Object[] { new ItemStack( BetterStorageItems.LOCK ), "dye" } );
-				GameRegistry.addRecipe( lockDyeRecipe );
-
-				lockDyeRecipe = new ColorRecipe( new ItemStack( BetterStorageItems.LOCK ),
-						new Object[] { new ItemStack( BetterStorageItems.LOCK ), "dye", "dye" } );
-				GameRegistry.addRecipe( lockDyeRecipe );
-				//@formatter:on
 			}
 
 			// Keyring recipe
@@ -264,7 +209,7 @@ public final class Recipes
 	{
 		//@formatter:off
 		// Cardboard sheet recipe
-		if( BetterStorageItems.CARDBOARD_SHEET != null )
+		if( BetterStorage.config.cardboardSheetEnabled )
 			GameRegistry.addRecipe(
 					new ShapelessOreRecipe(  new ItemStack( BetterStorageItems.CARDBOARD_SHEET, 4 ),
 							new Object[] { "paper",     "paper", "paper",
@@ -272,7 +217,6 @@ public final class Recipes
 									   	   "paper",     "paper", "paper" } ) );
 
 		// Cardboard helmet recipe
-		//@formatter:off
 		if( BetterStorageItems.CARDBOARD_HELMET != null )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HELMET ),

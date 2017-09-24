@@ -1,4 +1,5 @@
 # Containers
+container.betterstorage.cardboard_box=Cardboard Box
 container.betterstorage.crate=Storage Crate
 container.betterstorage.crate.capacity=%% Capacity
 container.betterstorage.locker=Locker
@@ -23,6 +24,8 @@ material.betterstorage.tin=Tin
 material.betterstorage.zinc=Zinc
 
 # Blocks
+tile.betterstorage.cardboard_box.name=Cardboard Box
+tile.betterstorage.cardboard_box.name.tooltip=Enable or disable cardboard boxes.
 tile.betterstorage.crate.name=Storage Crate
 tile.betterstorage.crate.name.tooltip=Enable or disable storage crates.
 tile.betterstorage.locker.name=Locker
@@ -39,6 +42,8 @@ tile.betterstorage.reinforced_locker.name.full=Reinforced %s Locker
 tile.betterstorage.reinforced_locker.name.tooltip=Enable or disable reinforced lockers.\n(No effect if lockers are disabled)
 
 # Items
+item.betterstorage.cardboard_sheet.name=Cardboard Sheet
+item.betterstorage.cardboard_sheet.name.tooltip=Enable or disable cardboard sheets.
 item.betterstorage.key.name=Key
 item.betterstorage.key.name.tooltip=Enable or disable keys.
 item.betterstorage.keyring.name=Keyring
@@ -48,14 +53,29 @@ item.betterstorage.lock.name.tooltip=Enable or disable locks.\n(Requires keys en
 item.betterstorage.master_key.name=Master Key
 item.betterstorage.master_key.name.tooltip=Enable or disable master key.\n(Requires keys enabled)
 
+# Tooltips
+tooltip.betterstorage.cardboardBox.useHint=One-time use portable storage.
+tooltip.betterstorage.cardboardBox.useHint.reusable=Reusable portable storage.
+tooltip.betterstorage.cardboardBox.uses=Remaining uses: %s
+tooltip.betterstorage.cardboardBox.containsItems=Contains items.
+tooltip.betterstorage.cardboardBox.plusMore=... Plus %s more.
+
 # Config
 config.betterstorage.category.block=Blocks
 config.betterstorage.category.block.tooltip=Change whether a certain Block is active.
 config.betterstorage.category.item=Items
 config.betterstorage.category.item.tooltip=Change whether a certain Item is active.
 
+config.betterstorage.general.cardboardBoxShowContents=Cardboard Box Show Contents
+config.betterstorage.general.cardboardBoxShowContents.tooltip=If disabled, doesn't show cardboard box contents in their tooltips.
+config.betterstorage.general.cardboardBoxRows=Cardboard Box Rows
+config.betterstorage.general.cardboardBoxRows.tooltip=Number of rows in cardboard boxes.
+config.betterstorage.general.cardboardBoxUses=Cardboard Box Uses
+config.betterstorage.general.cardboardBoxUses.tooltip=Number of times cardboard boxes can be picked up with items before they break. Use 0 for infinite uses.
 config.betterstorage.general.enableCrateInventoryInterface=Crate Inventory Interface
 config.betterstorage.general.enableCrateInventoryInterface.tooltip=If enabled, exposes a special block view of crates, so items can be moved in and out by automated systems.
+config.betterstorage.general.enableHelpTooltips=Tooltips
+config.betterstorage.general.enableHelpTooltips.tooltip=If enabled, shows tooltips on some items to help players who're new to the mod.
 config.betterstorage.general.enableWarningMessages=Debug Messages
 config.betterstorage.general.enableWarningMessages.tooltip=If disabled, prevents certain warning messages from being logged to the console.
 config.betterstorage.general.reinforcedColumns=Reinforced Columns

@@ -15,9 +15,7 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,11 +23,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public final class BetterStorageItems
 {
-	public static ItemKey				KEY = new ItemKey();
-	public static ItemMasterKey			MASTER_KEY = new ItemMasterKey();
-	public static ItemKeyring			KEYRING = new ItemKeyring();
-	public static ItemLock				LOCK = new ItemLock();
-	public static ItemCardboardSheet	CARDBOARD_SHEET;
+	public static ItemKey				KEY				= new ItemKey();
+	public static ItemMasterKey			MASTER_KEY		= new ItemMasterKey();
+	public static ItemKeyring			KEYRING			= new ItemKeyring();
+	public static ItemLock				LOCK			= new ItemLock();
+	public static ItemCardboardSheet	CARDBOARD_SHEET	= new ItemCardboardSheet();
 
 	public static ItemCardboardArmor	CARDBOARD_HELMET;
 	public static ItemCardboardArmor	CARDBOARD_CHESTPLATE;
@@ -50,12 +48,6 @@ public final class BetterStorageItems
 
 	public static void registerItems()
 	{
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSheetEnabled ) )
-		{
-			CARDBOARD_SHEET = (ItemCardboardSheet)new ItemCardboardSheet().setUnlocalizedName( ModInfo.modId + ".cardboard_sheet" );
-			GameRegistry.register( CARDBOARD_SHEET.setRegistryName( "cardboard_sheet" ) );
-		}
-
 		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHelmetEnabled ) )
 		{
 			CARDBOARD_HELMET = (ItemCardboardArmor)new ItemCardboardArmor( EntityEquipmentSlot.HEAD )
@@ -131,7 +123,7 @@ public final class BetterStorageItems
 
 	private static ItemCardboardArmor conditionalNewArmor( String configName, EntityEquipmentSlot armorType )
 	{
-		//if( !BetterStorage.globalConfig.getBoolean( configName ) ) return null;
+		// if( !BetterStorage.globalConfig.getBoolean( configName ) ) return null;
 		return new ItemCardboardArmor( armorType );
 	}
 
@@ -141,46 +133,44 @@ public final class BetterStorageItems
 		if( BetterStorage.config.keyEnabled )
 		{
 			KEY.registerItemModels();
-			if( BetterStorage.config.masterKeyEnabled)
+			if( BetterStorage.config.masterKeyEnabled )
 				MASTER_KEY.registerItemModels();
 			if( BetterStorage.config.keyringEnabled )
 				KEYRING.registerItemModels();
 			if( BetterStorage.config.lockEnabled )
 				LOCK.registerItemModels();
-				//ModelLoader.setCustomModelResourceLocation( LOCK, 0, new ModelResourceLocation( LOCK.getRegistryName(), "inventory" ) );
 		}
+
+		if( BetterStorage.config.cardboardSheetEnabled )
+			CARDBOARD_SHEET.registerItemModels();
 		/*
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSheetEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_SHEET, 0,
-					new ModelResourceLocation( CARDBOARD_SHEET.getRegistryName(), "inventory" ) );
-
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHelmetEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_HELMET, 0,
-					new ModelResourceLocation( CARDBOARD_HELMET.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardChestplateEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_CHESTPLATE, 0,
-					new ModelResourceLocation( CARDBOARD_CHESTPLATE.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardLeggingsEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_LEGGINGS, 0,
-					new ModelResourceLocation( CARDBOARD_LEGGINGS.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBootsEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_BOOTS, 0,
-					new ModelResourceLocation( CARDBOARD_BOOTS.getRegistryName(), "inventory" ) );
-
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSwordEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_SWORD, 0,
-					new ModelResourceLocation( CARDBOARD_SWORD.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardShovelEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_SHOVEL, 0,
-					new ModelResourceLocation( CARDBOARD_SHOVEL.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardPickaxeEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_PICKAXE, 0,
-					new ModelResourceLocation( CARDBOARD_PICKAXE.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardAxeEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_AXE, 0, new ModelResourceLocation( CARDBOARD_AXE.getRegistryName(), "inventory" ) );
-		if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHoeEnabled ) )
-			ModelLoader.setCustomModelResourceLocation( CARDBOARD_HOE, 0, new ModelResourceLocation( CARDBOARD_HOE.getRegistryName(), "inventory" ) );
-		*/
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHelmetEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_HELMET, 0,
+		 * new ModelResourceLocation( CARDBOARD_HELMET.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardChestplateEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_CHESTPLATE, 0,
+		 * new ModelResourceLocation( CARDBOARD_CHESTPLATE.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardLeggingsEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_LEGGINGS, 0,
+		 * new ModelResourceLocation( CARDBOARD_LEGGINGS.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBootsEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_BOOTS, 0,
+		 * new ModelResourceLocation( CARDBOARD_BOOTS.getRegistryName(), "inventory" ) );
+		 * 
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardSwordEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_SWORD, 0,
+		 * new ModelResourceLocation( CARDBOARD_SWORD.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardShovelEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_SHOVEL, 0,
+		 * new ModelResourceLocation( CARDBOARD_SHOVEL.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardPickaxeEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_PICKAXE, 0,
+		 * new ModelResourceLocation( CARDBOARD_PICKAXE.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardAxeEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_AXE, 0, new ModelResourceLocation( CARDBOARD_AXE.getRegistryName(), "inventory" ) );
+		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardHoeEnabled ) )
+		 * ModelLoader.setCustomModelResourceLocation( CARDBOARD_HOE, 0, new ModelResourceLocation( CARDBOARD_HOE.getRegistryName(), "inventory" ) );
+		 */
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.slimeBucketEnabled ) )

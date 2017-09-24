@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockBetterStorage extends Block
 {
-	private final String name;
+	protected final String name;
 
 	public BlockBetterStorage( String name, Material material )
 	{

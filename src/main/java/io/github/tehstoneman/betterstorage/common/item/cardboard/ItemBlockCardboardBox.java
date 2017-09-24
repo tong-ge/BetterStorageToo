@@ -1,25 +1,25 @@
-package io.github.tehstoneman.betterstorage.common.item;
+package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.IContainerItem;
-import io.github.tehstoneman.betterstorage.config.GlobalConfig;
-import io.github.tehstoneman.betterstorage.utils.LanguageUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
+public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, ICardboardItem
 {
 	public ItemBlockCardboardBox( Block block )
 	{
@@ -33,7 +33,14 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 	public boolean showDurabilityBar( ItemStack stack )
 	{
 		final int maxUses = getUses();
-		return maxUses > 1 && StackUtils.get( stack, maxUses, "uses" ) < maxUses;
+		if( maxUses > 1 )
+		{
+			int uses = maxUses;
+			if( stack.hasTagCompound() && stack.getTagCompound().hasKey( "uses" ) )
+				uses = Math.min( maxUses, stack.getTagCompound().getInteger( "uses" ) );
+			return uses < maxUses;
+		}
+		return false;
 	}
 
 	@Override
@@ -50,8 +57,8 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 		final int maxUses = getUses();
 		final boolean hasItems = stack.hasTagCompound() && stack.getTagCompound().hasKey( "Inventory" );
 
-		if( !hasItems && BetterStorage.globalConfig.getBoolean( GlobalConfig.enableHelpTooltips ) )
-			list.add( LanguageUtils.translateTooltip( "cardboardBox.useHint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
+		if( !hasItems && BetterStorage.config.enableHelpTooltips )
+			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.useHint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
 
 		if( maxUses > 1 )
 		{
@@ -64,7 +71,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 
 		if( !hasItems )
 			return;
-		if( !BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxShowContents ) )
+		if( !BetterStorage.config.cardboardBoxShowContents )
 		{
 			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.containsItems" ) );
 			return;
@@ -80,7 +87,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 		for( int i = 0; i < contents.getSlots(); i++ )
 		{
 			final ItemStack contentStack = contents.getStackInSlot( i );
-			if( contentStack != null )
+			if( !contentStack.isEmpty() )
 			{
 				boolean added = false;
 				if( items.size() > 0 )
@@ -105,7 +112,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 		int count = 0;
 		for( int i = limit; i < items.size(); i++ )
 			count += items.get( i ).stackSize;
-		list.add( count + " more item" + ( count > 1 ? "s" : "" ) + " ..." );
+		list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.plusMore", count ) );
 	}
 
 	// IContainerItem implementation
@@ -130,13 +137,13 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 	/** Returns the amount of rows in a cardboard box. */
 	public static int getRows()
 	{
-		return BetterStorage.globalConfig.getInteger( GlobalConfig.cardboardBoxRows );
+		return BetterStorage.config.cardboardBoxRows;
 	}
 
 	/** Returns how many times cardboard boxes can be reused. */
 	public static int getUses()
 	{
-		return BetterStorage.globalConfig.getInteger( GlobalConfig.cardboardBoxUses );
+		return BetterStorage.config.cardboardBoxUses;
 	}
 
 	private static class DisplayNameStack implements Comparable< DisplayNameStack >
@@ -147,14 +154,14 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 		public DisplayNameStack( ItemStack stack )
 		{
 			name = stack.getItem().getItemStackDisplayName( stack );
-			stackSize = stack.stackSize;
+			stackSize = stack.getCount();
 		}
 
 		public boolean matchAndAdd( ItemStack stack )
 		{
 			if( name.equals( stack.getItem().getItemStackDisplayName( stack ) ) )
 			{
-				stackSize += stack.stackSize;
+				stackSize += stack.getCount();
 				return true;
 			}
 			else
@@ -172,5 +179,46 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem
 		{
 			return other.stackSize - stackSize;
 		}
+	}
+
+	// Cardboard items
+	@Override
+	public boolean canDye( ItemStack stack )
+	{
+		return true;
+	}
+
+	@Override
+	public int getColor( ItemStack itemstack )
+	{
+		if( hasColor( itemstack ) )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.getInteger( "color" );
+		}
+		return 0x6e522b;
+	}
+
+	@Override
+	public boolean hasColor( ItemStack itemstack )
+	{
+		if( itemstack.hasTagCompound() )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.hasKey( "color" );
+		}
+		return false;
+	}
+
+	@Override
+	public void setColor( ItemStack itemstack, int colorRGB )
+	{
+		NBTTagCompound compound;
+		if( itemstack.hasTagCompound() )
+			compound = itemstack.getTagCompound();
+		else
+			compound = new NBTTagCompound();
+		compound.setInteger( "color", colorRGB );
+		itemstack.setTagCompound( compound );
 	}
 }

@@ -6,14 +6,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BetterStorageBlocks
 {
-	public static BlockCrate				CRATE				= new BlockCrate();
-	public static BlockReinforcedChest		REINFORCED_CHEST	= new BlockReinforcedChest();
-	public static BlockLocker				LOCKER				= new BlockLocker();
-	public static BlockReinforcedLocker		REINFORCED_LOCKER	= new BlockReinforcedLocker();
-	public static BlockFlintBlock			BLOCK_FLINT			= new BlockFlintBlock();
-	public static BlockLockableDoor			LOCKABLE_DOOR		= new BlockLockableDoor();
-	public static BlockCardboardBox			CARDBOARD_BOX;
-	public static BlockCardboardBoxColored	CARDBOARD_BOX_COLORED;
+	public static BlockCrate			CRATE				= new BlockCrate();
+	public static BlockReinforcedChest	REINFORCED_CHEST	= new BlockReinforcedChest();
+	public static BlockLocker			LOCKER				= new BlockLocker();
+	public static BlockReinforcedLocker	REINFORCED_LOCKER	= new BlockReinforcedLocker();
+	public static BlockFlintBlock		BLOCK_FLINT			= new BlockFlintBlock();
+	public static BlockLockableDoor		LOCKABLE_DOOR		= new BlockLockableDoor();
+	public static BlockCardboardBox		CARDBOARD_BOX		= new BlockCardboardBox();
 	// public static BlockPresent PRESENT;
 
 	// public static BlockCraftingStation CRAFTING_STATION;
@@ -47,18 +46,8 @@ public final class BetterStorageBlocks
 		}
 		if( BetterStorage.config.flintBlockEnabled )
 			BLOCK_FLINT.registerItemModels();
-
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.cardboardBoxEnabled ) )
-		 * {
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( CARDBOARD_BOX ), 0,
-		 * new ModelResourceLocation( CARDBOARD_BOX.getRegistryName(), "inventory" ) );
-		 *
-		 * for( final EnumDyeColor color : EnumDyeColor.values() )
-		 * ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( CARDBOARD_BOX_COLORED ), color.getMetadata(),
-		 * new ModelResourceLocation( CARDBOARD_BOX.getRegistryName() + "_" + color.getName(), "inventory" ) );
-		 * }
-		 */
+		if( BetterStorage.config.cardboardBoxEnabled )
+			CARDBOARD_BOX.registerItemModels();
 
 		/*
 		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.presentEnabled ) )

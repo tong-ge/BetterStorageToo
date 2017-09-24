@@ -2,10 +2,12 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.Random;
 
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -14,12 +16,17 @@ import net.minecraft.world.World;
 
 public class BlockCardboardBox extends BlockContainerBetterStorage
 {
-	public BlockCardboardBox()
+	public BlockCardboardBox( String name )
 	{
-		super( Material.WOOD );
+		super( name, Material.WOOD );
 
 		setHardness( 0.8f );
 		setSoundType( SoundType.CLOTH );
+	}
+
+	public BlockCardboardBox()
+	{
+		this( "cardboard_box" );
 	}
 
 	@Override
@@ -50,5 +57,11 @@ public class BlockCardboardBox extends BlockContainerBetterStorage
 	public TileEntity createNewTileEntity( World world, int metadata )
 	{
 		return new TileEntityCardboardBox();
+	}
+
+	@Override
+	protected ItemBlock getItemBlock()
+	{
+		return new ItemBlockCardboardBox( this );
 	}
 }
