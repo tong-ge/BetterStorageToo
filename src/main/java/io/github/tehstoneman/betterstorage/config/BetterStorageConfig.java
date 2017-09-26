@@ -2,8 +2,6 @@ package io.github.tehstoneman.betterstorage.config;
 
 import java.io.File;
 
-import io.github.tehstoneman.betterstorage.config.setting.BooleanSetting;
-import io.github.tehstoneman.betterstorage.config.setting.IntegerSetting;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import scala.actors.threadpool.Arrays;
@@ -31,15 +29,26 @@ public class BetterStorageConfig
 	public boolean				lockEnabled;
 	public boolean				cardboardSheetEnabled;
 
+	// Cardboard items
+	public boolean				cardboardHelmetEnabled;
+	public boolean				cardboardChestplateEnabled;
+	public boolean				cardboardLeggingsEnabled;
+	public boolean				cardboardBootsEnabled;
+	public boolean				cardboardSwordEnabled;
+	public boolean				cardboardPickaxeEnabled;
+	public boolean				cardboardShovelEnabled;
+	public boolean				cardboardAxeEnabled;
+	public boolean				cardboardHoeEnabled;
+
 	// General settings
 	public int					reinforcedColumns;
 	public boolean				enableCrateInventoryInterface;
 
-	public int		cardboardBoxRows;
-	public int cardboardBoxUses;
-	public boolean		cardboardBoxShowContents;
+	public int					cardboardBoxRows;
+	public int					cardboardBoxUses;
+	public boolean				cardboardBoxShowContents;
 
-	public boolean enableHelpTooltips;
+	public boolean				enableHelpTooltips;
 	public boolean				enableWarningMessages;
 
 	public BetterStorageConfig( File file )
@@ -123,6 +132,26 @@ public class BetterStorageConfig
 		final Property propCardboardSheetEnabled = config.get( CATEGORY_ITEMS, "cardboardSheetEnabled", true )
 				.setLanguageKey( "item.betterstorage.cardboard_sheet.name" ).setRequiresMcRestart( true );
 
+		// Cardboard items
+		final Property propCardboardHelmetEnabled = config.get( CATEGORY_ITEMS, "cardboardHelmetEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_helmet.name" ).setRequiresMcRestart( true );
+		final Property propCardboardChestplateEnabled = config.get( CATEGORY_ITEMS, "cardboardChestplateEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_chestplate.name" ).setRequiresMcRestart( true );
+		final Property propCardboardLeggingsEnabled = config.get( CATEGORY_ITEMS, "cardboardLeggingsEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_leggings.name" ).setRequiresMcRestart( true );
+		final Property propCardboardBootsEnabled = config.get( CATEGORY_ITEMS, "cardboardBootsEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_boots.name" ).setRequiresMcRestart( true );
+		final Property propCardboardSwordEnabled = config.get( CATEGORY_ITEMS, "cardboardSwordEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_sword.name" ).setRequiresMcRestart( true );
+		final Property propCardboardPickaxeEnabled = config.get( CATEGORY_ITEMS, "cardboardPickaxeEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_pickaxe.name" ).setRequiresMcRestart( true );
+		final Property propCardboardShovelEnabled = config.get( CATEGORY_ITEMS, "cardboardShovelEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_shovel.name" ).setRequiresMcRestart( true );
+		final Property propCardboardAxeEnabled = config.get( CATEGORY_ITEMS, "cardboardAxeEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_axe.name" ).setRequiresMcRestart( true );
+		final Property propCardboardHoeEnabled = config.get( CATEGORY_ITEMS, "cardboardHoeEnabled", true )
+				.setLanguageKey( "item.betterstorage.cardboard_hoe.name" ).setRequiresMcRestart( true );
+
 		// Reinforced chest settings
 		final Property propReinforcedColumns = config.get( Configuration.CATEGORY_GENERAL, "reinforcedColumns", "13",
 				"Number of columns in reinforced chests and lockers. Valid values are 9, 11 and 13.", new String[]{ "9", "11", "13" } )
@@ -174,7 +203,16 @@ public class BetterStorageConfig
 											  "masterKeyEnabled",
 											  "keyringEnabled",
 											  "lockEnabled",
-											  "cardboardSheetEnabled" } ) );
+											  "cardboardSheetEnabled",
+											  "cardboardHelmetEnabled",
+											  "cardboardChestplateEnabled",
+											  "cardboardLeggingsEnabled",
+											  "cardboardBootsEnabled",
+											  "cardboardSwordEnabled",
+											  "cardboardPickaxeEnabled",
+											  "cardboardShovelEnabled",
+											  "cardboardAxeEnabled",
+											  "cardboardHoeEnabled" } ) );
 		//@formatter:on
 
 		// Read properties
@@ -187,6 +225,16 @@ public class BetterStorageConfig
 			lockableDoorEnabled = propLockableDoorEnabled.getBoolean();
 			flintBlockEnabled = propFlintBlockEnabled.getBoolean();
 			cardboardBoxEnabled = propCardboardBoxEnabled.getBoolean();
+
+			cardboardHelmetEnabled = propCardboardHelmetEnabled.getBoolean();
+			cardboardChestplateEnabled = propCardboardChestplateEnabled.getBoolean();
+			cardboardLeggingsEnabled = propCardboardLeggingsEnabled.getBoolean();
+			cardboardBootsEnabled = propCardboardBootsEnabled.getBoolean();
+			cardboardSwordEnabled = propCardboardSwordEnabled.getBoolean();
+			cardboardPickaxeEnabled = propCardboardPickaxeEnabled.getBoolean();
+			cardboardShovelEnabled = propCardboardShovelEnabled.getBoolean();
+			cardboardAxeEnabled = propCardboardAxeEnabled.getBoolean();
+			cardboardHoeEnabled = propCardboardHoeEnabled.getBoolean();
 
 			keyEnabled = propKeyEnabled.getBoolean();
 			masterKeyEnabled = propMasterKeyEnabled.getBoolean();

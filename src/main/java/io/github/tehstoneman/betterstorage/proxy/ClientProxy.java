@@ -16,7 +16,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -60,16 +60,22 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), ItemBlock.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) );
-		/*
-		 * Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
-		 * BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,
-		 * BetterStorageItems.CARDBOARD_HOE, BetterStorageItems.CARDBOARD_LEGGINGS, BetterStorageItems.CARDBOARD_PICKAXE,
-		 * BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD );
-		 */
-		// Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new ItemCardboardColor(), ItemBlock.getItemFromBlock(
-		// BetterStorageBlocks.CARDBOARD_BOX ) );
+		//@formatter:off
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
+				BetterStorageItems.KEY,
+				BetterStorageItems.LOCK );
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
+				Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ),
+				BetterStorageItems.CARDBOARD_AXE,
+				BetterStorageItems.CARDBOARD_BOOTS,
+				BetterStorageItems.CARDBOARD_CHESTPLATE,
+				BetterStorageItems.CARDBOARD_HELMET,
+				BetterStorageItems.CARDBOARD_HOE,
+				BetterStorageItems.CARDBOARD_LEGGINGS,
+				BetterStorageItems.CARDBOARD_PICKAXE,
+				BetterStorageItems.CARDBOARD_SHOVEL,
+				BetterStorageItems.CARDBOARD_SWORD );
+		//@formatter:on
 	}
 
 	private void registerRenderers()

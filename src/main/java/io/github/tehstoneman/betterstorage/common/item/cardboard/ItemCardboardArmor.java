@@ -1,7 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,45 +12,43 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ISpecialArmor;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemCardboardArmor extends ItemArmor implements /*ICardboardItem,*/ ISpecialArmor
+public class ItemCardboardArmor extends ItemArmor implements ICardboardItem, ISpecialArmor
 {
+	private String					name;
 
-	private static final String[] armorText = { "Helmet", "Chestplate", "Leggings", "Boots" };
+	private static final String[]	armorText	= { "Helmet", "Chestplate", "Leggings", "Boots" };
 
 	public ItemCardboardArmor( EntityEquipmentSlot armorType )
 	{
 		super( ItemCardboardSheet.armorMaterial, 0, armorType );
 	}
 
+	public void register( String name )
+	{
+		this.name = name;
+		setUnlocalizedName( ModInfo.modId + "." + name );
+		setRegistryName( name );
+		GameRegistry.register( this );
+	}
+
+	@SideOnly( Side.CLIENT )
+	public void registerItemModels()
+	{
+		ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
+	}
+
 	@Override
 	public String getArmorTexture( ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type )
 	{
 		return ( type != null ? Resources.textureEmpty
-				: slot == EntityEquipmentSlot.LEGS ? Resources.textureCardboardLeggins : Resources.textureCardboardArmor ).toString();
+				: slot == EntityEquipmentSlot.LEGS ? Resources.textureCardboardLeggings : Resources.textureCardboardArmor ).toString();
 	}
-
-	@Override
-	public int getColor( ItemStack stack )
-	{
-		final NBTTagCompound nbttagcompound = stack.getTagCompound();
-
-		if( nbttagcompound != null )
-		{
-			final NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag( "display" );
-
-			if( nbttagcompound1 != null && nbttagcompound1.hasKey( "color", 3 ) )
-				return nbttagcompound1.getInteger( "color" );
-		}
-		return 0x705030;
-	}
-
-	/*@Override
-	public boolean canDye( ItemStack stack )
-	{
-		return true;
-	}*/
 
 	// ISpecialArmor implementation
 	// Makes sure cardboard armor doesn't get destroyed,
@@ -71,4 +71,44 @@ public class ItemCardboardArmor extends ItemArmor implements /*ICardboardItem,*/
 		ItemCardboardSheet.damageItem( stack, damage, entity );
 	}
 
+	// Cardboard items
+	@Override
+	public boolean canDye( ItemStack stack )
+	{
+		return true;
+	}
+
+	@Override
+	public int getColor( ItemStack itemstack )
+	{
+		if( hasColor( itemstack ) )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.getInteger( "color" );
+		}
+		return 0x705030;
+	}
+
+	@Override
+	public boolean hasColor( ItemStack itemstack )
+	{
+		if( itemstack.hasTagCompound() )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.hasKey( "color" );
+		}
+		return false;
+	}
+
+	@Override
+	public void setColor( ItemStack itemstack, int colorRGB )
+	{
+		NBTTagCompound compound;
+		if( itemstack.hasTagCompound() )
+			compound = itemstack.getTagCompound();
+		else
+			compound = new NBTTagCompound();
+		compound.setInteger( "color", colorRGB );
+		itemstack.setTagCompound( compound );
+	}
 }

@@ -6,8 +6,8 @@ import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.client.CreativeTabBetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.ReinforcedMaterial;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
-import io.github.tehstoneman.betterstorage.utils.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.utils.MaterialRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,8 +63,6 @@ public class BetterStorage
 
 		// Addon.initialize();
 		// Addon.setupConfigsAll();
-		// globalConfig.load();
-		// globalConfig.save();
 		
 		// Initialize API
 		BetterStorageAPI.materials = new MaterialRegistry();

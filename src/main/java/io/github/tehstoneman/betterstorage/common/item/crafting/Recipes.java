@@ -38,8 +38,10 @@ public final class Recipes
 	{
 		// RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
-		//RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
-		//RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
+		RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
+		RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
+		RecipeSorter.register( "betterstorage:cardboardColorRecipe", CardboardColorRecipe.class, Category.SHAPELESS, "" );
+		RecipeSorter.register( "betterstorage:keyColorRecipe", KeyColorRecipe.class, Category.SHAPELESS, "" );
 	}
 
 	private static void addBlockRecipes()
@@ -217,7 +219,7 @@ public final class Recipes
 									   	   "paper",     "paper", "paper" } ) );
 
 		// Cardboard helmet recipe
-		if( BetterStorageItems.CARDBOARD_HELMET != null )
+		if( BetterStorage.config.cardboardHelmetEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HELMET ),
 							new Object[]{ false,
@@ -225,7 +227,7 @@ public final class Recipes
 										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard chestplate recipe
-		if( BetterStorageItems.CARDBOARD_CHESTPLATE != null )
+		if( BetterStorage.config.cardboardChestplateEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE ),
 							new Object[]{ false,
@@ -234,7 +236,7 @@ public final class Recipes
 										  "ooo",	'o', "sheetCardboard" } ) );
 
 		// Cardboard leggings recipe
-		if( BetterStorageItems.CARDBOARD_LEGGINGS != null )
+		if( BetterStorage.config.cardboardLeggingsEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS ),
 							new Object[]{ false,
@@ -243,7 +245,7 @@ public final class Recipes
 										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard boots recipe
-		if( BetterStorageItems.CARDBOARD_BOOTS != null )
+		if( BetterStorage.config.cardboardBootsEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_BOOTS ),
 							new Object[]{ false,
@@ -251,7 +253,7 @@ public final class Recipes
 										  "o o",	'o', "sheetCardboard" } ) );
 
 		// Cardboard sword recipe
-		if( BetterStorageItems.CARDBOARD_SWORD != null )
+		if( BetterStorage.config.cardboardSwordEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SWORD ),
 							new Object[]{ false,
@@ -261,7 +263,7 @@ public final class Recipes
 										  		'/', "stickWood" } ) );
 
 		// Cardboard pickaxe recipe
-		if( BetterStorageItems.CARDBOARD_PICKAXE != null )
+		if( BetterStorage.config.cardboardPickaxeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_PICKAXE ),
 							new Object[]{ false,
@@ -271,7 +273,7 @@ public final class Recipes
 										  			'/', "stickWood" } ) );
 
 		// Cardboard shovel recipe
-		if( BetterStorageItems.CARDBOARD_SHOVEL != null )
+		if( BetterStorage.config.cardboardShovelEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SHOVEL ),
 							new Object[]{ false,
@@ -281,7 +283,7 @@ public final class Recipes
 								  				'/', "stickWood" } ) );
 
 		// Cardboard axe recipe
-		if( BetterStorageItems.CARDBOARD_AXE != null )
+		if( BetterStorage.config.cardboardAxeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_AXE ),
 							new Object[] { "oo",
@@ -290,7 +292,7 @@ public final class Recipes
 										   			'/', "stickWood" } ) );
 
 		// Cardboard hoe recipe
-		if( BetterStorageItems.CARDBOARD_HOE != null )
+		if( BetterStorage.config.cardboardHoeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
 							new Object[]{ "oo",

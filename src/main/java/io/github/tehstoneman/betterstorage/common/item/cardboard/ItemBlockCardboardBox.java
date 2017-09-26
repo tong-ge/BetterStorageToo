@@ -196,7 +196,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 			final NBTTagCompound compound = itemstack.getTagCompound();
 			return compound.getInteger( "color" );
 		}
-		return 0x6e522b;
+		return 0x705030;
 	}
 
 	@Override

@@ -161,7 +161,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public int getColor()
 	{
 		if( color < 0 )
-			return 0x6e522b;
+			return 0x705030;
 		return color;
 	}
 }

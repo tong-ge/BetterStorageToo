@@ -5,13 +5,17 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.utils.MiscUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 {
@@ -21,27 +25,20 @@ public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 	public ItemCardboardShovel()
 	{
 		super( ItemCardboardSheet.toolMaterial );
+		this.name = "cardboard_shovel";
 	}
 
-	@Override
-	public boolean canDye( ItemStack stack )
+	public void register()
 	{
-		return true;
+		setUnlocalizedName( ModInfo.modId + "." + name );
+		setRegistryName( name );
+		GameRegistry.register( this );
 	}
 
-	@Override
-	public int getColor( ItemStack stack )
+	@SideOnly( Side.CLIENT )
+	public void registerItemModels()
 	{
-		final NBTTagCompound nbttagcompound = stack.getTagCompound();
-
-		if( nbttagcompound != null )
-		{
-			final NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag( "display" );
-
-			if( nbttagcompound1 != null && nbttagcompound1.hasKey( "color", 3 ) )
-				return nbttagcompound1.getInteger( "color" );
-		}
-		return 0x705030;
+		ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,
@@ -70,5 +67,46 @@ public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 	public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase player )
 	{
 		return ItemCardboardSheet.damageItem( stack, 1, player );
+	}
+
+	// Cardboard items
+	@Override
+	public boolean canDye( ItemStack stack )
+	{
+		return true;
+	}
+
+	@Override
+	public int getColor( ItemStack itemstack )
+	{
+		if( hasColor( itemstack ) )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.getInteger( "color" );
+		}
+		return 0x705030;
+	}
+
+	@Override
+	public boolean hasColor( ItemStack itemstack )
+	{
+		if( itemstack.hasTagCompound() )
+		{
+			final NBTTagCompound compound = itemstack.getTagCompound();
+			return compound.hasKey( "color" );
+		}
+		return false;
+	}
+
+	@Override
+	public void setColor( ItemStack itemstack, int colorRGB )
+	{
+		NBTTagCompound compound;
+		if( itemstack.hasTagCompound() )
+			compound = itemstack.getTagCompound();
+		else
+			compound = new NBTTagCompound();
+		compound.setInteger( "color", colorRGB );
+		itemstack.setTagCompound( compound );
 	}
 }
