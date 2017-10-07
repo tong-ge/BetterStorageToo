@@ -5,6 +5,7 @@ import java.security.InvalidParameterException;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
@@ -121,12 +122,16 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 			float hitZ )
 	{
 		if( !getWorld().isRemote )
-		{
-			if( canHaveLock() && !canPlayerUseContainer( player ) )
-				( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
-			if( !getLock().isEmpty() )
-				return false;
-		}
+			if( canHaveLock() && !getLock().isEmpty() )
+			{
+				// if( state.getValue( BlockHorizontal.FACING ) == side )
+				// {
+				final ItemStack stack = player.getHeldItem( hand );
+				if( !( stack.getItem() instanceof IKey ) && !canPlayerUseContainer( player ) )
+					( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
+				// }
+				return true;
+			}
 		return super.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
 	}
 

@@ -16,6 +16,7 @@ public class ItemMasterKey extends ItemKey
 	public ItemMasterKey()
 	{
 		super( "master_key" );
+		setMaxDamage( 0 );
 	}
 
 	@Override

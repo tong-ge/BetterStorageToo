@@ -9,6 +9,22 @@ container.betterstorage.reinforced_chest_large=Large Reinforced Chest
 container.betterstorage.reinforced_locker=Reinforced Locker
 container.betterstorage.reinforced_locker_large=Large Reinforced Locker
 
+# Enchantments
+enchantment.betterstorage.key.lockpicking=Lockpicking
+enchantment.betterstorage.key.lockpicking.tooltip=Enable or disable lockpicking enchantment.
+enchantment.betterstorage.key.morphing=Morphing
+enchantment.betterstorage.key.morphing.tooltip=Enable or disable morphing enchantment.
+enchantment.betterstorage.key.unlocking=Unlocking
+enchantment.betterstorage.key.unlocking.tooltip=Enable or disable unlocking enchantment.
+enchantment.betterstorage.lock.persistance=Persistance
+enchantment.betterstorage.lock.persistance.tooltip=Enable or disable persistance enchantment.
+enchantment.betterstorage.lock.security=Security
+enchantment.betterstorage.lock.security.tooltip=Enable or disable security enchantment.
+enchantment.betterstorage.lock.shock=Shock
+enchantment.betterstorage.lock.shock.tooltip=Enable or disable shock enchantment.
+enchantment.betterstorage.lock.trigger=Trigger
+enchantment.betterstorage.lock.trigger.tooltip=Enable or disable trigger enchantment.
+
 # Creative tab
 itemGroup.betterstorage=Better Storage Too
 
@@ -83,6 +99,8 @@ config.betterstorage.category.block=Blocks
 config.betterstorage.category.block.tooltip=Change whether a certain Block is active.
 config.betterstorage.category.item=Items
 config.betterstorage.category.item.tooltip=Change whether a certain Item is active.
+config.betterstorage.category.enchantment=Enchantments
+config.betterstorage.category.enchantment.tooltip=Change whether a certain Enchantment is active.
 
 config.betterstorage.general.cardboardBoxRows=Cardboard Box Rows
 config.betterstorage.general.cardboardBoxRows.tooltip=Number of rows in cardboard boxes.
@@ -96,5 +114,7 @@ config.betterstorage.general.enableHelpTooltips=Tooltips
 config.betterstorage.general.enableHelpTooltips.tooltip=If enabled, shows tooltips on some items to help players who're new to the mod.
 config.betterstorage.general.enableWarningMessages=Debug Messages
 config.betterstorage.general.enableWarningMessages.tooltip=If disabled, prevents certain warning messages from being logged to the console.
+config.betterstorage.general.lockBreakable=Breakable Locks
+config.betterstorage.general.lockBreakable.tooltip=If disabled, turns off the ability to break locks off of locked containers using tools.
 config.betterstorage.general.reinforcedColumns=Reinforced Columns
 config.betterstorage.general.reinforcedColumns.tooltip=Number of columns in reinforced chests and lockers. Valid values are 9, 11 and 13.

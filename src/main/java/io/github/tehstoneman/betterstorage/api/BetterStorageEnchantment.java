@@ -7,11 +7,12 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 
 public final class BetterStorageEnchantment
 {
-	public static Map< String, EnumEnchantmentType >	enchantmentTypes	= new HashMap< >();
-	public static Map< String, Enchantment >			enchantments		= new HashMap< >();
+	public static Map< String, EnumEnchantmentType > enchantmentTypes = new HashMap<>();
+	// public static Map< String, Enchantment > enchantments = new HashMap<>();
 
 	private BetterStorageEnchantment()
 	{}
@@ -30,17 +31,50 @@ public final class BetterStorageEnchantment
 	 * <b>Key:</b> unlocking, lockpicking, morphing. <br>
 	 * <b>Lock:</b> persistance, security, shock, trigger.
 	 */
-	public static Enchantment get( String name )
-	{
-		return enchantments.get( name );
-	}
+	/*
+	 * public static Enchantment get( String name )
+	 * {
+	 * return enchantments.get( name );
+	 * }
+	 */
 
 	/** Helper method to get the level of that enchantment on the item. */
-	public static int getLevel( ItemStack stack, String name )
+	public static int getLevel( ItemStack stack, Enchantment enchantment )
 	{
-		final Enchantment enchantment = get( name );
-		if( enchantment == null )
-			return 0;
-		return EnchantmentHelper.getEnchantmentLevel( enchantment, stack );
+		if( stack.isItemEnchanted() )
+		{
+			final Map< Enchantment, Integer > enchantments = EnchantmentHelper.getEnchantments( stack );
+			return enchantments.getOrDefault( enchantment, 0 );
+		}
+		return 0;
+	}
+
+	/** Helper method to decrease the level of an enchantment on the item. */
+	public static void decEnchantment( ItemStack stack, Enchantment ench, int level )
+	{
+		if( stack.getTagCompound() == null )
+			return;
+
+		if( !stack.getTagCompound().hasKey( "ench", 9 ) )
+			return;
+
+		final NBTTagList list = stack.getTagCompound().getTagList( "ench", 10 );
+		final int enchID = Enchantment.getEnchantmentID( ench );
+		int count = -1;
+		for( int i = 0; i < list.tagCount(); i++ )
+			if( list.getCompoundTagAt( i ).getShort( "id" ) == enchID )
+				count = i;
+		if( count >= 0 )
+		{
+			final int newLevel = list.getCompoundTagAt( count ).getShort( "lvl" ) - level;
+			if( newLevel <= 0 )
+			{
+				list.removeTag( count );
+				if( list.hasNoTags() )
+					stack.getTagCompound().removeTag( "ench" );
+			}
+			else
+				list.getCompoundTagAt( count ).setShort( "lvl", (byte)level );
+		}
 	}
 }

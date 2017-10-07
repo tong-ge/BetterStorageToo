@@ -1,10 +1,12 @@
 package io.github.tehstoneman.betterstorage;
 
+import java.util.Random;
+
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.client.CreativeTabBetterStorage;
-import io.github.tehstoneman.betterstorage.common.block.ReinforcedMaterial;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
@@ -39,12 +41,11 @@ public class BetterStorage
 	public static CommonProxy			proxy;
 
 	public static SimpleNetworkWrapper	simpleNetworkWrapper;
-
 	public static Logger				logger;
-
 	public static CreativeTabs			creativeTab;
-
 	public static BetterStorageConfig	config;
+
+	public static Random				random;
 
 	@EventHandler
 	public void preInit( FMLPreInitializationEvent event )
@@ -56,6 +57,9 @@ public class BetterStorage
 		logger = event.getModLog();
 		creativeTab = new CreativeTabBetterStorage();
 
+		// Initialize random numbers
+		random = new Random();
+
 		config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
 		config.syncFromFile();
 
@@ -63,13 +67,13 @@ public class BetterStorage
 
 		// Addon.initialize();
 		// Addon.setupConfigsAll();
-		
+
 		// Initialize API
 		BetterStorageAPI.materials = new MaterialRegistry();
 
 		proxy.preInit();
 
-		// EnchantmentBetterStorage.initialize();
+		EnchantmentBetterStorage.initialize();
 
 		// BetterStorageEntities.register();
 		// DungeonLoot.add();

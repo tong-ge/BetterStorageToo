@@ -12,6 +12,7 @@ public class BetterStorageConfig
 
 	public static final String	CATEGORY_BLOCKS	= "blocks";
 	public static final String	CATEGORY_ITEMS	= "items";
+	public static final String	CATEGORY_ENCHANTMENTS	= "enchantments";
 
 	// Block settings
 	public boolean				crateEnabled;
@@ -40,6 +41,15 @@ public class BetterStorageConfig
 	public boolean				cardboardAxeEnabled;
 	public boolean				cardboardHoeEnabled;
 
+	// Enchantments
+	public boolean		enchUnlockingEnabled;//					= "enchantment.unlocking";
+	public boolean		enchLockpickingEnabled;//				= "enchantment.lockpicking";
+	public boolean		enchMorphingEnabled;//					= "enchantment.morphing";
+	public boolean		enchPersistanceEnabled;//				= "enchantment.persistance";
+	public boolean		enchSecurityEnabled;//					= "enchantment.security";
+	public boolean		enchShockEnabled;//						= "enchantment.shock";
+	public boolean		enchTriggerEnabled;//					= "enchantment.trigger";
+
 	// General settings
 	public int					reinforcedColumns;
 	public boolean				enableCrateInventoryInterface;
@@ -47,6 +57,8 @@ public class BetterStorageConfig
 	public int					cardboardBoxRows;
 	public int					cardboardBoxUses;
 	public boolean				cardboardBoxShowContents;
+
+	public boolean		lockBreakable;
 
 	public boolean				enableHelpTooltips;
 	public boolean				enableWarningMessages;
@@ -152,6 +164,22 @@ public class BetterStorageConfig
 		final Property propCardboardHoeEnabled = config.get( CATEGORY_ITEMS, "cardboardHoeEnabled", true )
 				.setLanguageKey( "item.betterstorage.cardboard_hoe.name" ).setRequiresMcRestart( true );
 
+		// Enchantment settings
+		final Property propEnchUnlockingEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchUnlockingEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.key.unlocking" ).setRequiresMcRestart( true );
+		final Property propEnchLockpickingEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchLockpickingEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.key.lockpicking" ).setRequiresMcRestart( true );
+		final Property propEnchMorphingEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchMorphingEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.key.morphing" ).setRequiresMcRestart( true );
+		final Property propEnchPersistanceEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchPersistanceEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.lock.persistance" ).setRequiresMcRestart( true );
+		final Property propEnchSecurityEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchSecurityEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.lock.security" ).setRequiresMcRestart( true );
+		final Property propEnchShockEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchShockEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.lock.shock" ).setRequiresMcRestart( true );
+		final Property propEnchTriggerEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchTriggerEnabled", true )
+				.setLanguageKey( "enchantment.betterstorage.lock.trigger" ).setRequiresMcRestart( true );
+
 		// Reinforced chest settings
 		final Property propReinforcedColumns = config.get( Configuration.CATEGORY_GENERAL, "reinforcedColumns", "13",
 				"Number of columns in reinforced chests and lockers. Valid values are 9, 11 and 13.", new String[]{ "9", "11", "13" } )
@@ -174,6 +202,10 @@ public class BetterStorageConfig
 				.setLanguageKey( "config.betterstorage.general.cardboardBoxShowContents" );
 
 		// Miscellaneous settings
+		final Property propLockBreakable = config.get( Configuration.CATEGORY_GENERAL, "lockBreakable", true,
+				"If disabled, turns off the ability to break locks off of locked containers using tools." )
+				.setLanguageKey( "config.betterstorage.general.lockBreakable" );
+
 		final Property propEnableHelpTooltips = config.get( Configuration.CATEGORY_GENERAL, "enableHelpTooltips", true,
 				"If enabled, shows tooltips on some items to help players who're new to the mod." )
 				.setLanguageKey( "config.betterstorage.general.enableHelpTooltips" );
@@ -188,6 +220,7 @@ public class BetterStorageConfig
 											  "cardboardBoxRows",
 											  "cardboardBoxUses",
 											  "cardboardBoxShowContents",
+											  "lockBreakable",
 											  "enableHelpTooltips",
 											  "enableWarningMessages" } ) );
 		config.setCategoryPropertyOrder( CATEGORY_BLOCKS,
@@ -213,11 +246,27 @@ public class BetterStorageConfig
 											  "cardboardShovelEnabled",
 											  "cardboardAxeEnabled",
 											  "cardboardHoeEnabled" } ) );
+		config.setCategoryPropertyOrder( CATEGORY_ENCHANTMENTS,
+				Arrays.asList( new String[] { "enchUnlockingEnabled",
+											  "enchLockpickingEnabled",
+											  "enchMorphingEnabled",
+											  "enchPersistanceEnabled",
+											  "enchSecurityEnabled",
+											  "enchShockEnabled",
+											  "enchTriggerEnabled" } ) );
 		//@formatter:on
 
 		// Read properties
 		if( readFieldsFromConfig )
 		{
+			enchUnlockingEnabled = propEnchUnlockingEnabled.getBoolean();
+			enchLockpickingEnabled = propEnchLockpickingEnabled.getBoolean();
+			enchMorphingEnabled = propEnchMorphingEnabled.getBoolean();
+			enchPersistanceEnabled = propEnchPersistanceEnabled.getBoolean();
+			enchSecurityEnabled = propEnchSecurityEnabled.getBoolean();
+			enchShockEnabled = propEnchShockEnabled.getBoolean();
+			enchTriggerEnabled = propEnchTriggerEnabled.getBoolean();
+			
 			crateEnabled = propCrateEnabled.getBoolean();
 			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
 			lockerEnabled = propLockerEnabled.getBoolean();
@@ -247,11 +296,22 @@ public class BetterStorageConfig
 			cardboardBoxRows = propCardboardBoxRows.getInt();
 			cardboardBoxUses = propCardboardBoxUses.getInt();
 			cardboardBoxShowContents = propCardboardBoxShowContents.getBoolean();
+			
+			lockBreakable = propLockBreakable.getBoolean();
+
 			enableHelpTooltips = propEnableHelpTooltips.getBoolean();
 			enableWarningMessages = propEnableWarningMessages.getBoolean();
 		}
 
 		// Save properties to file
+		propEnchUnlockingEnabled.set( enchUnlockingEnabled );
+		propEnchLockpickingEnabled.set( enchLockpickingEnabled );
+		propEnchMorphingEnabled.set( enchMorphingEnabled );
+		propEnchPersistanceEnabled.set( enchPersistanceEnabled );
+		propEnchSecurityEnabled.set( enchSecurityEnabled );
+		propEnchShockEnabled.set( enchShockEnabled );
+		propEnchTriggerEnabled.set( enchTriggerEnabled );
+		
 		propCrateEnabled.set( crateEnabled );
 		propReinforcedChestEnabled.set( reinforcedChestEnabled );
 		propLockerEnabled.set( lockerEnabled );
@@ -271,6 +331,8 @@ public class BetterStorageConfig
 		propCardboardBoxRows.set( cardboardBoxRows );
 		propCardboardBoxUses.set( cardboardBoxUses );
 		propCardboardBoxShowContents.set( cardboardBoxShowContents );
+		
+		propLockBreakable.set( lockBreakable );
 		propEnableHelpTooltips.set( enableHelpTooltips );
 		propEnableWarningMessages.set( enableWarningMessages );
 

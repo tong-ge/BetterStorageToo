@@ -3,7 +3,9 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
+import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.common.inventory.KeyringCapabilityProvider;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
@@ -32,6 +34,7 @@ public class ItemKeyring extends ItemBetterStorage implements IKey
 	public ItemKeyring()
 	{
 		super( "keyring" );
+		setMaxDamage( 0 );
 		setMaxStackSize( 1 );
 	}
 
@@ -59,6 +62,8 @@ public class ItemKeyring extends ItemBetterStorage implements IKey
 				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
 				if( unlock( playerIn.getHeldItem( hand ), lockable.getLock(), false ) )
 					lockable.useUnlocked( playerIn );
+				else
+					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, EnumLockInteraction.PICK );
 			}
 		}
 		return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
@@ -84,7 +89,7 @@ public class ItemKeyring extends ItemBetterStorage implements IKey
 			for( int i = 0; i < inventory.getSlots(); i++ )
 			{
 				final ItemStack key = inventory.getStackInSlot( i );
-				if( key != null )
+				if( !key.isEmpty() )
 				{
 					final IKey keyType = (IKey)key.getItem();
 					if( keyType.unlock( key, lock, false ) )

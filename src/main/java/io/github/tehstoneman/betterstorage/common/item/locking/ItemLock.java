@@ -1,12 +1,15 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import net.minecraft.block.Block;
@@ -18,6 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +29,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.sound.SoundSetupEvent;
 
 public class ItemLock extends ItemKeyLock implements ILock
 {
@@ -53,12 +59,6 @@ public class ItemLock extends ItemKeyLock implements ILock
 	public boolean isDamageable()
 	{
 		return true;
-	}
-
-	@Override
-	public int getItemEnchantability()
-	{
-		return 20;
 	}
 
 	@Override
@@ -164,6 +164,7 @@ public class ItemLock extends ItemKeyLock implements ILock
 	@Override
 	public void onUnlock( ItemStack lock, ItemStack key, ILockable lockable, EntityPlayer player, boolean success )
 	{
+		Logger.getLogger( ModInfo.modId ).info( "Lock Unlock" );
 		if( success )
 			return;
 		// Power is 2 when a key was used to open the lock, 1 otherwise.
@@ -174,9 +175,8 @@ public class ItemLock extends ItemKeyLock implements ILock
 	@Override
 	public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
 	{
-
-		final int shock = BetterStorageEnchantment.getLevel( lock, "shock" );
-		final int trigger = BetterStorageEnchantment.getLevel( lock, "trigger" );
+		final int shock = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.shock );
+		final int trigger = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.trigger );
 
 		if( shock > 0 )
 		{

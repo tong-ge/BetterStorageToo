@@ -1,11 +1,14 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import java.util.Random;
+
 import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -147,9 +150,8 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		final TileEntity tileEntity = worldIn.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityLockable )
 		{
-
 			final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
-			if( lockable != null && lockable.getLock() != null )
+			if( !lockable.getLock().isEmpty() )
 				return -1;
 		}
 		return super.getBlockHardness( blockState, worldIn, pos );
@@ -162,14 +164,10 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		final TileEntity tileEntity = world.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityLockable )
 		{
-
 			final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
-			if( lockable != null )
-			{
-				final int persistance = BetterStorageEnchantment.getLevel( lockable.getLock(), "persistance" );
-				if( persistance > 0 )
-					modifier += Math.pow( 2, persistance );
-			}
+			final int persistance = BetterStorageEnchantment.getLevel( lockable.getLock(), EnchantmentBetterStorage.persistance );
+			if( persistance > 0 )
+				modifier += Math.pow( 2, persistance );
 		}
 		return super.getExplosionResistance( exploder ) * modifier;
 	}
@@ -206,26 +204,28 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		return true;
 	}
 
-	/*
-	 * @Override
-	 * public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-	 * return (WorldUtils.get(world, x, y, z, TileEntityLockable.class).isPowered() ? 15 : 0);
-	 * }
-	 */
+	@Override
+	public int getWeakPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side )
+	{
+		final TileEntity tileEntity = blockAccess.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityLockable )
+			return ( (TileEntityLockable)tileEntity ).isPowered() ? 15 : 0;
+		return 0;
+	}
 
-	/*
-	 * @Override
-	 * public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-	 * return isProvidingWeakPower(world, x, y, z, side);
-	 * }
-	 */
+	@Override
+	public int getStrongPower( IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side )
+	{
+		return getWeakPower( blockState, blockAccess, pos, side );
+	}
 
-	/*
-	 * @Override
-	 * public void updateTick(World world, int x, int y, int z, Random random) {
-	 * WorldUtils.get(world, x, y, z, TileEntityLockable.class).setPowered(false);
-	 * }
-	 */
+	@Override
+	public void updateTick( World worldIn, BlockPos pos, IBlockState state, Random rand )
+	{
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityLockable )
+			( (TileEntityLockable)tileEntity ).setPowered( false );
+	}
 
 	@Override
 	public ItemStack getPickBlock( IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player )

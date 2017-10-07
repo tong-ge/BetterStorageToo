@@ -58,13 +58,12 @@ public class BetterStorageGuiFactory implements IModGuiFactory
 			final ConfigElement generalCategory = new ConfigElement( config.getCategory( Configuration.CATEGORY_GENERAL ) );
 			final ConfigElement blockCategory = new ConfigElement( config.getCategory( BetterStorageConfig.CATEGORY_BLOCKS ) );
 			final ConfigElement itemCategory = new ConfigElement( config.getCategory( BetterStorageConfig.CATEGORY_ITEMS ) );
-			// enchantmentCategory.addAll( BetterStorage.globalConfig.getSettings( "enchantment" ).values() );
+			final ConfigElement enchantCategory = new ConfigElement( config.getCategory( BetterStorageConfig.CATEGORY_ENCHANTMENTS ) );
 
 			configElements.addAll( generalCategory.getChildElements() );
 			configElements.add( new DummyCategoryElement( "block", "config.betterstorage.category.block", blockCategory.getChildElements() ) );
 			configElements.add( new DummyCategoryElement( "item", "config.betterstorage.category.item", itemCategory.getChildElements() ) );
-			// configElements.add( new DummyConfigElement.DummyCategoryElement( "enchantment", "config.betterstorage.category.enchantment", enchantmentCategory
-			// ) );
+			configElements.add( new DummyCategoryElement( "enchant", "config.betterstorage.category.enchantment", enchantCategory.getChildElements() ) );
 		}
 	}
 }

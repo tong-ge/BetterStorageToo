@@ -25,6 +25,12 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 		setMaxStackSize( 1 );
 	}
 
+	@Override
+	public int getItemEnchantability()
+	{
+		return 20;
+	}
+
 	// NBT helper functions
 	// Only used by keys and locks currently.
 	public static int getKeyColor1( ItemStack stack )

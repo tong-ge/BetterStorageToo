@@ -1,11 +1,15 @@
 package io.github.tehstoneman.betterstorage.attachment;
 
+import java.util.logging.Logger;
+
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
@@ -103,6 +107,7 @@ public class LockAttachment extends ItemAttachment
 		 */
 		if( !player.world.isRemote )
 		{
+			Logger.getLogger( ModInfo.modId ).info( "Lock Attacked" );
 			if( canHurt )
 			{
 				hit = 10;
@@ -113,7 +118,7 @@ public class LockAttachment extends ItemAttachment
 				// int efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, holding);
 				// breakProgress += Math.min(damage, 10) / 2 + Math.min(Math.max(sharpness, efficiency), 5);
 
-				final int persistance = BetterStorageEnchantment.getLevel( lock, "persistance" );
+				final int persistance = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.persistance );
 				if( breakProgress > 100 * ( 1 + persistance ) )
 				{
 					// int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, lock);
@@ -166,7 +171,8 @@ public class LockAttachment extends ItemAttachment
 		final ILockable lockable = (ILockable)tileEntity;
 		final ItemStack lock = lockable.getLock();
 
-		if( lock == null )
+		Logger.getLogger( ModInfo.modId ).info( "lock : " + lock );
+		if( lock.isEmpty() )
 		{
 			if( StackUtils.isLock( holding ) && lockable.isLockValid( holding ) )
 			{
@@ -193,7 +199,7 @@ public class LockAttachment extends ItemAttachment
 					final double y = ( box.minY + box.maxY ) / 2;
 					final double z = ( box.minZ + box.maxZ ) / 2;
 					final EntityItem item = WorldUtils.spawnItem( player.world, x, y, z, lock );
-					lockable.setLock( null );
+					lockable.setLock( ItemStack.EMPTY );
 				}
 				else
 					lockable.useUnlocked( player );
@@ -206,7 +212,7 @@ public class LockAttachment extends ItemAttachment
 
 	private boolean canHurtLock( ItemStack stack )
 	{
-		if( stack == null || !BetterStorage.config.LOCK_BREAKABLE )
+		if( stack == null || !BetterStorage.config.lockBreakable )
 			return false;
 		final Item item = stack.getItem();
 		return item instanceof ItemSword || item instanceof ItemPickaxe || item instanceof ItemAxe;

@@ -1,5 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import java.util.logging.Logger;
+
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
@@ -173,11 +176,14 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	public boolean onBlockActivated( World world, BlockPos pos, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ )
 	{
 		if( !world.isRemote )
+		{
+			Logger.getLogger( ModInfo.modId ).info( "Block Acticated" );
 			if( canUse( player ) )
 				useUnlocked( player );
 			else
 				if( !getLock().isEmpty() )
 					( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
+		}
 		return false;
 	}
 
