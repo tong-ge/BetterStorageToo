@@ -10,8 +10,8 @@ public class BetterStorageConfig
 {
 	private final Configuration	config;
 
-	public static final String	CATEGORY_BLOCKS	= "blocks";
-	public static final String	CATEGORY_ITEMS	= "items";
+	public static final String	CATEGORY_BLOCKS			= "blocks";
+	public static final String	CATEGORY_ITEMS			= "items";
 	public static final String	CATEGORY_ENCHANTMENTS	= "enchantments";
 
 	// Block settings
@@ -29,6 +29,7 @@ public class BetterStorageConfig
 	public boolean				keyringEnabled;
 	public boolean				lockEnabled;
 	public boolean				cardboardSheetEnabled;
+	public boolean				slimeBucketEnabled;
 
 	// Cardboard items
 	public boolean				cardboardHelmetEnabled;
@@ -42,13 +43,13 @@ public class BetterStorageConfig
 	public boolean				cardboardHoeEnabled;
 
 	// Enchantments
-	public boolean		enchUnlockingEnabled;//					= "enchantment.unlocking";
-	public boolean		enchLockpickingEnabled;//				= "enchantment.lockpicking";
-	public boolean		enchMorphingEnabled;//					= "enchantment.morphing";
-	public boolean		enchPersistanceEnabled;//				= "enchantment.persistance";
-	public boolean		enchSecurityEnabled;//					= "enchantment.security";
-	public boolean		enchShockEnabled;//						= "enchantment.shock";
-	public boolean		enchTriggerEnabled;//					= "enchantment.trigger";
+	public boolean				enchUnlockingEnabled;
+	public boolean				enchLockpickingEnabled;
+	public boolean				enchMorphingEnabled;
+	public boolean				enchPersistanceEnabled;
+	public boolean				enchSecurityEnabled;
+	public boolean				enchShockEnabled;
+	public boolean				enchTriggerEnabled;
 
 	// General settings
 	public int					reinforcedColumns;
@@ -58,7 +59,7 @@ public class BetterStorageConfig
 	public int					cardboardBoxUses;
 	public boolean				cardboardBoxShowContents;
 
-	public boolean		lockBreakable;
+	public boolean				lockBreakable;
 
 	public boolean				enableHelpTooltips;
 	public boolean				enableWarningMessages;
@@ -163,6 +164,8 @@ public class BetterStorageConfig
 				.setLanguageKey( "item.betterstorage.cardboard_axe.name" ).setRequiresMcRestart( true );
 		final Property propCardboardHoeEnabled = config.get( CATEGORY_ITEMS, "cardboardHoeEnabled", true )
 				.setLanguageKey( "item.betterstorage.cardboard_hoe.name" ).setRequiresMcRestart( true );
+		final Property propSlimeBucketEnabled = config.get( CATEGORY_ITEMS, "slimeBucketEnabled", true )
+				.setLanguageKey( "item.betterstorage.bucket.slime.name" ).setRequiresMcRestart( true );
 
 		// Enchantment settings
 		final Property propEnchUnlockingEnabled = config.get( CATEGORY_ENCHANTMENTS, "enchUnlockingEnabled", true )
@@ -245,7 +248,8 @@ public class BetterStorageConfig
 											  "cardboardPickaxeEnabled",
 											  "cardboardShovelEnabled",
 											  "cardboardAxeEnabled",
-											  "cardboardHoeEnabled" } ) );
+											  "cardboardHoeEnabled",
+											  "slimeBucketEnabled" } ) );
 		config.setCategoryPropertyOrder( CATEGORY_ENCHANTMENTS,
 				Arrays.asList( new String[] { "enchUnlockingEnabled",
 											  "enchLockpickingEnabled",
@@ -266,7 +270,7 @@ public class BetterStorageConfig
 			enchSecurityEnabled = propEnchSecurityEnabled.getBoolean();
 			enchShockEnabled = propEnchShockEnabled.getBoolean();
 			enchTriggerEnabled = propEnchTriggerEnabled.getBoolean();
-			
+
 			crateEnabled = propCrateEnabled.getBoolean();
 			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
 			lockerEnabled = propLockerEnabled.getBoolean();
@@ -284,6 +288,7 @@ public class BetterStorageConfig
 			cardboardShovelEnabled = propCardboardShovelEnabled.getBoolean();
 			cardboardAxeEnabled = propCardboardAxeEnabled.getBoolean();
 			cardboardHoeEnabled = propCardboardHoeEnabled.getBoolean();
+			slimeBucketEnabled = propSlimeBucketEnabled.getBoolean();
 
 			keyEnabled = propKeyEnabled.getBoolean();
 			masterKeyEnabled = propMasterKeyEnabled.getBoolean();
@@ -296,7 +301,7 @@ public class BetterStorageConfig
 			cardboardBoxRows = propCardboardBoxRows.getInt();
 			cardboardBoxUses = propCardboardBoxUses.getInt();
 			cardboardBoxShowContents = propCardboardBoxShowContents.getBoolean();
-			
+
 			lockBreakable = propLockBreakable.getBoolean();
 
 			enableHelpTooltips = propEnableHelpTooltips.getBoolean();
@@ -311,7 +316,7 @@ public class BetterStorageConfig
 		propEnchSecurityEnabled.set( enchSecurityEnabled );
 		propEnchShockEnabled.set( enchShockEnabled );
 		propEnchTriggerEnabled.set( enchTriggerEnabled );
-		
+
 		propCrateEnabled.set( crateEnabled );
 		propReinforcedChestEnabled.set( reinforcedChestEnabled );
 		propLockerEnabled.set( lockerEnabled );
@@ -325,13 +330,14 @@ public class BetterStorageConfig
 		propKeyringEnabled.set( keyringEnabled );
 		propLockEnabled.set( lockEnabled );
 		propCardboardSheetEnabled.set( cardboardSheetEnabled );
+		propSlimeBucketEnabled.set( slimeBucketEnabled );
 
 		propReinforcedColumns.set( reinforcedColumns );
 		propReinforcedChestEnabled.set( enableCrateInventoryInterface );
 		propCardboardBoxRows.set( cardboardBoxRows );
 		propCardboardBoxUses.set( cardboardBoxUses );
 		propCardboardBoxShowContents.set( cardboardBoxShowContents );
-		
+
 		propLockBreakable.set( lockBreakable );
 		propEnableHelpTooltips.set( enableHelpTooltips );
 		propEnableWarningMessages.set( enableWarningMessages );

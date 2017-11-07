@@ -97,7 +97,10 @@ public class CommonProxy
 			BetterStorageItems.CARDBOARD_LEGGINGS.register( "cardboard_leggings" );
 		if( BetterStorage.config.cardboardBootsEnabled )
 			BetterStorageItems.CARDBOARD_BOOTS.register( "cardboard_boots" );
-	}
+
+		if( BetterStorage.config.slimeBucketEnabled )
+			BetterStorageItems.SLIME_BUCKET.register();
+}
 
 	public void initialize()
 	{
@@ -123,36 +126,6 @@ public class CommonProxy
 	 * if ((holding != null) && (holding.getItem() instanceof ICardboardItem) &&
 	 * !ItemCardboardSheet.isEffective(holding))
 	 * event.newSpeed = -1;
-	 * }
-	 */
-
-	/*
-	 * @SubscribeEvent
-	 * public void onEntityInteract(EntityInteractEvent event) {
-	 *
-	 * if (event.entity.worldObj.isRemote || event.isCanceled()) return;
-	 *
-	 * EntityPlayer player = event.entityPlayer;
-	 * Entity target = event.target;
-	 * ItemStack holding = player.getCurrentEquippedItem();
-	 *
-	 * if ((target.getClass() == EntityChicken.class) &&
-	 * (holding != null) && (holding.getItem() == Items.name_tag)) {
-	 *
-	 * EntityChicken chicken = (EntityChicken)target;
-	 * if (!chicken.isDead && !chicken.isChild() &&
-	 * "Cluckington".equals(holding.getDisplayName()))
-	 * EntityCluckington.spawn(chicken);
-	 *
-	 * }
-	 *
-	 * if ((BetterStorageItems.slimeBucket != null) && (target instanceof EntityLiving) &&
-	 * (holding != null) && (holding.getItem() == Items.bucket)) {
-	 * ItemBucketSlime.pickUpSlime(player, (EntityLiving)target);
-	 * if (player.getCurrentEquippedItem().getItem() instanceof ItemBucketSlime)
-	 * preventSlimeBucketUse = true;
-	 * }
-	 *
 	 * }
 	 */
 

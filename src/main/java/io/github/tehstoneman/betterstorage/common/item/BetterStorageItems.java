@@ -35,8 +35,9 @@ public final class BetterStorageItems
 	public static ItemCardboardArmor	CARDBOARD_LEGGINGS		= new ItemCardboardArmor( EntityEquipmentSlot.LEGS );
 	public static ItemCardboardArmor	CARDBOARD_BOOTS			= new ItemCardboardArmor( EntityEquipmentSlot.FEET );
 
+	public static ItemBucketSlime		SLIME_BUCKET			= new ItemBucketSlime();
+
 	// public static ItemDrinkingHelmet drinkingHelmet;
-	// public static ItemBucketSlime SLIME_BUCKET;
 	// public static ItemPresentBook PRESENT_BOOK;
 
 	public static boolean				anyCardboardItemsEnabled;
@@ -78,10 +79,7 @@ public final class BetterStorageItems
 		if( BetterStorage.config.cardboardBootsEnabled )
 			CARDBOARD_BOOTS.registerItemModels();
 
-		/*
-		 * if( BetterStorage.globalConfig.getBoolean( GlobalConfig.slimeBucketEnabled ) )
-		 * ModelLoader.setCustomModelResourceLocation( SLIME_BUCKET, 0,
-		 * new ModelResourceLocation( SLIME_BUCKET.getRegistryName(), "inventory" ) );
-		 */
+		if( BetterStorage.config.slimeBucketEnabled )
+			SLIME_BUCKET.registerItemModels();
 	}
 }
