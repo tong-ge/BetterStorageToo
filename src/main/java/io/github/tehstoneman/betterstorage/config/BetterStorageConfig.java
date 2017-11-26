@@ -1,10 +1,10 @@
 package io.github.tehstoneman.betterstorage.config;
 
 import java.io.File;
+import java.util.Arrays;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import scala.actors.threadpool.Arrays;
 
 public class BetterStorageConfig
 {
@@ -217,7 +217,7 @@ public class BetterStorageConfig
 				.setLanguageKey( "config.betterstorage.general.enableWarningMessages" );
 
 		// Define property order
-		config.setCategoryPropertyOrder( Configuration.CATEGORY_GENERAL,
+		/*config.setCategoryPropertyOrder( Configuration.CATEGORY_GENERAL,
 				Arrays.asList( new String[] { "reinforcedColumns",
 											  "enableCrateInventoryInterface",
 											  "cardboardBoxRows",
@@ -257,7 +257,7 @@ public class BetterStorageConfig
 											  "enchPersistanceEnabled",
 											  "enchSecurityEnabled",
 											  "enchShockEnabled",
-											  "enchTriggerEnabled" } ) );
+											  "enchTriggerEnabled" } ) );*/
 		//@formatter:on
 
 		// Read properties

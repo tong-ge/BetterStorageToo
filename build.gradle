@@ -28,9 +28,9 @@ configFile.withReader
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.minecraft_version}-${config.mod_version}"
+version = "${config.minecraft_version}-${config.mod_major_version}.${config.api_major_version}.${config.minor_version}.${config.patch_version}"
 group = "io.github.thestoneman.betterstorage"
-archivesBaseName = "BetterStorage"
+archivesBaseName = "BetterStorageToo"
 
 // java version
 sourceCompatibility = 1.8
@@ -127,7 +127,8 @@ sourceSets
     }
 }
 
-processResources {
+processResources
+{
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
@@ -147,24 +148,28 @@ processResources {
     }
 }
 
-task apiJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main.output
-    include 'net/mcft/copy/betterstorage/api/**'
-    classifier = 'api'
-}
+//task apiJar(type: Jar, dependsOn: classes)
+//{
+//    from sourceSets.main.output
+//    include 'io/gethub/tehstoneman/betterstorage/api/**'
+//    classifier = 'api'
+//}
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
+//task sourcesJar(type: Jar, dependsOn: classes)
+//{
+//    from sourceSets.main.allSource
+//    classifier = 'sources'
+//}
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
+//task deobfJar(type: Jar)
+//{
+//    from sourceSets.main.output
+//    classifier = 'deobf'
+//}
 
-artifacts {
-    archives sourcesJar
-    archives apiJar
-    archives deobfJar
-}
+//artifacts
+//{
+//    archives sourcesJar
+//    archives apiJar
+//    archives deobfJar
+//}
