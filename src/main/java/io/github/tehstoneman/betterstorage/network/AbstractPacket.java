@@ -51,7 +51,7 @@ public abstract class AbstractPacket<T extends AbstractPacket< T >> implements I
 	@Override
 	public final IMessage onMessage( T message, MessageContext context )
 	{
-		message.handle( context.side.isServer() ? context.getServerHandler().playerEntity : PlayerUtils.getLocalPlayer() );
+		message.handle( context.side.isServer() ? context.getServerHandler().player : PlayerUtils.getLocalPlayer() );
 		return null;
 	}
 }

@@ -69,7 +69,7 @@ public class ContainerCrate extends Container
 
 		volume = inventoryCrate.getOccupiedSlots() * 100 / inventoryCrate.getSlots();
 		for( int j = 0; j < listeners.size(); ++j )
-			listeners.get( j ).sendProgressBarUpdate( this, 0, volume );
+			listeners.get( j ).sendWindowProperty( this, 0, volume );
 	}
 
 	@Override

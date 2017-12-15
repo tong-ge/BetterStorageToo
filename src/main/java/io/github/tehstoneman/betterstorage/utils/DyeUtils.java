@@ -82,7 +82,7 @@ public final class DyeUtils
 		}
 		for( final ItemStack dye : dyes )
 		{
-			color = getDyeColor( dye ).getMapColor().colorValue;
+			color = getDyeColor( dye ).getColorValue();
 			if( color < 0 )
 				continue;
 			r += color >> 16;
@@ -104,7 +104,7 @@ public final class DyeUtils
 	private static void addColorFromTable( String name )
 	{
 		final EnumDyeColor dye = EnumDyeColor.byDyeDamage( dyes.size() );
-		final int color = dye.getMapColor().colorValue;
+		final int color = dye.getColorValue();
 		dyes.put( name, dye );
 	}
 

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class KeyColor implements IItemColor
 {
 	@Override
-	public int getColorFromItemstack( ItemStack stack, int tintIndex )
+	public int colorMultiplier( ItemStack stack, int tintIndex )
 	{
 		switch( tintIndex )
 		{

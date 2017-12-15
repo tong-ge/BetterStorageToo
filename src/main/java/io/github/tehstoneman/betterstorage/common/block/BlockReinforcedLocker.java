@@ -71,11 +71,11 @@ public class BlockReinforcedLocker extends BlockLockable
 	}
 
 	@Override
-	public void getSubBlocks( Item item, CreativeTabs tab, NonNullList< ItemStack > list )
+	public void getSubBlocks( CreativeTabs tab, NonNullList< ItemStack > list )
 	{
 		for( final EnumReinforced material : EnumReinforced.values() )
 		{
-			final ItemStack itemstack = new ItemStack( item, 1, material.getMetadata() );
+			final ItemStack itemstack = new ItemStack( this, 1, material.getMetadata() );
 			list.add( itemstack );
 		}
 	}

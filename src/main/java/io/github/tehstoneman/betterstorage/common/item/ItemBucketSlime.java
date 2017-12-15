@@ -9,6 +9,7 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.utils.LanguageUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -65,10 +66,10 @@ public class ItemBucketSlime extends ItemBetterStorage
 	}
 
 	@Override
-	public void getSubItems( Item itemIn, CreativeTabs tab, NonNullList< ItemStack > subItems )
+	public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	{
 		for( final EnumSlime slime : EnumSlime.values() )
-			subItems.add( new ItemStack( itemIn, 1, slime.getMetadata() ) );
+			subItems.add( new ItemStack( this, 1, slime.getMetadata() ) );
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
+	public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	{
 		final EnumSlime slime = EnumSlime.byMetadata( stack.getMetadata() );
 		final ResourceLocation resourceLocation = slime.getResourceLocation();
@@ -99,12 +100,12 @@ public class ItemBucketSlime extends ItemBetterStorage
 			if( compound.hasKey( "name" ) )
 				name = compound.getString( "name" );
 		}
-		if( name != null || advancedTooltips )
+		if( name != null || toolTipFlag.isAdvanced() )
 		{
 			final String localName = name != null
-					? "\"" + name + "\"" + ( advancedTooltips ? " (" + BetterStorage.proxy.localize( handler.entityName ) + ")" : "" )
+					? "\"" + name + "\"" + ( toolTipFlag.isAdvanced() ? " (" + BetterStorage.proxy.localize( handler.entityName ) + ")" : "" )
 					: BetterStorage.proxy.localize( handler.entityName );
-			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.bucket.slime.contains", localName ) );
+			tooltip.add( BetterStorage.proxy.localize( "tooltip.betterstorage.bucket.slime.contains", localName ) );
 		}
 
 		if( stack.hasTagCompound() )
@@ -115,7 +116,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 				final NBTTagList effectList = compound.getTagList( "effects", NBT.TAG_COMPOUND );
 				if( effectList != null && handler != null )
 				{
-					final int max = advancedTooltips || GuiScreen.isShiftKeyDown() ? 6 : 3;
+					final int max = toolTipFlag.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
 
 					for( int i = 0; i < Math.min( effectList.tagCount(), max ); i++ )
 					{
@@ -131,13 +132,13 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 						str.append( " (" ).append( StringUtils.ticksToElapsedTime( duration ) ).append( ")" );
 
-						list.add( str.toString() );
+						tooltip.add( str.toString() );
 					}
 
 					final int more = effectList.tagCount() - max;
 
 					if( more > 0 )
-						list.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + LanguageUtils
+						tooltip.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + LanguageUtils
 								.translateTooltip( "bucketSlime.more." + ( more == 1 ? "1" : "x" ), "%X%", Integer.toString( more ) ) );
 				}
 			}
@@ -345,7 +346,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	protected double getYOffset( World p_190909_1_, BlockPos p_190909_2_ )
 	{
-		final AxisAlignedBB axisalignedbb = new AxisAlignedBB( p_190909_2_ ).addCoord( 0.0D, -1.0D, 0.0D );
+		final AxisAlignedBB axisalignedbb = new AxisAlignedBB( p_190909_2_ ).expand( 0.0D, -1.0D, 0.0D );
 		final List< AxisAlignedBB > list = p_190909_1_.getCollisionBoxes( (Entity)null, axisalignedbb );
 
 		if( list.isEmpty() )

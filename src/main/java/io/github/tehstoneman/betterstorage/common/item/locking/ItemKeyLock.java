@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -96,7 +98,7 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 	@SideOnly( Side.CLIENT )
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public void addInformation( ItemStack stack, EntityPlayer playerin, List tooltip, boolean advanced )
+	public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	{
 		final NBTTagCompound tag = stack.getTagCompound();
 		if( tag != null )

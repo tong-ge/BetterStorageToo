@@ -4,13 +4,15 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockBetterStorage extends Block
 {
@@ -26,7 +28,7 @@ public class BlockBetterStorage extends Block
 	}
 
 	/** Returns the name of this tile, for example "craftingStation". */
-	public String getTileName()
+	public String getBlockName()
 	{
 		return name;
 	}
@@ -37,22 +39,30 @@ public class BlockBetterStorage extends Block
 		return new ItemBlock( this );
 	}
 
-	/** Registers the block in the GameRegistry. */
-	public void registerBlock()
+	/**
+	 * Registers the block in the GameRegistry.
+	 * 
+	 * @param registry
+	 */
+	public void registerBlock( IForgeRegistry< Block > registry )
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		this.setRegistryName( name );
-		GameRegistry.register( this );
+		registry.register( this );
 
 		final ItemBlock itemBlock = getItemBlock();
 
 		if( itemBlock != null )
-			GameRegistry.register( itemBlock.setRegistryName( getRegistryName() ) );
+			ForgeRegistries.ITEMS.register( itemBlock.setRegistryName( getRegistryName() ) );
 	}
 
 	@SideOnly( Side.CLIENT )
-	public void registerItemModels()
+	public void registerItemModels( ItemModelMesher mesher )
 	{
-		ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( this ), 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
+		final Item item = Item.getItemFromBlock( this );
+		final int meta = 0;
+		final ModelResourceLocation model = new ModelResourceLocation( getRegistryName(), "inventory" );
+		ModelLoader.setCustomModelResourceLocation( item, meta, model );
+		mesher.register( item, meta, model );
 	}
 }

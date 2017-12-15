@@ -45,7 +45,7 @@ public final class BetterStorageItems
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		if( BetterStorage.config.keyEnabled )
+		/*if( BetterStorage.config.keyEnabled )
 		{
 			KEY.registerItemModels();
 			if( BetterStorage.config.masterKeyEnabled )
@@ -80,6 +80,6 @@ public final class BetterStorageItems
 			CARDBOARD_BOOTS.registerItemModels();
 
 		if( BetterStorage.config.slimeBucketEnabled )
-			SLIME_BUCKET.registerItemModels();
+			SLIME_BUCKET.registerItemModels();*/
 	}
 }

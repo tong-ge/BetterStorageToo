@@ -26,10 +26,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.common.Optional.Method;
-import vazkii.botania.api.mana.ILaputaImmobile;
+//import vazkii.botania.api.mana.ILaputaImmobile;
 
 @Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
-public class BlockCrate extends BlockBetterStorage implements ITileEntityProvider, ILaputaImmobile
+public class BlockCrate extends BlockBetterStorage implements ITileEntityProvider//, ILaputaImmobile
 {
 	public static final PropertyBool	CONNECTED_DOWN	= PropertyBool.create( "down" );
 	public static final PropertyBool	CONNECTED_UP	= PropertyBool.create( "up" );
@@ -194,10 +194,10 @@ public class BlockCrate extends BlockBetterStorage implements ITileEntityProvide
 		return tileCrate.getComparatorSignalStrength();
 	}
 
-	@Method( modid = "Botania" )
+	/*@Method( modid = "Botania" )
 	@Override
 	public boolean canMove( World world, BlockPos pos )
 	{
 		return false;
-	}
+	}*/
 }

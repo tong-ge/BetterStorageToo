@@ -39,9 +39,6 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_CHEST, sizeStateMap );
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, sizeStateMap );
 		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_LOCKER, sizeStateMap );
-
-		BetterStorageBlocks.registerItemModels();
-		BetterStorageItems.registerItemModels();
 	}
 
 	@Override
@@ -50,6 +47,9 @@ public class ClientProxy extends CommonProxy
 		super.initialize();
 
 		// new KeyBindingHandler();
+
+		BetterStorageBlocks.registerItemModels();
+		BetterStorageItems.registerItemModels();
 
 		registerRenderers();
 		BetterStorageColorHandler.registerColorHandlers();
@@ -61,10 +61,10 @@ public class ClientProxy extends CommonProxy
 		super.postInit();
 
 		//@formatter:off
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
+		/*Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
 				BetterStorageItems.KEY,
-				BetterStorageItems.LOCK );
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
+				BetterStorageItems.LOCK );*/
+		/*Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
 				Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ),
 				BetterStorageItems.CARDBOARD_AXE,
 				BetterStorageItems.CARDBOARD_BOOTS,
@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy
 				BetterStorageItems.CARDBOARD_LEGGINGS,
 				BetterStorageItems.CARDBOARD_PICKAXE,
 				BetterStorageItems.CARDBOARD_SHOVEL,
-				BetterStorageItems.CARDBOARD_SWORD );
+				BetterStorageItems.CARDBOARD_SWORD );*/
 		//@formatter:on
 	}
 

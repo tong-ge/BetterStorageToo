@@ -34,8 +34,8 @@ public class ItemBlockCrate extends ItemBlock
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void getSubItems( Item itemIn, CreativeTabs tab, NonNullList< ItemStack > subItems )
+	public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	{
-		block.getSubBlocks( itemIn, tab, subItems );
+		block.getSubBlocks( tab, subItems );
 	}
 }

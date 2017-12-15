@@ -24,13 +24,13 @@ public final class Recipes
 	{
 		registerRecipeSorter();
 
-		addBlockRecipes();
-		addItemRecipes();
-		addCardboardRecipes();
+		//addBlockRecipes();
+		//addItemRecipes();
+		//addCardboardRecipes();
 
 		// Misc. recipes
-		GameRegistry.addRecipe( new CardboardColorRecipe() );
-		GameRegistry.addRecipe( new KeyColorRecipe() );
+		//GameRegistry.addRecipe( new CardboardColorRecipe() );
+		//GameRegistry.addRecipe( new KeyColorRecipe() );
 		// Addon.addRecipesAll();
 	}
 
@@ -46,33 +46,6 @@ public final class Recipes
 
 	private static void addBlockRecipes()
 	{
-		// Crate recipe
-		//@formatter:off
-		if( BetterStorage.config.crateEnabled )
-			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CRATE ),
-							new Object[] { false,
-										   "o/o",
-										   "/ /",
-										   "o/o",	'o', "plankWood",
-										   			'/', "stickWood" } ) );
-		//@formatter:on
-
-		// Reinforced chest recipes
-		if( BetterStorage.config.reinforcedChestEnabled )
-			for( final EnumReinforced material : EnumReinforced.values() )
-				//@formatter:off
-				GameRegistry.addRecipe(
-						new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() ),
-								new Object[] { false,
-											   "o#o",
-											   "#C#",
-											   "oOo",	'C', Blocks.CHEST,
-											   			'#', "logWood",
-											   			'o', material.getOreDictIngot(),
-											   			'O', material.getOreDictBlock() } ) );
-					//@formatter:on
-
 		// Locker recipe
 		if( BetterStorage.config.lockerEnabled )
 		{

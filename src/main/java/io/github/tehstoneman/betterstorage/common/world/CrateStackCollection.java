@@ -9,12 +9,11 @@ import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** Holds all CratePileData objects for one world / dimension. */
-public class CrateStackCollection extends WorldSavedData
+public class CrateStackCollection extends net.minecraft.world.storage.WorldSavedData
 {
 	private static final String						filename	= ModInfo.modId + "_cratepile";
 

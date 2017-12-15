@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -87,11 +86,6 @@ public class CrateStackHandler extends ItemStackHandler
 	public int getIndexedSlot( int slot )
 	{
 		return indexSlots.get( slot );
-	}
-
-	private static boolean isEnabled()
-	{
-		return GlobalConfig.enableCrateStorageInterfaceSetting.getValue();
 	}
 
 	/** Tries to fit contents into full stacks, and moves empty slots to the end of the inventory */

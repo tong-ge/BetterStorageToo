@@ -10,11 +10,13 @@ import io.github.tehstoneman.betterstorage.api.IContainerItem;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
@@ -52,20 +54,20 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
+	public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	{
 		final int maxUses = getUses();
 		final boolean hasItems = stack.hasTagCompound() && stack.getTagCompound().hasKey( "Inventory" );
 
 		if( !hasItems && BetterStorage.config.enableHelpTooltips )
-			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.useHint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
+			tooltip.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.useHint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
 
 		if( maxUses > 1 )
 		{
 			int uses = maxUses;
 			if( stack.hasTagCompound() && stack.getTagCompound().hasKey( "uses" ) )
 				uses = Math.min( maxUses, stack.getTagCompound().getInteger( "uses" ) );
-			list.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC
+			tooltip.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC
 					+ BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.uses", uses ) );
 		}
 
@@ -73,14 +75,14 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 			return;
 		if( !BetterStorage.config.cardboardBoxShowContents )
 		{
-			list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.containsItems" ) );
+			tooltip.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.containsItems" ) );
 			return;
 		}
 
 		final ItemStackHandler contents = new ItemStackHandler( 9 );
 		contents.deserializeNBT( stack.getTagCompound().getCompoundTag( "Inventory" ) );
 
-		final int limit = advancedTooltips || GuiScreen.isShiftKeyDown() ? 6 : 3;
+		final int limit = toolTipFlag.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
 
 		final List< DisplayNameStack > items = new ArrayList<>();
 
@@ -104,7 +106,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 
 		Collections.sort( items );
 		for( int i = 0; i < items.size() && i < limit; i++ )
-			list.add( items.get( i ).toString() );
+			tooltip.add( items.get( i ).toString() );
 
 		if( items.size() <= limit )
 			return;
@@ -112,7 +114,7 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 		int count = 0;
 		for( int i = limit; i < items.size(); i++ )
 			count += items.get( i ).stackSize;
-		list.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.plusMore", count ) );
+		tooltip.add( BetterStorage.proxy.localize( "tooltip.betterstorage.cardboardBox.plusMore", count ) );
 	}
 
 	// IContainerItem implementation

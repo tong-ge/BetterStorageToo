@@ -72,8 +72,8 @@ public class GuiBetterStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
-		fontRendererObj.drawString( I18n.format( title ), 8, 6, 0x404040 );
-		fontRendererObj.drawString( I18n.format( "container.inventory" ), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );
+		fontRenderer.drawString( I18n.format( title ), 8, 6, 0x404040 );
+		fontRenderer.drawString( I18n.format( "container.inventory" ), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage imp
 	protected BlockContainerBetterStorage( String name, Material material )
 	{
 		super( name, material );
-		isBlockContainer = true;
+		//isBlockContainer = true;
 	}
 
 	@Override

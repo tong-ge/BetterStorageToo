@@ -30,15 +30,15 @@ public class GuiCrate extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer( int mouseX, int mouseY )
 	{
-		fontRendererObj.drawString( BetterStorage.proxy.localize( ModInfo.containerCrate ), 8, 6, 0x404040 );
-		fontRendererObj.drawString( BetterStorage.proxy.localize( "container.inventory" ), 8, yOffset + 3, 0x404040 );
+		fontRenderer.drawString( BetterStorage.proxy.localize( ModInfo.containerCrate ), 8, 6, 0x404040 );
+		fontRenderer.drawString( BetterStorage.proxy.localize( "container.inventory" ), 8, yOffset + 3, 0x404040 );
 
 		if( mouseX >= guiLeft + 115 && mouseX < guiLeft + 169 && mouseY >= guiTop + 7 && mouseY < guiTop + 13 )
 		{
 			final int volume = containerCrate.getVolume();
 			final List< String > hoveringText = new ArrayList<>();
 			hoveringText.add( volume + BetterStorage.proxy.localize( ModInfo.containerCapacity ) );
-			drawHoveringText( hoveringText, mouseX - guiLeft, mouseY - guiTop, fontRendererObj );
+			drawHoveringText( hoveringText, mouseX - guiLeft, mouseY - guiTop, fontRenderer );
 		}
 	}
 

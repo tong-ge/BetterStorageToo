@@ -26,12 +26,8 @@ public class CommonProxy
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 
+		/*
 		// Register blocks and items
-		if( BetterStorage.config.crateEnabled )
-		{
-			BetterStorageBlocks.CRATE.registerBlock();
-			GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
-		}
 		if( BetterStorage.config.reinforcedChestEnabled )
 		{
 			BetterStorageBlocks.REINFORCED_CHEST.registerBlock();
@@ -99,8 +95,8 @@ public class CommonProxy
 			BetterStorageItems.CARDBOARD_BOOTS.register( "cardboard_boots" );
 
 		if( BetterStorage.config.slimeBucketEnabled )
-			BetterStorageItems.SLIME_BUCKET.register();
-}
+			BetterStorageItems.SLIME_BUCKET.register();*/
+		}
 
 	public void initialize()
 	{

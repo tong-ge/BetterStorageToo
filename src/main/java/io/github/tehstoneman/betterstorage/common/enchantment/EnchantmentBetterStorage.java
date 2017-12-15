@@ -19,7 +19,7 @@ public class EnchantmentBetterStorage
 	public static void initialize()
 	{
 		// Add key enchantments
-		if( BetterStorage.config.keyEnabled )
+		/*if( BetterStorage.config.keyEnabled )
 		{
 			if( BetterStorage.config.enchUnlockingEnabled )
 				GameRegistry.register( unlocking, new BetterStorageResource( "unlocking" ) );
@@ -33,10 +33,10 @@ public class EnchantmentBetterStorage
 				lockpicking.setIncompatible( morphing );
 				morphing.setIncompatible( lockpicking );
 			}
-		}
+		}*/
 
 		// Add lock enchantments
-		if( BetterStorage.config.lockEnabled )
+		/*if( BetterStorage.config.lockEnabled )
 		{
 			if( BetterStorage.config.enchPersistanceEnabled )
 				GameRegistry.register( persistance, new BetterStorageResource( "persistance" ) );
@@ -46,6 +46,6 @@ public class EnchantmentBetterStorage
 				GameRegistry.register( shock, new BetterStorageResource( "shock" ) );
 			if( BetterStorage.config.enchTriggerEnabled )
 				GameRegistry.register( trigger, new BetterStorageResource( "trigger" ) );
-		}
+		}*/
 	}
 }

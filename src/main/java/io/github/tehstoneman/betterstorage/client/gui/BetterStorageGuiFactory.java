@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
@@ -19,14 +20,18 @@ public class BetterStorageGuiFactory implements IModGuiFactory
 {
 	@Override
 	public void initialize( Minecraft minecraftInstance )
+	{}
+
+	@Override
+	public boolean hasConfigGui()
 	{
-		BetterStorageGuiConfig.initialize( minecraftInstance );
+		return true;
 	}
 
 	@Override
-	public Class< ? extends GuiScreen > mainConfigGuiClass()
+	public GuiScreen createConfigGui( GuiScreen parentScreen )
 	{
-		return BetterStorageGuiConfig.class;
+		return new BetterStorageGuiConfig( parentScreen );
 	}
 
 	@Override
@@ -35,24 +40,16 @@ public class BetterStorageGuiFactory implements IModGuiFactory
 		return null;
 	}
 
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor( RuntimeOptionCategoryElement element )
-	{
-		return null;
-	}
-
 	public static class BetterStorageGuiConfig extends GuiConfig
 	{
-		private static ArrayList< IConfigElement > configElements;
-
 		public BetterStorageGuiConfig( GuiScreen parentScreen )
 		{
-			super( parentScreen, configElements, ModInfo.modId, false, false, ModInfo.modName );
+			super( parentScreen, getConfigElements(), ModInfo.modId, false, false, ModInfo.modName );
 		}
 
-		public static void initialize( Minecraft minecraftInstance )
+		private static List< IConfigElement > getConfigElements()
 		{
-			configElements = new ArrayList<>();
+			final List< IConfigElement > configElements = new ArrayList< >();
 
 			final Configuration config = BetterStorage.config.getConfig();
 			final ConfigElement generalCategory = new ConfigElement( config.getCategory( Configuration.CATEGORY_GENERAL ) );
@@ -64,6 +61,8 @@ public class BetterStorageGuiFactory implements IModGuiFactory
 			configElements.add( new DummyCategoryElement( "block", "config.betterstorage.category.block", blockCategory.getChildElements() ) );
 			configElements.add( new DummyCategoryElement( "item", "config.betterstorage.category.item", itemCategory.getChildElements() ) );
 			configElements.add( new DummyCategoryElement( "enchant", "config.betterstorage.category.enchantment", enchantCategory.getChildElements() ) );
+
+			return configElements;
 		}
 	}
 }

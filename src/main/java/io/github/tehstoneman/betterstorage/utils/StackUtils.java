@@ -216,39 +216,6 @@ public final class StackUtils
 
 	// Enchantment functions
 
-	/** Returns the enchantments on the item stack. */
-	public static Map< Integer, StackEnchantment > getEnchantments( ItemStack stack )
-	{
-		final Map< Integer, StackEnchantment > enchantments = new HashMap<>();
-		final NBTTagList list = stack.getItem() == Items.ENCHANTED_BOOK ? Items.ENCHANTED_BOOK.getEnchantments( stack )
-				: stack.getEnchantmentTagList();
-		if( list != null )
-			for( int i = 0; i < list.tagCount(); i++ )
-			{
-				final StackEnchantment ench = new StackEnchantment( stack, list.getCompoundTagAt( i ) );
-				enchantments.put( Enchantment.getEnchantmentID( ench.ench ), ench );
-			}
-		return enchantments;
-	}
-
-	/** Returns if the enchantment can go on this item stack. */
-	public static boolean isEnchantmentCompatible( ItemStack stack, Collection< StackEnchantment > stackEnchants, StackEnchantment newEnchant )
-	{
-		if( !newEnchant.ench.canApply( stack ) )
-			return false;
-		for( final StackEnchantment stackEnch : stackEnchants )
-			if( newEnchant.ench == stackEnch.ench ? newEnchant.getLevel() <= stackEnch.getLevel()
-					: !newEnchant.ench.func_191560_c( stackEnch.ench ) || !stackEnch.ench.func_191560_c( newEnchant.ench ) )
-				return false;
-		return true;
-	}
-
-	/** Returns if the enchantment can go on this item stack. */
-	public static boolean isEnchantmentCompatible( ItemStack stack, StackEnchantment newEnchant )
-	{
-		return isEnchantmentCompatible( stack, getEnchantments( stack ).values(), newEnchant );
-	}
-
 	/** Represents an enchantment entry on an item stack. */
 	public static class StackEnchantment
 	{

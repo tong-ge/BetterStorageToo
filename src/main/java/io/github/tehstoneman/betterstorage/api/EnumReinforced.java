@@ -13,7 +13,6 @@ public enum EnumReinforced implements IStringSerializable
 	GOLD	( 1, "gold", "ingotGold", "blockGold" ),
 	DIAMOND	( 2, "diamond", "gemDiamond", "blockDiamond" ),
 	EMERALD	( 3, "emerald", "gemEmerald", "blockEmerald" ),
-	//SPECIAL	( "special", "",""),
 	COPPER	( 4, "copper", "ingotCopper", "blockCopper" ),
 	TIN		( 5, "tin", "ingotTin", "blockTin" ),
 	SILVER	( 6, "silver", "ingotSilver", "blockSilver" ),
