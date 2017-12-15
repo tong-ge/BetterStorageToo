@@ -4,7 +4,7 @@ public final class ModInfo
 {
 	public static final String	modId						= "betterstorage";
 	public static final String	modName						= "BetterStorage";
-	public static final String	modVersion					= "1.0.0.0";
+	public static final String	modVersion					= "1.0.0.1";
 	public static final String	dependencies				= "required-after:Forge@[12.18.2.2114,); after:JEI;";
 	public static final String	acceptedMC					= "1.10.2";
 	public static final String	guiFactory					= "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory";

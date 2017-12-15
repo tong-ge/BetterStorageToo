@@ -60,13 +60,29 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
-				BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,
-				BetterStorageItems.CARDBOARD_HOE, BetterStorageItems.CARDBOARD_LEGGINGS, BetterStorageItems.CARDBOARD_PICKAXE,
-				BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD );
-		// Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new ItemCardboardColor(), ItemBlock.getItemFromBlock(
-		// BetterStorageBlocks.CARDBOARD_BOX ) );
+		if( BetterStorageItems.KEY != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.KEY );
+		if( BetterStorageItems.LOCK != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(), BetterStorageItems.LOCK );
+
+		if( BetterStorageItems.CARDBOARD_AXE != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE );
+		if( BetterStorageItems.CARDBOARD_BOOTS != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_BOOTS );
+		if( BetterStorageItems.CARDBOARD_CHESTPLATE != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_CHESTPLATE );
+		if( BetterStorageItems.CARDBOARD_HELMET != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_HELMET );
+		if( BetterStorageItems.CARDBOARD_HOE != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_HOE );
+		if( BetterStorageItems.CARDBOARD_LEGGINGS != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_LEGGINGS );
+		if( BetterStorageItems.CARDBOARD_PICKAXE != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_PICKAXE );
+		if( BetterStorageItems.CARDBOARD_SHOVEL != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_SHOVEL );
+		if( BetterStorageItems.CARDBOARD_SWORD != null )
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(), BetterStorageItems.CARDBOARD_SWORD );
 	}
 
 	/*
