@@ -30,7 +30,7 @@ configFile.withReader
 
 version = "${config.minecraft_version}-${config.mod_version}"
 group = "io.github.thestoneman.betterstorage"
-archivesBaseName = "BetterStorage"
+archivesBaseName = "BetterStorageToo"
 
 // java version
 sourceCompatibility = 1.8
