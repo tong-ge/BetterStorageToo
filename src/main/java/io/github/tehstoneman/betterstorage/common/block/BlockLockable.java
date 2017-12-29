@@ -1,17 +1,10 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
-import io.github.tehstoneman.betterstorage.attachment.Attachments;
-import io.github.tehstoneman.betterstorage.attachment.EnumAttachmentInteraction;
-import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
-import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
-import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -22,19 +15,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 
 public abstract class BlockLockable extends BlockContainerBetterStorage
 {
@@ -163,14 +152,16 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	 * }
 	 */
 
-	@Override
-	public void onBlockClicked( World worldIn, BlockPos pos, EntityPlayer playerIn )
-	{
-		// TODO: See if we can make a pull request to Forge to get PlayerInteractEvent to fire for left click on client.
-		final Attachments attachments = WorldUtils.get( worldIn, pos.getX(), pos.getY(), pos.getZ(), IHasAttachments.class ).getAttachments();
-		final boolean abort = attachments.interact( WorldUtils.rayTrace( playerIn, 1.0F ), playerIn, EnumAttachmentInteraction.attack );
-		// TODO: Abort block breaking? playerController.resetBlockBreaking doesn't seem to do the job.
-	}
+	/*
+	 * @Override
+	 * public void onBlockClicked( World worldIn, BlockPos pos, EntityPlayer playerIn )
+	 * {
+	 * // TODO: See if we can make a pull request to Forge to get PlayerInteractEvent to fire for left click on client.
+	 * final Attachments attachments = WorldUtils.get( worldIn, pos.getX(), pos.getY(), pos.getZ(), IHasAttachments.class ).getAttachments();
+	 * final boolean abort = attachments.interact( WorldUtils.rayTrace( playerIn, 1.0F ), playerIn, EnumAttachmentInteraction.attack );
+	 * // TODO: Abort block breaking? playerController.resetBlockBreaking doesn't seem to do the job.
+	 * }
+	 */
 
 	@Override
 	public boolean hasComparatorInputOverride( IBlockState state )
