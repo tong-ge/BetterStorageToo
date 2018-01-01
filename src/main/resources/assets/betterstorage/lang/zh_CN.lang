@@ -1,143 +1,123 @@
 # Containers
-container.betterstorage.craftingStation=合成站
-container.betterstorage.backpack=背包
-container.betterstorage.cardboardBox=纸箱
-container.betterstorage.crate=仓储货箱
-container.betterstorage.enderBackpack=末影背包
-container.betterstorage.keyring=钥匙链
-container.betterstorage.locker=柜子
-container.betterstorage.lockerLarge=大型柜子
-container.betterstorage.reinforcedChest=强化箱子
-container.betterstorage.reinforcedChestLarge=大型强化箱子
-container.betterstorage.reinforcedLocker=强化柜子
-container.betterstorage.reinforcedLockerLarge=大型强化柜子
-container.betterstorage.thaumcraftBackpack=神秘使背包
-container.betterstorage.thaumiumChest=神秘箱子
-container.betterstorage.thaumiumChestLarge=大型神秘箱子
+container.betterstorage.cardboard_box=纸箱
+container.betterstorage.crate.capacity=%% 容量
+container.betterstorage.crate=储物箱
+container.betterstorage.locker=储物柜
+container.betterstorage.locker_large=大型储物柜
+container.betterstorage.reinforced_chest=强化箱子
+container.betterstorage.reinforced_chest_large=大型强化箱子
+container.betterstorage.reinforced_locker=强化储物柜
+container.betterstorage.reinforced_locker_large=大型强化储物柜
 
 # Enchantments
 enchantment.betterstorage.key.lockpicking=撬锁钥匙
+enchantment.betterstorage.key.lockpicking.tooltip=启用或禁用‘撬锁钥匙’附魔。
 enchantment.betterstorage.key.morphing=匙齿变形
+enchantment.betterstorage.key.morphing.tooltip=启用或禁用‘匙齿变形’附魔。
 enchantment.betterstorage.key.unlocking=解锁钥匙
+enchantment.betterstorage.key.unlocking.tooltip=启用或禁用‘解锁钥匙’附魔。
 enchantment.betterstorage.lock.persistance=防爆锁
+enchantment.betterstorage.lock.persistance.tooltip=启用或禁用‘防爆锁’附魔。
 enchantment.betterstorage.lock.security=安全锁
+enchantment.betterstorage.lock.security.tooltip=启用或禁用‘安全锁’附魔。
 enchantment.betterstorage.lock.shock=电击锁
+enchantment.betterstorage.lock.shock.tooltip=启用或禁用‘电击锁’附魔。
 enchantment.betterstorage.lock.trigger=报信锁
-
-# Entities
-entity.BetterStorage.Frienderman.name=末影人
-
-# Items
-item.betterstorage.bucketSlime.name=桶中史莱姆
-item.betterstorage.cardboardAxe.name=纸板斧
-item.betterstorage.cardboardBoots.name=纸盒靴
-item.betterstorage.cardboardChestplate.name=纸盒胸甲
-item.betterstorage.cardboardHelmet.name=纸盒头盔
-item.betterstorage.cardboardHoe.name=纸板锄
-item.betterstorage.cardboardLeggings.name=纸盒护腿
-item.betterstorage.cardboardPickaxe.name=纸板稿
-item.betterstorage.cardboardSheet.name=纸箱板
-item.betterstorage.cardboardShovel.name=纸板铲
-item.betterstorage.cardboardSword.name=纸板剑
-item.betterstorage.drinkingHelmet.name=嗜饮头盔
-item.betterstorage.key.name=钥匙
-item.betterstorage.keyring.name=钥匙链
-item.betterstorage.lock.name=锁
-item.betterstorage.masterKey.name=万能钥匙
+enchantment.betterstorage.lock.trigger.tooltip=启用或禁用‘报信锁’附魔。
 
 # Creative tab
 itemGroup.betterstorage=更好存储
 
-# Keys
-key.betterstorage.backpackOpen=[更好存储] 打开背包
-key.betterstorage.drinkingHelmet=[更好存储] 使用嗜饮头盔
-
 # Container materials
-material.betterstorage.iron=铁
-material.betterstorage.gold=金
+material.betterstorage.copper=铜
 material.betterstorage.diamond=钻石
 material.betterstorage.emerald=绿宝石
-material.betterstorage.copper=铜
-material.betterstorage.tin=锡
+material.betterstorage.gold=金
+material.betterstorage.iron=铁
 material.betterstorage.silver=银
 material.betterstorage.steel=钢
+material.betterstorage.tin=锡
 material.betterstorage.zinc=锌
 
-# Thaumcraft
-tc.research_name.betterstorage.magicstorage=魔力存储
-tc.research_text.betterstorage.magicstorage=附魔你的储物容器
-tc.research_page.betterstorage.magicstorage.1=用自然属性的魔力和材料对背包注魔能增加背包的耐用性以及容量.被施加过修复附魔的物品即使装入这个背包也能回复耐久,虽然会比正常回复速度稍慢.<BR>用神秘锭改造的神秘箱子具有类似功能,你将得到了一个可以容纳更多物品也更加耐用的箱子. 
-
 # Blocks
-tile.betterstorage.craftingStation.name=合成站
-tile.betterstorage.armorStand.name=装备架
-tile.betterstorage.backpack.cantEquip.backpack=你已经背着背包了
-tile.betterstorage.backpack.cantEquip.chestplate=穿着胸甲的时候背不了背包
-tile.betterstorage.backpack.name=背包
-tile.betterstorage.cardboardBox.name=纸箱
-tile.betterstorage.crate.name=货箱
-tile.betterstorage.enderBackpack.name=末影背包
-tile.betterstorage.flintBlock.name=燧石块
-tile.betterstorage.locker.name=柜子
-tile.betterstorage.reinforcedChest.name=强化箱子
-tile.betterstorage.reinforcedChest.name.full=强化%MATERIAL%箱子
-tile.betterstorage.reinforcedLocker.name=强化柜子
-tile.betterstorage.reinforcedLocker.name.full=强化%MATERIAL%柜子
-tile.betterstorage.thaumcraftBackpack.name=神秘使背包
-tile.betterstorage.thaumiumChest.name=神秘箱子
+tile.betterstorage.cardboard_box.name=纸箱
+tile.betterstorage.cardboard_box.name.tooltip=启用或禁用纸箱。
+tile.betterstorage.crate.name=储物箱
+tile.betterstorage.crate.name.tooltip=启用或禁用储物箱。
+tile.betterstorage.flint_block.name=燧石块
+tile.betterstorage.flint_block.name.tooltip=启用或禁用燧石块
+tile.betterstorage.lockable_door.name=铁门（带锁）
+tile.betterstorage.lockable_door.name.tooltip=启用或禁用带锁的铁门。\n（需要启用钥匙）
+tile.betterstorage.locker.name=储物柜
+tile.betterstorage.locker.name.tooltip=启用或禁用储物柜。
+tile.betterstorage.reinforced_chest.name=强化箱子
+tile.betterstorage.reinforced_chest.name.full=强化 %s 箱子
+tile.betterstorage.reinforced_chest.name.tooltip=启用或禁用强化箱子。
+tile.betterstorage.reinforced_locker.name=强化储物柜
+tile.betterstorage.reinforced_locker.name.full=强化 %s 储物柜
+tile.betterstorage.reinforced_locker.name.tooltip=启用或禁用强化储物柜。\n（如果储物柜被禁用则其也无效）
+
+# Items
+item.betterstorage.bucket.slime.name=史莱姆桶
+item.betterstorage.bucket.slime.name.tooltip=启用或禁用史莱姆桶。
+item.betterstorage.cardboard_axe.name=纸板斧
+item.betterstorage.cardboard_axe.name.tooltip=启用或禁用纸板斧。
+item.betterstorage.cardboard_boots.name=纸板靴子
+item.betterstorage.cardboard_boots.name.tooltip=启用或禁用纸板靴子。
+item.betterstorage.cardboard_chestplate.name=纸板胸甲
+item.betterstorage.cardboard_chestplate.name.tooltip=启用或禁用纸板胸甲。
+item.betterstorage.cardboard_helmet.name=纸板头盔
+item.betterstorage.cardboard_helmet.name.tooltip=启用或禁用纸板头盔。
+item.betterstorage.cardboard_hoe.name=纸板锄
+item.betterstorage.cardboard_hoe.name.tooltip=启用或禁用纸板锄。
+item.betterstorage.cardboard_leggings.name=纸板护腿
+item.betterstorage.cardboard_leggings.name.tooltip=启用或禁用纸板护腿。
+item.betterstorage.cardboard_pickaxe.name=纸板镐
+item.betterstorage.cardboard_pickaxe.name.tooltip=启用或禁用纸板镐。
+item.betterstorage.cardboard_sheet.name=纸箱板
+item.betterstorage.cardboard_sheet.name.tooltip=启用或禁用纸箱板。
+item.betterstorage.cardboard_shovel.name=纸板铲
+item.betterstorage.cardboard_shovel.name.tooltip=启用或禁用纸板铲。
+item.betterstorage.cardboard_sword.name=纸板剑
+item.betterstorage.cardboard_sword.name.tooltip=启用或禁用纸板剑。
+item.betterstorage.key.name=钥匙
+item.betterstorage.key.name.tooltip=启用或禁用钥匙。
+item.betterstorage.keyring.name=钥匙链
+item.betterstorage.keyring.name.tooltip=启用或禁用钥匙链。\n（需要启用钥匙）
+item.betterstorage.lock.name=锁
+item.betterstorage.lock.name.tooltip=启用或禁用锁。\n（需要启用钥匙）
+item.betterstorage.master_key.name=万能钥匙
+item.betterstorage.master_key.name.tooltip=启用或禁用万能钥匙。\n（需要启用钥匙）
 
 # Tooltips
-tooltip.betterstorage.backpack.bound=用以绑定背包.
-tooltip.betterstorage.backpack.containsItems=用以容纳物品.
-tooltip.betterstorage.backpack.equipHint=放置状态下按住潜行#然后打掉就能装备上.
-tooltip.betterstorage.backpack.equipHint.extended=潜行打掉就能装备.#空手时潜行右击地面#就能将其脱下.
-tooltip.betterstorage.backpack.openHint=装备时按住%KEY%打开背包界面.
-tooltip.betterstorage.backpack.unequipHint=空手情况下对着空地按住潜行#并右击地面来卸下背包.
-tooltip.betterstorage.backpack.unequipHint.extended=%INFO%空手情况下对着空地按住潜行#并右击地面来卸下背包.
-tooltip.betterstorage.backpack.used=背包当前正在被玩家翻开.
-tooltip.betterstorage.bucketSlime.more.1=能再添加1个效果...
-tooltip.betterstorage.bucketSlime.more.x=能再添加%X%个效果...
-tooltip.betterstorage.cardboardBox.more.1=能再添加1个物品...
-tooltip.betterstorage.cardboardBox.more.x=能再添加%X%个物品...
-tooltip.betterstorage.cardboardBox.useHint=一次性可携带存储工具.
-tooltip.betterstorage.cardboardBox.useHint.reusable=可以重复使用的存储工具.
-tooltip.betterstorage.drinkingHelmet.craftHint=与两瓶药水合成.
-tooltip.betterstorage.drinkingHelmet.useHint=按下%KEY%小啜一口.
-tooltip.betterstorage.drinkingHelmet.uses=剩余次数: %USES%
+tooltip.betterstorage.bucket.slime.contains=包含： %s
+tooltip.betterstorage.cardboardBox.containsItems=包含物品
+tooltip.betterstorage.cardboardBox.plusMore=...还包含 %s 
+tooltip.betterstorage.cardboardBox.useHint.reusable=可重复使用的储物容器
+tooltip.betterstorage.cardboardBox.useHint=仅一次性携带的储物容器
+tooltip.betterstorage.cardboardBox.uses=剩余使用次数： %s
 
 # Config
+config.betterstorage.category.block=方块
+config.betterstorage.category.block.tooltip=切换某种方块是否激活。
 config.betterstorage.category.item=物品
-config.betterstorage.category.item.tooltip=切换某种物品是否激活.
-config.betterstorage.category.tile=方块
-config.betterstorage.category.tile.tooltip=切换某种方块是否激活.
+config.betterstorage.category.item.tooltip=切换某种物品是否激活。
 config.betterstorage.category.enchantment=附魔
 config.betterstorage.category.enchantment.tooltip=变更附魔id
 
-config.betterstorage.general.reinforcedColumns=高级箱子列数
-config.betterstorage.general.reinforcedColumns.tooltip=强化箱子和柜子界面内物品栏的列数,有效值包括9,11和13.
-config.betterstorage.general.enableCrateInventoryInterface仓储货箱物品栏界面
-config.betterstorage.general.enableCrateInventoryInterface.tooltip=激活后会显露出一个特殊观察方块,通过它能够实现自动输入输出物品.
-config.betterstorage.general.enableCrateStorageInterface=仓储货箱储物界面
-config.betterstorage.general.enableCrateStorageInterface.tooltip=禁用后阻止模组(比如AE)使用仓储货箱.
-config.betterstorage.general.backpackChestplate=背包护甲
-config.betterstorage.general.backpackChestplate.tooltip=禁用后背包将不占用护甲栏.
-config.betterstorage.general.backpackRows=背包行数
-config.betterstorage.general.backpackRows.tooltip=背包内物品栏的行数.
-config.betterstorage.general.enableBackpackOpen=背包开启
-config.betterstorage.general.enableBackpackOpen.tooltip=允许按下A键开启已装备背包的物品栏界面.
-config.betterstorage.general.enableBackpackInteraction=背包互动
-config.betterstorage.general.enableBackpackInteraction.tooltip=允许其他玩家右击打开背包.
-config.betterstorage.general.dropBackpackOnDeath=背包掉落
-config.betterstorage.general.dropBackpackOnDeath.tooltip=激活后掉落的背包将视为容器方块,而不会暴出一地物品.
 config.betterstorage.general.cardboardBoxRows=纸箱行数
 config.betterstorage.general.cardboardBoxRows.tooltip=纸箱内物品栏行数
-config.betterstorage.general.cardboardBoxReusable=纸箱重复使用
-config.betterstorage.general.cardboardBoxReusable.tooltip=激活后纸箱可以无限使用而不再是一次性消耗品.
-config.betterstorage.general.enableStationAutoCrafting=合成站自动合成
-config.betterstorage.general.enableStationAutoCrafting.tooltip=激活后可以连接自动化系统实现自动合成物品.
-config.betterstorage.general.stationAutocraftDelay=自动合成延迟
-config.betterstorage.general.stationAutocraftDelay.tooltip=合成站中两次合成之间所需的冷却时间,单位为ticks.
+config.betterstorage.general.cardboardBoxShowContents=纸箱提示内容
+config.betterstorage.general.cardboardBoxShowContents.tooltip=如果禁用，则不会在进行提示内容。
+config.betterstorage.general.cardboardBoxUses=纸箱使用次数
+config.betterstorage.general.cardboardBoxUses.tooltip=纸箱在破损前可以使用的次数，设置0即可无限使用。
+config.betterstorage.general.enableCrateInventoryInterface=仓储货箱物品栏界面
+config.betterstorage.general.enableCrateInventoryInterface.tooltip=启用后会显露出一个特殊观察方块，通过它能够实现自动输入输出物品。
 config.betterstorage.general.enableHelpTooltips=提示
-config.betterstorage.general.enableHelpTooltips.tooltip=激活后在物品下显示信息帮助新玩家了解用法.
+config.betterstorage.general.enableHelpTooltips.tooltip=启用后在物品下显示信息帮助新玩家了解用法。
 config.betterstorage.general.enableWarningMessages=调试信息
-config.betterstorage.general.enableWarningMessages.tooltip=激活后禁止某些信息显示到控制台中.
+config.betterstorage.general.enableWarningMessages.tooltip=启用后禁止某些信息显示到控制台中。
+config.betterstorage.general.lockBreakable=锁的开关
+config.betterstorage.general.lockBreakable.tooltip=如果禁用，则无法使用工具来开启锁。
+config.betterstorage.general.reinforcedColumns=强化箱子列数
+config.betterstorage.general.reinforcedColumns.tooltip=强化箱子内物品栏行数，有效值为9,11以及13。
