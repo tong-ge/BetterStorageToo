@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
+import java.util.logging.Logger;
+
 import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import net.minecraft.block.Block;
@@ -84,6 +87,7 @@ public class ItemBlockReinforcedChest extends ItemBlock
 		// final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
 		// return super.getUnlocalizedName() + "." + material.getUnlocalizedName();
 		final EnumReinforced material = BetterStorageAPI.materials.get( stack );
+		Logger.getLogger( ModInfo.modId ).info( "Material : " + material );
 		if( material != null )
 		{
 			final String materialName = BetterStorage.proxy.localize( material.getUnlocalizedName() );

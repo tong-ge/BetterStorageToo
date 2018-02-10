@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< TileEntityLockableDoor >
 {
-	@Override
+	/*@Override
 	public void renderTileEntityAt( TileEntityLockableDoor door, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		GlStateManager.pushAttrib();
@@ -54,7 +54,7 @@ public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< T
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
-	}
+	}*/
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
 	private void renderItem( TileEntityLockableDoor door, float partialTicks, int destroyStage, IBlockState state )
@@ -64,7 +64,7 @@ public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< T
 		if( itemstack != null )
 		{
 			final EntityItem entityitem = new EntityItem( door.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-			final Item item = entityitem.getEntityItem().getItem();
+			final Item item = entityitem.getItem().getItem();
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 			GlStateManager.rotate( 180.0F, 0.0F, 1.0F, 0.0F );
@@ -86,7 +86,7 @@ public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< T
 
 			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
-			itemRenderer.renderItem( entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED );
+			itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 

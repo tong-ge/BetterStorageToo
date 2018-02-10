@@ -50,16 +50,16 @@ public final class Recipes
 		if( BetterStorage.config.lockerEnabled )
 		{
 			//@formatter:off
-			GameRegistry.addRecipe(
+/*			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
 							new Object[] { "ooo",
 										   "o |",
 										   "ooo",	'o', "plankWood",
 										   			'|', Blocks.TRAPDOOR } ) );
-			//@formatter:on
+*/			//@formatter:on
 
 			// Reinforced locker recipes
-			if( BetterStorage.config.reinforcedLockerEnabled )
+/*			if( BetterStorage.config.reinforcedLockerEnabled )
 				for( final EnumReinforced material : EnumReinforced.values() )
 					//@formatter:off
 					GameRegistry.addRecipe(
@@ -72,19 +72,19 @@ public final class Recipes
 												   			'o', material.getOreDictIngot(),
 												   			'O', material.getOreDictBlock() } ) );
 						//@formatter:on
-		}
+*/		}
 
 		// Cardboard box recipe
 		if( BetterStorage.config.cardboardBoxEnabled )
 		{
 			//@formatter:off
-			GameRegistry.addRecipe(
+/*			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.CARDBOARD_BOX ),
 							new Object[] { false,
 										   "ooo",
 										   "o o",
 										   "ooo",	'o', "sheetCardboard" } ) );
-			//@formatter:on
+*/			//@formatter:on
 		}
 
 		// Crafting Station recipe
@@ -116,12 +116,12 @@ public final class Recipes
 		if( BetterStorage.config.flintBlockEnabled )
 		{
 			//@formatter:off
-			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.BLOCK_FLINT ),
+/*			GameRegistry.addShapedRecipe( new ItemStack( BetterStorageBlocks.BLOCK_FLINT ),
 					new Object[]{ "ooo",
 								  "ooo",
 								  "ooo",	'o', Items.FLINT } );
 			GameRegistry.addShapelessRecipe( new ItemStack( Items.FLINT, 9 ), BetterStorageBlocks.BLOCK_FLINT );
-			//@formatter:on
+*/			//@formatter:on
 		}
 
 	}
@@ -133,20 +133,20 @@ public final class Recipes
 		{
 			// Key recipes
 			//@formatter:off
-			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEY ),
+/*			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEY ),
 					new Object[] { ".o",
 								   ".o",
 								   " o", 'o', "ingotGold",
 								   		 '.', "nuggetGold" } );
 			GameRegistry.addRecipe( keyRecipe );
-
+*/
 			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.KEY ),
 					new Object[] { ".o",
 								   ".o",
 								   "ko", 'o', "ingotGold",
 								   		 '.', "nuggetGold",
 								   		 'k', new ItemStack( BetterStorageItems.KEY ) } );
-			GameRegistry.addRecipe( keyCopyRecipe );
+//			GameRegistry.addRecipe( keyCopyRecipe );
 
 			if( BetterStorage.config.lockEnabled )
 			{
@@ -158,11 +158,11 @@ public final class Recipes
 									   "gig", 'g', "ingotGold",
 									   		  'k', new ItemStack( BetterStorageItems.KEY ),
 									   		  'i', "ingotIron" } );
-				GameRegistry.addRecipe( lockRecipe );
+//				GameRegistry.addRecipe( lockRecipe );
 			}
 
 			// Keyring recipe
-			if( BetterStorage.config.keyringEnabled )
+/*			if( BetterStorage.config.keyringEnabled )
 			{
 				//@formatter:off
 				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEYRING ),
@@ -173,7 +173,7 @@ public final class Recipes
 				GameRegistry.addRecipe( keyRingRecipe );
 				//@formatter:on
 			}
-		}
+*/		}
 
 		// Drinking helmet recipe
 		// if( BetterStorageItems.drinkingHelmet != null ) GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
@@ -184,49 +184,49 @@ public final class Recipes
 	{
 		//@formatter:off
 		// Cardboard sheet recipe
-		if( BetterStorage.config.cardboardSheetEnabled )
+/*		if( BetterStorage.config.cardboardSheetEnabled )
 			GameRegistry.addRecipe(
 					new ShapelessOreRecipe(  new ItemStack( BetterStorageItems.CARDBOARD_SHEET, 4 ),
 							new Object[] { "paper",     "paper", "paper",
 									   	   "paper", "slimeball", "paper",
 									   	   "paper",     "paper", "paper" } ) );
-
+*/
 		// Cardboard helmet recipe
-		if( BetterStorage.config.cardboardHelmetEnabled )
+/*		if( BetterStorage.config.cardboardHelmetEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HELMET ),
 							new Object[]{ false,
 										  "ooo",
 										  "o o",	'o', "sheetCardboard" } ) );
-
+*/
 		// Cardboard chestplate recipe
-		if( BetterStorage.config.cardboardChestplateEnabled )
+/*		if( BetterStorage.config.cardboardChestplateEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_CHESTPLATE ),
 							new Object[]{ false,
 										  "o o",
 										  "ooo",
 										  "ooo",	'o', "sheetCardboard" } ) );
-
+*/
 		// Cardboard leggings recipe
-		if( BetterStorage.config.cardboardLeggingsEnabled )
+/*		if( BetterStorage.config.cardboardLeggingsEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_LEGGINGS ),
 							new Object[]{ false,
 										  "ooo",
 										  "o o",
 										  "o o",	'o', "sheetCardboard" } ) );
-
+*/
 		// Cardboard boots recipe
-		if( BetterStorage.config.cardboardBootsEnabled )
+/*		if( BetterStorage.config.cardboardBootsEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_BOOTS ),
 							new Object[]{ false,
 										  "o o",
 										  "o o",	'o', "sheetCardboard" } ) );
-
+*/
 		// Cardboard sword recipe
-		if( BetterStorage.config.cardboardSwordEnabled )
+/*		if( BetterStorage.config.cardboardSwordEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SWORD ),
 							new Object[]{ false,
@@ -234,9 +234,9 @@ public final class Recipes
 										  "o",
 										  "/",	'o', "sheetCardboard",
 										  		'/', "stickWood" } ) );
-
+*/
 		// Cardboard pickaxe recipe
-		if( BetterStorage.config.cardboardPickaxeEnabled )
+/*		if( BetterStorage.config.cardboardPickaxeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_PICKAXE ),
 							new Object[]{ false,
@@ -244,9 +244,9 @@ public final class Recipes
 										  " / ",
 										  " / ",	'o', "sheetCardboard",
 										  			'/', "stickWood" } ) );
-
+*/
 		// Cardboard shovel recipe
-		if( BetterStorage.config.cardboardShovelEnabled )
+/*		if( BetterStorage.config.cardboardShovelEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_SHOVEL ),
 							new Object[]{ false,
@@ -254,25 +254,25 @@ public final class Recipes
 										  "/",
 										  "/",	'o', "sheetCardboard",
 								  				'/', "stickWood" } ) );
-
+*/
 		// Cardboard axe recipe
-		if( BetterStorage.config.cardboardAxeEnabled )
+/*		if( BetterStorage.config.cardboardAxeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_AXE ),
 							new Object[] { "oo",
 										   "o/",
 										   " /",	'o', "sheetCardboard",
 										   			'/', "stickWood" } ) );
-
+*/
 		// Cardboard hoe recipe
-		if( BetterStorage.config.cardboardHoeEnabled )
+/*		if( BetterStorage.config.cardboardHoeEnabled )
 			GameRegistry.addRecipe(
 					new ShapedOreRecipe( new ItemStack( BetterStorageItems.CARDBOARD_HOE ),
 							new Object[]{ "oo",
 									" /",
 									" /",	'o', "sheetCardboard",
 											'/', "stickWood" } ) );
-		//@formatter:on
+*/		//@formatter:on
 
 		/*
 		 * if( BetterStorageItems.anyCardboardItemsEnabled )

@@ -14,7 +14,7 @@ public class LockRecipe extends ShapedOreRecipe
 
 	public LockRecipe( ItemStack result, Object[] recipe )
 	{
-		super( result, recipe );
+		super( null, result, recipe );
 		mirrored = false;
 	}
 

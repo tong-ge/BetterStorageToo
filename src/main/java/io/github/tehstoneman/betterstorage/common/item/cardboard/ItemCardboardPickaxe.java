@@ -31,7 +31,7 @@ public class ItemCardboardPickaxe extends ItemPickaxe implements ICardboardItem
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		setRegistryName( name );
-		GameRegistry.register( this );
+		//GameRegistry.register( this );
 	}
 
 	@SideOnly( Side.CLIENT )

@@ -14,7 +14,7 @@ public class CopyKeyRecipe extends ShapedOreRecipe
 {
 	public CopyKeyRecipe( ItemStack result, Object[] recipe )
 	{
-		super( result, recipe );
+		super( null, result, recipe );
 	}
 
 	@Override

@@ -132,12 +132,12 @@ public class BlockReinforcedChest extends BlockLockable
 	public void registerItemModels( ItemModelMesher mesher )
 	{
 		final Item item = Item.getItemFromBlock( this );
-		final ModelResourceLocation model = new ModelResourceLocation( getRegistryName(), "inventory" );
+		//final ModelResourceLocation model = new ModelResourceLocation( getRegistryName(), "inventory" );
 		for( final EnumReinforced material : EnumReinforced.values() )
 		{
-			//final ModelResourceLocation model = new ModelResourceLocation( getRegistryName() + "_" + material.getName(), "inventory" );
-			Logger.getLogger( ModInfo.modId ).info( model.toString() );
+			final ModelResourceLocation model = new ModelResourceLocation( getRegistryName() + "_" + material.getName(), "inventory" );
 			final int meta = material.getMetadata();
+			Logger.getLogger( ModInfo.modId ).info( item + " " + meta + " " + model.toString() );
 			ModelLoader.setCustomModelResourceLocation( item, meta, model );
 			mesher.register( item, meta, model );
 		}

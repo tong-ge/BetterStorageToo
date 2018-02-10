@@ -11,7 +11,9 @@ import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.item.ItemBucketSlime;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
@@ -58,6 +60,27 @@ public class BetterStorageEventHandler
 			registry.register( BetterStorageBlocks.REINFORCED_CHEST );
 			GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
 		}
+		if( BetterStorage.config.lockerEnabled )
+		{
+			BetterStorageBlocks.LOCKER.setUnlocalizedName( ModInfo.modId + "." + BetterStorageBlocks.LOCKER.getBlockName() );
+			BetterStorageBlocks.LOCKER.setRegistryName( BetterStorageBlocks.LOCKER.getBlockName() );
+			registry.register( BetterStorageBlocks.LOCKER );
+			GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
+			if( BetterStorage.config.reinforcedLockerEnabled )
+			{
+				BetterStorageBlocks.REINFORCED_LOCKER
+						.setUnlocalizedName( ModInfo.modId + "." + BetterStorageBlocks.REINFORCED_LOCKER.getBlockName() );
+				BetterStorageBlocks.REINFORCED_LOCKER.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getBlockName() );
+				registry.register( BetterStorageBlocks.REINFORCED_LOCKER );
+				GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
+			}
+		}
+		if( BetterStorage.config.flintBlockEnabled )
+		{
+			BetterStorageBlocks.BLOCK_FLINT.setUnlocalizedName( ModInfo.modId + "." + BetterStorageBlocks.BLOCK_FLINT.getBlockName() );
+			BetterStorageBlocks.BLOCK_FLINT.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getBlockName() );
+			registry.register( BetterStorageBlocks.BLOCK_FLINT );
+		}
 	}
 
 	@SubscribeEvent
@@ -71,6 +94,15 @@ public class BetterStorageEventHandler
 		if( BetterStorage.config.reinforcedChestEnabled )
 			registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST )
 					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
+
+		if( BetterStorage.config.lockerEnabled )
+		{
+			registry.register(
+					new ItemBlockReinforcedChest( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+			if( BetterStorage.config.reinforcedLockerEnabled )
+				registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_LOCKER )
+						.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+		}
 	}
 
 	@SubscribeEvent

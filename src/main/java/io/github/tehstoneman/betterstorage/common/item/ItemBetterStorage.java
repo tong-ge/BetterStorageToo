@@ -24,7 +24,7 @@ public abstract class ItemBetterStorage extends Item
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		setRegistryName( name );
-		GameRegistry.register( this );
+		//GameRegistry.register( this );
 	}
 
 	@SideOnly( Side.CLIENT )

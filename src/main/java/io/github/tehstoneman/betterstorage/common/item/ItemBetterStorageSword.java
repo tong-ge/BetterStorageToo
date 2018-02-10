@@ -23,7 +23,7 @@ public abstract class ItemBetterStorageSword extends ItemSword
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		setRegistryName( name );
-		GameRegistry.register( this );
+		//GameRegistry.register( this );
 	}
 
 	@SideOnly( Side.CLIENT )

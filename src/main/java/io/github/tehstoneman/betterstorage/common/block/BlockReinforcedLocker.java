@@ -149,14 +149,14 @@ public class BlockReinforcedLocker extends BlockLockable
 		return true;
 	}
 
-	@Override
+	/*@Override
 	@SideOnly( Side.CLIENT )
 	public void registerItemModels()
 	{
 		for( final EnumReinforced material : EnumReinforced.values() )
 			ModelLoader.setCustomModelResourceLocation( Item.getItemFromBlock( this ), material.getMetadata(),
 					new ModelResourceLocation( getRegistryName() + "_" + material.getName(), "inventory" ) );
-	}
+	}*/
 
 	@Override
 	protected ItemBlock getItemBlock()

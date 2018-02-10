@@ -32,7 +32,7 @@ public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		setRegistryName( name );
-		GameRegistry.register( this );
+		//GameRegistry.register( this );
 	}
 
 	@SideOnly( Side.CLIENT )

@@ -55,13 +55,13 @@ public class BlockLockableDoor extends BlockBetterStorage
 		//@formatter:on
 	}
 
-	@Override
+	/*@Override
 	public void registerBlock()
 	{
 		setUnlocalizedName( ModInfo.modId + "." + name );
 		this.setRegistryName( name );
 		GameRegistry.register( this );
-	}
+	}*/
 
 	@Override
 	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos )

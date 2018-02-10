@@ -36,16 +36,16 @@ public class ReinforcedMaterial
 
 	public ShapedOreRecipe getReinforcedRecipe( Block middle, Block result )
 	{
-		if( ingot == null || block == null )
+		//if( ingot == null || block == null )
 			return null;
 		//@formatter:off
-		return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ),
+		/*return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ),
 								"o#o",
 								"#C#",
 								"oOo",	'C', middle,
 										'#', "logWood",
 										'o', ingot,
-										'O', block );
+										'O', block );*/
 		//@formatter:on
 	}
 

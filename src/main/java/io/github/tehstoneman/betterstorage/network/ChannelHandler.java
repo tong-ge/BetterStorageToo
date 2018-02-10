@@ -23,7 +23,7 @@ public class ChannelHandler extends SimpleNetworkWrapper
 		// register(5, Side.CLIENT, PacketBackpackStack.class);
 		// register( 6, Side.SERVER, PacketDrinkingHelmetUse.class );
 		// register( 7, Side.SERVER, PacketLockHit.class );
-		register( 8, Side.CLIENT, PacketSyncSetting.class );
+		//register( 8, Side.CLIENT, PacketSyncSetting.class );
 		// register( 9, Side.CLIENT, PacketPresentOpen.class );
 	}
 

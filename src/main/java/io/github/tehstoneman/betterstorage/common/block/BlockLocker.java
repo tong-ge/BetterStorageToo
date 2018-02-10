@@ -76,12 +76,12 @@ public class BlockLocker extends BlockLockable
 		return true;
 	}
 
-	@Override
+	/*@Override
 	@SideOnly( Side.CLIENT )
 	public EnumBlockRenderType getRenderType( IBlockState state )
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
+	}*/
 
 	@Override
 	public BlockStateContainer createBlockState()
