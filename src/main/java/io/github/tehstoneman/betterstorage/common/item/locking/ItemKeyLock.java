@@ -96,7 +96,6 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 	}
 
 	@SideOnly( Side.CLIENT )
-	@SuppressWarnings( "unchecked" )
 	@Override
 	public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	{

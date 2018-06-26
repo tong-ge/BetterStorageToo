@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:reinforced_chest_diamond" ]
+	},
+	"criteria":
+	{
+		"has_chest":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "item": "minecraft:chest" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:reinforced_chest_diamond" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_chest",
+			"has_the_recipe"
+		]
+	]
+}

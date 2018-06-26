@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +20,7 @@ public class ItemBlockCrate extends ItemBlock
 	public ItemBlockCrate( Block block )
 	{
 		super( block );
+		setCreativeTab( BetterStorage.creativeTab );
 	}
 
 	@Override
@@ -36,6 +37,7 @@ public class ItemBlockCrate extends ItemBlock
 	@SideOnly( Side.CLIENT )
 	public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	{
-		block.getSubBlocks( tab, subItems );
+		if( isInCreativeTab( tab ) )
+			block.getSubBlocks( tab, subItems );
 	}
 }

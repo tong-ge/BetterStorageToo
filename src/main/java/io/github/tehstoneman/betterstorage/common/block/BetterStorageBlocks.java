@@ -21,10 +21,6 @@ public final class BetterStorageBlocks
 	{
 		final ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
-		if( BetterStorage.config.crateEnabled )
-			CRATE.registerItemModels( mesher );
-		if( BetterStorage.config.reinforcedChestEnabled )
-			REINFORCED_CHEST.registerItemModels( mesher );
 		/*
 		 * if( BetterStorage.config.lockerEnabled )
 		 * {
