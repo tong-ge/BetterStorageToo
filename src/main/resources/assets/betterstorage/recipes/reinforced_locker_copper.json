@@ -1,0 +1,18 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "betterstorage:reinforced_locker",
+	"pattern":
+	[
+		"o#o",
+		"#C#",
+		"oOo"
+	],
+	"key":
+	{
+		"C": { "item": "betterstorage:locker" },
+		"#": { "type": "forge:ore_dict", "ore": "logWood" },
+		"o": { "type": "forge:ore_dict", "ore": "ingotCopper" },
+		"O": { "type": "forge:ore_dict", "ore": "blockCopper" }
+	},
+	"result": { "item": "betterstorage:reinforced_locker", "data": 4 }
+}

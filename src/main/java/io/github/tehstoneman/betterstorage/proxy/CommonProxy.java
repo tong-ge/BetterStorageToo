@@ -27,12 +27,6 @@ public class CommonProxy
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 
 		/*
-		// Register blocks and items
-		if( BetterStorage.config.reinforcedChestEnabled )
-		{
-			BetterStorageBlocks.REINFORCED_CHEST.registerBlock();
-			GameRegistry.registerTileEntity( TileEntityReinforcedChest.class, ModInfo.containerReinforcedChest );
-		}
 		if( BetterStorage.config.lockerEnabled )
 		{
 			BetterStorageBlocks.LOCKER.registerBlock();

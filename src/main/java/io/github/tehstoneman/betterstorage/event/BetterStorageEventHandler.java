@@ -1,19 +1,17 @@
 package io.github.tehstoneman.betterstorage.event;
 
-import java.util.Objects;
-import java.util.function.ToIntFunction;
-import java.util.logging.Logger;
-
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.IDyeableItem;
+import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBucketSlime;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
@@ -22,7 +20,6 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -33,7 +30,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -112,10 +108,9 @@ public class BetterStorageEventHandler
 
 		if( BetterStorage.config.lockerEnabled )
 		{
-			registry.register(
-					new ItemBlockReinforcedChest( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+			registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 			if( BetterStorage.config.reinforcedLockerEnabled )
-				registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_LOCKER )
+				registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER )
 						.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
 		}
 	}
@@ -123,16 +118,33 @@ public class BetterStorageEventHandler
 	@SubscribeEvent
 	public void onRegisterModels( ModelRegistryEvent event )
 	{
-		//ModelLoader.setCustomStateMapper( block, mapper );
+		// ModelLoader.setCustomStateMapper( block, mapper );
+
+		final SizeStateMap sizeStateMap = new SizeStateMap();
 
 		if( BetterStorage.config.crateEnabled )
 			registerItemModel( BetterStorageBlocks.CRATE );
-		
+
 		if( BetterStorage.config.reinforcedChestEnabled )
+		{
+			ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_CHEST, sizeStateMap );
 			for( final EnumReinforced material : EnumReinforced.values() )
+				registerItemModel( BetterStorageBlocks.REINFORCED_CHEST, material.getMetadata(),
+						BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() + "_" + material.getName() );
+		}
+
+		if( BetterStorage.config.lockerEnabled )
+		{
+			ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, sizeStateMap );
+			registerItemModel( BetterStorageBlocks.LOCKER );
+			if( BetterStorage.config.reinforcedLockerEnabled )
 			{
-				registerItemModel( BetterStorageBlocks.REINFORCED_CHEST, material.getMetadata(), BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() + "_" + material.getName() );
+				ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_LOCKER, sizeStateMap );
+				for( final EnumReinforced material : EnumReinforced.values() )
+					registerItemModel( BetterStorageBlocks.REINFORCED_LOCKER, material.getMetadata(),
+							BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() + "_" + material.getName() );
 			}
+		}
 
 	}
 
@@ -278,9 +290,7 @@ public class BetterStorageEventHandler
 		final Item item = Item.getItemFromBlock( state.getBlock() );
 
 		if( item != Items.AIR )
-		{
 			registerItemModel( item, metadata, propertyStringMapper.getPropertyString( state.getProperties() ) );
-		}
 	}
 
 	private void registerItemModel( Block block )
@@ -288,9 +298,7 @@ public class BetterStorageEventHandler
 		final Item item = Item.getItemFromBlock( block );
 
 		if( item != Items.AIR )
-		{
 			registerItemModel( item );
-		}
 	}
 
 	private void registerItemModel( Block block, int metadata, String modelLocation )
@@ -298,9 +306,7 @@ public class BetterStorageEventHandler
 		final Item item = Item.getItemFromBlock( block );
 
 		if( item != Items.AIR )
-		{
 			registerItemModel( item, metadata, modelLocation );
-		}
 	}
 
 	/**
@@ -351,7 +357,6 @@ public class BetterStorageEventHandler
 	 */
 	private void registerItemModel( Item item, ModelResourceLocation fullModelLocation )
 	{
-		Logger.getLogger( ModInfo.modId ).info( "item " + item + " : model " + fullModelLocation );
 		ModelBakery.registerItemVariants( item, fullModelLocation );
 		registerItemModel( item, stack -> fullModelLocation );
 	}
@@ -383,7 +388,6 @@ public class BetterStorageEventHandler
 	 */
 	private void registerItemModel( Item item, int metadata, ModelResourceLocation modelResourceLocation )
 	{
-		Logger.getLogger( ModInfo.modId ).info( "registerItemModelForMeta : " + modelResourceLocation );
 		ModelLoader.setCustomModelResourceLocation( item, metadata, modelResourceLocation );
 	}
 }

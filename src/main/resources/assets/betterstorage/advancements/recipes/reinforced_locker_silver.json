@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:reinforced_locker_silver" ]
+	},
+	"criteria":
+	{
+		"has_chest":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "item": "betterstorage:locker" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:reinforced_locker_silver" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_chest",
+			"has_the_recipe"
+		]
+	]
+}

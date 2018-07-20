@@ -45,12 +45,6 @@ public class BlockReinforcedChest extends BlockLockable
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
 	public boolean isOpaqueCube( IBlockState state )
 	{
 		return false;
@@ -60,6 +54,12 @@ public class BlockReinforcedChest extends BlockLockable
 	public boolean isFullCube( IBlockState state )
 	{
 		return false;
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType( IBlockState state )
+	{
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override

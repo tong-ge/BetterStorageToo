@@ -24,7 +24,6 @@ public class ItemBlockReinforcedLocker extends ItemBlockLocker
 	public String getItemStackDisplayName( ItemStack stack )
 	{
 		final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
-		// final EnumReinforced material = BetterStorageAPI.materials.getMaterial( stack );
 		if( material != null )
 		{
 			final String materialName = BetterStorage.proxy.localize( material.getUnlocalizedName() );
@@ -38,8 +37,6 @@ public class ItemBlockReinforcedLocker extends ItemBlockLocker
 	public String getUnlocalizedName( ItemStack stack )
 	{
 		final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
-		// return super.getUnlocalizedName() + "." + material.getUnlocalizedName();
-		// final EnumReinforced material = BetterStorageAPI.materials.getMaterial( stack );
 		if( material != null )
 		{
 			final String materialName = BetterStorage.proxy.localize( material.getUnlocalizedName() );

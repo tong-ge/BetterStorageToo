@@ -49,15 +49,6 @@ public final class Recipes
 		// Locker recipe
 		if( BetterStorage.config.lockerEnabled )
 		{
-			//@formatter:off
-/*			GameRegistry.addRecipe(
-					new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.LOCKER ),
-							new Object[] { "ooo",
-										   "o |",
-										   "ooo",	'o', "plankWood",
-										   			'|', Blocks.TRAPDOOR } ) );
-*/			//@formatter:on
-
 			// Reinforced locker recipes
 /*			if( BetterStorage.config.reinforcedLockerEnabled )
 				for( final EnumReinforced material : EnumReinforced.values() )

@@ -1,13 +1,19 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
+import java.util.logging.Logger;
+
 import org.lwjgl.opengl.GL11;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoor.EnumHingePosition;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
@@ -17,11 +23,14 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,41 +40,39 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 {
 	protected static BlockRendererDispatcher blockRenderer;
 
-	/*
-	 * @Override
-	 * public void renderTileEntityAt( TileEntityLocker locker, double x, double y, double z, float partialTicks, int destroyStage )
-	 * {
-	 * if( !locker.isMain() )
-	 * return;
-	 * GlStateManager.pushAttrib();
-	 * GlStateManager.pushMatrix();
-	 * 
-	 * GlStateManager.translate( x, y, z );
-	 * GlStateManager.disableRescaleNormal();
-	 * 
-	 * final BlockPos pos = locker.getPos();
-	 * final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( locker.getWorld(), pos );
-	 * IBlockState state = world.getBlockState( pos );
-	 * if( state.getPropertyKeys().contains( BlockLockable.MATERIAL ) )
-	 * state = state.withProperty( BlockLockable.MATERIAL, locker.getMaterial() );
-	 * state = state.withProperty( BlockLockable.CONNECTED, locker.isConnected() );
-	 * 
-	 * if( blockRenderer == null )
-	 * blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
-	 * 
-	 * GlStateManager.translate( 0.5, 0.0, 0.5 );
-	 * final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
-	 * GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
-	 * GlStateManager.translate( -0.5, 0.0, -0.5 );
-	 * 
-	 * renderBase( locker, partialTicks, destroyStage, state );
-	 * renderDoor( locker, partialTicks, destroyStage, state );
-	 * renderItem( locker, partialTicks, destroyStage, state );
-	 * 
-	 * GlStateManager.popMatrix();
-	 * GlStateManager.popAttrib();
-	 * }
-	 */
+	@Override
+	public void render( TileEntityLocker locker, double x, double y, double z, float partialTicks, int destroyStage, float alpha )
+	{
+		if( !locker.isMain() )
+			return;
+		GlStateManager.pushAttrib();
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate( x, y, z );
+		GlStateManager.disableRescaleNormal();
+
+		final BlockPos pos = locker.getPos();
+		final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( locker.getWorld(), pos );
+		IBlockState state = world.getBlockState( pos );
+		if( state.getPropertyKeys().contains( BlockLockable.MATERIAL ) )
+			state = state.withProperty( BlockLockable.MATERIAL, locker.getMaterial() );
+		state = state.withProperty( BlockLockable.CONNECTED, locker.isConnected() );
+
+		if( blockRenderer == null )
+			blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+
+		GlStateManager.translate( 0.5, 0.0, 0.5 );
+		final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
+		GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
+		GlStateManager.translate( -0.5, 0.0, -0.5 );
+
+		renderBase( locker, partialTicks, destroyStage, state );
+		renderDoor( locker, partialTicks, destroyStage, state );
+		renderItem( locker, partialTicks, destroyStage, state );
+
+		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
+	}
 
 	private void renderBase( TileEntityLocker locker, float partialTicks, int destroyStage, IBlockState state )
 	{
@@ -82,10 +89,12 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		GlStateManager.translate( -locker.getPos().getX(), -locker.getPos().getY(), -locker.getPos().getZ() );
 
 		final Tessellator tessellator = Tessellator.getInstance();
-		/*final VertexBuffer buffer = tessellator.getBuffer();
+
+		final BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
 		final IBakedModel model = blockRenderer.getBlockModelShapes().getModelForState( state.withProperty( Properties.StaticProperty, true ) );
-		blockRenderer.getBlockModelRenderer().renderModel( world, model, state, locker.getPos(), buffer, false );*/
+		blockRenderer.getBlockModelRenderer().renderModel( world, model, state, locker.getPos(), buffer, false );
+
 		tessellator.draw();
 
 		RenderHelper.enableStandardItemLighting();
@@ -118,10 +127,12 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		GlStateManager.translate( -locker.getPos().getX(), -locker.getPos().getY(), -locker.getPos().getZ() );
 
 		final Tessellator tessellator = Tessellator.getInstance();
-		/*final VertexBuffer VertexBuffer = tessellator.getBuffer();
+
+		final BufferBuilder VertexBuffer = tessellator.getBuffer();
 		VertexBuffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
 		final IBakedModel model = blockRenderer.getBlockModelShapes().getModelForState( state.withProperty( Properties.StaticProperty, false ) );
-		blockRenderer.getBlockModelRenderer().renderModel( world, model, state, locker.getPos(), tessellator.getBuffer(), false );*/
+		blockRenderer.getBlockModelRenderer().renderModel( world, model, state, locker.getPos(), tessellator.getBuffer(), false );
+
 		tessellator.draw();
 
 		// renderItem( locker, partialTicks, destroyStage, state );

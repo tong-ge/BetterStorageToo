@@ -34,11 +34,6 @@ public class ClientProxy extends CommonProxy
 		super.preInit();
 
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
-
-		final SizeStateMap sizeStateMap = new SizeStateMap();
-		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_CHEST, sizeStateMap );
-		ModelLoader.setCustomStateMapper( BetterStorageBlocks.LOCKER, sizeStateMap );
-		ModelLoader.setCustomStateMapper( BetterStorageBlocks.REINFORCED_LOCKER, sizeStateMap );
 	}
 
 	@Override
@@ -48,8 +43,8 @@ public class ClientProxy extends CommonProxy
 
 		// new KeyBindingHandler();
 
-		BetterStorageBlocks.registerItemModels();
-		BetterStorageItems.registerItemModels();
+		//BetterStorageBlocks.registerItemModels();
+		//BetterStorageItems.registerItemModels();
 
 		registerRenderers();
 		BetterStorageColorHandler.registerColorHandlers();
