@@ -125,7 +125,7 @@ public class ItemLock extends ItemKeyLock implements ILock
 			if( tileEntity instanceof TileEntityLockable )
 			{
 				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
-				if( lockable.isLockValid( stack ) )
+				if( lockable.isLockValid( stack ) && lockable.getLock().isEmpty() )
 				{
 					lockable.setLock( stack.copy() );
 					if( !playerIn.isCreative() )
@@ -164,7 +164,6 @@ public class ItemLock extends ItemKeyLock implements ILock
 	@Override
 	public void onUnlock( ItemStack lock, ItemStack key, ILockable lockable, EntityPlayer player, boolean success )
 	{
-		Logger.getLogger( ModInfo.modId ).info( "Lock Unlock" );
 		if( success )
 			return;
 		// Power is 2 when a key was used to open the lock, 1 otherwise.

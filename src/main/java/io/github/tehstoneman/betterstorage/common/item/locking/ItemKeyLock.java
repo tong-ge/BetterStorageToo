@@ -6,7 +6,6 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -55,6 +54,11 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 		tag.setInteger( TAG_COLOR1, color );
 		stack.setTagCompound( tag );
 	}
+	
+	public static boolean hasKeyColor1( ItemStack stack )
+	{
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey( TAG_COLOR1 );
+	}
 
 	public static int getKeyColor2( ItemStack stack )
 	{
@@ -77,6 +81,22 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 		stack.setTagCompound( tag );
 	}
 
+	public static boolean hasKeyColor2( ItemStack stack )
+	{
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey( TAG_COLOR2 );
+	}
+	
+	public static void clearColors( ItemStack stack )
+	{
+		if( stack.hasTagCompound() )
+		{
+			NBTTagCompound tag = stack.getTagCompound();
+			tag.removeTag( TAG_COLOR1 );
+			tag.removeTag( TAG_COLOR2 );
+			stack.setTagCompound( tag );
+		}
+	}
+
 	public static UUID getID( ItemStack stack )
 	{
 		if( !stack.hasTagCompound() || !stack.getTagCompound().hasUniqueId( TAG_KEYLOCK_ID ) )
@@ -97,15 +117,15 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 
 	@SideOnly( Side.CLIENT )
 	@Override
-	public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
+	public void addInformation( ItemStack stack, World worldIn, List< String > tooltip, ITooltipFlag toolTipFlag )
 	{
 		final NBTTagCompound tag = stack.getTagCompound();
 		if( tag != null )
 		{
-			/*
-			 * if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-			 * tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
-			 */
+
+			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+				tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
+
 			if( tag.hasKey( TAG_COLOR1 ) )
 				tooltip.add( "Color 1 : #" + Integer.toHexString( tag.getInteger( TAG_COLOR1 ) ).toUpperCase() );
 			if( tag.hasKey( TAG_COLOR2 ) )

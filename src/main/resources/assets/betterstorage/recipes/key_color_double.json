@@ -1,0 +1,11 @@
+{
+	"type": "betterstorage:key_color_shapless",
+	"group": "betterstorage:key",
+	"ingredients":
+	[
+		{ "item": "betterstorage:key" },
+		{ "type": "forge:ore_dict", "ore": "dye" },
+		{ "type": "forge:ore_dict", "ore": "dye" }
+	],
+	"result": { "item": "betterstorage:key" }
+}

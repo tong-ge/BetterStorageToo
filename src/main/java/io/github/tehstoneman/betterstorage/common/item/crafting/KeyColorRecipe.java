@@ -1,140 +1,91 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
-import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import io.github.tehstoneman.betterstorage.utils.DyeUtils;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
+import net.minecraftforge.common.crafting.JsonContext;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class KeyColorRecipe implements IRecipe
+public class KeyColorRecipe extends ShapelessOreRecipe
 {
-	@Override
-	public boolean matches( InventoryCrafting inv, World worldIn )
+	public KeyColorRecipe( @Nullable final ResourceLocation group, final NonNullList< Ingredient > input, final ItemStack result )
 	{
-		ItemStack itemstack = ItemStack.EMPTY;
-		final List< ItemStack > list = Lists.<ItemStack> newArrayList();
-
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
-		{
-			final ItemStack itemstack1 = inv.getStackInSlot( i );
-
-			if( !itemstack1.isEmpty() )
-				if( itemstack1.getItem() instanceof ItemKeyLock )
-				{
-					if( !itemstack.isEmpty() )
-						return false;
-
-					itemstack = itemstack1;
-				}
-				else
-				{
-					if( !DyeUtils.isDye( itemstack1 ) )
-						return false;
-
-					list.add( itemstack1 );
-				}
-		}
-
-		return !itemstack.isEmpty() && !list.isEmpty() && list.size() <= 2;
+		super( group, result, result );
 	}
 
 	@Override
 	public ItemStack getCraftingResult( InventoryCrafting inv )
 	{
-		ItemStack itemIn = ItemStack.EMPTY;
-		int color1 = -1;
-		int color2 = -1;
+		final ItemStack outputStack = super.getCraftingResult( inv );
 
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		if( !outputStack.isEmpty() )
 		{
-			final ItemStack testStack = inv.getStackInSlot( i );
+			final NBTTagCompound tagCompound = outputStack.hasTagCompound() ? outputStack.getTagCompound() : new NBTTagCompound();
 
-			if( !testStack.isEmpty() )
+			for( int i = 0; i < inv.getSizeInventory(); ++i )
 			{
-				if( testStack.getItem() instanceof ItemBetterStorage )
-					itemIn = testStack;
-				/*if( DyeUtils.isDye( testStack ) )
-					if( color1 == -1 )
-						color1 = DyeUtils.getDyeColor( testStack ).getMapColor().colorValue;
-					else
-						if( color2 == -1 )
-							color2 = DyeUtils.getDyeColor( testStack ).getMapColor().colorValue;*/
+				final ItemStack ingredientStack = inv.getStackInSlot( i );
+
+				if( !ingredientStack.isEmpty() )
+				{
+					ItemKeyLock.clearColors( ingredientStack );
+					if( ingredientStack.getItem() == outputStack.getItem() )
+						if( ingredientStack.hasTagCompound() )
+							tagCompound.merge( ingredientStack.getTagCompound() );
+
+					if( DyeUtils.isDye( ingredientStack ) )
+						if( !tagCompound.hasKey( ItemKeyLock.TAG_COLOR1 ) )
+							tagCompound.setInteger( ItemKeyLock.TAG_COLOR1, DyeUtils.getDyeColor( ingredientStack ).getColorValue() );
+						else
+							if( !tagCompound.hasKey( ItemKeyLock.TAG_COLOR2 ) )
+								tagCompound.setInteger( ItemKeyLock.TAG_COLOR2, DyeUtils.getDyeColor( ingredientStack ).getColorValue() );
+
+				}
 			}
+
+			outputStack.setTagCompound( tagCompound );
 		}
 
-		if( !itemIn.isEmpty() )
+		return outputStack;
+	}
+
+	public static class Factory implements IRecipeFactory
+	{
+		@Override
+		public IRecipe parse( JsonContext context, JsonObject json )
 		{
-			final ItemStack resultStack = itemIn.copy();
+			final String group = JsonUtils.getString( json, "group", "" );
+			final NonNullList< Ingredient > ingredients = parseShapeless( context, json );
+			final ItemStack result = CraftingHelper.getItemStack( JsonUtils.getJsonObject( json, "result" ), context );
 
-			if( color1 != -1 )
-				ItemKeyLock.setKeyColor1( resultStack, color1 );
-			if( color2 != -1 )
-				ItemKeyLock.setKeyColor2( resultStack, color2 );
-
-			return resultStack;
+			return new KeyColorRecipe( group.isEmpty() ? null : new ResourceLocation( group ), ingredients, result );
 		}
-		return ItemStack.EMPTY;
-	}
 
-	/*@Override
-	public int getRecipeSize()
-	{
-		return 10;
-	}*/
-
-	@Override
-	public ItemStack getRecipeOutput()
-	{
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
-	{
-		final NonNullList< ItemStack > nonnulllist = NonNullList.<ItemStack> withSize( inv.getSizeInventory(), ItemStack.EMPTY );
-
-		for( int i = 0; i < nonnulllist.size(); ++i )
+		public static NonNullList< Ingredient > parseShapeless( final JsonContext context, final JsonObject json )
 		{
-			final ItemStack itemstack = inv.getStackInSlot( i );
-			nonnulllist.set( i, net.minecraftforge.common.ForgeHooks.getContainerItem( itemstack ) );
+			final NonNullList< Ingredient > ingredients = NonNullList.create();
+			for( final JsonElement element : JsonUtils.getJsonArray( json, "ingredients" ) )
+				ingredients.add( CraftingHelper.getIngredient( element, context ) );
+
+			if( ingredients.isEmpty() )
+				throw new JsonParseException( "No ingredients for shapeless recipe" );
+
+			return ingredients;
 		}
-
-		return nonnulllist;
-	}
-
-	@Override
-	public IRecipe setRegistryName( ResourceLocation name )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class< IRecipe > getRegistryType()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean canFit( int width, int height )
-	{
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

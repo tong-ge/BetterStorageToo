@@ -175,7 +175,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		if( getWorld().isRemote )
 			return true;
 		if( !canPlayerUseContainer( player ) )
-			return true;
+			return false;
 		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}

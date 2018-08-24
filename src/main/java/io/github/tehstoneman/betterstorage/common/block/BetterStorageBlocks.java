@@ -22,12 +22,6 @@ public final class BetterStorageBlocks
 		final ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
 		/*
-		 * if( BetterStorage.config.lockerEnabled )
-		 * {
-		 * LOCKER.registerItemModels();
-		 * if( BetterStorage.config.reinforcedLockerEnabled )
-		 * REINFORCED_LOCKER.registerItemModels();
-		 * }
 		 * if( BetterStorage.config.flintBlockEnabled )
 		 * BLOCK_FLINT.registerItemModels();
 		 * if( BetterStorage.config.cardboardBoxEnabled )

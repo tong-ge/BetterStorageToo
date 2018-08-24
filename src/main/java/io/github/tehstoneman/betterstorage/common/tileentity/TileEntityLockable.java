@@ -130,7 +130,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 				if( !( stack.getItem() instanceof IKey ) && !canPlayerUseContainer( player ) )
 					( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
 				// }
-				return true;
+				return false;
 			}
 		return super.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
 	}

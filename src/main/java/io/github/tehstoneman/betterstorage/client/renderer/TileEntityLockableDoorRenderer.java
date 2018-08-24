@@ -29,8 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< TileEntityLockableDoor >
 {
-	/*@Override
-	public void renderTileEntityAt( TileEntityLockableDoor door, double x, double y, double z, float partialTicks, int destroyStage )
+	@Override
+	public void render( TileEntityLockableDoor door, double x, double y, double z, float partialTicks, int destroyStage, float alpha )
 	{
 		GlStateManager.pushAttrib();
 		GlStateManager.pushMatrix();
@@ -54,7 +54,7 @@ public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer< T
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
-	}*/
+	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
 	private void renderItem( TileEntityLockableDoor door, float partialTicks, int destroyStage, IBlockState state )

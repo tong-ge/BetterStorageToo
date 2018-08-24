@@ -1,5 +1,9 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -24,7 +28,15 @@ public class GuiKeyring extends GuiContainer
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
+	public void drawScreen( int mouseX, int mouseY, float partialTicks )
+	{
+		drawDefaultBackground();
+		super.drawScreen( mouseX, mouseY, partialTicks );
+		renderHoveredToolTip( mouseX, mouseY );
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer( int mouseX, int mouseY )
 	{
 		fontRenderer.drawString( I18n.format( ModInfo.containerKeyring ), 8, 6, 0x404040 );
 		fontRenderer.drawString( I18n.format( "container.inventory" ), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );

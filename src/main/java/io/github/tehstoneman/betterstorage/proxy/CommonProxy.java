@@ -27,34 +27,8 @@ public class CommonProxy
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 
 		/*
-		if( BetterStorage.config.lockerEnabled )
-		{
-			BetterStorageBlocks.LOCKER.registerBlock();
-			GameRegistry.registerTileEntity( TileEntityLocker.class, ModInfo.containerLocker );
-			if( BetterStorage.config.reinforcedLockerEnabled )
-			{
-				BetterStorageBlocks.REINFORCED_LOCKER.registerBlock();
-				GameRegistry.registerTileEntity( TileEntityReinforcedLocker.class, ModInfo.containerReinforcedLocker );
-			}
-		}
 		if( BetterStorage.config.flintBlockEnabled )
 			BetterStorageBlocks.BLOCK_FLINT.registerBlock();
-
-		if( BetterStorage.config.keyEnabled )
-		{
-			BetterStorageItems.KEY.register();
-			if( BetterStorage.config.masterKeyEnabled )
-				BetterStorageItems.MASTER_KEY.register();
-			if( BetterStorage.config.keyringEnabled )
-				BetterStorageItems.KEYRING.register();
-			if( BetterStorage.config.lockEnabled )
-				BetterStorageItems.LOCK.register();
-			if( BetterStorage.config.lockableDoorEnabled )
-			{
-				BetterStorageBlocks.LOCKABLE_DOOR.registerBlock();
-				GameRegistry.registerTileEntity( TileEntityLockableDoor.class, ModInfo.lockableDoor );
-			}
-		}
 
 		if( BetterStorage.config.cardboardSheetEnabled )
 		{

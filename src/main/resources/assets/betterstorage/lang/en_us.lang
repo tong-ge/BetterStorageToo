@@ -2,6 +2,7 @@
 container.betterstorage.cardboard_box=Cardboard Box
 container.betterstorage.crate.capacity=%% Capacity
 container.betterstorage.crate=Storage Crate
+container.betterstorage.keyring=Keyring
 container.betterstorage.locker=Locker
 container.betterstorage.locker_large=Large Locker
 container.betterstorage.reinforced_chest=Reinforced Chest

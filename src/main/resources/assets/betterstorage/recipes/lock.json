@@ -1,0 +1,18 @@
+{
+	"type": "betterstorage:copy_key_shaped",
+	"group": "betterstorage:lock",
+	"pattern":
+	[
+		" g ",
+		"gkg",
+		"gig"
+	],
+	"mirrored": false,
+	"key":
+	{
+		"g": { "type": "forge:ore_dict", "ore": "ingotGold" },
+		"k": { "item": "betterstorage:key" },
+		"i": { "type": "forge:ore_dict", "ore": "ingotIron" }
+	},
+	"result": { "item": "betterstorage:lock" }
+}

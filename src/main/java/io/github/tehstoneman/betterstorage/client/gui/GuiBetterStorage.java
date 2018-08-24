@@ -70,6 +70,14 @@ public class GuiBetterStorage extends GuiContainer
 	{}
 
 	@Override
+	public void drawScreen( int mouseX, int mouseY, float partialTicks )
+	{
+		drawDefaultBackground();
+		super.drawScreen( mouseX, mouseY, partialTicks );
+		renderHoveredToolTip( mouseX, mouseY );
+	}
+
+	@Override
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
 		fontRenderer.drawString( I18n.format( title ), 8, 6, 0x404040 );

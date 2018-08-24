@@ -38,33 +38,12 @@ public final class Recipes
 	{
 		// RecipeSorter.register( "betterstorage:drinkinghelmetrecipe", DrinkingHelmetRecipe.class, Category.SHAPED, "" );
 
-		RecipeSorter.register( "betterstorage:copykeyrecipe", CopyKeyRecipe.class, Category.SHAPED, "" );
-		RecipeSorter.register( "betterstorage:lockrecipe", LockRecipe.class, Category.SHAPED, "" );
 		RecipeSorter.register( "betterstorage:cardboardColorRecipe", CardboardColorRecipe.class, Category.SHAPELESS, "" );
 		RecipeSorter.register( "betterstorage:keyColorRecipe", KeyColorRecipe.class, Category.SHAPELESS, "" );
 	}
 
 	private static void addBlockRecipes()
 	{
-		// Locker recipe
-		if( BetterStorage.config.lockerEnabled )
-		{
-			// Reinforced locker recipes
-/*			if( BetterStorage.config.reinforcedLockerEnabled )
-				for( final EnumReinforced material : EnumReinforced.values() )
-					//@formatter:off
-					GameRegistry.addRecipe(
-							new ShapedOreRecipe( new ItemStack( BetterStorageBlocks.REINFORCED_LOCKER, 1, material.getMetadata() ),
-									new Object[] { false,
-												   "o#o",
-												   "#C#",
-												   "oOo",	'C', BetterStorageBlocks.LOCKER,
-												   			'#', "logWood",
-												   			'o', material.getOreDictIngot(),
-												   			'O', material.getOreDictBlock() } ) );
-						//@formatter:on
-*/		}
-
 		// Cardboard box recipe
 		if( BetterStorage.config.cardboardBoxEnabled )
 		{
@@ -119,53 +98,6 @@ public final class Recipes
 
 	private static void addItemRecipes()
 	{
-
-		if( BetterStorage.config.keyEnabled )
-		{
-			// Key recipes
-			//@formatter:off
-/*			final IRecipe keyRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { ".o",
-								   ".o",
-								   " o", 'o', "ingotGold",
-								   		 '.', "nuggetGold" } );
-			GameRegistry.addRecipe( keyRecipe );
-*/
-			final IRecipe keyCopyRecipe = new CopyKeyRecipe( new ItemStack( BetterStorageItems.KEY ),
-					new Object[] { ".o",
-								   ".o",
-								   "ko", 'o', "ingotGold",
-								   		 '.', "nuggetGold",
-								   		 'k', new ItemStack( BetterStorageItems.KEY ) } );
-//			GameRegistry.addRecipe( keyCopyRecipe );
-
-			if( BetterStorage.config.lockEnabled )
-			{
-				// Lock recipe
-				//@formatter:off
-				final IRecipe lockRecipe = new LockRecipe( new ItemStack( BetterStorageItems.LOCK ),
-						new Object[] { " g ",
-									   "gkg",
-									   "gig", 'g', "ingotGold",
-									   		  'k', new ItemStack( BetterStorageItems.KEY ),
-									   		  'i', "ingotIron" } );
-//				GameRegistry.addRecipe( lockRecipe );
-			}
-
-			// Keyring recipe
-/*			if( BetterStorage.config.keyringEnabled )
-			{
-				//@formatter:off
-				final IRecipe keyRingRecipe = new ShapedOreRecipe( new ItemStack( BetterStorageItems.KEYRING ),
-						new Object[] { false,
-									   "...",
-									   ". .",
-									   "...", '.', "nuggetGold" } );
-				GameRegistry.addRecipe( keyRingRecipe );
-				//@formatter:on
-			}
-*/		}
-
 		// Drinking helmet recipe
 		// if( BetterStorageItems.drinkingHelmet != null ) GameRegistry.addRecipe( new DrinkingHelmetRecipe( BetterStorageItems.drinkingHelmet ) );
 

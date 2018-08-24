@@ -1,0 +1,17 @@
+{
+	"type": "betterstorage:copy_key_shaped",
+	"group": "betterstorage:key",
+	"pattern":
+	[
+		".o",
+		".o",
+		"ko"
+	],
+	"key":
+	{
+		"o": { "type": "forge:ore_dict", "ore": "ingotGold" },
+		".": { "type": "forge:ore_dict", "ore": "nuggetGold" },
+		"k": { "item": "betterstorage:key" }
+	},
+	"result": { "item": "betterstorage:key" }
+}

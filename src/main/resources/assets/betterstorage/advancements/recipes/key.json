@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:key" ]
+	},
+	"criteria":
+	{
+		"has_gold":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "item": "minecraft:gold_ingot" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:key" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_gold",
+			"has_the_recipe"
+		]
+	]
+}

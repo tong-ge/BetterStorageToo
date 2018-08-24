@@ -144,8 +144,6 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 		{
 			final EntityItem entityitem = new EntityItem( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
 			final Item item = entityitem.getItem().getItem();
-			// entityitem.getEntityItem().stackSize = 1;
-			entityitem.hoverStart = 0.0F;
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 

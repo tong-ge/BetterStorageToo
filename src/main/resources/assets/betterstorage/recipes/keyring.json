@@ -1,0 +1,15 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "betterstorage:keyring",
+	"pattern":
+	[
+		"...",
+		". .",
+		"..."
+	],
+	"key":
+	{
+		".": { "type": "forge:ore_dict", "ore": "nuggetGold" }
+	},
+	"result": { "item": "betterstorage:keyring" }
+}

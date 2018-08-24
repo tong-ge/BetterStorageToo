@@ -74,13 +74,12 @@ public class ItemKey extends ItemKeyLock implements IKey
 	{
 		if( !worldIn.isRemote && hand == EnumHand.MAIN_HAND )
 		{
-			Logger.getLogger( ModInfo.modId ).info( "Key Used." );
 			final ItemStack stack = playerIn.getHeldItem( hand );
 			TileEntity tileEntity = worldIn.getTileEntity( pos );
 			if( tileEntity == null )
 			{
 				final IBlockState state = worldIn.getBlockState( pos );
-				if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
+				if( state.getProperties().containsKey( BlockDoor.HALF ) && state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
 				{
 					pos = pos.down();
 					tileEntity = worldIn.getTileEntity( pos );

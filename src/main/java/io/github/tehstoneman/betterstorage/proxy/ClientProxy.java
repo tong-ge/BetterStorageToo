@@ -1,14 +1,12 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.client.ClientEvents;
 import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageColorHandler;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
 import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
@@ -16,9 +14,8 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +29,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		super.preInit();
-
+		MinecraftForge.EVENT_BUS.register( new ClientEvents() );
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 	}
 
@@ -43,8 +40,8 @@ public class ClientProxy extends CommonProxy
 
 		// new KeyBindingHandler();
 
-		//BetterStorageBlocks.registerItemModels();
-		//BetterStorageItems.registerItemModels();
+		// BetterStorageBlocks.registerItemModels();
+		// BetterStorageItems.registerItemModels();
 
 		registerRenderers();
 		BetterStorageColorHandler.registerColorHandlers();
@@ -56,9 +53,9 @@ public class ClientProxy extends CommonProxy
 		super.postInit();
 
 		//@formatter:off
-		/*Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new KeyColor(),
 				BetterStorageItems.KEY,
-				BetterStorageItems.LOCK );*/
+				BetterStorageItems.LOCK );
 		/*Minecraft.getMinecraft().getItemColors().registerItemColorHandler( new CardboardColor(),
 				Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ),
 				BetterStorageItems.CARDBOARD_AXE,

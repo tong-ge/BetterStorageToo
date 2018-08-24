@@ -67,13 +67,13 @@ public class BlockReinforcedLocker extends BlockLockable
 	@Override
 	public boolean isOpaqueCube( IBlockState state )
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isFullCube( IBlockState state )
 	{
-		return true;
+		return false;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardArmor;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardHoe;
@@ -45,41 +44,32 @@ public final class BetterStorageItems
 	@SideOnly( Side.CLIENT )
 	public static void registerItemModels()
 	{
-		/*if( BetterStorage.config.keyEnabled )
-		{
-			KEY.registerItemModels();
-			if( BetterStorage.config.masterKeyEnabled )
-				MASTER_KEY.registerItemModels();
-			if( BetterStorage.config.keyringEnabled )
-				KEYRING.registerItemModels();
-			if( BetterStorage.config.lockEnabled )
-				LOCK.registerItemModels();
-		}
-
-		if( BetterStorage.config.cardboardSheetEnabled )
-			CARDBOARD_SHEET.registerItemModels();
-
-		if( BetterStorage.config.cardboardSwordEnabled )
-			CARDBOARD_SWORD.registerItemModels();
-		if( BetterStorage.config.cardboardShovelEnabled )
-			CARDBOARD_SHOVEL.registerItemModels();
-		if( BetterStorage.config.cardboardPickaxeEnabled )
-			CARDBOARD_PICKAXE.registerItemModels();
-		if( BetterStorage.config.cardboardAxeEnabled )
-			CARDBOARD_AXE.registerItemModels();
-		if( BetterStorage.config.cardboardHoeEnabled )
-			CARDBOARD_HOE.registerItemModels();
-
-		if( BetterStorage.config.cardboardHelmetEnabled )
-			CARDBOARD_HELMET.registerItemModels();
-		if( BetterStorage.config.cardboardChestplateEnabled )
-			CARDBOARD_CHESTPLATE.registerItemModels();
-		if( BetterStorage.config.cardboardLeggingsEnabled )
-			CARDBOARD_LEGGINGS.registerItemModels();
-		if( BetterStorage.config.cardboardBootsEnabled )
-			CARDBOARD_BOOTS.registerItemModels();
-
-		if( BetterStorage.config.slimeBucketEnabled )
-			SLIME_BUCKET.registerItemModels();*/
+		/*
+		 * if( BetterStorage.config.cardboardSheetEnabled )
+		 * CARDBOARD_SHEET.registerItemModels();
+		 * 
+		 * if( BetterStorage.config.cardboardSwordEnabled )
+		 * CARDBOARD_SWORD.registerItemModels();
+		 * if( BetterStorage.config.cardboardShovelEnabled )
+		 * CARDBOARD_SHOVEL.registerItemModels();
+		 * if( BetterStorage.config.cardboardPickaxeEnabled )
+		 * CARDBOARD_PICKAXE.registerItemModels();
+		 * if( BetterStorage.config.cardboardAxeEnabled )
+		 * CARDBOARD_AXE.registerItemModels();
+		 * if( BetterStorage.config.cardboardHoeEnabled )
+		 * CARDBOARD_HOE.registerItemModels();
+		 * 
+		 * if( BetterStorage.config.cardboardHelmetEnabled )
+		 * CARDBOARD_HELMET.registerItemModels();
+		 * if( BetterStorage.config.cardboardChestplateEnabled )
+		 * CARDBOARD_CHESTPLATE.registerItemModels();
+		 * if( BetterStorage.config.cardboardLeggingsEnabled )
+		 * CARDBOARD_LEGGINGS.registerItemModels();
+		 * if( BetterStorage.config.cardboardBootsEnabled )
+		 * CARDBOARD_BOOTS.registerItemModels();
+		 * 
+		 * if( BetterStorage.config.slimeBucketEnabled )
+		 * SLIME_BUCKET.registerItemModels();
+		 */
 	}
 }
