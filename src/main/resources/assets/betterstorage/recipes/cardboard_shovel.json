@@ -1,0 +1,16 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "betterstorage:cardboard_shovel",
+	"pattern":
+	[
+		"o",
+		"/",
+		"/"
+	],
+	"key":
+	{
+		"o": { "type": "forge:ore_dict", "ore": "sheetCardboard" },
+		"/": { "type": "forge:ore_dict", "ore": "stickWood" }
+	},
+	"result": { "item": "betterstorage:cardboard_shovel" }
+}

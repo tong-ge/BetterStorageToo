@@ -148,41 +148,6 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 		return BetterStorage.config.cardboardBoxUses;
 	}
 
-	private static class DisplayNameStack implements Comparable< DisplayNameStack >
-	{
-		public final String	name;
-		public int			stackSize;
-
-		public DisplayNameStack( ItemStack stack )
-		{
-			name = stack.getItem().getItemStackDisplayName( stack );
-			stackSize = stack.getCount();
-		}
-
-		public boolean matchAndAdd( ItemStack stack )
-		{
-			if( name.equals( stack.getItem().getItemStackDisplayName( stack ) ) )
-			{
-				stackSize += stack.getCount();
-				return true;
-			}
-			else
-				return false;
-		}
-
-		@Override
-		public String toString()
-		{
-			return stackSize + "x " + name;
-		}
-
-		@Override
-		public int compareTo( DisplayNameStack other )
-		{
-			return other.stackSize - stackSize;
-		}
-	}
-
 	// Cardboard items
 	@Override
 	public boolean canDye( ItemStack stack )
@@ -222,5 +187,40 @@ public class ItemBlockCardboardBox extends ItemBlock implements IContainerItem, 
 			compound = new NBTTagCompound();
 		compound.setInteger( "color", colorRGB );
 		itemstack.setTagCompound( compound );
+	}
+
+	private static class DisplayNameStack implements Comparable< DisplayNameStack >
+	{
+		public final String	name;
+		public int			stackSize;
+	
+		public DisplayNameStack( ItemStack stack )
+		{
+			name = stack.getItem().getItemStackDisplayName( stack );
+			stackSize = stack.getCount();
+		}
+	
+		public boolean matchAndAdd( ItemStack stack )
+		{
+			if( name.equals( stack.getItem().getItemStackDisplayName( stack ) ) )
+			{
+				stackSize += stack.getCount();
+				return true;
+			}
+			else
+				return false;
+		}
+	
+		@Override
+		public String toString()
+		{
+			return stackSize + "x " + name;
+		}
+	
+		@Override
+		public int compareTo( DisplayNameStack other )
+		{
+			return other.stackSize - stackSize;
+		}
 	}
 }

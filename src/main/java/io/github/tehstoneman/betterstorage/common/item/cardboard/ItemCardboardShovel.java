@@ -12,6 +12,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,13 +57,12 @@ public class ItemCardboardShovel extends ItemSpade implements ICardboardItem
 		return !ItemCardboardSheet.isEffective( stack );
 	}
 
-	/*
-	 * @Override
-	 * public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase player )
-	 * {
-	 * return ItemCardboardSheet.onBlockDestroyed( stack, world, block, pos, player );
-	 * }
-	 */
+	@Override
+	public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase player )
+	{
+		//return ItemCardboardSheet.onBlockDestroyed( stack, world, block, pos, player );
+		return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, player ) : true;
+	}
 
 	@Override
 	public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase player )

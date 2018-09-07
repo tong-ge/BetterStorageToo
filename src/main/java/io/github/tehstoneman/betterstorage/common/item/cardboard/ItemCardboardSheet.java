@@ -1,11 +1,18 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
+import java.util.Map;
+
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 
 public class ItemCardboardSheet extends ItemBetterStorage
@@ -35,23 +42,17 @@ public class ItemCardboardSheet extends ItemBetterStorage
 		if( !isEffective( stack ) )
 			return true;
 
-		/*
-		 * Map<Integer, Integer> enchants = (EnchantmentHelper.getEnchantments(stack));
-		 * int numEnchants = enchants.size();
-		 * int numLevelTotal = 0;
-		 * for (int enchLevel : enchants.values())
-		 * numLevelTotal += enchLevel;
-		 */
+		final Map< Enchantment, Integer > enchants = EnchantmentHelper.getEnchantments( stack );
+		final int numEnchants = enchants.size();
+		int numLevelTotal = 0;
+		for( final int enchLevel : enchants.values() )
+			numLevelTotal += enchLevel;
 
-		/*
-		 * double changeForNoDamage = - 1 / Math.pow((numLevelTotal / 10 + 1), 2) + 1;
-		 * changeForNoDamage = (numEnchants / 10) + (changeForNoDamage * (1 - (numEnchants / 10)));
-		 */
+		double changeForNoDamage = -1 / Math.pow( numLevelTotal / 10 + 1, 2 ) + 1;
+		changeForNoDamage = numEnchants / 10 + changeForNoDamage * ( 1 - numEnchants / 10 );
 
-		/*
-		 * if (entity.worldObj.rand.nextDouble() >= changeForNoDamage)
-		 * stack.damageItem(1, entity);
-		 */
+		if( entity.world.rand.nextDouble() >= changeForNoDamage )
+			stack.damageItem( 1, entity );
 
 		if( !isEffective( stack ) )
 		{
@@ -63,10 +64,9 @@ public class ItemCardboardSheet extends ItemBetterStorage
 		return true;
 	}
 
-	/*
-	 * public static boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
-	 * {
-	 * return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
-	 * }
-	 */
+	@Override
+	public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
+	{
+		return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
+	}
 }

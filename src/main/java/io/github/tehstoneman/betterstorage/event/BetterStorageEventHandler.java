@@ -11,7 +11,9 @@ import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBucketSlime;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
@@ -26,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -38,6 +41,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEve
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class BetterStorageEventHandler
@@ -84,13 +88,19 @@ public class BetterStorageEventHandler
 			BetterStorageBlocks.BLOCK_FLINT.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getBlockName() );
 			registry.register( BetterStorageBlocks.BLOCK_FLINT );
 		}
-
 		if( BetterStorage.config.keyEnabled && BetterStorage.config.lockableDoorEnabled )
 		{
 			BetterStorageBlocks.LOCKABLE_DOOR.setUnlocalizedName( ModInfo.modId + "." + BetterStorageBlocks.LOCKABLE_DOOR.getBlockName() );
 			BetterStorageBlocks.LOCKABLE_DOOR.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.getBlockName() );
 			registry.register( BetterStorageBlocks.LOCKABLE_DOOR );
 			GameRegistry.registerTileEntity( TileEntityLockableDoor.class, ModInfo.lockableDoor );
+		}
+		if( BetterStorage.config.cardboardBoxEnabled )
+		{
+			BetterStorageBlocks.CARDBOARD_BOX.setUnlocalizedName( ModInfo.modId + "." + BetterStorageBlocks.CARDBOARD_BOX.getBlockName() );
+			BetterStorageBlocks.CARDBOARD_BOX.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getBlockName() );
+			registry.register( BetterStorageBlocks.CARDBOARD_BOX );
+			GameRegistry.registerTileEntity( TileEntityCardboardBox.class, ModInfo.containerCardboardBox );
 		}
 
 	}
@@ -115,6 +125,10 @@ public class BetterStorageEventHandler
 						.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
 		}
 
+		if( BetterStorage.config.flintBlockEnabled )
+			registry.register(
+					new ItemBlock( BetterStorageBlocks.BLOCK_FLINT ).setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getRegistryName() ) );
+
 		if( BetterStorage.config.keyEnabled )
 		{
 			BetterStorageItems.KEY.register();
@@ -134,6 +148,70 @@ public class BetterStorageEventHandler
 				BetterStorageItems.LOCK.register();
 				registry.register( BetterStorageItems.LOCK );
 			}
+		}
+
+		if( BetterStorage.config.cardboardSheetEnabled )
+		{
+			BetterStorageItems.CARDBOARD_SHEET.register();
+			registry.register( BetterStorageItems.CARDBOARD_SHEET );
+			OreDictionary.registerOre( "sheetCardboard", BetterStorageItems.CARDBOARD_SHEET );
+		}
+
+		if( BetterStorage.config.cardboardBoxEnabled )
+			registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX )
+					.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getRegistryName() ) );
+
+		if( BetterStorage.config.cardboardSwordEnabled )
+		{
+			BetterStorageItems.CARDBOARD_SWORD.register();
+			registry.register( BetterStorageItems.CARDBOARD_SWORD );
+		}
+		if( BetterStorage.config.cardboardShovelEnabled )
+		{
+			BetterStorageItems.CARDBOARD_SHOVEL.register();
+			registry.register( BetterStorageItems.CARDBOARD_SHOVEL );
+		}
+		if( BetterStorage.config.cardboardPickaxeEnabled )
+		{
+			BetterStorageItems.CARDBOARD_PICKAXE.register();
+			registry.register( BetterStorageItems.CARDBOARD_PICKAXE );
+		}
+		if( BetterStorage.config.cardboardAxeEnabled )
+		{
+			BetterStorageItems.CARDBOARD_AXE.register();
+			registry.register( BetterStorageItems.CARDBOARD_AXE );
+		}
+		if( BetterStorage.config.cardboardHoeEnabled )
+		{
+			BetterStorageItems.CARDBOARD_HOE.register();
+			registry.register( BetterStorageItems.CARDBOARD_HOE );
+		}
+
+		if( BetterStorage.config.cardboardHelmetEnabled )
+		{
+			BetterStorageItems.CARDBOARD_HELMET.register( "cardboard_helmet" );
+			registry.register( BetterStorageItems.CARDBOARD_HELMET );
+		}
+		if( BetterStorage.config.cardboardChestplateEnabled )
+		{
+			BetterStorageItems.CARDBOARD_CHESTPLATE.register( "cardboard_chestplate" );
+			registry.register( BetterStorageItems.CARDBOARD_CHESTPLATE );
+		}
+		if( BetterStorage.config.cardboardLeggingsEnabled )
+		{
+			BetterStorageItems.CARDBOARD_LEGGINGS.register( "cardboard_leggings" );
+			registry.register( BetterStorageItems.CARDBOARD_LEGGINGS );
+		}
+		if( BetterStorage.config.cardboardBootsEnabled )
+		{
+			BetterStorageItems.CARDBOARD_BOOTS.register( "cardboard_boots" );
+			registry.register( BetterStorageItems.CARDBOARD_BOOTS );
+		}
+
+		if( BetterStorage.config.slimeBucketEnabled )
+		{
+			BetterStorageItems.SLIME_BUCKET.register();
+			registry.register( BetterStorageItems.SLIME_BUCKET );
 		}
 	}
 
@@ -179,7 +257,12 @@ public class BetterStorageEventHandler
 
 		// Prevent players from breaking blocks with broken cardboard items.
 		if( hand == EnumHand.MAIN_HAND && holding.getItem() instanceof ICardboardItem && !ItemCardboardSheet.isEffective( holding ) )
-			event.setResult( Result.DENY );
+		{
+			if( event.isCancelable() )
+				event.setCanceled( true );
+			// event.setResult( Result.DENY );
+			return;
+		}
 
 		// Attach locks to iron doors.
 		/*

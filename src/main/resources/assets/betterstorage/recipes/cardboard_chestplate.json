@@ -1,0 +1,15 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "betterstorage:cardboard_chestplate",
+	"pattern":
+	[
+		"o o",
+		"ooo",
+		"ooo"
+	],
+	"key":
+	{
+		"o": { "type": "forge:ore_dict", "ore": "sheetCardboard" }
+	},
+	"result": { "item": "betterstorage:cardboard_chestplate" }
+}

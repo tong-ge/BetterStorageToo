@@ -13,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,13 +58,11 @@ public class ItemCardboardAxe extends ItemAxe implements ICardboardItem
 		return !ItemCardboardSheet.isEffective( stack );
 	}
 
-	/*
-	 * @Override
-	 * public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase player )
-	 * {
-	 * return ItemCardboardSheet.onBlockDestroyed( stack, world, block, pos, player );
-	 * }
-	 */
+	@Override
+	public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
+	{
+		return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
+	}
 
 	@Override
 	public boolean hitEntity( ItemStack stack, EntityLivingBase target, EntityLivingBase player )

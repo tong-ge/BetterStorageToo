@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:cardboard_chestplate" ]
+	},
+	"criteria":
+	{
+		"has_cardboard":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "item": "betterstorage:cardboard_sheet" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:cardboard_chestplate" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_cardboard",
+			"has_the_recipe"
+		]
+	]
+}

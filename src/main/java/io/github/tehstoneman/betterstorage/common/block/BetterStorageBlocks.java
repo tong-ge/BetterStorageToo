@@ -15,17 +15,4 @@ public final class BetterStorageBlocks
 	public static BlockFlintBlock		BLOCK_FLINT			= new BlockFlintBlock();
 	public static BlockLockableDoor		LOCKABLE_DOOR		= new BlockLockableDoor();
 	public static BlockCardboardBox		CARDBOARD_BOX		= new BlockCardboardBox();
-
-	@SideOnly( Side.CLIENT )
-	public static void registerItemModels()
-	{
-		final ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-
-		/*
-		 * if( BetterStorage.config.flintBlockEnabled )
-		 * BLOCK_FLINT.registerItemModels();
-		 * if( BetterStorage.config.cardboardBoxEnabled )
-		 * CARDBOARD_BOX.registerItemModels();
-		 */
-	}
 }

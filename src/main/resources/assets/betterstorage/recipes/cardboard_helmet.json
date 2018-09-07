@@ -1,0 +1,14 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "betterstorage:cardboard_helmet",
+	"pattern":
+	[
+		"ooo",
+		"o o"
+	],
+	"key":
+	{
+		"o": { "type": "forge:ore_dict", "ore": "sheetCardboard" }
+	},
+	"result": { "item": "betterstorage:cardboard_helmet" }
+}

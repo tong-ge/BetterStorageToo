@@ -38,38 +38,4 @@ public final class BetterStorageItems
 
 	// public static ItemDrinkingHelmet drinkingHelmet;
 	// public static ItemPresentBook PRESENT_BOOK;
-
-	public static boolean				anyCardboardItemsEnabled;
-
-	@SideOnly( Side.CLIENT )
-	public static void registerItemModels()
-	{
-		/*
-		 * if( BetterStorage.config.cardboardSheetEnabled )
-		 * CARDBOARD_SHEET.registerItemModels();
-		 * 
-		 * if( BetterStorage.config.cardboardSwordEnabled )
-		 * CARDBOARD_SWORD.registerItemModels();
-		 * if( BetterStorage.config.cardboardShovelEnabled )
-		 * CARDBOARD_SHOVEL.registerItemModels();
-		 * if( BetterStorage.config.cardboardPickaxeEnabled )
-		 * CARDBOARD_PICKAXE.registerItemModels();
-		 * if( BetterStorage.config.cardboardAxeEnabled )
-		 * CARDBOARD_AXE.registerItemModels();
-		 * if( BetterStorage.config.cardboardHoeEnabled )
-		 * CARDBOARD_HOE.registerItemModels();
-		 * 
-		 * if( BetterStorage.config.cardboardHelmetEnabled )
-		 * CARDBOARD_HELMET.registerItemModels();
-		 * if( BetterStorage.config.cardboardChestplateEnabled )
-		 * CARDBOARD_CHESTPLATE.registerItemModels();
-		 * if( BetterStorage.config.cardboardLeggingsEnabled )
-		 * CARDBOARD_LEGGINGS.registerItemModels();
-		 * if( BetterStorage.config.cardboardBootsEnabled )
-		 * CARDBOARD_BOOTS.registerItemModels();
-		 * 
-		 * if( BetterStorage.config.slimeBucketEnabled )
-		 * SLIME_BUCKET.registerItemModels();
-		 */
-	}
 }

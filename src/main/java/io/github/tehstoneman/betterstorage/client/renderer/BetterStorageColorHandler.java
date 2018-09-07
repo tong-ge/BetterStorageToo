@@ -38,6 +38,6 @@ public class BetterStorageColorHandler
 			}
 			return Color.WHITE.getRGB();
 		};
-		//blockColors.registerBlockColorHandler( cardboardBoxColorHandler, BetterStorageBlocks.CARDBOARD_BOX );
+		blockColors.registerBlockColorHandler( cardboardBoxColorHandler, BetterStorageBlocks.CARDBOARD_BOX );
 	}
 }

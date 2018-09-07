@@ -5,6 +5,7 @@ import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.item.ItemBucketSlime.EnumSlime;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -51,6 +52,9 @@ public class ClientEvents
 			}
 		}
 
+		if( BetterStorage.config.flintBlockEnabled )
+			registerItemModel( BetterStorageBlocks.BLOCK_FLINT );
+
 		if( BetterStorage.config.keyEnabled )
 		{
 			registerItemModel( BetterStorageItems.KEY );
@@ -58,10 +62,42 @@ public class ClientEvents
 				registerItemModel( BetterStorageItems.MASTER_KEY );
 			if( BetterStorage.config.keyringEnabled )
 				for( int i = 0; i < 4; i++ )
-					registerItemModel( BetterStorageItems.KEYRING, i, new ModelResourceLocation( BetterStorageItems.KEYRING.getRegistryName() + "_" + i, "inventory" ) );
+					registerItemModel( BetterStorageItems.KEYRING, i,
+							new ModelResourceLocation( BetterStorageItems.KEYRING.getRegistryName() + "_" + i, "inventory" ) );
 			if( BetterStorage.config.lockEnabled )
 				registerItemModel( BetterStorageItems.LOCK );
 		}
+
+		if( BetterStorage.config.cardboardSheetEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_SHEET );
+
+		if( BetterStorage.config.cardboardBoxEnabled )
+			registerItemModel( BetterStorageBlocks.CARDBOARD_BOX );
+
+		if( BetterStorage.config.cardboardSwordEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_SWORD );
+		if( BetterStorage.config.cardboardShovelEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_SHOVEL );
+		if( BetterStorage.config.cardboardPickaxeEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_PICKAXE );
+		if( BetterStorage.config.cardboardAxeEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_AXE );
+		if( BetterStorage.config.cardboardHoeEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_HOE );
+
+		if( BetterStorage.config.cardboardHelmetEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_HELMET );
+		if( BetterStorage.config.cardboardChestplateEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_CHESTPLATE );
+		if( BetterStorage.config.cardboardLeggingsEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_LEGGINGS );
+		if( BetterStorage.config.cardboardBootsEnabled )
+			registerItemModel( BetterStorageItems.CARDBOARD_BOOTS );
+
+		if( BetterStorage.config.slimeBucketEnabled )
+			for( final EnumSlime slime : EnumSlime.values() )
+				registerItemModel( BetterStorageItems.SLIME_BUCKET, slime.getMetadata(),
+						BetterStorageItems.SLIME_BUCKET.getRegistryName() + "_" + slime.getResourceLocation().getResourcePath() );
 	}
 
 	/*

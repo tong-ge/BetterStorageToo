@@ -1,0 +1,10 @@
+{
+	"type": "forge:ore_shapeless",
+	"ingredients":
+	[
+		{ "type": "forge:ore_dict", "ore": "paper" }, { "type": "forge:ore_dict", "ore": "paper" }, { "type": "forge:ore_dict", "ore": "paper" },
+		{ "type": "forge:ore_dict", "ore": "paper" }, { "type": "forge:ore_dict", "ore": "slimeball" }, { "type": "forge:ore_dict", "ore": "paper" },
+		{ "type": "forge:ore_dict", "ore": "paper" }, { "type": "forge:ore_dict", "ore": "paper" }, { "type": "forge:ore_dict", "ore": "paper" }
+	],
+	"result": { "item": "betterstorage:cardboard_sheet", "count": 4 }
+}

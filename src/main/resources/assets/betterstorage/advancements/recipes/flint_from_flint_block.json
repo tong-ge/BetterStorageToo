@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:flint_from_flint_block" ]
+	},
+	"criteria":
+	{
+		"has_flint":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "item": "betterstorage:flint_block" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:flint_from_flint_block" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_flint",
+			"has_the_recipe"
+		]
+	]
+}

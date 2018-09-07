@@ -27,9 +27,6 @@ public class CommonProxy
 		NetworkRegistry.INSTANCE.registerGuiHandler( BetterStorage.instance, new BetterStorageGUIHandler() );
 
 		/*
-		if( BetterStorage.config.flintBlockEnabled )
-			BetterStorageBlocks.BLOCK_FLINT.registerBlock();
-
 		if( BetterStorage.config.cardboardSheetEnabled )
 		{
 			BetterStorageItems.CARDBOARD_SHEET.register();
