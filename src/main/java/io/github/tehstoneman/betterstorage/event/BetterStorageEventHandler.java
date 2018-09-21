@@ -4,7 +4,9 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.IDyeableItem;
+import io.github.tehstoneman.betterstorage.client.BetterStorageResource;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
@@ -22,6 +24,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -215,6 +218,63 @@ public class BetterStorageEventHandler
 		}
 	}
 
+	@SubscribeEvent
+	public void registerEnchantments( Register< Enchantment > event )
+	{
+		final IForgeRegistry<Enchantment> registry = event.getRegistry();
+
+		// Add key enchantments
+		if( BetterStorage.config.keyEnabled )
+		{
+			if( BetterStorage.config.enchUnlockingEnabled )
+			{
+				EnchantmentBetterStorage.unlocking.setRegistryName( "unlocking" );
+				registry.register( EnchantmentBetterStorage.unlocking );
+			}
+			if( BetterStorage.config.enchLockpickingEnabled )
+			{
+				EnchantmentBetterStorage.lockpicking.setRegistryName( "lockpicking" );
+				registry.register( EnchantmentBetterStorage.lockpicking );
+			}
+			if( BetterStorage.config.enchMorphingEnabled )
+			{
+				EnchantmentBetterStorage.morphing.setRegistryName( "morphing" );
+				registry.register( EnchantmentBetterStorage.morphing );
+			}
+
+			if( BetterStorage.config.enchLockpickingEnabled && BetterStorage.config.enchMorphingEnabled )
+			{
+				EnchantmentBetterStorage.lockpicking.setIncompatible( EnchantmentBetterStorage.morphing );
+				EnchantmentBetterStorage.morphing.setIncompatible( EnchantmentBetterStorage.lockpicking );
+			}
+		}
+
+		// Add lock enchantments
+		if( BetterStorage.config.lockEnabled )
+		{
+			if( BetterStorage.config.enchPersistanceEnabled )
+			{
+				EnchantmentBetterStorage.persistance.setRegistryName( "persistance" );
+				registry.register( EnchantmentBetterStorage.persistance );
+			}
+			if( BetterStorage.config.enchSecurityEnabled )
+			{
+				EnchantmentBetterStorage.security.setRegistryName( "security" );
+				registry.register( EnchantmentBetterStorage.security );
+			}
+			if( BetterStorage.config.enchShockEnabled )
+			{
+				EnchantmentBetterStorage.shock.setRegistryName( "shock" );
+				registry.register( EnchantmentBetterStorage.shock );
+			}
+			if( BetterStorage.config.enchTriggerEnabled )
+			{
+				EnchantmentBetterStorage.trigger.setRegistryName( "trigger" );
+				registry.register( EnchantmentBetterStorage.trigger );
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void onConfigChangeEvent( OnConfigChangedEvent event )
 	{

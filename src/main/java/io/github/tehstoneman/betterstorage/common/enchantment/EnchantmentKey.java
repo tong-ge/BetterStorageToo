@@ -4,29 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
 public class EnchantmentKey extends Enchantment
 {
-	private static Predicate< Item >	keyTest			= new Predicate< Item >()
-														{
-															@Override
-															public boolean apply( Item item )
-															{
-																return item instanceof ItemKey;
-															}
-														};
-	final static EnumEnchantmentType	keyType			= EnumHelper.addEnchantmentType( "key", keyTest );
+	final static EnumEnchantmentType	keyType			= EnumHelper.addEnchantmentType( "key", ( item ) -> ( item instanceof ItemKey ) );
 
 	private final int					maxLevel;
 	private final int					minBase, minScaling;

@@ -17,14 +17,16 @@ import net.minecraftforge.common.util.EnumHelper;
 
 public class ItemCardboardSheet extends ItemBetterStorage
 {
-	public static final ToolMaterial	toolMaterial	= EnumHelper.addToolMaterial( "cardboard", 0, 64, 2.0F, -0.5F, 0 );
-	public static final ArmorMaterial	armorMaterial	= EnumHelper.addArmorMaterial( "cardboard", ModInfo.modId + ":cardboard", 5,
+	public static final ToolMaterial	toolMaterial	= EnumHelper.addToolMaterial( "CARDBOARD", 0, 64, 2.0F, -0.5F, 0 );
+	public static final ArmorMaterial	armorMaterial	= EnumHelper.addArmorMaterial( "CARDBOARD", ModInfo.modId + ":cardboard", 5,
 			new int[] { 1, 2, 2, 1 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F );
 
 	public ItemCardboardSheet()
 	{
 		super( "cardboard_sheet" );
 		setMaxStackSize( 8 );
+		toolMaterial.setRepairItem( new ItemStack( this ) );
+		armorMaterial.setRepairItem( new ItemStack( this ) );
 	}
 
 	public static boolean isEffective( ItemStack stack )
