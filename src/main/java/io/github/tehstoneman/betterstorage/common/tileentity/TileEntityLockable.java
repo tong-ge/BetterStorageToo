@@ -45,7 +45,7 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	@Override
 	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
 	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && getLock() != null )
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && !getLock().isEmpty() )
 			return false;
 		return super.hasCapability( capability, facing );
 	}

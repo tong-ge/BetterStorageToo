@@ -85,6 +85,10 @@ public class CrateStackHandler extends ItemStackHandler
 	/** Returns a slot pointed to by a randomized index */
 	public int getIndexedSlot( int slot )
 	{
+		if( slot < 0 )
+			slot = 0;
+		if( slot >= indexSlots.size() )
+			slot = indexSlots.size() - 1;
 		return indexSlots.get( slot );
 	}
 
