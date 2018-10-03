@@ -218,10 +218,14 @@ public class TileEntityCrate extends TileEntity
 	/** Checks crate connections */
 	private void checkConnections( int x, int y, int z, UUID pileID, HashSet< TileEntityCrate > set )
 	{
-		final TileEntityCrate crate = (TileEntityCrate)getWorld().getTileEntity( new BlockPos( x, y, z ) );
-		if( crate == null || !pileID.equals( crate.getPileID() ) || set.contains( crate ) )
-			return;
-		set.add( crate );
+		final TileEntity tileEntity = getWorld().getTileEntity( new BlockPos( x, y, z ) );
+		if( tileEntity instanceof TileEntityCrate )
+		{
+			final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+			if( !pileID.equals( crate.getPileID() ) || set.contains( crate ) )
+				return;
+			set.add( crate );
+		}
 		for( final EnumFacing ndir : EnumFacing.HORIZONTALS )
 			checkConnections( x + ndir.getFrontOffsetX(), y, z + ndir.getFrontOffsetZ(), pileID, set );
 	}
