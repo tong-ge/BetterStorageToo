@@ -57,6 +57,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		setMaxStackSize( 0 );
 		setMaxDamage( 0 );
 		setHasSubtypes( true );
+		this.setCreativeTab( BetterStorage.creativeTab );
 	}
 
 	@Override
