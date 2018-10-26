@@ -31,7 +31,7 @@ public class ItemCardboardSheet extends ItemBetterStorage
 
 	public static boolean isEffective( ItemStack stack )
 	{
-		return stack.getItemDamage() < stack.getMaxDamage();
+		return stack.getMaxDamage() == 0 || stack.getItemDamage() < stack.getMaxDamage();
 	}
 
 	public static boolean canHarvestBlock( ItemStack stack, boolean canHarvestDefault )
