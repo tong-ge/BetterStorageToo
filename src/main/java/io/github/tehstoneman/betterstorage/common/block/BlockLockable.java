@@ -1,7 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
 import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
@@ -19,6 +21,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -67,6 +70,12 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}*/
+	
+	@Override
+	public int quantityDropped( Random rand )
+	{
+		return 0;
+	}
 
 	@Override
 	public IBlockState getStateFromMeta( int meta )

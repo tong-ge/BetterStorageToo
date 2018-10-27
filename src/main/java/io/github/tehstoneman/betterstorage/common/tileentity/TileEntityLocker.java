@@ -2,8 +2,11 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -67,6 +70,20 @@ public class TileEntityLocker extends TileEntityLockable
 		if( getOrientation() != side )
 			return false;
 		return super.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
+	}
+
+	@Override
+	public void onBlockDestroyed()
+	{
+		super.onBlockDestroyed();
+
+		// Don't drop an empty cardboard box in creative.
+		if( !brokenInCreative )
+		{
+			final ItemStack stack = this instanceof TileEntityReinforcedLocker ? new ItemStack( BetterStorageBlocks.REINFORCED_LOCKER, 1, material.getMetadata() ) : new ItemStack( BetterStorageBlocks.LOCKER );
+			final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
+			world.spawnEntity( entityItem );
+		}
 	}
 
 	// TileEntity synchronization

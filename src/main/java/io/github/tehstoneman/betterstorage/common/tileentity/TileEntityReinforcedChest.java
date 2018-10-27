@@ -2,6 +2,9 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -69,6 +72,21 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	 * return super.canConnect( connectable );
 	 * }
 	 */
+
+	@Override
+	public void onBlockDestroyed()
+	{
+		super.onBlockDestroyed();
+
+		// Don't drop an empty cardboard box in creative.
+		if( !brokenInCreative )
+		{
+			final ItemStack stack = new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() );
+			final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
+			world.spawnEntity( entityItem );
+		}
+	}
+
 
 	// TileEntity synchronization
 
