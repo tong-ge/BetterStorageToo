@@ -1,10 +1,8 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-import java.util.logging.Logger;
-
 import org.lwjgl.opengl.GL11;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.BlockDoor;
@@ -54,21 +52,24 @@ public class TileEntityLockerRenderer extends TileEntitySpecialRenderer< TileEnt
 		final BlockPos pos = locker.getPos();
 		final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( locker.getWorld(), pos );
 		IBlockState state = world.getBlockState( pos );
-		if( state.getPropertyKeys().contains( BlockLockable.MATERIAL ) )
-			state = state.withProperty( BlockLockable.MATERIAL, locker.getMaterial() );
-		state = state.withProperty( BlockLockable.CONNECTED, locker.isConnected() );
+		if( state.getBlock() == BetterStorageBlocks.LOCKER || state.getBlock() == BetterStorageBlocks.REINFORCED_LOCKER )
+		{
+			if( state.getPropertyKeys().contains( BlockLockable.MATERIAL ) )
+				state = state.withProperty( BlockLockable.MATERIAL, locker.getMaterial() );
+			state = state.withProperty( BlockLockable.CONNECTED, locker.isConnected() );
 
-		if( blockRenderer == null )
-			blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+			if( blockRenderer == null )
+				blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
-		GlStateManager.translate( 0.5, 0.0, 0.5 );
-		final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
-		GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
-		GlStateManager.translate( -0.5, 0.0, -0.5 );
+			GlStateManager.translate( 0.5, 0.0, 0.5 );
+			final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
+			GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
+			GlStateManager.translate( -0.5, 0.0, -0.5 );
 
-		renderBase( locker, partialTicks, destroyStage, state );
-		renderDoor( locker, partialTicks, destroyStage, state );
-		renderItem( locker, partialTicks, destroyStage, state );
+			renderBase( locker, partialTicks, destroyStage, state );
+			renderDoor( locker, partialTicks, destroyStage, state );
+			renderItem( locker, partialTicks, destroyStage, state );
+		}
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();

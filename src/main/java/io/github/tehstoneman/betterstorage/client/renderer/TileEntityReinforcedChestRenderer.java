@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.client.renderer;
 
 import org.lwjgl.opengl.GL11;
 
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.BlockHorizontal;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -50,23 +50,26 @@ public class TileEntityReinforcedChestRenderer extends TileEntitySpecialRenderer
 		final BlockPos pos = chest.getPos();
 		final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( chest.getWorld(), pos );
 		IBlockState state = world.getBlockState( pos );
-		state = state.withProperty( BlockLockable.MATERIAL, chest.getMaterial() );
-		state = state.withProperty( BlockLockable.CONNECTED, chest.isConnected() );
+		if( state.getBlock() == BetterStorageBlocks.REINFORCED_CHEST )
+		{
+			state = state.withProperty( BlockLockable.MATERIAL, chest.getMaterial() );
+			state = state.withProperty( BlockLockable.CONNECTED, chest.isConnected() );
 
-		if( blockRenderer == null )
-			blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+			if( blockRenderer == null )
+				blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
-		GlStateManager.translate( 0.5, 0.0, 0.5 );
-		final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
-		GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
-		if( chest.isConnected() && ( facing == EnumFacing.NORTH || facing == EnumFacing.EAST ) )
-			GlStateManager.translate( 0.5, 0, -0.5 );
-		else
-			GlStateManager.translate( -0.5, 0.0, -0.5 );
+			GlStateManager.translate( 0.5, 0.0, 0.5 );
+			final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
+			GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
+			if( chest.isConnected() && ( facing == EnumFacing.NORTH || facing == EnumFacing.EAST ) )
+				GlStateManager.translate( 0.5, 0, -0.5 );
+			else
+				GlStateManager.translate( -0.5, 0.0, -0.5 );
 
-		renderBase( chest, partialTicks, destroyStage, state );
-		renderLid( chest, partialTicks, destroyStage, state );
-		renderItem( chest, partialTicks, destroyStage, state );
+			renderBase( chest, partialTicks, destroyStage, state );
+			renderLid( chest, partialTicks, destroyStage, state );
+			renderItem( chest, partialTicks, destroyStage, state );
+		}
 
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
