@@ -1,11 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import java.util.logging.Logger;
-
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -17,17 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class TileEntityContainer extends TileEntity implements ITickable
@@ -35,7 +27,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	public ItemStackHandler	inventory;
 
 	/** The custom title of this container, set by an anvil. */
-	private String			customTitle			= null;
+	private ITextComponent	customTitle			= null;
 
 	private int				playersUsing		= 0;
 
@@ -45,8 +37,9 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	public float			lidAngle			= 0;
 	public float			prevLidAngle		= 0;
 
-	public TileEntityContainer()
+	public TileEntityContainer( TileEntityType< ? > tileEntityTypeIn )
 	{
+		super( tileEntityTypeIn );
 		final int size = getSizeContents();
 		if( size > 0 )
 			inventory = new ItemStackHandler( size )
@@ -61,21 +54,25 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			inventory = null;
 	}
 
-	@Override
-	public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
-	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return true;
-		return super.hasCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
+	 * {
+	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+	 * return true;
+	 * return super.hasCapability( capability, facing );
+	 * }
+	 */
 
-	@Override
-	public <T> T getCapability( Capability< T > capability, EnumFacing facing )
-	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return (T)inventory;
-		return super.getCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public <T> T getCapability( Capability< T > capability, EnumFacing facing )
+	 * {
+	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+	 * return (T)inventory;
+	 * return super.getCapability( capability, facing );
+	 * }
+	 */
 
 	/** The amount of columns in the container. */
 	public int getColumns()
@@ -119,11 +116,11 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	/** Returns the title of the container. */
 	public String getContainerTitle()
 	{
-		return hasCustomTitle() ? getCustomTitle() : getName();
+		return hasCustomTitle() ? getCustomTitle().getString() : getName();
 	}
 
 	/** Returns the custom title of this container. */
-	public String getCustomTitle()
+	public ITextComponent getCustomTitle()
 	{
 		return customTitle;
 	}
@@ -147,10 +144,10 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	}
 
 	/** Sets the custom title of this container. Has no effect if it can't be set. */
-	public void setCustomTitle( String title )
+	public void setCustomTitle( ITextComponent iTextComponent )
 	{
 		if( canSetCustomTitle() )
-			customTitle = title;
+			customTitle = iTextComponent;
 	}
 
 	// Block functions
@@ -169,14 +166,14 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Called then the block is activated (right clicked).
 	 * Usually opens the GUI of the container.
 	 */
-	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
-			float hitY, float hitZ )
+	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+			float hitZ )
 	{
 		if( getWorld().isRemote )
 			return true;
 		if( !canPlayerUseContainer( player ) )
 			return false;
-		player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
+		// player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
 		return true;
 	}
 
@@ -195,16 +192,18 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 */
 	public boolean onBlockBreak( EntityPlayer player )
 	{
-		brokenInCreative = player.capabilities.isCreativeMode;
+		// brokenInCreative = player.getCapabilities().isCreativeMode;
 		return true;
 	}
 
 	/** Called when a neighbor block changes. */
-	public void onNeighborUpdate( Block neighborBlock )
-	{
-		if( acceptsRedstoneSignal() && neighborBlock.canProvidePower( null ) )
-			checkForRedstoneChange();
-	}
+	/*
+	 * public void onNeighborUpdate( Block neighborBlock )
+	 * {
+	 * if( acceptsRedstoneSignal() && neighborBlock.canProvidePower( null ) )
+	 * checkForRedstoneChange();
+	 * }
+	 */
 
 	/** Called after the block is destroyed, drops contents etc. */
 	public void onBlockDestroyed()
@@ -230,13 +229,13 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Sets things like the material taken from the stack. <br>
 	 * Only gets called if an ItemRendererContainer is registered.
 	 */
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public void onBlockRenderAsItem( ItemStack stack )
 	{}
 
 	// Redstone related
 
-	private int redstonePower = 0;
+	private final int redstonePower = 0;
 
 	/** Returns if the block accepts redstone power. */
 	protected boolean acceptsRedstoneSignal()
@@ -260,18 +259,20 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		return getRedstonePower() > 0;
 	}
 
-	protected void checkForRedstoneChange()
-	{
-		final int previousPower = redstonePower;
-		redstonePower = requiresStrongSignal() ? getStrongRedstoneSignal() : getWeakRedstoneSignal();
-		if( redstonePower == previousPower )
-			return;
-		onRedstonePowerChanged( previousPower, redstonePower );
-		if( previousPower <= 0 )
-			onRedstoneActivated();
-		if( redstonePower <= 0 )
-			onRedstoneDeactivated();
-	}
+	/*
+	 * protected void checkForRedstoneChange()
+	 * {
+	 * final int previousPower = redstonePower;
+	 * redstonePower = requiresStrongSignal() ? getStrongRedstoneSignal() : getWeakRedstoneSignal();
+	 * if( redstonePower == previousPower )
+	 * return;
+	 * onRedstonePowerChanged( previousPower, redstonePower );
+	 * if( previousPower <= 0 )
+	 * onRedstoneActivated();
+	 * if( redstonePower <= 0 )
+	 * onRedstoneDeactivated();
+	 * }
+	 */
 
 	/** Called when redstone power going to this block changes. */
 	protected void onRedstonePowerChanged( int previousPower, int currentPower )
@@ -292,10 +293,12 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	}
 
 	/** Returns the weak redstone signal power going into this block. */
-	protected int getWeakRedstoneSignal()
-	{
-		return getWorld().isBlockIndirectlyGettingPowered( pos );
-	}
+	/*
+	 * protected int getWeakRedstoneSignal()
+	 * {
+	 * return getWorld().isBlockIndirectlyGettingPowered( pos );
+	 * }
+	 */
 
 	// Comparator related
 
@@ -421,19 +424,17 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	{
 		if( !doesSyncPlayers() )
 			return;
-		getWorld().addBlockEvent( pos, getBlockType(), 0, playersUsing );
+		// getWorld().addBlockEvent( pos, getBlockType(), 0, playersUsing );
 	}
 
 	@Override
 	public boolean receiveClientEvent( int event, int value )
 	{
 		if( event == 0 )
-		{
 			playersUsing = value;
-		}
 		return true;
 	}
-	
+
 	/** Called when a player opens this container. */
 	public void onContainerOpened()
 	{
@@ -453,28 +454,30 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		return 0.1F;
 	}
 
-	@Override
-	public void update()
-	{
-		if( ticksExisted++ == 0 )
-			// Only run once after tile entity has loaded.
-			checkForRedstoneChange();
-
-		// If a comparator or such has accessed the container and
-		// the contents have been changed, send a block update.
-		if( hasComparatorAccessed() && hasContentsChanged() )
-			comparatorUpdateAndReset();
-
-		prevLidAngle = lidAngle;
-		if( playersUsing > 0 )
-		{
-			if( lidAngle < 1.0F )
-				lidAngle = Math.min( 1.0F, lidAngle + getLidSpeed() );
-		}
-		else
-			if( lidAngle > 0.0F )
-				lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
-	}
+	/*
+	 * @Override
+	 * public void update()
+	 * {
+	 * if( ticksExisted++ == 0 )
+	 * // Only run once after tile entity has loaded.
+	 * checkForRedstoneChange();
+	 * 
+	 * // If a comparator or such has accessed the container and
+	 * // the contents have been changed, send a block update.
+	 * if( hasComparatorAccessed() && hasContentsChanged() )
+	 * comparatorUpdateAndReset();
+	 * 
+	 * prevLidAngle = lidAngle;
+	 * if( playersUsing > 0 )
+	 * {
+	 * if( lidAngle < 1.0F )
+	 * lidAngle = Math.min( 1.0F, lidAngle + getLidSpeed() );
+	 * }
+	 * else
+	 * if( lidAngle > 0.0F )
+	 * lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
+	 * }
+	 */
 
 	// Inventory management
 
@@ -497,17 +500,19 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		final NBTTagCompound compound = super.getUpdateTag();
 
 		if( customTitle != null )
-			compound.setString( "CustomName", customTitle );
+			compound.setString( "CustomName", customTitle.getString() );
 
 		return compound;
 	}
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
-	{
-		final NBTTagCompound compound = getUpdateTag();
-		return new SPacketUpdateTileEntity( getPos(), getBlockMetadata(), compound );
-	}
+	/*
+	 * @Override
+	 * public SPacketUpdateTileEntity getUpdatePacket()
+	 * {
+	 * final NBTTagCompound compound = getUpdateTag();
+	 * return new SPacketUpdateTileEntity( getPos(), getBlockMetadata(), compound );
+	 * }
+	 */
 
 	@Override
 	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
@@ -517,45 +522,51 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
 	}
 
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-
-		if( compound.hasKey( "CustomName" ) )
-			customTitle = compound.getString( "CustomName" );
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( NBTTagCompound compound )
+	 * {
+	 * super.handleUpdateTag( compound );
+	 * 
+	 * if( compound.hasKey( "CustomName" ) )
+	 * customTitle = compound.getString( "CustomName" );
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 
-	@Override
-	public void readFromNBT( NBTTagCompound compound )
-	{
-		super.readFromNBT( compound );
-		if( compound.hasKey( "CustomName" ) )
-			customTitle = compound.getString( "CustomName" );
-		if( compound.hasKey( "Inventory" ) )
-			inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
-		if( compound.getBoolean( "ComparatorAccessed" ) )
-			compAccessedOnLoad = true;
-		if( acceptsRedstoneSignal() )
-			redstonePower = compound.getByte( "RedstonePower" );
-	}
+	/*
+	 * @Override
+	 * public void readFromNBT( NBTTagCompound compound )
+	 * {
+	 * super.readFromNBT( compound );
+	 * if( compound.hasKey( "CustomName" ) )
+	 * customTitle = compound.getString( "CustomName" );
+	 * if( compound.hasKey( "Inventory" ) )
+	 * inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
+	 * if( compound.getBoolean( "ComparatorAccessed" ) )
+	 * compAccessedOnLoad = true;
+	 * if( acceptsRedstoneSignal() )
+	 * redstonePower = compound.getByte( "RedstonePower" );
+	 * }
+	 */
 
-	@Override
-	public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	{
-		super.writeToNBT( compound );
-		if( customTitle != null )
-			compound.setString( "CustomName", customTitle );
-		if( inventory != null )
-			compound.setTag( "Inventory", inventory.serializeNBT() );
-		if( hasComparatorAccessed() )
-			compound.setBoolean( "ComparatorAccessed", true );
-		if( acceptsRedstoneSignal() )
-			compound.setByte( "RedstonePower", (byte)redstonePower );
-		return compound;
-	}
+	/*
+	 * @Override
+	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
+	 * {
+	 * super.writeToNBT( compound );
+	 * if( customTitle != null )
+	 * compound.setString( "CustomName", customTitle );
+	 * if( inventory != null )
+	 * compound.setTag( "Inventory", inventory.serializeNBT() );
+	 * if( hasComparatorAccessed() )
+	 * compound.setBoolean( "ComparatorAccessed", true );
+	 * if( acceptsRedstoneSignal() )
+	 * compound.setByte( "RedstonePower", (byte)redstonePower );
+	 * return compound;
+	 * }
+	 */
 
 	// Utility functions
 

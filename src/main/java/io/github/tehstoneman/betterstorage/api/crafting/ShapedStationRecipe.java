@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ShapedStationRecipe implements IStationRecipe
 {
@@ -115,7 +113,7 @@ public class ShapedStationRecipe implements IStationRecipe
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< IRecipeInput[] > getSampleInputs()
 	{
 		IRecipeInput[] input;
@@ -131,14 +129,14 @@ public class ShapedStationRecipe implements IStationRecipe
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< IRecipeInput > getPossibleInputs()
 	{
 		return null;
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< ItemStack > getPossibleOutputs()
 	{
 		return null;

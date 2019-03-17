@@ -2,10 +2,7 @@ package io.github.tehstoneman.betterstorage.attachment;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class LockAttachmentRenderer extends ItemAttachmentRenderer
 {
 	public static final LockAttachmentRenderer instance = new LockAttachmentRenderer();

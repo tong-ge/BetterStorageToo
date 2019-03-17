@@ -5,10 +5,6 @@ import java.util.List;
 
 import io.github.tehstoneman.betterstorage.api.BetterStorageUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeInputItemStack extends RecipeInputBase
 {
@@ -24,16 +20,18 @@ public class RecipeInputItemStack extends RecipeInputBase
 		this( stack );
 		// If input is NBT sensitive, make sure it has an NBT compound.
 		// Empty means it only matches items with no NBT data.
-		if( nbtSensitive )
-		{
-			if( !stack.hasTagCompound() )
-				stack.setTagCompound( new NBTTagCompound() );
-			// Otherwise, always remove the NBT compound,
-			// because then it will match any item.
-		}
-		else
-			if( stack.hasTagCompound() )
-				stack.setTagCompound( null );
+		/*
+		 * if( nbtSensitive )
+		 * {
+		 * if( !stack.hasTagCompound() )
+		 * stack.setTagCompound( new NBTTagCompound() );
+		 * // Otherwise, always remove the NBT compound,
+		 * // because then it will match any item.
+		 * }
+		 * else
+		 * if( stack.hasTagCompound() )
+		 * stack.setTagCompound( null );
+		 */
 	}
 
 	@Override
@@ -51,12 +49,11 @@ public class RecipeInputItemStack extends RecipeInputBase
 	private final List< ItemStack > list = null;
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< ItemStack > getPossibleMatches()
 	{
 		final ItemStack stack = this.stack.copy();
-		if( stack.getItemDamage() == OreDictionary.WILDCARD_VALUE )
-			stack.setItemDamage( 0 );
+		// if( stack.getItemDamage() == OreDictionary.WILDCARD_VALUE ) stack.setItemDamage( 0 );
 		return Arrays.asList( stack );
 	}
 }

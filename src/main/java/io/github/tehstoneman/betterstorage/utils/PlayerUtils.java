@@ -4,18 +4,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class PlayerUtils
 {
 	private PlayerUtils()
 	{}
 
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public static EntityPlayer getLocalPlayer()
 	{
-		return Minecraft.getMinecraft().player;
+		return Minecraft.getInstance().player;
 	}
 
 	public static void openGui( EntityPlayer pl, String name, int columns, int rows, String title, Container container )

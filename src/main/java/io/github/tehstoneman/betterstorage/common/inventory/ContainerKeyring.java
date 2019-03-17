@@ -6,46 +6,45 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 //@InventoryContainer
 public class ContainerKeyring extends Container
 {
-	private final IInventory			inventoryPlayer;
-	private final KeyringStackHandler	inventoryKeyRing;
-	private final int					protectedIndex;
+	private final IInventory	inventoryPlayer;
+	// private final KeyringStackHandler inventoryKeyRing;
+	private final int			protectedIndex;
 
-	public int							indexStart, indexPlayer, indexHotbar;
+	public int					indexStart, indexPlayer, indexHotbar;
 
 	public ContainerKeyring( EntityPlayer player, ItemStack keyring, int protectedIndex )
 	{
 		inventoryPlayer = player.inventory;
-		inventoryKeyRing = (KeyringStackHandler)keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		// inventoryKeyRing = (KeyringStackHandler)keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
 		this.protectedIndex = protectedIndex;
 
 		indexStart = 0;
-		indexHotbar = inventoryKeyRing.getSlots();
+		// indexHotbar = inventoryKeyRing.getSlots();
 		indexPlayer = indexHotbar + 9;
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = i / 9 * 18 + 18;
-			addSlotToContainer( new KeyringSlotHandler( inventoryKeyRing, i, x, y ) );
+			// addSlotToContainer( new KeyringSlotHandler( inventoryKeyRing, i, x, y ) );
 		}
 
 		for( int i = 0; i < 27; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 50 + i / 9 * 18;
-			addSlotToContainer( new Slot( inventoryPlayer, i + 9, x, y ) );
+			// addSlotToContainer( new Slot( inventoryPlayer, i + 9, x, y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 108;
-			addSlotToContainer( new Slot( inventoryPlayer, i, x, y ) );
+			// addSlotToContainer( new Slot( inventoryPlayer, i, x, y ) );
 		}
 	}
 
@@ -97,6 +96,6 @@ public class ContainerKeyring extends Container
 	public void onContainerClosed( EntityPlayer playerIn )
 	{
 		super.onContainerClosed( playerIn );
-		inventoryKeyRing.updateCount();
+		// inventoryKeyRing.updateCount();
 	}
 }

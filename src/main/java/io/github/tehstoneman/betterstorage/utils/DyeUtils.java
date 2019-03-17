@@ -6,30 +6,31 @@ import java.util.Map;
 
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public final class DyeUtils
 {
 	private static final Map< String, EnumDyeColor > dyes = new HashMap<>();
-	static
-	{
-		addColorFromTable( "dyeBlack" );
-		addColorFromTable( "dyeRed" );
-		addColorFromTable( "dyeGreen" );
-		addColorFromTable( "dyeBrown" );
-		addColorFromTable( "dyeBlue" );
-		addColorFromTable( "dyePurple" );
-		addColorFromTable( "dyeCyan" );
-		addColorFromTable( "dyeLightGray" );
-		addColorFromTable( "dyeGray" );
-		addColorFromTable( "dyePink" );
-		addColorFromTable( "dyeLime" );
-		addColorFromTable( "dyeYellow" );
-		addColorFromTable( "dyeLightBlue" );
-		addColorFromTable( "dyeMagenta" );
-		addColorFromTable( "dyeOrange" );
-		addColorFromTable( "dyeWhite" );
-	};
+	/*
+	 * static
+	 * {
+	 * addColorFromTable( "dyeBlack" );
+	 * addColorFromTable( "dyeRed" );
+	 * addColorFromTable( "dyeGreen" );
+	 * addColorFromTable( "dyeBrown" );
+	 * addColorFromTable( "dyeBlue" );
+	 * addColorFromTable( "dyePurple" );
+	 * addColorFromTable( "dyeCyan" );
+	 * addColorFromTable( "dyeLightGray" );
+	 * addColorFromTable( "dyeGray" );
+	 * addColorFromTable( "dyePink" );
+	 * addColorFromTable( "dyeLime" );
+	 * addColorFromTable( "dyeYellow" );
+	 * addColorFromTable( "dyeLightBlue" );
+	 * addColorFromTable( "dyeMagenta" );
+	 * addColorFromTable( "dyeOrange" );
+	 * addColorFromTable( "dyeWhite" );
+	 * };
+	 */
 
 	private DyeUtils()
 	{}
@@ -42,27 +43,31 @@ public final class DyeUtils
 	{
 		if( stack == null )
 			return null;
-		final int[] oreIds = OreDictionary.getOreIDs( stack );
-		for( final int ore : oreIds )
-		{
-			final String name = OreDictionary.getOreName( ore );
-			if( dyes.containsKey( name ) )
-				return dyes.get( name );
-		}
+		// final int[] oreIds = OreDictionary.getOreIDs( stack );
+		/*
+		 * for( final int ore : oreIds )
+		 * {
+		 * final String name = OreDictionary.getOreName( ore );
+		 * if( dyes.containsKey( name ) )
+		 * return dyes.get( name );
+		 * }
+		 */
 		return null;
 	}
 
 	/** Returns if the item stack is a dye. */
 	public static boolean isDye( ItemStack stack )
 	{
-		final int[] oreIDs = OreDictionary.getOreIDs( stack );
-		if( oreIDs.length > 0 )
-		{
-			final int dye = OreDictionary.getOreID( "dye" );
-			for( final int oreID : oreIDs )
-				if( oreID == dye )
-					return true;
-		}
+		// final int[] oreIDs = OreDictionary.getOreIDs( stack );
+		/*
+		 * if( oreIDs.length > 0 )
+		 * {
+		 * final int dye = OreDictionary.getOreID( "dye" );
+		 * for( final int oreID : oreIDs )
+		 * if( oreID == dye )
+		 * return true;
+		 * }
+		 */
 		return false;
 	}
 
@@ -80,15 +85,17 @@ public final class DyeUtils
 			b = color & 0xFF;
 			number++;
 		}
-		for( final ItemStack dye : dyes )
-		{
-			color = getDyeColor( dye ).getColorValue();
-			if( color < 0 )
-				continue;
-			r += color >> 16;
-			g += color >> 8 & 0xFF;
-			b += color & 0xFF;
-		}
+		/*
+		 * for( final ItemStack dye : dyes )
+		 * {
+		 * color = getDyeColor( dye ).getColorValue();
+		 * if( color < 0 )
+		 * continue;
+		 * r += color >> 16;
+		 * g += color >> 8 & 0xFF;
+		 * b += color & 0xFF;
+		 * }
+		 */
 		r /= number;
 		g /= number;
 		b /= number;
@@ -101,11 +108,13 @@ public final class DyeUtils
 		return getColorFromDyes( -1, dyes );
 	}
 
-	private static void addColorFromTable( String name )
-	{
-		final EnumDyeColor dye = EnumDyeColor.byDyeDamage( dyes.size() );
-		final int color = dye.getColorValue();
-		dyes.put( name, dye );
-	}
+	/*
+	 * private static void addColorFromTable( String name )
+	 * {
+	 * final EnumDyeColor dye = EnumDyeColor.byDyeDamage( dyes.size() );
+	 * final int color = dye.getColorValue();
+	 * dyes.put( name, dye );
+	 * }
+	 */
 
 }

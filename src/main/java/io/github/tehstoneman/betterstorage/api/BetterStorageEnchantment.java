@@ -7,7 +7,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 
 public final class BetterStorageEnchantment
 {
@@ -41,7 +40,7 @@ public final class BetterStorageEnchantment
 	/** Helper method to get the level of that enchantment on the item. */
 	public static int getLevel( ItemStack stack, Enchantment enchantment )
 	{
-		if( stack.isItemEnchanted() )
+		if( stack.isEnchanted() )
 		{
 			final Map< Enchantment, Integer > enchantments = EnchantmentHelper.getEnchantments( stack );
 			return enchantments.getOrDefault( enchantment, 0 );
@@ -52,29 +51,31 @@ public final class BetterStorageEnchantment
 	/** Helper method to decrease the level of an enchantment on the item. */
 	public static void decEnchantment( ItemStack stack, Enchantment ench, int level )
 	{
-		if( stack.getTagCompound() == null )
-			return;
-
-		if( !stack.getTagCompound().hasKey( "ench", 9 ) )
-			return;
-
-		final NBTTagList list = stack.getTagCompound().getTagList( "ench", 10 );
-		final int enchID = Enchantment.getEnchantmentID( ench );
-		int count = -1;
-		for( int i = 0; i < list.tagCount(); i++ )
-			if( list.getCompoundTagAt( i ).getShort( "id" ) == enchID )
-				count = i;
-		if( count >= 0 )
-		{
-			final int newLevel = list.getCompoundTagAt( count ).getShort( "lvl" ) - level;
-			if( newLevel <= 0 )
-			{
-				list.removeTag( count );
-				if( list.hasNoTags() )
-					stack.getTagCompound().removeTag( "ench" );
-			}
-			else
-				list.getCompoundTagAt( count ).setShort( "lvl", (byte)level );
-		}
+		/*
+		 * if( stack.getTagCompound() == null )
+		 * return;
+		 * 
+		 * if( !stack.getTagCompound().hasKey( "ench", 9 ) )
+		 * return;
+		 * 
+		 * final NBTTagList list = stack.getTagCompound().getTagList( "ench", 10 );
+		 * final int enchID = Enchantment.getEnchantmentID( ench );
+		 * int count = -1;
+		 * for( int i = 0; i < list.tagCount(); i++ )
+		 * if( list.getCompoundTagAt( i ).getShort( "id" ) == enchID )
+		 * count = i;
+		 * if( count >= 0 )
+		 * {
+		 * final int newLevel = list.getCompoundTagAt( count ).getShort( "lvl" ) - level;
+		 * if( newLevel <= 0 )
+		 * {
+		 * list.removeTag( count );
+		 * if( list.hasNoTags() )
+		 * stack.getTagCompound().removeTag( "ench" );
+		 * }
+		 * else
+		 * list.getCompoundTagAt( count ).setShort( "lvl", (byte)level );
+		 * }
+		 */
 	}
 }

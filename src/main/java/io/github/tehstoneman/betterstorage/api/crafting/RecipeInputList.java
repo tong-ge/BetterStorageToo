@@ -4,8 +4,6 @@ import java.util.List;
 
 import io.github.tehstoneman.betterstorage.api.BetterStorageUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RecipeInputList extends RecipeInputBase
 {
@@ -32,7 +30,7 @@ public class RecipeInputList extends RecipeInputBase
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< ItemStack > getPossibleMatches()
 	{
 		return items;

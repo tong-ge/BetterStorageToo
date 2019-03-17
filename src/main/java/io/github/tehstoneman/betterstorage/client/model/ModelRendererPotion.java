@@ -3,11 +3,9 @@ package io.github.tehstoneman.betterstorage.client.model;
 import org.lwjgl.opengl.GL11;
 
 import io.github.tehstoneman.betterstorage.utils.RenderUtils;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModelRendererPotion extends ModelRenderer
 {
@@ -31,7 +29,7 @@ public class ModelRendererPotion extends ModelRenderer
 		}
 
 		@Override
-		@SideOnly( Side.CLIENT )
+		// @SideOnly( Side.CLIENT )
 		public void render( float par1 )
 		{
 			if( stack == null )

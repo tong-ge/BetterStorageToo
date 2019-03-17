@@ -3,18 +3,8 @@ package io.github.tehstoneman.betterstorage.utils;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.nbt.NBTTagString;
 
 public final class NbtUtils
 {
@@ -23,7 +13,7 @@ public final class NbtUtils
 	{}
 
 	/** Returns the value of a tag. The type is determined by the generic type of the function. */
-	public static <T> T getTagValue( NBTBase tag )
+	/*public static <T> T getTagValue( NBTBase tag )
 	{
 		//@formatter:off
 		if( tag instanceof NBTTagByte )			return (T)(Object)( (NBTTagByte)tag ).getByte();
@@ -37,10 +27,10 @@ public final class NbtUtils
 		if( tag instanceof NBTTagIntArray )		return (T)( (NBTTagIntArray)tag ).getIntArray();
 		return null;
 		//@formatter:on
-	}
+	}*/
 
 	/** Creates a tag from a value. The type is determined by the type of the value. */
-	public static NBTBase createTag( Object value )
+	/*public static NBTBase createTag( Object value )
 	{
 		//@formatter:off
 		if( value instanceof Byte )		return new NBTTagByte( (Byte)value );
@@ -54,13 +44,15 @@ public final class NbtUtils
 		if( value instanceof int[] )	return new NBTTagIntArray( (int[])value );
 		return null;
 		//@formatter:on
-	}
+	}*/
 
 	public static NBTTagList createList( Object... values )
 	{
 		final NBTTagList list = new NBTTagList();
-		for( final Object value : values )
-			list.appendTag( value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
+		/*
+		 * for( final Object value : values )
+		 * list.appendTag( value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
+		 */
 		return list;
 	}
 
@@ -71,7 +63,7 @@ public final class NbtUtils
 		{
 			final String key = (String)nameValuePairs[i];
 			final Object value = nameValuePairs[i + 1];
-			compound.setTag( key, value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
+			// compound.setTag( key, value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
 		}
 		return compound;
 	}
@@ -80,19 +72,23 @@ public final class NbtUtils
 	{
 		for( int i = 0; i < contents.length; i++ )
 			contents[i] = null;
-		for( int i = 0; i < items.tagCount(); i++ )
-		{
-			final NBTTagCompound item = items.getCompoundTagAt( i );
-			final int slot = item.getByte( "Slot" ) & 255;
-			if( slot >= 0 && slot < contents.length )
-				contents[slot] = new ItemStack( item );
-		}
+		/*
+		 * for( int i = 0; i < items.tagCount(); i++ )
+		 * {
+		 * final NBTTagCompound item = items.getCompoundTagAt( i );
+		 * final int slot = item.getByte( "Slot" ) & 255;
+		 * if( slot >= 0 && slot < contents.length )
+		 * contents[slot] = new ItemStack( item );
+		 * }
+		 */
 	}
 
 	public static void readItems( List< ItemStack > list, NBTTagList items )
 	{
-		for( int i = 0; i < items.tagCount(); i++ )
-			list.add( new ItemStack( items.getCompoundTagAt( i ) ) );
+		/*
+		 * for( int i = 0; i < items.tagCount(); i++ )
+		 * list.add( new ItemStack( items.getCompoundTagAt( i ) ) );
+		 */
 	}
 
 	public static NBTTagList writeItems( ItemStack[] contents )
@@ -104,8 +100,8 @@ public final class NbtUtils
 				continue;
 			final NBTTagCompound item = new NBTTagCompound();
 			item.setByte( "Slot", (byte)i );
-			contents[i].writeToNBT( item );
-			items.appendTag( item );
+			// contents[i].writeToNBT( item );
+			// items.appendTag( item );
 		}
 		return items;
 	}

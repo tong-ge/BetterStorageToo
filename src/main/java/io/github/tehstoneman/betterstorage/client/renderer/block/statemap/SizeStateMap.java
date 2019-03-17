@@ -11,15 +11,13 @@ import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
-public class SizeStateMap extends StateMapperBase
+public class SizeStateMap// extends StateMapperBase
 {
-	@Override
+	/*@Override
 	protected ModelResourceLocation getModelResourceLocation( IBlockState state )
 	{
 		String size = state.getValue( BlockLockable.CONNECTED ) ? "_large" : "_small";
@@ -33,5 +31,5 @@ public class SizeStateMap extends StateMapperBase
         	map.remove( BlockDoor.HINGE );
         }
 		return new ModelResourceLocation( new ResourceLocation( name ), getPropertyString( map ) );
-	}
+	}*/
 }

@@ -7,16 +7,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 //@ChestContainer(isLargeChest = true)
 public class ContainerBetterStorage extends Container
 {
-	private final ItemStackHandler		inventoryContainer;
+	// private final ItemStackHandler inventoryContainer;
 	private final IInventory			inventoryPlayer;
 	private final TileEntityContainer	tileContainer;
 
@@ -27,12 +22,12 @@ public class ContainerBetterStorage extends Container
 
 	public final int					separation;
 
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public GuiBetterStorage				updateGui;
 
 	public ContainerBetterStorage( EntityPlayer player, TileEntityContainer tileContainer )
 	{
-		inventoryContainer = (ItemStackHandler)tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		// inventoryContainer = (ItemStackHandler)tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
 		inventoryPlayer = player.inventory;
 		this.tileContainer = tileContainer;
 		tileContainer.onContainerOpened();
@@ -41,14 +36,14 @@ public class ContainerBetterStorage extends Container
 		rows = tileContainer.getRows();
 
 		indexStart = 0;
-		indexHotbar = inventoryContainer.getSlots();
+		// indexHotbar = inventoryContainer.getSlots();
 		indexPlayer = indexHotbar + 9;
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % columns * 18 + 8;
 			final int y = i / columns * 18 + 18;
-			addSlotToContainer( new SlotItemHandler( inventoryContainer, i, x, y ) );
+			// addSlotToContainer( new SlotItemHandler( inventoryContainer, i, x, y ) );
 		}
 
 		final int offsetX = ( columns - 9 ) / 2 * 18;
@@ -58,14 +53,14 @@ public class ContainerBetterStorage extends Container
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 14 + i / 9 * 18;
-			addSlotToContainer( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
+			// addSlotToContainer( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 72;
-			addSlotToContainer( new Slot( inventoryPlayer, i, offsetX + x, offsetY + y ) );
+			// addSlotToContainer( new Slot( inventoryPlayer, i, offsetX + x, offsetY + y ) );
 		}
 
 		separation = 14;

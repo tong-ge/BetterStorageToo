@@ -3,12 +3,10 @@ package io.github.tehstoneman.betterstorage.client.model;
 import org.lwjgl.opengl.GL11;
 
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class ModelLocker extends ModelBase
 {
 	// private IModelCustom model;

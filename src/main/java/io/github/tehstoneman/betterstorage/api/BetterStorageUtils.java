@@ -1,9 +1,6 @@
 package io.github.tehstoneman.betterstorage.api;
 
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public final class BetterStorageUtils
 {
@@ -18,11 +15,14 @@ public final class BetterStorageUtils
 	 */
 	public static boolean wildcardMatch( ItemStack match, ItemStack stack )
 	{
-		return match == null ? stack == null
-				: stack != null && Item.getIdFromItem( match.getItem() ) == Item.getIdFromItem( stack.getItem() )
-						&& ( StackUtils.getRealItemDamage( match ) == OreDictionary.WILDCARD_VALUE
-								|| StackUtils.getRealItemDamage( match ) == StackUtils.getRealItemDamage( stack ) )
-						&& ( !match.hasTagCompound() || match.getTagCompound().hasNoTags() && !stack.hasTagCompound()
-								|| match.getTagCompound().equals( stack.getTagCompound() ) );
+		/*
+		 * return match == null ? stack == null
+		 * : stack != null && Item.getIdFromItem( match.getItem() ) == Item.getIdFromItem( stack.getItem() )
+		 * && ( StackUtils.getRealItemDamage( match ) == OreDictionary.WILDCARD_VALUE
+		 * || StackUtils.getRealItemDamage( match ) == StackUtils.getRealItemDamage( stack ) )
+		 * && ( !match.hasTagCompound() || match.getTagCompound().hasNoTags() && !stack.hasTagCompound()
+		 * || match.getTagCompound().equals( stack.getTagCompound() ) );
+		 */
+		return false;
 	}
 }

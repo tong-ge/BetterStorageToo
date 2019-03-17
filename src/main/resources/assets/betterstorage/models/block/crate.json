@@ -1,13 +1,6 @@
 {
-	"parent": "block/cube",
-	"textures":
-	{
-		"down":		"betterstorage:blocks/crate/all",
-		"up":		"betterstorage:blocks/crate/all",
-		"north":	"betterstorage:blocks/crate/all",
-		"south":	"betterstorage:blocks/crate/all",
-		"east":		"betterstorage:blocks/crate/all",
-		"west":		"betterstorage:blocks/crate/all",
-		"particle":	"betterstorage:blocks/crate/all"
+    "parent": "block/cube_all",
+	"textures": {
+		"all": "betterstorage:block/crate/all"
 	}
 }

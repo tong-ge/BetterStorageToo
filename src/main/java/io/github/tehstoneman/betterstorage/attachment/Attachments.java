@@ -12,13 +12,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Attachments implements Iterable< Attachment >
 {
@@ -51,27 +47,29 @@ public class Attachments implements Iterable< Attachment >
 
 	public RayTraceResult rayTrace( World world, int x, int y, int z, Vec3d start, Vec3d end )
 	{
-		final AxisAlignedBB aabb = tileEntity.getBlockType().getCollisionBoundingBox( world.getBlockState( new BlockPos( x, y, z ) ), world,
-				new BlockPos( x, y, z ) );
-		RayTraceResult target = aabb.calculateIntercept( start, end );
-		final EntityPlayer player = playerLocal.get();
-
-		double distance = target != null ? start.distanceTo( target.hitVec ) : Double.MAX_VALUE;
-		for( final Attachment attachment : this )
-		{
-			if( !attachment.boxVisible( player ) )
-				continue;
-			final AxisAlignedBB attachmentBox = attachment.getHighlightBox();
-			final RayTraceResult attachmentTarget = attachmentBox.calculateIntercept( start, end );
-			if( attachmentTarget == null )
-				continue;
-			final double attachmentDistance = start.distanceTo( attachmentTarget.hitVec );
-			if( attachmentDistance >= distance )
-				continue;
-			distance = attachmentDistance;
-			target = attachmentTarget;
-			target.subHit = attachment.subId;
-		}
+		/*
+		 * final AxisAlignedBB aabb = tileEntity.getBlockType().getCollisionBoundingBox( world.getBlockState( new BlockPos( x, y, z ) ), world,
+		 * new BlockPos( x, y, z ) );
+		 * RayTraceResult target = aabb.calculateIntercept( start, end );
+		 * final EntityPlayer player = playerLocal.get();
+		 * 
+		 * double distance = target != null ? start.distanceTo( target.hitVec ) : Double.MAX_VALUE;
+		 * for( final Attachment attachment : this )
+		 * {
+		 * if( !attachment.boxVisible( player ) )
+		 * continue;
+		 * final AxisAlignedBB attachmentBox = attachment.getHighlightBox();
+		 * final RayTraceResult attachmentTarget = attachmentBox.calculateIntercept( start, end );
+		 * if( attachmentTarget == null )
+		 * continue;
+		 * final double attachmentDistance = start.distanceTo( attachmentTarget.hitVec );
+		 * if( attachmentDistance >= distance )
+		 * continue;
+		 * distance = attachmentDistance;
+		 * target = attachmentTarget;
+		 * target.subHit = attachment.subId;
+		 * }
+		 */
 
 		/*
 		 * if (target != null) {
@@ -80,7 +78,8 @@ public class Attachments implements Iterable< Attachment >
 		 * target.blockZ = z;
 		 * }
 		 */
-		return target;
+		// return target;
+		return null;
 
 	}
 
@@ -92,7 +91,7 @@ public class Attachments implements Iterable< Attachment >
 	}
 
 	// Called in TileEntityRenderer.renderTileEntityAt.
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public void render( float partialTicks )
 	{
 		for( final Attachment attachment : this )

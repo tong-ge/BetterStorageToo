@@ -2,100 +2,94 @@ package io.github.tehstoneman.betterstorage;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
-import io.github.tehstoneman.betterstorage.client.CreativeTabBetterStorage;
-import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
-import io.github.tehstoneman.betterstorage.common.item.crafting.KeyColorRecipe;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
-import io.github.tehstoneman.betterstorage.proxy.CommonProxy;
-import io.github.tehstoneman.betterstorage.utils.MaterialRegistry;
-import net.minecraft.creativetab.CreativeTabs;
+import io.github.tehstoneman.betterstorage.event.RegistryEventHandler;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.RecipeSorter.Category;
 
-//@formatter:off
-@Mod( modid						= ModInfo.modId,
-      name						= ModInfo.modName,
-      version					= ModInfo.modVersion,
-      dependencies				= ModInfo.dependencies,
-      acceptedMinecraftVersions	= ModInfo.acceptedMC,
-      guiFactory				= ModInfo.guiFactory,
-      updateJSON				= ModInfo.updateJson )
-//@formatter:on
+@Mod( ModInfo.modId )
 public class BetterStorage
 {
-	@Instance( ModInfo.modId )
-	public static BetterStorage			instance;
+	// Directly reference a log4j logger.
+	public static final Logger			LOGGER		= LogManager.getLogger();
+	public static final ItemGroup		ITEM_GROUP	= new ItemGroup( "betterStorageToo" )
+													{
+														@Override
+														@OnlyIn( Dist.CLIENT )
+														public ItemStack createIcon()
+														{
+															return new ItemStack( BetterStorageBlocks.CRATE );
+														}
+													};
 
-	@SidedProxy( serverSide = ModInfo.commonProxy, clientSide = ModInfo.clientProxy )
-	public static CommonProxy			proxy;
-
-	public static SimpleNetworkWrapper	simpleNetworkWrapper;
-	public static Logger				logger;
-	public static CreativeTabs			creativeTab;
 	public static BetterStorageConfig	config;
 
 	public static Random				random;
 
-	@EventHandler
-	public void preInit( FMLPreInitializationEvent event )
+	public BetterStorage()
 	{
-		// Register network messages
-		final int messageID = 0;
-		simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
-
-		logger = event.getModLog();
-		creativeTab = new CreativeTabBetterStorage();
-
-		// Initialize random numbers
-		random = new Random();
-
-		config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
-		config.syncFromFile();
-
-		MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
-
-		// Addon.initialize();
-		// Addon.setupConfigsAll();
-
-		// Initialize API
-		BetterStorageAPI.materials = new MaterialRegistry();
-
-		proxy.preInit();
-
-		EnchantmentBetterStorage.initialize();
-
-		// BetterStorageEntities.register();
-		// DungeonLoot.add();
-
+		MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
 	}
 
-	@EventHandler
-	public void init( FMLInitializationEvent event )
-	{
-		// Recipes.add();
+	/*
+	 * public void preInit( FMLPreInitializationEvent event )
+	 * {
+	 * // Register network messages
+	 * final int messageID = 0;
+	 * simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
+	 * 
+	 * logger = event.getModLog();
+	 * creativeTab = new CreativeTabBetterStorage();
+	 * 
+	 * // Initialize random numbers
+	 * random = new Random();
+	 * 
+	 * config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
+	 * config.syncFromFile();
+	 * 
+	 * MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
+	 * 
+	 * // Addon.initialize();
+	 * // Addon.setupConfigsAll();
+	 * 
+	 * // Initialize API
+	 * BetterStorageAPI.materials = new MaterialRegistry();
+	 * 
+	 * proxy.preInit();
+	 * 
+	 * EnchantmentBetterStorage.initialize();
+	 * 
+	 * // BetterStorageEntities.register();
+	 * // DungeonLoot.add();
+	 * 
+	 * }
+	 */
 
-		proxy.initialize();
-	}
+	/*
+	 * @EventHandler
+	 * public void init( FMLInitializationEvent event )
+	 * {
+	 * // Recipes.add();
+	 * 
+	 * proxy.initialize();
+	 * }
+	 */
 
-	@EventHandler
-	public void postInit( FMLPostInitializationEvent event )
-	{
-		// Addon.postInitializeAll();
-
-		proxy.postInit();
-	}
+	/*
+	 * @EventHandler
+	 * public void postInit( FMLPostInitializationEvent event )
+	 * {
+	 * // Addon.postInitializeAll();
+	 * 
+	 * proxy.postInit();
+	 * }
+	 */
 }

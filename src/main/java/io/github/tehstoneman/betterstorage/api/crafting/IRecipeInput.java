@@ -3,8 +3,6 @@ package io.github.tehstoneman.betterstorage.api.crafting;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IRecipeInput
 {
@@ -27,6 +25,6 @@ public interface IRecipeInput
 	 * Returns a list of possible item stacks that will match this input.
 	 * Used to display and cycle items for the NEI addon.
 	 */
-	@SideOnly( Side.CLIENT )
+	//@SideOnly( Side.CLIENT )
 	List< ItemStack > getPossibleMatches();
 }

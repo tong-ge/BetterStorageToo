@@ -1,11 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.utils.StackUtils;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ReinforcedMaterial
 {
@@ -34,20 +31,20 @@ public class ReinforcedMaterial
 		this( ModInfo.modId, name, null, null );
 	}
 
-	public ShapedOreRecipe getReinforcedRecipe( Block middle, Block result )
+	/*public ShapedOreRecipe getReinforcedRecipe( Block middle, Block result )
 	{
 		//if( ingot == null || block == null )
 			return null;
 		//@formatter:off
-		/*return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ),
+		return new ShapedOreRecipe( setMaterial( new ItemStack( result ) ),
 								"o#o",
 								"#C#",
 								"oOo",	'C', middle,
 										'#', "logWood",
 										'o', ingot,
-										'O', block );*/
+										'O', block );
 		//@formatter:on
-	}
+	}*/
 
 	public ResourceLocation getModelResource( String model, boolean large )
 	{
@@ -61,7 +58,7 @@ public class ReinforcedMaterial
 
 	public ItemStack setMaterial( ItemStack stack )
 	{
-		StackUtils.set( stack, name, TAG_NAME );
+		// StackUtils.set( stack, name, TAG_NAME );
 		return stack;
 	}
 

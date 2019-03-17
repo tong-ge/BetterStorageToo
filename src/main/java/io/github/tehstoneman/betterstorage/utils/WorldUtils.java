@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.utils;
 
-import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -11,22 +10,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class WorldUtils
 {
 	private WorldUtils()
 	{}
 
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public static World getLocalWorld()
 	{
-		return Minecraft.getMinecraft().world;
+		return Minecraft.getInstance().world;
 	}
 
 	public static AxisAlignedBB getAABB( TileEntity entity, double minX, double minY, double minZ, double maxX, double maxY, double maxZ )
@@ -114,17 +108,21 @@ public final class WorldUtils
 	// TileEntity related functions
 
 	/** Returns whether the TileEntity at the position is an instance of tileClass. */
-	public static <T> boolean is( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
-	{
-		return tileClass.isInstance( world.getTileEntity( new BlockPos( x, y, z ) ) );
-	}
+	/*
+	 * public static <T> boolean is( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
+	 * {
+	 * return tileClass.isInstance( world.getTileEntity( new BlockPos( x, y, z ) ) );
+	 * }
+	 */
 
 	/** Returns the TileEntity at the position if it's an instance of tileClass, null if not. */
-	public static <T> T get( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
-	{
-		final TileEntity t = world.getTileEntity( new BlockPos( x, y, z ) );
-		return tileClass.isInstance( t ) ? (T)t : null;
-	}
+	/*
+	 * public static <T> T get( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
+	 * {
+	 * final TileEntity t = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * return tileClass.isInstance( t ) ? (T)t : null;
+	 * }
+	 */
 
 	/** Returns if the TileEntity can be used by this player. */
 	public static boolean isTileEntityUsableByPlayer( TileEntity entity, EntityPlayer player )
@@ -171,28 +169,30 @@ public final class WorldUtils
 	{
 		final Block block = world.getBlockState( new BlockPos( x, y, z ) ).getBlock();
 		// world.notifyNeighborsOfStateChange( pos, blockType );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x + 1, y, z ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x - 1, y, z ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y + 1, z ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y - 1, z ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z + 1 ), block, true );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z - 1 ), block, true );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x + 1, y, z ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x - 1, y, z ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y + 1, z ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y - 1, z ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z + 1 ), block );
+		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z - 1 ), block );
 	}
 
 	// Misc functions
 
-	public static RayTraceResult rayTrace( EntityPlayer player, float partialTicks )
-	{
-		Attachments.playerLocal.set( player );
-		// final double range = player.worldObj.isRemote ? Minecraft.getMinecraft().playerController.getBlockReachDistance()
-		// : ( (EntityPlayerMP)player ).theItemInWorldManager.getBlockReachDistance();
-		final double range = Minecraft.getMinecraft().playerController.getBlockReachDistance();
-		final Vec3d start = new Vec3d( player.posX, player.posY + 1.62 - player.getYOffset(), player.posZ );
-		final Vec3d look = player.getLook( 1.0F );
-		final Vec3d end = start.addVector( look.x * range, look.y * range, look.z * range );
-		final RayTraceResult target = player.world.rayTraceBlocks( start, end );
-		Attachments.playerLocal.remove();
-		return target;
-	}
+	/*
+	 * public static RayTraceResult rayTrace( EntityPlayer player, float partialTicks )
+	 * {
+	 * Attachments.playerLocal.set( player );
+	 * // final double range = player.worldObj.isRemote ? Minecraft.getMinecraft().playerController.getBlockReachDistance()
+	 * // : ( (EntityPlayerMP)player ).theItemInWorldManager.getBlockReachDistance();
+	 * final double range = Minecraft.getInstance().playerController.getBlockReachDistance();
+	 * final Vec3d start = new Vec3d( player.posX, player.posY + 1.62 - player.getYOffset(), player.posZ );
+	 * final Vec3d look = player.getLook( 1.0F );
+	 * final Vec3d end = start.addVector( look.x * range, look.y * range, look.z * range );
+	 * final RayTraceResult target = player.world.rayTraceBlocks( start, end );
+	 * Attachments.playerLocal.remove();
+	 * return target;
+	 * }
+	 */
 }

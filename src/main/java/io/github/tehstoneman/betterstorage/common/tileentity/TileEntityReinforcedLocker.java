@@ -3,12 +3,16 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.tileentity.TileEntityType;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker
 {
+	public TileEntityReinforcedLocker( TileEntityType< ? > tileEntityTypeIn )
+	{
+		super( tileEntityTypeIn );
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public boolean canHaveLock()
 	{
@@ -36,6 +40,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		return ModInfo.containerReinforcedLocker;
 	}
 
+	@Override
 	public void setMaterial( EnumReinforced reinforcedMaterial )
 	{
 		material = reinforcedMaterial;

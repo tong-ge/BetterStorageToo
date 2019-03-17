@@ -4,10 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import io.github.tehstoneman.betterstorage.utils.RenderUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class ItemAttachmentRenderer implements IAttachmentRenderer
 {
 

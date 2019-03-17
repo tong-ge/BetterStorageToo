@@ -8,13 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class BetterStorageColorHandler
 {
-	public static Minecraft minecraft = Minecraft.getMinecraft();
+	public static Minecraft minecraft = Minecraft.getInstance();
 
 	public static void registerColorHandlers()
 	{
@@ -38,6 +36,6 @@ public class BetterStorageColorHandler
 			}
 			return Color.WHITE.getRGB();
 		};
-		blockColors.registerBlockColorHandler( cardboardBoxColorHandler, BetterStorageBlocks.CARDBOARD_BOX );
+		//blockColors.registerBlockColorHandler( cardboardBoxColorHandler, BetterStorageBlocks.CARDBOARD_BOX );
 	}
 }

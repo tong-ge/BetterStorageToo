@@ -1,30 +1,27 @@
 package io.github.tehstoneman.betterstorage.client;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class CreativeTabBetterStorage extends CreativeTabs
+public class CreativeTabBetterStorage// extends CreativeTabs
 {
-	public CreativeTabBetterStorage()
-	{
-		super( ModInfo.modId );
-	}
+	/*
+	 * public CreativeTabBetterStorage()
+	 * {
+	 * super( ModInfo.modId );
+	 * }
+	 */
 
-	@Override
-	@SideOnly( Side.CLIENT )
-	public ItemStack getTabIconItem()
-	{
-		if( BetterStorageBlocks.CRATE != null )
-			return new ItemStack( BetterStorageBlocks.CRATE );
-		else
-			if( BetterStorageBlocks.REINFORCED_CHEST != null )
-				return new ItemStack( BetterStorageBlocks.REINFORCED_CHEST );
-			else
-				return new ItemStack( Blocks.CHEST );
-	}
+	/*
+	 * @Override
+	 * 
+	 * @SideOnly( Side.CLIENT )
+	 * public ItemStack getTabIconItem()
+	 * {
+	 * if( BetterStorageBlocks.CRATE != null )
+	 * return new ItemStack( BetterStorageBlocks.CRATE );
+	 * else
+	 * if( BetterStorageBlocks.REINFORCED_CHEST != null )
+	 * return new ItemStack( BetterStorageBlocks.REINFORCED_CHEST );
+	 * else
+	 * return new ItemStack( Blocks.CHEST );
+	 * }
+	 */
 }

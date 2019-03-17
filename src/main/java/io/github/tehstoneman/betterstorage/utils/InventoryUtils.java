@@ -116,17 +116,19 @@ public final class InventoryUtils
 			for( int i = 0; i < inventory.getSizeInventory(); i++ )
 			{
 				final ItemStack invStack = inventory.getStackInSlot( i );
-				if( StackUtils.matches( stack, invStack ) && invStack.getCount() < maxStackSize )
-				{
-					final int amount = Math.min( invStack.getCount() + stack.getCount(), maxStackSize );
-					final ItemStack testStack = StackUtils.copyStack( stack, amount );
-					if( inventory.isItemValidForSlot( i, testStack ) )
-					{
-						stack.setCount( stack.getCount() - testStack.getCount() - invStack.getCount() );
-						if( doAdd )
-							inventory.setInventorySlotContents( i, testStack );
-					}
-				}
+				/*
+				 * if( StackUtils.matches( stack, invStack ) && invStack.getCount() < maxStackSize )
+				 * {
+				 * final int amount = Math.min( invStack.getCount() + stack.getCount(), maxStackSize );
+				 * final ItemStack testStack = StackUtils.copyStack( stack, amount );
+				 * if( inventory.isItemValidForSlot( i, testStack ) )
+				 * {
+				 * stack.setCount( stack.getCount() - testStack.getCount() - invStack.getCount() );
+				 * if( doAdd )
+				 * inventory.setInventorySlotContents( i, testStack );
+				 * }
+				 * }
+				 */
 				if( stack.getCount() <= 0 )
 					return true;
 			}
@@ -134,16 +136,18 @@ public final class InventoryUtils
 		for( int i = 0; i < inventory.getSizeInventory(); i++ )
 		{
 			final ItemStack invStack = inventory.getStackInSlot( i );
-			if( invStack == null )
-			{
-				final ItemStack testStack = StackUtils.copyStack( stack, Math.min( stack.getCount(), maxStackSize ) );
-				if( inventory.isItemValidForSlot( i, testStack ) )
-				{
-					stack.setCount( stack.getCount() - testStack.getCount() );
-					if( doAdd )
-						inventory.setInventorySlotContents( i, testStack );
-				}
-			}
+			/*
+			 * if( invStack == null )
+			 * {
+			 * final ItemStack testStack = StackUtils.copyStack( stack, Math.min( stack.getCount(), maxStackSize ) );
+			 * if( inventory.isItemValidForSlot( i, testStack ) )
+			 * {
+			 * stack.setCount( stack.getCount() - testStack.getCount() );
+			 * if( doAdd )
+			 * inventory.setInventorySlotContents( i, testStack );
+			 * }
+			 * }
+			 */
 			if( stack.getCount() <= 0 )
 				return true;
 		}

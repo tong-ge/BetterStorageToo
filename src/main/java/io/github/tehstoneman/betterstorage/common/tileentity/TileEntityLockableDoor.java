@@ -9,25 +9,17 @@ import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
-import io.github.tehstoneman.betterstorage.common.block.BlockLockableDoor;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockDoor.EnumDoorHalf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityLockableDoor extends TileEntity implements ILockable, IHasAttachments
 {
@@ -42,15 +34,15 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	public boolean				isOpen		= false;
 	public boolean				isMirrored	= false;
 
-	public TileEntityLockableDoor()
+	public TileEntityLockableDoor( TileEntityType< ? > tileEntityTypeIn )
 	{
-
+		super( tileEntityTypeIn );
 		lockAttachment = attachments.add( LockAttachment.class );
 		lockAttachment.setScale( 0.5F, 1.5F );
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return WorldUtils.getAABB( this, 0, 0, 0, 0, 1, 0 );
@@ -111,25 +103,7 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	{
 		// Turn it back into a normal iron door
 		if( lock.isEmpty() )
-		{
 			lockAttachment.setItem( ItemStack.EMPTY );
-
-			final IBlockState blockState = world.getBlockState( pos ).withProperty( BlockDoor.HINGE, world.getBlockState( pos.up() ).getValue( BlockDoor.HINGE ) );
-			final Block block = blockState.getBlock();
-
-			//@formatter:off
-			world.setBlockState( pos, Blocks.IRON_DOOR.getDefaultState()
-					.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
-					.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
-					.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
-					.withProperty( BlockDoor.HALF, EnumDoorHalf.LOWER ) );
-			world.setBlockState( pos.up(), Blocks.IRON_DOOR.getDefaultState()
-					.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
-					.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
-					.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
-					.withProperty( BlockDoor.HALF, EnumDoorHalf.UPPER ) );
-			//@formatter:on
-		}
 		else
 			setLockWithUpdate( lock );
 
@@ -154,13 +128,15 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	@Override
 	public void useUnlocked( EntityPlayer player )
 	{
-		IBlockState state = world.getBlockState( pos );
+		final IBlockState state = world.getBlockState( pos );
 
-		state = state.cycleProperty( BlockDoor.OPEN );
+		// state = state.cycleProperty( BlockDoor.OPEN );
 		world.setBlockState( pos, state, 10 );
 		world.markBlockRangeForRenderUpdate( pos, pos );
-		world.playSound( (EntityPlayer)null, pos, state.getValue( BlockDoor.OPEN ).booleanValue() ? SoundEvents.BLOCK_IRON_DOOR_OPEN : SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 1, 1 );
-		//world.playEvent( player, state.getValue( BlockDoor.OPEN ).booleanValue() ? BlockLockableDoor.getOpenSound() : BlockLockableDoor.getCloseSound(), pos, 0 );
+		// world.playSound( (EntityPlayer)null, pos, state.getValue( BlockDoor.OPEN ).booleanValue() ? SoundEvents.BLOCK_IRON_DOOR_OPEN :
+		// SoundEvents.BLOCK_IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 1, 1 );
+		// world.playEvent( player, state.getValue( BlockDoor.OPEN ).booleanValue() ? BlockLockableDoor.getOpenSound() : BlockLockableDoor.getCloseSound(), pos,
+		// 0 );
 
 		isOpen = !isOpen;
 		// worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType(), 0, isOpen ? 1 : 0);
@@ -223,11 +199,13 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 		// WorldUtils.notifyBlocksAround(worldObj, xCoord, yCoord + 1, zCoord);
 	}
 
-	@Override
-	public boolean shouldRefresh( World world, BlockPos pos, IBlockState oldState, IBlockState newSate )
-	{
-		return oldState.getBlock() != newSate.getBlock();
-	}
+	/*
+	 * @Override
+	 * public boolean shouldRefresh( World world, BlockPos pos, IBlockState oldState, IBlockState newSate )
+	 * {
+	 * return oldState.getBlock() != newSate.getBlock();
+	 * }
+	 */
 
 	// TileEntity synchronization
 
@@ -242,7 +220,7 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 		 * if( !lockAttachment.getItem().isEmpty() )
 		 * compound.setTag( "lock", lockAttachment.getItem().writeToNBT( new NBTTagCompound() ) );
 		 */
-		writeToNBT( compound );
+		// writeToNBT( compound );
 		return compound;
 	}
 
@@ -264,22 +242,24 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 		 * isMirrored = compound.getBoolean( "isMirrored" );
 		 * updateLockPosition();
 		 */
-		readFromNBT( compound );
+		// readFromNBT( compound );
 	}
 
 	// Reading from / writing to NBT
 
-	@Override
-	public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	{
-		super.writeToNBT( compound );
-		compound.setBoolean( "isOpen", isOpen );
-		compound.setBoolean( "isMirrored", isMirrored );
-		compound.setByte( "orientation", (byte)orientation.ordinal() );
-		if( !lockAttachment.getItem().isEmpty() )
-			compound.setTag( "lock", lockAttachment.getItem().writeToNBT( new NBTTagCompound() ) );
-		return compound;
-	}
+	/*
+	 * @Override
+	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
+	 * {
+	 * super.writeToNBT( compound );
+	 * compound.setBoolean( "isOpen", isOpen );
+	 * compound.setBoolean( "isMirrored", isMirrored );
+	 * compound.setByte( "orientation", (byte)orientation.ordinal() );
+	 * if( !lockAttachment.getItem().isEmpty() )
+	 * compound.setTag( "lock", lockAttachment.getItem().writeToNBT( new NBTTagCompound() ) );
+	 * return compound;
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -289,15 +269,17 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	 * }
 	 */
 
-	@Override
-	public void readFromNBT( NBTTagCompound compound )
-	{
-		super.readFromNBT( compound );
-		isOpen = compound.getBoolean( "isOpen" );
-		isMirrored = compound.getBoolean( "isMirrored" );
-		orientation = EnumFacing.getFront( compound.getByte( "orientation" ) );
-		if( compound.hasKey( "lock" ) )
-			lockAttachment.setItem( new ItemStack( compound.getCompoundTag( "lock" ) ) );
-		updateLockPosition();
-	}
+	/*
+	 * @Override
+	 * public void readFromNBT( NBTTagCompound compound )
+	 * {
+	 * super.readFromNBT( compound );
+	 * isOpen = compound.getBoolean( "isOpen" );
+	 * isMirrored = compound.getBoolean( "isMirrored" );
+	 * orientation = EnumFacing.getFront( compound.getByte( "orientation" ) );
+	 * if( compound.hasKey( "lock" ) )
+	 * lockAttachment.setItem( new ItemStack( compound.getCompoundTag( "lock" ) ) );
+	 * updateLockPosition();
+	 * }
+	 */
 }

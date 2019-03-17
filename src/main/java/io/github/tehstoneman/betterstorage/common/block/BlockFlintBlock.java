@@ -1,16 +1,15 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 
 public class BlockFlintBlock extends BlockBetterStorage
 {
 	public BlockFlintBlock()
 	{
-		super( "flint_block", Material.ROCK );
+		super( Properties.from( Blocks.OAK_PLANKS ) );
 
-		setHardness( 3.0F );
-		setResistance( 6.0F );
-		setSoundType( SoundType.STONE );
+		// setHardness( 3.0F );
+		// setResistance( 6.0F );
+		// setSoundType( SoundType.STONE );
 	}
 }

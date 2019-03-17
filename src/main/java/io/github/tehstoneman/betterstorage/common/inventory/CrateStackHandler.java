@@ -7,13 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CrateStackHandler extends ItemStackHandler
@@ -211,21 +207,23 @@ public class CrateStackHandler extends ItemStackHandler
 	 *
 	 * @return Overflow contents
 	 */
-	public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
-	{
-		if( numCrates > 1 )
-		{
-			final NonNullList< ItemStack > overflow = copyStack( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.size() );
-			setNumCrates( numCrates - 1 );
-			CrateStackCollection.getCollection( crate.getWorld() ).markDirty();
-			return overflow;
-		}
-		else
-		{
-			CrateStackCollection.getCollection( crate.getWorld() ).removeCratePile( pileID );
-			return stacks;
-		}
-	}
+	/*
+	 * public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
+	 * {
+	 * if( numCrates > 1 )
+	 * {
+	 * final NonNullList< ItemStack > overflow = copyStack( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.size() );
+	 * setNumCrates( numCrates - 1 );
+	 * CrateStackCollection.getCollection( crate.getWorld() ).markDirty();
+	 * return overflow;
+	 * }
+	 * else
+	 * {
+	 * CrateStackCollection.getCollection( crate.getWorld() ).removeCratePile( pileID );
+	 * return stacks;
+	 * }
+	 * }
+	 */
 
 	/** Sets the region of this handler */
 	public void setRegion( Region region )
@@ -294,25 +292,27 @@ public class CrateStackHandler extends ItemStackHandler
 	 * This is needed when crates are not removed in order, for
 	 * example when they're split.
 	 */
-	public void trimRegion( World world )
-	{
-		Region region = null;
-		for( final BlockPos pos : BlockPos.getAllInBox( this.region.posMin, this.region.posMax ) )
-		{
-			final TileEntity tileEntity = world.getTileEntity( pos );
-			if( tileEntity instanceof TileEntityCrate )
-			{
-				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-				if( crate.getPileID().equals( pileID ) )
-					if( region == null )
-						region = new Region( pos, pos );
-					else
-						region.expandToContain( pos );
-			}
-		}
-		if( region != null )
-			this.region = region;
-	}
+	/*
+	 * public void trimRegion( World world )
+	 * {
+	 * Region region = null;
+	 * for( final BlockPos pos : BlockPos.getAllInBox( this.region.posMin, this.region.posMax ) )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( pos );
+	 * if( tileEntity instanceof TileEntityCrate )
+	 * {
+	 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+	 * if( crate.getPileID().equals( pileID ) )
+	 * if( region == null )
+	 * region = new Region( pos, pos );
+	 * else
+	 * region.expandToContain( pos );
+	 * }
+	 * }
+	 * if( region != null )
+	 * this.region = region;
+	 * }
+	 */
 
 	@Override
 	public void setSize( int size )
@@ -420,7 +420,7 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		final NBTTagCompound compound = super.serializeNBT();
 
-		compound.setInteger( "NumCrates", numCrates );
+		compound.setInt( "NumCrates", numCrates );
 		if( pileID != null )
 			compound.setUniqueId( "PileID", pileID );
 
@@ -434,12 +434,12 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		super.deserializeNBT( compound );
 
-		numCrates = compound.getInteger( "NumCrates" );
+		numCrates = compound.getInt( "NumCrates" );
 		if( compound.hasUniqueId( "PileID" ) )
 			pileID = compound.getUniqueId( "PileID" );
 
 		if( compound.hasKey( "Region" ) )
-			region = Region.fromCompound( compound.getCompoundTag( "Region" ) );
+			region = Region.fromCompound( compound.getCompound( "Region" ) );
 		onLoad();
 	}
 }

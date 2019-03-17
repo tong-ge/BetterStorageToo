@@ -1,46 +1,20 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import java.util.UUID;
-import java.util.logging.Logger;
-
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockDoor.EnumDoorHalf;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.sound.SoundSetupEvent;
 
 public class ItemLock extends ItemKeyLock implements ILock
 {
 	public ItemLock()
 	{
 		super( "lock" );
-		setMaxDamage( 64 );
-		setMaxStackSize( 1 );
+		// setMaxDamage( 64 );
+		// setMaxStackSize( 1 );
 	}
 
 	@Override
@@ -61,21 +35,25 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return true;
 	}
 
-	@Override
-	public void onCreated( ItemStack stack, World world, EntityPlayer player )
-	{
-		if( !world.isRemote )
-			ensureHasID( stack );
-	}
+	/*
+	 * @Override
+	 * public void onCreated( ItemStack stack, World world, EntityPlayer player )
+	 * {
+	 * if( !world.isRemote )
+	 * ensureHasID( stack );
+	 * }
+	 */
 
-	@Override
-	public void onUpdate( ItemStack stack, World world, Entity entity, int slot, boolean isBeingHeld )
-	{
-		if( !world.isRemote )
-			ensureHasID( stack );
-	}
+	/*
+	 * @Override
+	 * public void onUpdate( ItemStack stack, World world, Entity entity, int slot, boolean isBeingHeld )
+	 * {
+	 * if( !world.isRemote )
+	 * ensureHasID( stack );
+	 * }
+	 */
 
-	@Override
+	/*@Override
 	public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
 			float hitZ )
 	{
@@ -135,23 +113,25 @@ public class ItemLock extends ItemKeyLock implements ILock
 			}
 		}
 		return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
-	}
+	}*/
 
 	/**
 	 * Gives the lock a random ID if it doesn't have one. <br>
 	 * This is usually only when the lock is taken out of creative.
 	 */
-	public static void ensureHasID( ItemStack stack )
-	{
-		NBTTagCompound tag = stack.getTagCompound();
-		if( tag == null )
-			tag = new NBTTagCompound();
-		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-		{
-			tag.setUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
-			stack.setTagCompound( tag );
-		}
-	}
+	/*
+	 * public static void ensureHasID( ItemStack stack )
+	 * {
+	 * NBTTagCompound tag = stack.getTagCompound();
+	 * if( tag == null )
+	 * tag = new NBTTagCompound();
+	 * if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+	 * {
+	 * tag.setUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
+	 * stack.setTagCompound( tag );
+	 * }
+	 * }
+	 */
 
 	// ILock implementation
 
@@ -171,32 +151,41 @@ public class ItemLock extends ItemKeyLock implements ILock
 		applyEffects( lock, lockable, player, interaction );
 	}
 
-	@Override
-	public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
-	{
-		final int shock = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.shock );
-		final int trigger = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.trigger );
-
-		if( shock > 0 )
-		{
-			final boolean open = interaction == EnumLockInteraction.OPEN;
-			final boolean pick = interaction == EnumLockInteraction.PICK;
-			int damage = shock;
-			if( pick )
-				damage *= 3;
-			player.attackEntityFrom( DamageSource.MAGIC, damage );
-			if( shock >= 3 && !open )
-				player.setFire( 3 );
-		}
-
-		if( trigger > 0 )
-			lockable.applyTrigger();
-
-	}
+	/*
+	 * @Override
+	 * public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
+	 * {
+	 * final int shock = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.shock );
+	 * final int trigger = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.trigger );
+	 *
+	 * if( shock > 0 )
+	 * {
+	 * final boolean open = interaction == EnumLockInteraction.OPEN;
+	 * final boolean pick = interaction == EnumLockInteraction.PICK;
+	 * int damage = shock;
+	 * if( pick )
+	 * damage *= 3;
+	 * player.attackEntityFrom( DamageSource.MAGIC, damage );
+	 * if( shock >= 3 && !open )
+	 * player.setFire( 3 );
+	 * }
+	 *
+	 * if( trigger > 0 )
+	 * lockable.applyTrigger();
+	 *
+	 * }
+	 */
 
 	@Override
 	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
 		return true;
+	}
+
+	@Override
+	public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

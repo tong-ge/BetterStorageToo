@@ -2,8 +2,6 @@ package io.github.tehstoneman.betterstorage.attachment;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ItemAttachment extends Attachment
 {
@@ -34,7 +32,7 @@ public abstract class ItemAttachment extends Attachment
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public IAttachmentRenderer getRenderer()
 	{
 		return ItemAttachmentRenderer.instance;

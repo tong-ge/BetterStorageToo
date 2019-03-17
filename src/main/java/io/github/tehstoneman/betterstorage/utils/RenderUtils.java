@@ -9,10 +9,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public final class RenderUtils
 {
 
@@ -24,7 +22,7 @@ public final class RenderUtils
 	public static void renderItemIn3d( ItemStack stack )
 	{
 
-		final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+		final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 		// Not sure why but this can be null when the world loads.
 		if( textureManager == null )
 			return;
@@ -113,7 +111,7 @@ public final class RenderUtils
 
 	public static void bindTexture( ResourceLocation texture )
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture( texture );
+		Minecraft.getInstance().getTextureManager().bindTexture( texture );
 	}
 
 }

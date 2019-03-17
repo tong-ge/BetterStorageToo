@@ -1,14 +1,12 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Item renderer that'll tell the container class which stack is being rendered,
  * to make sure it's got a chance to set members based on the stack's NBT data.
  */
-@SideOnly( Side.CLIENT )
+// @SideOnly( Side.CLIENT )
 public class ItemRendererContainer// implements IItemRenderer
 {
 	private final Class< ? extends TileEntityContainer >	tileEntityClass;

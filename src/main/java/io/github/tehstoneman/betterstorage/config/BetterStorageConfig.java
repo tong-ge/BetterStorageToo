@@ -1,14 +1,8 @@
 package io.github.tehstoneman.betterstorage.config;
 
-import java.io.File;
-import java.util.Arrays;
-
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
 public class BetterStorageConfig
 {
-	private final Configuration	config;
+	// private final Configuration config;
 
 	public static final String	CATEGORY_BLOCKS			= "blocks";
 	public static final String	CATEGORY_ITEMS			= "items";
@@ -64,15 +58,19 @@ public class BetterStorageConfig
 	public boolean				enableHelpTooltips;
 	public boolean				enableWarningMessages;
 
-	public BetterStorageConfig( File file )
-	{
-		config = new Configuration( file );
-	}
+	/*
+	 * public BetterStorageConfig( File file )
+	 * {
+	 * config = new Configuration( file );
+	 * }
+	 */
 
-	public Configuration getConfig()
-	{
-		return config;
-	}
+	/*
+	 * public Configuration getConfig()
+	 * {
+	 * return config;
+	 * }
+	 */
 
 	/**
 	 * Load the configuration values from the configuration file
@@ -112,13 +110,15 @@ public class BetterStorageConfig
 	public void syncConfig( boolean loadConfigFromFile, boolean readFieldsFromConfig )
 	{
 		// Load config file
-		if( loadConfigFromFile )
-			config.load();
+		/*
+		 * if( loadConfigFromFile )
+		 * config.load();
+		 */
 
 		// Define config properties
 		//@formatter:off
 		// Blocks
-		final Property propCrateEnabled = config.get( CATEGORY_BLOCKS, "crateEnabled", true )
+		/*final Property propCrateEnabled = config.get( CATEGORY_BLOCKS, "crateEnabled", true )
 				.setLanguageKey( "tile.betterstorage.crate.name" ).setRequiresMcRestart( true );
 		final Property propReinforcedChestEnabled = config.get( CATEGORY_BLOCKS, "reinforcedChestEnabled", true )
 				.setLanguageKey( "tile.betterstorage.reinforced_chest.name" ).setRequiresMcRestart( true );
@@ -214,7 +214,7 @@ public class BetterStorageConfig
 				.setLanguageKey( "config.betterstorage.general.enableHelpTooltips" );
 		final Property propEnableWarningMessages = config.get( Configuration.CATEGORY_GENERAL, "enableWarningMessages", false,
 				"If disabled, prevents certain warning messages from being logged to the console." )
-				.setLanguageKey( "config.betterstorage.general.enableWarningMessages" );
+				.setLanguageKey( "config.betterstorage.general.enableWarningMessages" );*/
 
 		// Define property order
 		/*config.setCategoryPropertyOrder( Configuration.CATEGORY_GENERAL,
@@ -263,86 +263,90 @@ public class BetterStorageConfig
 		// Read properties
 		if( readFieldsFromConfig )
 		{
-			enchUnlockingEnabled = propEnchUnlockingEnabled.getBoolean();
-			enchLockpickingEnabled = propEnchLockpickingEnabled.getBoolean();
-			enchMorphingEnabled = propEnchMorphingEnabled.getBoolean();
-			enchPersistanceEnabled = propEnchPersistanceEnabled.getBoolean();
-			enchSecurityEnabled = propEnchSecurityEnabled.getBoolean();
-			enchShockEnabled = propEnchShockEnabled.getBoolean();
-			enchTriggerEnabled = propEnchTriggerEnabled.getBoolean();
-
-			crateEnabled = propCrateEnabled.getBoolean();
-			reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
-			lockerEnabled = propLockerEnabled.getBoolean();
-			reinforcedLockerEnabled = propReinforcedLockerEnabled.getBoolean();
-			lockableDoorEnabled = propLockableDoorEnabled.getBoolean();
-			flintBlockEnabled = propFlintBlockEnabled.getBoolean();
-			cardboardBoxEnabled = propCardboardBoxEnabled.getBoolean();
-
-			cardboardHelmetEnabled = propCardboardHelmetEnabled.getBoolean();
-			cardboardChestplateEnabled = propCardboardChestplateEnabled.getBoolean();
-			cardboardLeggingsEnabled = propCardboardLeggingsEnabled.getBoolean();
-			cardboardBootsEnabled = propCardboardBootsEnabled.getBoolean();
-			cardboardSwordEnabled = propCardboardSwordEnabled.getBoolean();
-			cardboardPickaxeEnabled = propCardboardPickaxeEnabled.getBoolean();
-			cardboardShovelEnabled = propCardboardShovelEnabled.getBoolean();
-			cardboardAxeEnabled = propCardboardAxeEnabled.getBoolean();
-			cardboardHoeEnabled = propCardboardHoeEnabled.getBoolean();
-			slimeBucketEnabled = propSlimeBucketEnabled.getBoolean();
-
-			keyEnabled = propKeyEnabled.getBoolean();
-			masterKeyEnabled = propMasterKeyEnabled.getBoolean();
-			keyringEnabled = propKeyringEnabled.getBoolean();
-			lockEnabled = propLockEnabled.getBoolean();
-			cardboardSheetEnabled = propCardboardSheetEnabled.getBoolean();
-
-			reinforcedColumns = propReinforcedColumns.getInt();
-			enableCrateInventoryInterface = propCrateInventoryInterface.getBoolean();
-			cardboardBoxRows = propCardboardBoxRows.getInt();
-			cardboardBoxUses = propCardboardBoxUses.getInt();
-			cardboardBoxShowContents = propCardboardBoxShowContents.getBoolean();
-
-			lockBreakable = propLockBreakable.getBoolean();
-
-			enableHelpTooltips = propEnableHelpTooltips.getBoolean();
-			enableWarningMessages = propEnableWarningMessages.getBoolean();
+			/*
+			 * enchUnlockingEnabled = propEnchUnlockingEnabled.getBoolean();
+			 * enchLockpickingEnabled = propEnchLockpickingEnabled.getBoolean();
+			 * enchMorphingEnabled = propEnchMorphingEnabled.getBoolean();
+			 * enchPersistanceEnabled = propEnchPersistanceEnabled.getBoolean();
+			 * enchSecurityEnabled = propEnchSecurityEnabled.getBoolean();
+			 * enchShockEnabled = propEnchShockEnabled.getBoolean();
+			 * enchTriggerEnabled = propEnchTriggerEnabled.getBoolean();
+			 * 
+			 * crateEnabled = propCrateEnabled.getBoolean();
+			 * reinforcedChestEnabled = propReinforcedChestEnabled.getBoolean();
+			 * lockerEnabled = propLockerEnabled.getBoolean();
+			 * reinforcedLockerEnabled = propReinforcedLockerEnabled.getBoolean();
+			 * lockableDoorEnabled = propLockableDoorEnabled.getBoolean();
+			 * flintBlockEnabled = propFlintBlockEnabled.getBoolean();
+			 * cardboardBoxEnabled = propCardboardBoxEnabled.getBoolean();
+			 * 
+			 * cardboardHelmetEnabled = propCardboardHelmetEnabled.getBoolean();
+			 * cardboardChestplateEnabled = propCardboardChestplateEnabled.getBoolean();
+			 * cardboardLeggingsEnabled = propCardboardLeggingsEnabled.getBoolean();
+			 * cardboardBootsEnabled = propCardboardBootsEnabled.getBoolean();
+			 * cardboardSwordEnabled = propCardboardSwordEnabled.getBoolean();
+			 * cardboardPickaxeEnabled = propCardboardPickaxeEnabled.getBoolean();
+			 * cardboardShovelEnabled = propCardboardShovelEnabled.getBoolean();
+			 * cardboardAxeEnabled = propCardboardAxeEnabled.getBoolean();
+			 * cardboardHoeEnabled = propCardboardHoeEnabled.getBoolean();
+			 * slimeBucketEnabled = propSlimeBucketEnabled.getBoolean();
+			 * 
+			 * keyEnabled = propKeyEnabled.getBoolean();
+			 * masterKeyEnabled = propMasterKeyEnabled.getBoolean();
+			 * keyringEnabled = propKeyringEnabled.getBoolean();
+			 * lockEnabled = propLockEnabled.getBoolean();
+			 * cardboardSheetEnabled = propCardboardSheetEnabled.getBoolean();
+			 * 
+			 * reinforcedColumns = propReinforcedColumns.getInt();
+			 * enableCrateInventoryInterface = propCrateInventoryInterface.getBoolean();
+			 * cardboardBoxRows = propCardboardBoxRows.getInt();
+			 * cardboardBoxUses = propCardboardBoxUses.getInt();
+			 * cardboardBoxShowContents = propCardboardBoxShowContents.getBoolean();
+			 * 
+			 * lockBreakable = propLockBreakable.getBoolean();
+			 * 
+			 * enableHelpTooltips = propEnableHelpTooltips.getBoolean();
+			 * enableWarningMessages = propEnableWarningMessages.getBoolean();
+			 */
 		}
 
 		// Save properties to file
-		propEnchUnlockingEnabled.set( enchUnlockingEnabled );
-		propEnchLockpickingEnabled.set( enchLockpickingEnabled );
-		propEnchMorphingEnabled.set( enchMorphingEnabled );
-		propEnchPersistanceEnabled.set( enchPersistanceEnabled );
-		propEnchSecurityEnabled.set( enchSecurityEnabled );
-		propEnchShockEnabled.set( enchShockEnabled );
-		propEnchTriggerEnabled.set( enchTriggerEnabled );
-
-		propCrateEnabled.set( crateEnabled );
-		propReinforcedChestEnabled.set( reinforcedChestEnabled );
-		propLockerEnabled.set( lockerEnabled );
-		propReinforcedLockerEnabled.set( reinforcedLockerEnabled );
-		propLockableDoorEnabled.set( lockableDoorEnabled );
-		propFlintBlockEnabled.set( flintBlockEnabled );
-		propCardboardBoxEnabled.set( cardboardBoxEnabled );
-
-		propKeyEnabled.set( keyEnabled );
-		propMasterKeyEnabled.set( masterKeyEnabled );
-		propKeyringEnabled.set( keyringEnabled );
-		propLockEnabled.set( lockEnabled );
-		propCardboardSheetEnabled.set( cardboardSheetEnabled );
-		propSlimeBucketEnabled.set( slimeBucketEnabled );
-
-		propReinforcedColumns.set( reinforcedColumns );
-		propReinforcedChestEnabled.set( enableCrateInventoryInterface );
-		propCardboardBoxRows.set( cardboardBoxRows );
-		propCardboardBoxUses.set( cardboardBoxUses );
-		propCardboardBoxShowContents.set( cardboardBoxShowContents );
-
-		propLockBreakable.set( lockBreakable );
-		propEnableHelpTooltips.set( enableHelpTooltips );
-		propEnableWarningMessages.set( enableWarningMessages );
-
-		if( config.hasChanged() )
-			config.save();
+		/*
+		 * propEnchUnlockingEnabled.set( enchUnlockingEnabled );
+		 * propEnchLockpickingEnabled.set( enchLockpickingEnabled );
+		 * propEnchMorphingEnabled.set( enchMorphingEnabled );
+		 * propEnchPersistanceEnabled.set( enchPersistanceEnabled );
+		 * propEnchSecurityEnabled.set( enchSecurityEnabled );
+		 * propEnchShockEnabled.set( enchShockEnabled );
+		 * propEnchTriggerEnabled.set( enchTriggerEnabled );
+		 * 
+		 * propCrateEnabled.set( crateEnabled );
+		 * propReinforcedChestEnabled.set( reinforcedChestEnabled );
+		 * propLockerEnabled.set( lockerEnabled );
+		 * propReinforcedLockerEnabled.set( reinforcedLockerEnabled );
+		 * propLockableDoorEnabled.set( lockableDoorEnabled );
+		 * propFlintBlockEnabled.set( flintBlockEnabled );
+		 * propCardboardBoxEnabled.set( cardboardBoxEnabled );
+		 * 
+		 * propKeyEnabled.set( keyEnabled );
+		 * propMasterKeyEnabled.set( masterKeyEnabled );
+		 * propKeyringEnabled.set( keyringEnabled );
+		 * propLockEnabled.set( lockEnabled );
+		 * propCardboardSheetEnabled.set( cardboardSheetEnabled );
+		 * propSlimeBucketEnabled.set( slimeBucketEnabled );
+		 * 
+		 * propReinforcedColumns.set( reinforcedColumns );
+		 * propReinforcedChestEnabled.set( enableCrateInventoryInterface );
+		 * propCardboardBoxRows.set( cardboardBoxRows );
+		 * propCardboardBoxUses.set( cardboardBoxUses );
+		 * propCardboardBoxShowContents.set( cardboardBoxShowContents );
+		 * 
+		 * propLockBreakable.set( lockBreakable );
+		 * propEnableHelpTooltips.set( enableHelpTooltips );
+		 * propEnableWarningMessages.set( enableWarningMessages );
+		 * 
+		 * if( config.hasChanged() )
+		 * config.save();
+		 */
 	}
 }

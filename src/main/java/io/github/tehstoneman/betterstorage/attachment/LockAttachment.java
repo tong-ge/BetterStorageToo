@@ -4,14 +4,11 @@ import java.util.logging.Logger;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
-import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.item.EntityItem;
@@ -23,8 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LockAttachment extends ItemAttachment
 {
@@ -49,7 +44,7 @@ public class LockAttachment extends ItemAttachment
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public IAttachmentRenderer getRenderer()
 	{
 		return LockAttachmentRenderer.instance;
@@ -81,13 +76,15 @@ public class LockAttachment extends ItemAttachment
 		if( item == null )
 			return null;
 		final ItemStack key = new ItemStack( BetterStorageItems.KEY );
-		ItemKeyLock.setID( key, ItemKeyLock.getID( item ) );
-		final int color = ItemKeyLock.getKeyColor1( item );
-		if( color >= 0 )
-			ItemKeyLock.setKeyColor1( key, color );
-		final int fullColor = ItemKeyLock.getKeyColor2( item );
-		if( fullColor >= 0 )
-			ItemKeyLock.setKeyColor2( key, fullColor );
+		/*
+		 * ItemKeyLock.setID( key, ItemKeyLock.getID( item ) );
+		 * final int color = ItemKeyLock.getKeyColor1( item );
+		 * if( color >= 0 )
+		 * ItemKeyLock.setKeyColor1( key, color );
+		 * final int fullColor = ItemKeyLock.getKeyColor2( item );
+		 * if( fullColor >= 0 )
+		 * ItemKeyLock.setKeyColor2( key, fullColor );
+		 */
 		return key;
 	}
 
@@ -118,22 +115,24 @@ public class LockAttachment extends ItemAttachment
 				// int efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, holding);
 				// breakProgress += Math.min(damage, 10) / 2 + Math.min(Math.max(sharpness, efficiency), 5);
 
-				final int persistance = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.persistance );
-				if( breakProgress > 100 * ( 1 + persistance ) )
-				{
-					// int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, lock);
-					// lock.setItemDamage(lock.getItemDamage() + 10 / (1 + unbreaking));
-					if( lock.getItemDamage() < lock.getMaxDamage() )
-					{
-						final AxisAlignedBB box = getHighlightBox();
-						final double x = ( box.minX + box.maxX ) / 2;
-						final double y = ( box.minY + box.maxY ) / 2;
-						final double z = ( box.minZ + box.maxZ ) / 2;
-						final EntityItem item = WorldUtils.spawnItem( tileEntity.getWorld(), x, y, z, lock );
-					}
-					lockable.setLock( null );
-					breakProgress = 0;
-				}
+				/*
+				 * final int persistance = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.persistance );
+				 * if( breakProgress > 100 * ( 1 + persistance ) )
+				 * {
+				 * // int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, lock);
+				 * // lock.setItemDamage(lock.getItemDamage() + 10 / (1 + unbreaking));
+				 * if( lock.getItemDamage() < lock.getMaxDamage() )
+				 * {
+				 * final AxisAlignedBB box = getHighlightBox();
+				 * final double x = ( box.minX + box.maxX ) / 2;
+				 * final double y = ( box.minY + box.maxY ) / 2;
+				 * final double z = ( box.minZ + box.maxZ ) / 2;
+				 * final EntityItem item = WorldUtils.spawnItem( tileEntity.getWorld(), x, y, z, lock );
+				 * }
+				 * lockable.setLock( null );
+				 * breakProgress = 0;
+				 * }
+				 */
 
 				( (ILock)lock.getItem() ).applyEffects( lock, lockable, player, EnumLockInteraction.ATTACK );
 			}
@@ -148,7 +147,7 @@ public class LockAttachment extends ItemAttachment
 		return true;
 	}
 
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public void hit( boolean damage )
 	{
 		wiggleStrength = Math.min( 20.0F, wiggleStrength + 12.0F );

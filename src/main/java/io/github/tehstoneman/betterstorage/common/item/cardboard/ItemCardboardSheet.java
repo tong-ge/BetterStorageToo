@@ -2,36 +2,36 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import java.util.Map;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.EnumHelper;
 
 public class ItemCardboardSheet extends ItemBetterStorage
 {
-	public static final ToolMaterial	toolMaterial	= EnumHelper.addToolMaterial( "CARDBOARD", 0, 64, 2.0F, -0.5F, 0 );
-	public static final ArmorMaterial	armorMaterial	= EnumHelper.addArmorMaterial( "CARDBOARD", ModInfo.modId + ":cardboard", 5,
-			new int[] { 1, 2, 2, 1 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F );
+	/*
+	 * public static final ToolMaterial toolMaterial = EnumHelper.addToolMaterial( "CARDBOARD", 0, 64, 2.0F, -0.5F, 0 );
+	 * public static final ArmorMaterial armorMaterial = EnumHelper.addArmorMaterial( "CARDBOARD", ModInfo.modId + ":cardboard", 5,
+	 * new int[] { 1, 2, 2, 1 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F );
+	 */
 
 	public ItemCardboardSheet()
 	{
-		super( "cardboard_sheet" );
-		setMaxStackSize( 8 );
-		toolMaterial.setRepairItem( new ItemStack( this ) );
-		armorMaterial.setRepairItem( new ItemStack( this ) );
+		super( "cardboard_sheet", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		// setMaxStackSize( 8 );
+		// toolMaterial.setRepairItem( new ItemStack( this ) );
+		// armorMaterial.setRepairItem( new ItemStack( this ) );
 	}
 
 	public static boolean isEffective( ItemStack stack )
 	{
-		return stack.getMaxDamage() == 0 || stack.getItemDamage() < stack.getMaxDamage();
+		return stack.getMaxDamage() == 0 || stack.getDamage() < stack.getMaxDamage();
 	}
 
 	public static boolean canHarvestBlock( ItemStack stack, boolean canHarvestDefault )
@@ -59,7 +59,7 @@ public class ItemCardboardSheet extends ItemBetterStorage
 		if( !isEffective( stack ) )
 		{
 			entity.renderBrokenItemStack( stack );
-			stack.setItemDamage( stack.getMaxDamage() );
+			stack.setDamage( stack.getMaxDamage() );
 			stack.setCount( 1 );
 		}
 

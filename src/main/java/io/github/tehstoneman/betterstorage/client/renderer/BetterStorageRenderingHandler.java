@@ -1,44 +1,43 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class BetterStorageRenderingHandler// implements ISimpleBlockRenderingHandler
 {
 
-	public TileEntity					tileEntity;
-	public TileEntitySpecialRenderer	tileEntityRenderer;
+	public TileEntity tileEntity;
+	// public TileEntitySpecialRenderer tileEntityRenderer;
 
-	public final int					renderId;
-	public final boolean				render3dInInventory;
-	public final float					rotation;
-	public final float					scale;
-	public final float					yOffset;
+	// public final int renderId;
+	// public final boolean render3dInInventory;
+	// public final float rotation;
+	// public final float scale;
+	// public final float yOffset;
 
-	public BetterStorageRenderingHandler( Class< ? extends TileEntity > tileEntityClass, TileEntitySpecialRenderer tileEntityRenderer,
-			boolean render3dInInventory, float rotation, float scale, float yOffset )
-	{
-		try
-		{
-			tileEntity = tileEntityClass.newInstance();
-		}
-		catch( final Exception e )
-		{
-			throw new RuntimeException( e );
-		}
-		this.tileEntityRenderer = tileEntityRenderer;
-		this.render3dInInventory = render3dInInventory;
-		this.rotation = rotation;
-		this.scale = scale;
-		this.yOffset = yOffset;
-
-		// tileEntityRenderer.func_147497_a( TileEntityRendererDispatcher.instance );
-		// renderId = RenderingRegistry.getNextAvailableRenderId();
-		renderId = 0;
-	}
+	/*
+	 * public BetterStorageRenderingHandler( Class< ? extends TileEntity > tileEntityClass, TileEntitySpecialRenderer tileEntityRenderer,
+	 * boolean render3dInInventory, float rotation, float scale, float yOffset )
+	 * {
+	 * try
+	 * {
+	 * tileEntity = tileEntityClass.newInstance();
+	 * }
+	 * catch( final Exception e )
+	 * {
+	 * throw new RuntimeException( e );
+	 * }
+	 * this.tileEntityRenderer = tileEntityRenderer;
+	 * this.render3dInInventory = render3dInInventory;
+	 * this.rotation = rotation;
+	 * this.scale = scale;
+	 * this.yOffset = yOffset;
+	 * 
+	 * // tileEntityRenderer.func_147497_a( TileEntityRendererDispatcher.instance );
+	 * // renderId = RenderingRegistry.getNextAvailableRenderId();
+	 * renderId = 0;
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -68,15 +67,19 @@ public class BetterStorageRenderingHandler// implements ISimpleBlockRenderingHan
 	 */
 
 	// @Override
-	public boolean shouldRender3DInInventory( int modelId )
-	{
-		return render3dInInventory;
-	}
+	/*
+	 * public boolean shouldRender3DInInventory( int modelId )
+	 * {
+	 * return render3dInInventory;
+	 * }
+	 */
 
 	// @Override
-	public int getRenderId()
-	{
-		return renderId;
-	}
+	/*
+	 * public int getRenderId()
+	 * {
+	 * return renderId;
+	 * }
+	 */
 
 }

@@ -12,8 +12,6 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class BetterStorageItems
 {

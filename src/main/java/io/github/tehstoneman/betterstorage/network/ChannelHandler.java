@@ -1,21 +1,11 @@
 package io.github.tehstoneman.betterstorage.network;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.network.packet.PacketSyncSetting;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
-
-public class ChannelHandler extends SimpleNetworkWrapper
+public class ChannelHandler // extends SimpleNetworkWrapper
 {
 
 	public ChannelHandler()
 	{
-		super( ModInfo.modId );
+		// super( ModInfo.modId );
 		// register(1, Side.CLIENT, PacketBackpackTeleport.class);
 		// register(2, Side.CLIENT, PacketBackpackHasItems.class);
 		// register(3, Side.CLIENT, PacketBackpackIsOpen.class);
@@ -23,21 +13,25 @@ public class ChannelHandler extends SimpleNetworkWrapper
 		// register(5, Side.CLIENT, PacketBackpackStack.class);
 		// register( 6, Side.SERVER, PacketDrinkingHelmetUse.class );
 		// register( 7, Side.SERVER, PacketLockHit.class );
-		//register( 8, Side.CLIENT, PacketSyncSetting.class );
+		// register( 8, Side.CLIENT, PacketSyncSetting.class );
 		// register( 9, Side.CLIENT, PacketPresentOpen.class );
 	}
 
-	public <T extends IMessage & IMessageHandler< T, IMessage >> void register( int id, Side receivingSide, Class< T > messageClass )
-	{
-		registerMessage( messageClass, messageClass, id, receivingSide );
-	}
+	/*
+	 * public <T extends IMessage & IMessageHandler< T, IMessage >> void register( int id, Side receivingSide, Class< T > messageClass )
+	 * {
+	 * registerMessage( messageClass, messageClass, id, receivingSide );
+	 * }
+	 */
 
 	// Sending packets
 
-	public void sendTo( IMessage message, EntityPlayer player )
-	{
-		sendTo( message, (EntityPlayerMP)player );
-	}
+	/*
+	 * public void sendTo( IMessage message, EntityPlayer player )
+	 * {
+	 * sendTo( message, (EntityPlayerMP)player );
+	 * }
+	 */
 
 	/*
 	 * public void sendToAllAround(IMessage message, World world, double x, double y, double z, double distance) {
@@ -45,19 +39,21 @@ public class ChannelHandler extends SimpleNetworkWrapper
 	 * }
 	 */
 
-	public void sendToAllAround( IMessage message, World world, double x, double y, double z, double distance, EntityPlayer except )
-	{
-		for( final EntityPlayer player : world.playerEntities )
-		{
-			if( player == except )
-				continue;
-			final double dx = x - player.posX;
-			final double dy = y - player.posY;
-			final double dz = z - player.posZ;
-			if( dx * dx + dy * dy + dz * dz < distance * distance )
-				sendTo( message, player );
-		}
-	}
+	/*
+	 * public void sendToAllAround( IMessage message, World world, double x, double y, double z, double distance, EntityPlayer except )
+	 * {
+	 * for( final EntityPlayer player : world.playerEntities )
+	 * {
+	 * if( player == except )
+	 * continue;
+	 * final double dx = x - player.posX;
+	 * final double dy = y - player.posY;
+	 * final double dz = z - player.posZ;
+	 * if( dx * dx + dy * dy + dz * dz < distance * distance )
+	 * sendTo( message, player );
+	 * }
+	 * }
+	 */
 
 	/** Sends a packet to everyone tracking an entity. */
 	/*

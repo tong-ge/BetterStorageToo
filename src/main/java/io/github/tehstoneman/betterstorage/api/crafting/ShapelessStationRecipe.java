@@ -6,9 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ShapelessStationRecipe implements IStationRecipe
 {
@@ -50,7 +47,7 @@ public class ShapelessStationRecipe implements IStationRecipe
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< IRecipeInput[] > getSampleInputs()
 	{
 		final IRecipeInput[] input = new IRecipeInput[9];
@@ -59,14 +56,14 @@ public class ShapelessStationRecipe implements IStationRecipe
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< IRecipeInput > getPossibleInputs()
 	{
 		return null;
 	}
 
 	@Override
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public List< ItemStack > getPossibleOutputs()
 	{
 		return null;
@@ -78,11 +75,11 @@ public class ShapelessStationRecipe implements IStationRecipe
 	public StationCrafting checkMatch( ItemStack[] input, RecipeBounds bounds )
 	{
 		final IRecipeInput[] requiredInput = new IRecipeInput[9];
-		final List< IRecipeInput > checklist = new LinkedList< >( Arrays.asList( recipeInput ) );
+		final List< IRecipeInput > checklist = new LinkedList<>( Arrays.asList( recipeInput ) );
 		inputLoop:
 		for( int i = 0; i < input.length; i++ )
 		{
-			final ItemStack item = input[ i ];
+			final ItemStack item = input[i];
 			if( item == null )
 				continue;
 			final Iterator< IRecipeInput > iter = checklist.iterator();

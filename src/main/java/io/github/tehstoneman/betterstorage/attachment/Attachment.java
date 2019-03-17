@@ -6,8 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Attachment
 {
@@ -144,7 +142,7 @@ public abstract class Attachment
 		return true;
 	}
 
-	@SideOnly( Side.CLIENT )
+	// @SideOnly( Side.CLIENT )
 	public abstract IAttachmentRenderer getRenderer();
 
 }

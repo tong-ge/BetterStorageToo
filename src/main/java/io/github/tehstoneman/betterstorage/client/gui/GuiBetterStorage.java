@@ -3,13 +3,10 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly( Side.CLIENT )
+//@SideOnly( Side.CLIENT )
 public class GuiBetterStorage extends GuiContainer
 {
 	public final ContainerBetterStorage	container;
@@ -69,13 +66,15 @@ public class GuiBetterStorage extends GuiContainer
 	public void update( int par1, int par2 )
 	{}
 
-	@Override
-	public void drawScreen( int mouseX, int mouseY, float partialTicks )
-	{
-		drawDefaultBackground();
-		super.drawScreen( mouseX, mouseY, partialTicks );
-		renderHoveredToolTip( mouseX, mouseY );
-	}
+	/*
+	 * @Override
+	 * public void drawScreen( int mouseX, int mouseY, float partialTicks )
+	 * {
+	 * drawDefaultBackground();
+	 * super.drawScreen( mouseX, mouseY, partialTicks );
+	 * renderHoveredToolTip( mouseX, mouseY );
+	 * }
+	 */
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
@@ -87,8 +86,8 @@ public class GuiBetterStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
 	{
-		mc.renderEngine.bindTexture( getResource() );
-		GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F );
+		// mc.renderEngine.bindTexture( getResource() );
+		// GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F );
 
 		final int m = 107;
 		final int m1 = ySize - m;
