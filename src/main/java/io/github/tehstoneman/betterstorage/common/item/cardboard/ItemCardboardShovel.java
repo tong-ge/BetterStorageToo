@@ -1,7 +1,16 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-public class ItemCardboardShovel// extends ItemSpade implements ICardboardItem
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.item.Item;
+
+public class ItemCardboardShovel extends ItemBetterStorage // ItemSpade implements ICardboardItem
 {
+
+	public ItemCardboardShovel()
+	{
+		super( "cardboard_shovel", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+	}
 
 	private String name;
 

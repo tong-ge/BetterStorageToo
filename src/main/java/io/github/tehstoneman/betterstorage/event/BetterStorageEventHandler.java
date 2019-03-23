@@ -92,7 +92,6 @@ public class BetterStorageEventHandler
 
 	}
 
-	// @SubscribeEvent
 	public void registerItems( Register< Item > event )
 	{
 		final IForgeRegistry< Item > registry = event.getRegistry();
@@ -236,7 +235,6 @@ public class BetterStorageEventHandler
 		 */
 	}
 
-	// @SubscribeEvent
 	public void registerEnchantments( Register< Enchantment > event )
 	{
 		final IForgeRegistry< Enchantment > registry = event.getRegistry();
@@ -297,14 +295,12 @@ public class BetterStorageEventHandler
 		 */
 	}
 
-	// @SubscribeEvent
 	public void onConfigChangeEvent( OnConfigChangedEvent event )
 	{
 		if( event.getModID().equals( ModInfo.modId ) && !event.isWorldRunning() )
 			BetterStorage.config.syncFromGUI();
 	}
 
-	// @SubscribeEvent
 	public void onPlayerInteract( PlayerInteractEvent event )
 	{
 		final World world = event.getEntity().world;
@@ -363,7 +359,6 @@ public class BetterStorageEventHandler
 		}
 	}
 
-	// @SubscribeEvent
 	public void onEntityInteract( EntityInteract event )
 	{
 

@@ -1,21 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-public abstract class BlockContainerBetterStorage extends BlockBetterStorage// implements ITileEntityProvider
+public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 {
-	protected BlockContainerBetterStorage( String name, Material material, Properties properties )
+	protected BlockContainerBetterStorage( Properties properties )
 	{
 		super( properties );
-		// super( name, material );
-		// isBlockContainer = true;
 	}
 
 	@Override
@@ -24,21 +15,25 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage// i
 		return true;
 	}
 
-	@Override
-	public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param )
-	{
-		final TileEntity te = worldIn.getTileEntity( pos );
-		return te != null ? te.receiveClientEvent( id, param ) : false;
-	}
+	/*
+	 * @Override
+	 * public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param )
+	 * {
+	 * final TileEntity te = worldIn.getTileEntity( pos );
+	 * return te != null ? te.receiveClientEvent( id, param ) : false;
+	 * }
+	 */
 
 	// Pass actions to TileEntityContainer
-	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
-	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityContainer )
-			( (TileEntityContainer)tileEntity ).onBlockPlaced( placer, stack );
-	}
+	/*
+	 * @Override
+	 * public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
+	 * {
+	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
+	 * if( tileEntity instanceof TileEntityContainer )
+	 * ( (TileEntityContainer)tileEntity ).onBlockPlaced( placer, stack );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -59,7 +54,7 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage// i
 	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
 	 * if( tileEntity instanceof TileEntityContainer )
 	 * return ( (TileEntityContainer)tileEntity ).onBlockActivated( pos, state, playerIn, hand, side, hitX, hitY, hitZ );
-	 * 
+	 *
 	 * return false;
 	 * }
 	 */
@@ -107,22 +102,26 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage// i
 	 * }
 	 */
 
-	@Override
-	public boolean hasComparatorInputOverride( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean hasComparatorInputOverride( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
-	@Override
-	public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
-	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( !( tileEntity instanceof TileEntityContainer ) )
-			return 0;
-
-		final TileEntityContainer tileContainer = (TileEntityContainer)tileEntity;
-		return tileContainer.getComparatorSignalStrength();
-	}
+	/*
+	 * @Override
+	 * public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
+	 * {
+	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
+	 * if( !( tileEntity instanceof TileEntityContainer ) )
+	 * return 0;
+	 * 
+	 * final TileEntityContainer tileContainer = (TileEntityContainer)tileEntity;
+	 * return tileContainer.getComparatorSignalStrength();
+	 * }
+	 */
 
 	/*
 	 * @Override

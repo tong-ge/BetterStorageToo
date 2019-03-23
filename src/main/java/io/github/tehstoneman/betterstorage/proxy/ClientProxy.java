@@ -1,49 +1,58 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.client.ClientEvents;
-import io.github.tehstoneman.betterstorage.client.renderer.BetterStorageColorHandler;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.common.MinecraftForge;
+import io.github.tehstoneman.betterstorage.api.IProxy;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 //@SideOnly( Side.CLIENT )
-public class ClientProxy extends CommonProxy
+public class ClientProxy implements IProxy
 {
 	// public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
 
 	@Override
-	public void preInit()
+	public void setup( FMLCommonSetupEvent event )
 	{
-		super.preInit();
-		MinecraftForge.EVENT_BUS.register( new ClientEvents() );
-		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 	}
 
-	@Override
-	public void initialize()
-	{
-		super.initialize();
+	/*
+	 * @Override
+	 * public void preInit()
+	 * {
+	 * super.preInit();
+	 * MinecraftForge.EVENT_BUS.register( new ClientEvents() );
+	 * OBJLoader.INSTANCE.addDomain( ModInfo.modId );
+	 * }
+	 */
 
-		// new KeyBindingHandler();
+	/*
+	 * @Override
+	 * public void initialize()
+	 * {
+	 * super.initialize();
+	 *
+	 * // new KeyBindingHandler();
+	 *
+	 * // BetterStorageBlocks.registerItemModels();
+	 * // BetterStorageItems.registerItemModels();
+	 *
+	 * registerRenderers();
+	 * BetterStorageColorHandler.registerColorHandlers();
+	 * }
+	 */
 
-		// BetterStorageBlocks.registerItemModels();
-		// BetterStorageItems.registerItemModels();
-
-		registerRenderers();
-		BetterStorageColorHandler.registerColorHandlers();
-	}
-
-	@Override
+	/*@Override
 	public void postInit()
 	{
 		super.postInit();
 
 		//@formatter:off
-		/*Minecraft.getInstance().getItemColors().registerItemColorHandler( new KeyColor(),
+		Minecraft.getInstance().getItemColors().registerItemColorHandler( new KeyColor(),
 				BetterStorageItems.KEY,
-				BetterStorageItems.LOCK );*/
-		/*Minecraft.getInstance().getItemColors().registerItemColorHandler( new CardboardColor(),
+				BetterStorageItems.LOCK );
+		Minecraft.getInstance().getItemColors().registerItemColorHandler( new CardboardColor(),
 				Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ),
 				BetterStorageItems.CARDBOARD_AXE,
 				BetterStorageItems.CARDBOARD_BOOTS,
@@ -53,26 +62,30 @@ public class ClientProxy extends CommonProxy
 				BetterStorageItems.CARDBOARD_LEGGINGS,
 				BetterStorageItems.CARDBOARD_PICKAXE,
 				BetterStorageItems.CARDBOARD_SHOVEL,
-				BetterStorageItems.CARDBOARD_SWORD );*/
+				BetterStorageItems.CARDBOARD_SWORD );
 		//@formatter:on
-	}
+	}*/
 
-	private void registerRenderers()
-	{
-		// RenderingRegistry.registerEntityRenderingHandler(EntityFrienderman.class, new RenderFrienderman());
-		// RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
+	/*
+	 * private void registerRenderers()
+	 * {
+	 * // RenderingRegistry.registerEntityRenderingHandler(EntityFrienderman.class, new RenderFrienderman());
+	 * // RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
+	 *
+	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
+	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
+	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
+	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
+	 * // Addon.registerRenderersAll();
+	 * }
+	 */
 
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
-		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
-		// Addon.registerRenderersAll();
-	}
-
-	@Override
-	public String localize( String unlocalized, Object... args )
-	{
-		return I18n.format( unlocalized, args );
-	}
+	/*
+	 * @Override
+	 * public String localize( String unlocalized, Object... args )
+	 * {
+	 * return I18n.format( unlocalized, args );
+	 * }
+	 */
 }

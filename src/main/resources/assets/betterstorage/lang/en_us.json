@@ -1,4 +1,24 @@
 {
-  "block.betterstorage.crate":"Storage Crate",
-  "itemGroup.betterStorageToo":"Better Storage Too"
+	"block.betterstorage.block_flint":"Block of Flint",
+	"block.betterstorage.cardboard_box":"Cardboard Box",
+	"block.betterstorage.crate":"Storage Crate",
+	"block.betterstorage.lockable_door":"Locked Iron Door",
+	"block.betterstorage.locker":"Locker",
+	"block.betterstorage.reinforced_chest":"Reinforced Chest",
+	"block.betterstorage.reinforced_locker":"Reinforced Locker",
+	"item.betterstorage.cardboard_axe":"Cardboard Axe",
+	"item.betterstorage.cardboard_boots":"Cardboard Boots",
+	"item.betterstorage.cardboard_chestplate":"Cardboard Chestplate",
+	"item.betterstorage.cardboard_helmet":"Cardboard Helmet",
+	"item.betterstorage.cardboard_hoe":"Cardboard Hoe",
+	"item.betterstorage.cardboard_leggings":"Cardboard Leggings",
+	"item.betterstorage.cardboard_pickaxe":"Cardboard Pickaxe",
+	"item.betterstorage.cardboard_sheet":"Cardboard Sheet",
+	"item.betterstorage.cardboard_shovel":"Cardboard Shovel",
+	"item.betterstorage.cardboard_sword":"Cardboard Sword",
+	"item.betterstorage.key":"Key",
+	"item.betterstorage.keyring":"Keyring",
+	"item.betterstorage.lock":"Lock",
+	"item.betterstorage.master_key":"Master Key",
+	"itemGroup.betterStorageToo":"Better Storage Too"
 }

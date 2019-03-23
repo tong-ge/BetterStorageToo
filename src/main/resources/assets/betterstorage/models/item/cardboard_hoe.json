@@ -2,6 +2,6 @@
     "parent": "item/handheld",
     "textures":
     {
-        "layer0": "betterstorage:items/cardboard_hoe"
+        "layer0": "betterstorage:item/cardboard_hoe"
     }
 }

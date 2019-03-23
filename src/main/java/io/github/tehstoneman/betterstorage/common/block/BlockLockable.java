@@ -1,120 +1,122 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import io.github.tehstoneman.betterstorage.api.BetterStorageAPI;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class BlockLockable extends BlockContainerBetterStorage
 {
-	// public static final PropertyEnum MATERIAL = PropertyEnum.create( "material", EnumReinforced.class );
-	// public static final PropertyBool CONNECTED = PropertyBool.create( "connected" );
+	public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
 
-	protected BlockLockable( String name, Material material )
+	protected BlockLockable( Block.Properties builder )
 	{
-		super( name, material, Properties.from( Blocks.OAK_PLANKS ) );
+		super( builder );
+
+		//@formatter:off
+		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH ) );
+		//@formatter:on
 	}
 
-	/*
-	 * @Override
-	 * public void getSubBlocks( CreativeTabs tab, NonNullList< ItemStack > list )
-	 * {
-	 * final BlockStateContainer container = getBlockState();
-	 * if( container.getProperties().contains( MATERIAL ) )
-	 * for( final EnumReinforced material : EnumReinforced.values() )
-	 * {
-	 * final ItemStack itemstack = new ItemStack( this, 1, material.getMetadata() );
-	 * list.add( itemstack );
-	 * }
-	 * else
-	 * super.getSubBlocks( tab, list );
-	 * }
-	 */
+	@Override
+	@OnlyIn( Dist.CLIENT )
+	public boolean hasCustomBreakingProgress( IBlockState state )
+	{
+		return true;
+	}
 
-	/*
-	 * @Override
-	 * protected BlockStateContainer createBlockState()
-	 * {
-	 * return new BlockStateContainer( this, new IProperty[] { BlockHorizontal.FACING, MATERIAL, Properties.StaticProperty, CONNECTED } );
-	 * }
+	/**
+	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
+	 * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
 	 */
+	@Override
+	public EnumBlockRenderType getRenderType( IBlockState state )
+	{
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
 
-	/*
-	 * @Override
-	 * public EnumBlockRenderType getRenderType( IBlockState state )
-	 * {
-	 * return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	 * }
+	/**
+	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+	 * blockstate.
 	 */
+	@Override
+	public IBlockState rotate( IBlockState state, Rotation rot )
+	{
+		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
+	}
 
-	/*
-	 * @Override
-	 * public int quantityDropped( Random rand )
-	 * {
-	 * return 0;
-	 * }
+	/**
+	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+	 * blockstate.
 	 */
+	@Override
+	public IBlockState mirror( IBlockState state, Mirror mirrorIn )
+	{
+		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
+	}
 
-	/*
-	 * @Override
-	 * public IBlockState getStateFromMeta( int meta )
-	 * {
-	 * final EnumFacing facing = EnumFacing.getFront( ( meta & 3 ) + 2 );
-	 * final boolean hidden = ( meta & 4 ) != 0;
-	 * return getDefaultState().withProperty( BlockHorizontal.FACING, facing );
-	 * }
+	@Override
+	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
+	{
+		super.fillStateContainer( builder );
+		builder.add( FACING );
+	}
+
+	/**
+	 * Called by ItemBlocks after a block is set in the world, to allow post-place logic
 	 */
-
-	/*
-	 * @Override
-	 * public int getMetaFromState( IBlockState state )
-	 * {
-	 * final int meta = state.getValue( BlockHorizontal.FACING ).getIndex() - 2 & 3;
-	 * return meta;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos )
-	 * {
-	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
-	 * if( tileEntity instanceof TileEntityLockable )
-	 * {
-	 * final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
-	 * if( lockable.getMaterial() != null )
-	 * state = state.withProperty( MATERIAL, lockable.getMaterial() );
-	 * state = state.withProperty( CONNECTED, lockable.isConnected() );
-	 * }
-	 * return state.withProperty( Properties.StaticProperty, true );
-	 * }
-	 */
-
 	@Override
 	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
 	{
-		// worldIn.setBlockState( pos, state.withProperty( BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite() ), 2 );
-
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
-
-		if( tileentity instanceof TileEntityLockable )
+		if( stack.hasDisplayName() )
 		{
-			final TileEntityLockable lockable = (TileEntityLockable)tileentity;
-			lockable.setMaterial( BetterStorageAPI.materials.get( stack ) );
+			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			if( tileentity instanceof TileEntityLockable )
+				( (TileEntityLockable)tileentity ).setCustomTitle( stack.getDisplayName() );
 		}
-
-		if( tileentity instanceof TileEntityConnectable )
-			( (TileEntityConnectable)tileentity ).onBlockPlaced( placer, stack );
-		else
-			super.onBlockPlacedBy( worldIn, pos, state, placer, stack );
 	}
+
+	@Override
+	public void onReplaced( IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving )
+	{
+		if( state.getBlock() != newState.getBlock() )
+		{
+			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			if( tileentity instanceof IInventory )
+			{
+				InventoryHelper.dropInventoryItems( worldIn, pos, (IInventory)tileentity );
+				worldIn.updateComparatorOutputLevel( pos, this );
+			}
+			super.onReplaced( state, worldIn, pos, newState, isMoving );
+		}
+	}
+
+	protected Stat< ResourceLocation > getOpenStat()
+	{
+		return StatList.CUSTOM.get( StatList.OPEN_CHEST );
+	}
+
 
 	/*
 	 * @Override
@@ -241,7 +243,7 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	 * {
 	 * final TileEntity tileentity = world.getTileEntity( pos );
 	 * EnumReinforced material = EnumReinforced.IRON;
-	 * 
+	 *
 	 * if( tileentity instanceof TileEntityLockable )
 	 * {
 	 * final TileEntityLockable lockable = (TileEntityLockable)tileentity;

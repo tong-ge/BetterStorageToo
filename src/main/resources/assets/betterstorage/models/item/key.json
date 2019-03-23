@@ -2,9 +2,9 @@
 	"parent": "item/generated",
 	"textures":
 	{
-		"layer0": "betterstorage:items/key_color1",
-		"layer1": "betterstorage:items/key_color2",
-		"layer2": "betterstorage:items/key_highlight"
+		"layer0": "betterstorage:item/key_color1",
+		"layer1": "betterstorage:item/key_color2",
+		"layer2": "betterstorage:item/key_highlight"
 	},
 	"display":
 	{

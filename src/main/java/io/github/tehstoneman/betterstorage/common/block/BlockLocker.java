@@ -1,12 +1,13 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityConnectable;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -14,7 +15,7 @@ public class BlockLocker extends BlockLockable
 {
 	public BlockLocker( Material material )
 	{
-		super( "locker", material );
+		super( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 
 		// setHardness( 2.5f );
 
@@ -42,18 +43,22 @@ public class BlockLocker extends BlockLockable
 	 * }
 	 */
 
-	@Override
-	public boolean isFullCube( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean isFullCube( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
-	@Override
-	// @SideOnly( Side.CLIENT )
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
+	/*
+	 * @Override
+	 * // @SideOnly( Side.CLIENT )
+	 * public EnumBlockRenderType getRenderType( IBlockState state )
+	 * {
+	 * return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -68,13 +73,13 @@ public class BlockLocker extends BlockLockable
 	 * public IBlockState getStateFromMeta( int meta )
 	 * {
 	 * EnumFacing enumfacing = EnumFacing.getFront( meta & 7 );
-	 * 
+	 *
 	 * if( enumfacing.getAxis() == EnumFacing.Axis.Y )
 	 * enumfacing = EnumFacing.NORTH;
-	 * 
+	 *
 	 * Boolean mirrored = (meta & 8) > 0;
-	 * 
-	 * 
+	 *
+	 *
 	 * return getDefaultState().withProperty( BlockHorizontal.FACING, enumfacing ).withProperty(BlockDoor.HINGE, mirrored ? BlockDoor.EnumHingePosition.RIGHT :
 	 * BlockDoor.EnumHingePosition.LEFT);
 	 * }
@@ -99,12 +104,12 @@ public class BlockLocker extends BlockLockable
 	 * {
 	 * final TileEntity tileentity = worldIn instanceof ChunkCache ? ( (ChunkCache)worldIn ).getTileEntity( pos, Chunk.EnumCreateEntityType.CHECK )
 	 * : worldIn.getTileEntity( pos );
-	 * 
+	 *
 	 * if( tileentity instanceof TileEntityLocker )
 	 * {
 	 * final TileEntityLocker locker = (TileEntityLocker)tileentity;
 	 * }
-	 * 
+	 *
 	 * return state.withProperty( Properties.StaticProperty, true );
 	 * }
 	 */

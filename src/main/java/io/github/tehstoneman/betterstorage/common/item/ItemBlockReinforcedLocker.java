@@ -4,9 +4,9 @@ import net.minecraft.block.Block;
 
 public class ItemBlockReinforcedLocker extends ItemBlockLocker
 {
-	public ItemBlockReinforcedLocker( Block block, Properties builder )
+	public ItemBlockReinforcedLocker( Block block )
 	{
-		super( block, builder );
+		super( block );
 		// setMaxDamage( 0 );
 		// setHasSubtypes( true );
 	}

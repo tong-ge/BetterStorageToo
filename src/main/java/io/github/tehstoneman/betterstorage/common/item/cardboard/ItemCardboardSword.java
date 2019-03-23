@@ -1,7 +1,16 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-public class ItemCardboardSword// extends ItemBetterStorageSword implements ICardboardItem
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.item.Item;
+
+public class ItemCardboardSword extends ItemBetterStorage // ItemBetterStorageSword implements ICardboardItem
 {
+
+	public ItemCardboardSword()
+	{
+		super( "cardboard_sword", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+	}
 	/*
 	 * public ItemCardboardSword()
 	 * {

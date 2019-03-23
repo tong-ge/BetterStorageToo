@@ -1,13 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 
-public class ItemBlockCrate extends ItemBlock
+public class ItemBlockCrate extends ItemBlockBetterStorage
 {
-	public ItemBlockCrate( Block block, Properties properties )
+	public ItemBlockCrate( Block block )
 	{
-		super( block, properties );
+		super( block );
 		// setCreativeTab( BetterStorage.creativeTab );
 	}
 
@@ -25,7 +24,7 @@ public class ItemBlockCrate extends ItemBlock
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	 * {

@@ -2,6 +2,6 @@
     "parent": "block/cube_all",
     "textures":
     {
-        "all": "betterstorage:blocks/block_flint"
+        "all": "betterstorage:block/block_flint"
     }
 }

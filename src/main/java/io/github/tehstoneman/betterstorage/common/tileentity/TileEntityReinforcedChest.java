@@ -1,22 +1,30 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.ModInfo;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.IChestLid;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityReinforcedChest extends TileEntityLockable
+public class TileEntityReinforcedChest extends TileEntity implements IChestLid, ITickable // TileEntityLockable
 {
-	public TileEntityReinforcedChest( TileEntityType< ? > tileEntityTypeIn )
+	public ItemStackHandler inventory;
+
+	protected TileEntityReinforcedChest( TileEntityType< ? > tileEntityTypeIn )
 	{
 		super( tileEntityTypeIn );
-		// TODO Auto-generated constructor stub
+	}
+
+	public TileEntityReinforcedChest()
+	{
+		this( BetterStorageTileEntityTypes.REINFORCED_CHEST );
 	}
 
 	@Override
-	// @SideOnly( Side.CLIENT )
+	@OnlyIn( Dist.CLIENT )
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return new AxisAlignedBB( pos.add( -1, 0, -1 ), pos.add( 2, 2, 2 ) );
@@ -24,43 +32,54 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 
 	// TileEntityConnactable stuff
 
-	private static EnumFacing[] neighbors = { EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.SOUTH };
+	// private static EnumFacing[] neighbors = { EnumFacing.EAST, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.SOUTH };
 
-	@Override
-	public void setAttachmentPosition()
-	{
-		// final double x = !isConnected() ? 8 : getOrientation() == EnumFacing.WEST || getOrientation() == EnumFacing.SOUTH ? 0 : 16;
-		// lockAttachment.setBox( x, 6.5, 0.5, 7, 7, 1 );
-	}
+	/*
+	 * @Override
+	 * public void setAttachmentPosition()
+	 * {
+	 * // final double x = !isConnected() ? 8 : getOrientation() == EnumFacing.WEST || getOrientation() == EnumFacing.SOUTH ? 0 : 16;
+	 * // lockAttachment.setBox( x, 6.5, 0.5, 7, 7, 1 );
+	 * }
+	 */
 
 	// TileEntityContainer stuff
 
-	@Override
-	public int getColumns()
-	{
-		return BetterStorage.config.reinforcedColumns;
-	}
+	/*
+	 * @Override
+	 * public int getColumns()
+	 * {
+	 * return 13;
+	 * // return BetterStorage.config.reinforcedColumns;
+	 * }
+	 */
 
 	// TileEntityConnactable stuff
 
-	@Override
-	protected String getConnectableName()
-	{
-		return ModInfo.containerReinforcedChest;
-	}
+	/*
+	 * @Override
+	 * protected String getConnectableName()
+	 * {
+	 * return ModInfo.containerReinforcedChest;
+	 * }
+	 */
 
-	@Override
-	public EnumFacing[] getPossibleNeighbors()
-	{
-		// final EnumFacing facing = getOrientation();
-		// return new EnumFacing[] { facing.rotateY(), facing.rotateYCCW() };
-		return neighbors;
-	}
+	/*
+	 * @Override
+	 * public EnumFacing[] getPossibleNeighbors()
+	 * {
+	 * // final EnumFacing facing = getOrientation();
+	 * // return new EnumFacing[] { facing.rotateY(), facing.rotateYCCW() };
+	 * return neighbors;
+	 * }
+	 */
 
-	public void setCustomInventoryName( String displayName )
-	{
-		// TODO Auto-generated method stub
-	}
+	/*
+	 * public void setCustomInventoryName( String displayName )
+	 * {
+	 * // TODO Auto-generated method stub
+	 * }
+	 */
 
 	/*
 	 * public boolean canConnect( TileEntityConnectable connectable )
@@ -75,36 +94,42 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	 * }
 	 */
 
-	@Override
-	public void onBlockDestroyed()
-	{
-		super.onBlockDestroyed();
-
-		// Don't drop an empty cardboard box in creative.
-		/*
-		 * if( !brokenInCreative )
-		 * {
-		 * final ItemStack stack = new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() );
-		 * final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
-		 * world.spawnEntity( entityItem );
-		 * }
-		 */
-	}
+	/*
+	 * @Override
+	 * public void onBlockDestroyed()
+	 * {
+	 * super.onBlockDestroyed();
+	 *
+	 * // Don't drop an empty cardboard box in creative.
+	 *
+	 * if( !brokenInCreative )
+	 * {
+	 * final ItemStack stack = new ItemStack( BetterStorageBlocks.REINFORCED_CHEST, 1, material.getMetadata() );
+	 * final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
+	 * world.spawnEntity( entityItem );
+	 * }
+	 *
+	 * }
+	 */
 
 	// TileEntity synchronization
 
-	@Override
-	public NBTTagCompound getUpdateTag()
-	{
-		final NBTTagCompound compound = super.getUpdateTag();
-		return compound;
-	}
+	/*
+	 * @Override
+	 * public NBTTagCompound getUpdateTag()
+	 * {
+	 * final NBTTagCompound compound = super.getUpdateTag();
+	 * return compound;
+	 * }
+	 */
 
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( NBTTagCompound compound )
+	 * {
+	 * super.handleUpdateTag( compound );
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 
@@ -130,5 +155,12 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public float getLidAngle( float partialTicks )
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

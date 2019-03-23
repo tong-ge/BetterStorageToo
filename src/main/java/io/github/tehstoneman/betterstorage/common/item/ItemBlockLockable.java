@@ -1,13 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 
-public class ItemBlockLockable extends ItemBlock
+public class ItemBlockLockable extends ItemBlockBetterStorage
 {
-	public ItemBlockLockable( Block block, Properties builder )
+	public ItemBlockLockable( Block block )
 	{
-		super( block, builder );
+		super( block );
 		// setHasSubtypes( true );
 		// setMaxDamage( 0 );
 	}
@@ -36,11 +35,11 @@ public class ItemBlockLockable extends ItemBlock
 	 * final String materialName = I18n.format( "material." + ModInfo.modId + "." + material.name );
 	 * return name.replace( "%MATERIAL%", materialName );
 	 * }
-	 * 
+	 *
 	 * if( block instanceof BlockLockable )
 	 * {
 	 * final EnumReinforced material = EnumReinforced.byMetadata( stack.getMetadata() );
-	 * 
+	 *
 	 * final String materialName = BetterStorage.proxy.localize( "material." + ModInfo.modId + "." + material.getName() );
 	 * final String name = BetterStorage.proxy.localize( getUnlocalizedName() + ".name.full", materialName );
 	 * return name.trim();

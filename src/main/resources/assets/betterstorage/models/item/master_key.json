@@ -2,7 +2,7 @@
 	"parent": "item/generated",
 	"textures":
 	{
-		"layer0": "betterstorage:items/master_key"
+		"layer0": "betterstorage:item/master_key"
 	},
 	"display":
 	{

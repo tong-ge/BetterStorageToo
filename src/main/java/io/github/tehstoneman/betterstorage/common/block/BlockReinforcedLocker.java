@@ -1,14 +1,15 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumBlockRenderType;
 
 public class BlockReinforcedLocker extends BlockLockable
 {
 	public BlockReinforcedLocker( Material material )
 	{
-		super( "reinforced_locker", material );
+		super( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 
 		// setHardness( 8.0F );
 		// setResistance( 20.0F );
@@ -38,18 +39,22 @@ public class BlockReinforcedLocker extends BlockLockable
 	 * }
 	 */
 
-	@Override
-	public boolean isFullCube( IBlockState state )
-	{
-		return false;
-	}
+	/*
+	 * @Override
+	 * public boolean isFullCube( IBlockState state )
+	 * {
+	 * return false;
+	 * }
+	 */
 
-	@Override
-	// @SideOnly( Side.CLIENT )
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
+	/*
+	 * @Override
+	 * // @SideOnly( Side.CLIENT )
+	 * public EnumBlockRenderType getRenderType( IBlockState state )
+	 * {
+	 * return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -77,9 +82,9 @@ public class BlockReinforcedLocker extends BlockLockable
 	 * public IBlockState getStateFromMeta( int meta )
 	 * {
 	 * EnumFacing enumfacing = EnumFacing.getFront( (meta & 3) + 2 );
-	 * 
+	 *
 	 * final Boolean mirrored = ( meta & 8 ) > 0;
-	 * 
+	 *
 	 * return getDefaultState().withProperty( BlockHorizontal.FACING, enumfacing ).withProperty( BlockDoor.HINGE,
 	 * mirrored ? BlockDoor.EnumHingePosition.RIGHT : BlockDoor.EnumHingePosition.LEFT );
 	 * }
@@ -102,14 +107,14 @@ public class BlockReinforcedLocker extends BlockLockable
 	 * {
 	 * final TileEntity tileentity = worldIn instanceof ChunkCache ? ( (ChunkCache)worldIn ).getTileEntity( pos, Chunk.EnumCreateEntityType.CHECK )
 	 * : worldIn.getTileEntity( pos );
-	 * 
+	 *
 	 * if( tileentity instanceof TileEntityReinforcedLocker )
 	 * {
 	 * final TileEntityReinforcedLocker locker = (TileEntityReinforcedLocker)tileentity;
 	 * if( locker.getMaterial() != null )
 	 * state = state.withProperty( MATERIAL, locker.getMaterial() );
 	 * }
-	 * 
+	 *
 	 * return state.withProperty( Properties.StaticProperty, true );
 	 * }
 	 */
@@ -153,7 +158,7 @@ public class BlockReinforcedLocker extends BlockLockable
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void registerItemModels()
 	 * {
@@ -177,7 +182,7 @@ public class BlockReinforcedLocker extends BlockLockable
 	 * {
 	 * final TileEntity tileentity = world.getTileEntity( pos );
 	 * EnumReinforced material = EnumReinforced.IRON;
-	 * 
+	 *
 	 * if( tileentity instanceof TileEntityReinforcedLocker )
 	 * {
 	 * final TileEntityReinforcedLocker clocker = (TileEntityReinforcedLocker)tileentity;

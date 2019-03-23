@@ -1,31 +1,29 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 
-public class BlockCardboardBox extends BlockContainerBetterStorage
+public class BlockCardboardBox extends Block// BlockContainerBetterStorage
 {
-	public BlockCardboardBox( String name, Properties properties )
-	{
-		super( name, Material.WOOD, properties );
+	protected static final VoxelShape	SHAPE_BOX	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 
-		// setHardness( 0.8f );
-		// setSoundType( SoundType.CLOTH );
-	}
+	private static Properties			properties	= Properties.create( Material.CLOTH ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH );
 
 	public BlockCardboardBox()
 	{
-		this( "cardboard_box", Properties.from( Blocks.OAK_PLANKS ) );
+		super( properties );
 	}
 
-	/*
-	 * @Override
-	 * public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess world, BlockPos pos )
-	 * {
-	 * return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F );
-	 * }
-	 */
+	@Override
+	public VoxelShape getShape( IBlockState state, IBlockReader worldIn, BlockPos pos )
+	{
+		return SHAPE_BOX;
+	}
 
 	/*
 	 * @Override

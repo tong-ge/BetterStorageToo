@@ -1,125 +1,108 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.entity.model.ModelChest;
+import net.minecraft.client.renderer.entity.model.ModelLargeChest;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.state.properties.ChestType;
+import net.minecraft.tileentity.IChestLid;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-//@SideOnly( Side.CLIENT )
-public class TileEntityReinforcedChestRenderer// extends TileEntitySpecialRenderer< TileEntityReinforcedChest >
+@OnlyIn( Dist.CLIENT )
+public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileEntityReinforcedChest >
 {
-	protected static BlockRendererDispatcher blockRenderer;
+	private static final ResourceLocation		TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.modId, "textures/entity/chest/normal_double.png" );
+	private static final ResourceLocation		TEXTURE_NORMAL			= new ResourceLocation( ModInfo.modId, "textures/entity/chest/normal.png" );
 
-	/*
-	 * @Override
-	 * public void render( TileEntityReinforcedChest chest, double x, double y, double z, float partialTicks, int destroyStage, float alpha )
-	 * {
-	 * if( !chest.isMain() )
-	 * return;
-	 * GlStateManager.pushAttrib();
-	 * GlStateManager.pushMatrix();
-	 * 
-	 * GlStateManager.translate( x, y, z );
-	 * GlStateManager.disableRescaleNormal();
-	 * 
-	 * final BlockPos pos = chest.getPos();
-	 * final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( chest.getWorld(), pos );
-	 * IBlockState state = world.getBlockState( pos );
-	 * if( state.getBlock() == BetterStorageBlocks.REINFORCED_CHEST )
-	 * {
-	 * state = state.withProperty( BlockLockable.MATERIAL, chest.getMaterial() );
-	 * state = state.withProperty( BlockLockable.CONNECTED, chest.isConnected() );
-	 * 
-	 * if( blockRenderer == null )
-	 * blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
-	 * 
-	 * GlStateManager.translate( 0.5, 0.0, 0.5 );
-	 * final EnumFacing facing = state.getValue( BlockHorizontal.FACING );
-	 * GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
-	 * if( chest.isConnected() && ( facing == EnumFacing.NORTH || facing == EnumFacing.EAST ) )
-	 * GlStateManager.translate( 0.5, 0, -0.5 );
-	 * else
-	 * GlStateManager.translate( -0.5, 0.0, -0.5 );
-	 * 
-	 * renderBase( chest, partialTicks, destroyStage, state );
-	 * renderLid( chest, partialTicks, destroyStage, state );
-	 * renderItem( chest, partialTicks, destroyStage, state );
-	 * }
-	 * 
-	 * GlStateManager.popMatrix();
-	 * GlStateManager.popAttrib();
-	 * }
-	 */
+	private final ModelChest					simpleChest				= new ModelChest();
+	private final ModelChest					largeChest				= new ModelLargeChest();
 
-	private void renderBase( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, IBlockState state )
+	protected static BlockRendererDispatcher	blockRenderer;
+
+	@Override
+	public void render( TileEntityReinforcedChest tileEntityChest, double x, double y, double z, float partialTicks, int destroyStage )
 	{
-		GlStateManager.pushMatrix();
+		// Modified from vanilla chest
+		GlStateManager.enableDepthTest();
+		GlStateManager.depthFunc( 515 );
+		GlStateManager.depthMask( true );
 
-		RenderHelper.disableStandardItemLighting();
-		// bindTexture( TextureMap.LOCATION_BLOCKS_TEXTURE );
-		if( Minecraft.isAmbientOcclusionEnabled() )
-			GlStateManager.shadeModel( GL11.GL_SMOOTH );
-		else
-			GlStateManager.shadeModel( GL11.GL_FLAT );
+		final IBlockState iblockstate = tileEntityChest.hasWorld() ? tileEntityChest.getBlockState()
+				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockReinforcedChest.FACING, EnumFacing.SOUTH );
+		final ChestType chesttype = iblockstate.has( BlockChest.TYPE ) ? iblockstate.get( BlockChest.TYPE ) : ChestType.SINGLE;
+		if( chesttype != ChestType.LEFT )
+		{
+			final boolean flag = chesttype != ChestType.SINGLE;
+			final ModelChest modelchest = getChestModel( tileEntityChest, destroyStage, flag );
 
-		final World world = chest.getWorld();
-		GlStateManager.translatef( -chest.getPos().getX(), -chest.getPos().getY(), -chest.getPos().getZ() );
+			if( destroyStage >= 0 )
+			{
+				GlStateManager.matrixMode( 5890 );
+				GlStateManager.pushMatrix();
+				GlStateManager.scalef( flag ? 8.0F : 4.0F, 4.0F, 1.0F );
+				GlStateManager.translatef( 0.0625F, 0.0625F, 0.0625F );
+				GlStateManager.matrixMode( 5888 );
+			}
+			else
+				GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 
-		final Tessellator tessellator = Tessellator.getInstance();
+			GlStateManager.pushMatrix();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.translatef( (float)x, (float)y + 1.0F, (float)z + 1.0F );
+			GlStateManager.scalef( 1.0F, -1.0F, -1.0F );
 
-		final BufferBuilder buffer = tessellator.getBuffer();
-		buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
-		// final IBakedModel model = blockRenderer.getBlockModelShapes().getModelForState( state.withProperty( Properties.StaticProperty, true ) );
-		// blockRenderer.getBlockModelRenderer().renderModel( world, model, state, chest.getPos(), buffer, false, null, destroyStage );
+			final float f = iblockstate.get( BlockChest.FACING ).getHorizontalAngle();
+			if( Math.abs( f ) > 1.0E-5D )
+			{
+				GlStateManager.translatef( 0.5F, 0.5F, 0.5F );
+				GlStateManager.rotatef( f, 0.0F, 1.0F, 0.0F );
+				GlStateManager.translatef( -0.5F, -0.5F, -0.5F );
+			}
 
-		tessellator.draw();
+			rotateLid( tileEntityChest, partialTicks, modelchest );
+			modelchest.renderAll();
 
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.popMatrix();
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.popMatrix();
+			GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+			if( destroyStage >= 0 )
+			{
+				GlStateManager.matrixMode( 5890 );
+				GlStateManager.popMatrix();
+				GlStateManager.matrixMode( 5888 );
+			}
+		}
+		// renderItem( chest, partialTicks, destroyStage, state );
 	}
 
-	private void renderLid( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, IBlockState state )
+	private ModelChest getChestModel( TileEntityReinforcedChest tileEntityChest, int destroyStage, boolean flag )
 	{
-		GlStateManager.pushMatrix();
-
-		RenderHelper.disableStandardItemLighting();
-		// bindTexture( TextureMap.LOCATION_BLOCKS_TEXTURE );
-		if( Minecraft.isAmbientOcclusionEnabled() )
-			GlStateManager.shadeModel( GL11.GL_SMOOTH );
+		ResourceLocation resourcelocation;
+		if( destroyStage >= 0 )
+			resourcelocation = DESTROY_STAGES[destroyStage];
 		else
-			GlStateManager.shadeModel( GL11.GL_FLAT );
+			resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
 
-		float openAngle = chest.prevLidAngle + ( chest.lidAngle - chest.prevLidAngle ) * partialTicks;
-		openAngle = 1.0F - openAngle;
-		openAngle = 1.0F - openAngle * openAngle * openAngle;
-		openAngle = openAngle * 90;
+		bindTexture( resourcelocation );
+		return flag ? largeChest : simpleChest;
+	}
 
-		GlStateManager.translated( 0, 9.5 / 16.0, 15.0 / 16.0 );
-		GlStateManager.rotatef( openAngle, 1, 0, 0 );
-		GlStateManager.translated( 0, -9.5 / 16.0, -15.0 / 16.0 );
-
-		final World world = chest.getWorld();
-		GlStateManager.translatef( -chest.getPos().getX(), -chest.getPos().getY(), -chest.getPos().getZ() );
-
-		final Tessellator tessellator = Tessellator.getInstance();
-
-		final BufferBuilder VertexBuffer = tessellator.getBuffer();
-		VertexBuffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
-		// final IBakedModel model = blockRenderer.getBlockModelShapes().getModelForState( state.withProperty( Properties.StaticProperty, false ) );
-		// blockRenderer.getBlockModelRenderer().renderModel( world, model, state, chest.getPos(), tessellator.getBuffer(), false, null, destroyStage );
-
-		tessellator.draw();
-
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.popMatrix();
+	private void rotateLid( TileEntityReinforcedChest tileEntityChest, float partialTicks, ModelChest modelchest )
+	{
+		float f = ( (IChestLid)tileEntityChest ).getLidAngle( partialTicks );
+		f = 1.0F - f;
+		f = 1.0F - f * f * f;
+		modelchest.getLid().rotateAngleX = -( f * ( (float)Math.PI / 2F ) );
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
@@ -127,29 +110,29 @@ public class TileEntityReinforcedChestRenderer// extends TileEntitySpecialRender
 	 * private void renderItem( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, IBlockState state )
 	 * {
 	 * final ItemStack itemstack = chest.getLock();
-	 * 
+	 *
 	 * if( !itemstack.isEmpty() )
 	 * {
 	 * final EntityItem entityitem = new EntityItem( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
 	 * final Item item = entityitem.getItem().getItem();
 	 * GlStateManager.pushMatrix();
 	 * GlStateManager.disableLighting();
-	 * 
+	 *
 	 * final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
-	 * 
+	 *
 	 * GlStateManager.rotatef( 180.0F, 0.0F, 1.0F, 0.0F );
 	 * final double x = chest.isConnected() ? 0F : -8.0 / 16.0;
 	 * final double y = 6.0 / 16.0;
 	 * final double z = -0.5 / 16.0;
 	 * GlStateManager.translatef( x, y, z );
 	 * GlStateManager.scale( 0.5, 0.5, 0.5 );
-	 * 
+	 *
 	 * GlStateManager.pushAttrib();
 	 * RenderHelper.enableStandardItemLighting();
 	 * itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
 	 * RenderHelper.disableStandardItemLighting();
 	 * GlStateManager.popAttrib();
-	 * 
+	 *
 	 * GlStateManager.enableLighting();
 	 * GlStateManager.popMatrix();
 	 * }

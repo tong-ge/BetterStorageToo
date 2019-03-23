@@ -1,13 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 
-public class ItemBlockReinforcedChest extends ItemBlock
+public class ItemBlockReinforcedChest extends ItemBlockBetterStorage
 {
-	public ItemBlockReinforcedChest( Block block, Properties builder )
+	public ItemBlockReinforcedChest( Block block )
 	{
-		super( block, builder );
+		super( block );
 		// setMaxDamage( 0 );
 		// setHasSubtypes( true );
 	}
@@ -19,17 +18,17 @@ public class ItemBlockReinforcedChest extends ItemBlock
 	 * {
 	 * final IBlockState iblockstate = worldIn.getBlockState( pos );
 	 * final Block block = iblockstate.getBlock();
-	 * 
+	 *
 	 * if( !block.isReplaceable( worldIn, pos ) )
 	 * pos = pos.offset( facing );
-	 * 
+	 *
 	 * final ItemStack itemstack = player.getHeldItem( hand );
-	 * 
+	 *
 	 * if( !itemstack.isEmpty() && player.canPlayerEdit( pos, facing, itemstack )
 	 * && worldIn.mayPlace( this.block, pos, false, facing, (Entity)null ) )
 	 * {
 	 * final IBlockState iblockstate1 = this.block.getStateForPlacement( worldIn, pos, facing, hitX, hitY, hitZ, 0, player, hand );
-	 * 
+	 *
 	 * if( placeBlockAt( itemstack, player, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1 ) )
 	 * {
 	 * final SoundType soundtype = worldIn.getBlockState( pos ).getBlock().getSoundType( worldIn.getBlockState( pos ), worldIn, pos,
@@ -38,7 +37,7 @@ public class ItemBlockReinforcedChest extends ItemBlock
 	 * soundtype.getPitch() * 0.8F );
 	 * itemstack.shrink( 1 );
 	 * }
-	 * 
+	 *
 	 * return EnumActionResult.SUCCESS;
 	 * }
 	 * else
@@ -90,7 +89,7 @@ public class ItemBlockReinforcedChest extends ItemBlock
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	 * {

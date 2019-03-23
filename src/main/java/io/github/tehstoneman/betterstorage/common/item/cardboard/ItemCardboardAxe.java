@@ -1,7 +1,16 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-public class ItemCardboardAxe// extends ItemAxe implements ICardboardItem
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.item.Item;
+
+public class ItemCardboardAxe extends ItemBetterStorage // ItemAxe implements ICardboardItem
 {
+	public ItemCardboardAxe()
+	{
+		super( "cardboard_axe", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+	}
+
 	private String name;
 
 	/*
