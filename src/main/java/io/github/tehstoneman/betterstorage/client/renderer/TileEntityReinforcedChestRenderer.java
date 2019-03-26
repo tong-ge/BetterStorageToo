@@ -2,11 +2,10 @@ package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.model.ModelChest;
 import net.minecraft.client.renderer.entity.model.ModelLargeChest;
@@ -21,13 +20,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn( Dist.CLIENT )
 public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileEntityReinforcedChest >
 {
-	private static final ResourceLocation		TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.modId, "textures/entity/chest/normal_double.png" );
-	private static final ResourceLocation		TEXTURE_NORMAL			= new ResourceLocation( ModInfo.modId, "textures/entity/chest/normal.png" );
+	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.modId,
+			"textures/entity/chest/reinforced_double.png" );
+	private static final ResourceLocation	TEXTURE_NORMAL			= new ResourceLocation( ModInfo.modId, "textures/entity/chest/reinforced.png" );
 
-	private final ModelChest					simpleChest				= new ModelChest();
-	private final ModelChest					largeChest				= new ModelLargeChest();
-
-	protected static BlockRendererDispatcher	blockRenderer;
+	private final ModelChest				simpleChest				= new ModelChest();
+	private final ModelChest				largeChest				= new ModelLargeChest();
 
 	@Override
 	public void render( TileEntityReinforcedChest tileEntityChest, double x, double y, double z, float partialTicks, int destroyStage )
@@ -38,7 +36,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 		GlStateManager.depthMask( true );
 
 		final IBlockState iblockstate = tileEntityChest.hasWorld() ? tileEntityChest.getBlockState()
-				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockReinforcedChest.FACING, EnumFacing.SOUTH );
+				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockLockable.FACING, EnumFacing.SOUTH );
 		final ChestType chesttype = iblockstate.has( BlockChest.TYPE ) ? iblockstate.get( BlockChest.TYPE ) : ChestType.SINGLE;
 		if( chesttype != ChestType.LEFT )
 		{
@@ -82,7 +80,6 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 				GlStateManager.matrixMode( 5888 );
 			}
 		}
-		// renderItem( chest, partialTicks, destroyStage, state );
 	}
 
 	private ModelChest getChestModel( TileEntityReinforcedChest tileEntityChest, int destroyStage, boolean flag )

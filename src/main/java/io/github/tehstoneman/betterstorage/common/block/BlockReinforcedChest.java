@@ -74,16 +74,6 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 		return false;
 	}
 
-	/**
-	 * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
-	 * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-	 * returns its solidified counterpart.
-	 * Note that this method should ideally consider only the specific face passed in.
-	 *
-	 * @param facingState
-	 *            The state that is currently at the position offset of the provided face to the stateIn at
-	 *            currentPos
-	 */
 	@Override
 	public IBlockState updatePostPlacement( IBlockState stateIn, EnumFacing facing, IBlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )

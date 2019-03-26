@@ -7,43 +7,42 @@ import net.minecraft.tileentity.TileEntityType;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker
 {
-	public TileEntityReinforcedLocker( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityReinforcedLocker()
 	{
-		super( tileEntityTypeIn );
-		// TODO Auto-generated constructor stub
+		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER );
 	}
 
-	@Override
+	/*@Override
 	public boolean canHaveLock()
 	{
 		return true;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public void setAttachmentPosition()
 	{
 		final double x = mirror ? 13.5 : 2.5;
 		final double y = isConnected() ? 0 : 8;
 		lockAttachment.setBox( x, y, 0.5, 5, 5, 1 );
 		lockAttachment.setScale( 0.375F, 1.5F );
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public int getColumns()
 	{
 		return BetterStorage.config.reinforcedColumns;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	protected String getConnectableName()
 	{
 		return ModInfo.containerReinforcedLocker;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public void setMaterial( EnumReinforced reinforcedMaterial )
 	{
 		material = reinforcedMaterial;
 		markDirty();
-	}
+	}*/
 }

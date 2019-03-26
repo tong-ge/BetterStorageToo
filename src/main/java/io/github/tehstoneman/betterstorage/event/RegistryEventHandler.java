@@ -10,7 +10,9 @@ import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntityTypes;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -80,5 +82,9 @@ public class RegistryEventHandler
 
 		BetterStorageTileEntityTypes.REINFORCED_CHEST = TileEntityType.register( ModInfo.modId + ":reinforced_chest",
 				TileEntityType.Builder.create( TileEntityReinforcedChest::new ) );
+		BetterStorageTileEntityTypes.LOCKER = TileEntityType.register( ModInfo.modId + ":locker",
+				TileEntityType.Builder.create( TileEntityLocker::new ) );
+		BetterStorageTileEntityTypes.REINFORCED_LOCKER = TileEntityType.register( ModInfo.modId + ":reinforced_locker",
+				TileEntityType.Builder.create( TileEntityReinforcedLocker::new ) );
 	}
 }

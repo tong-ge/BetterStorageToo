@@ -1,8 +1,12 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.IProxy;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -14,18 +18,10 @@ public class ClientProxy implements IProxy
 	@Override
 	public void setup( FMLCommonSetupEvent event )
 	{
+		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 	}
-
-	/*
-	 * @Override
-	 * public void preInit()
-	 * {
-	 * super.preInit();
-	 * MinecraftForge.EVENT_BUS.register( new ClientEvents() );
-	 * OBJLoader.INSTANCE.addDomain( ModInfo.modId );
-	 * }
-	 */
 
 	/*
 	 * @Override
