@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.IBucketPickupHandler;
@@ -15,12 +16,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.init.Fluids;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
@@ -32,18 +32,16 @@ import net.minecraft.state.properties.ChestType;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -88,9 +86,8 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 					&& getDirectionToAttached( facingState ) == facing.getOpposite() )
 				return stateIn.with( TYPE, chesttype.opposite() );
 		}
-		else
-			if( getDirectionToAttached( stateIn ) == facing )
-				return stateIn.with( TYPE, ChestType.SINGLE );
+		else if( getDirectionToAttached( stateIn ) == facing )
+			return stateIn.with( TYPE, ChestType.SINGLE );
 
 		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
@@ -146,9 +143,8 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 		if( chesttype == ChestType.SINGLE && !flag )
 			if( enumfacing == getDirectionToAttach( context, enumfacing.rotateY() ) )
 				chesttype = ChestType.LEFT;
-			else
-				if( enumfacing == getDirectionToAttach( context, enumfacing.rotateYCCW() ) )
-					chesttype = ChestType.RIGHT;
+			else if( enumfacing == getDirectionToAttach( context, enumfacing.rotateYCCW() ) )
+				chesttype = ChestType.RIGHT;
 
 		return getDefaultState().with( FACING, enumfacing ).with( TYPE, chesttype ).with( WATERLOGGED,
 				Boolean.valueOf( ifluidstate.getFluid() == Fluids.WATER ) );
@@ -195,6 +191,18 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 			return false;
 	}
 
+	@Override
+	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
+	{
+		if( stack.hasDisplayName() )
+		{
+			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			if( tileentity instanceof TileEntityReinforcedChest )
+				( (TileEntityReinforcedChest)tileentity ).setCustomName( stack.getDisplayName() );
+		}
+
+	}
+
 	/**
 	 * Returns facing pointing to a chest to form a double chest with, null otherwise
 	 */
@@ -205,6 +213,26 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 		return iblockstate.getBlock() == this && iblockstate.get( TYPE ) == ChestType.SINGLE ? iblockstate.get( FACING ) : null;
 	}
 
+	@Override
+	public boolean onBlockActivated( IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ )
+	{
+		if( worldIn.isRemote )
+			return true;
+		else
+		{
+			final TileEntityReinforcedChest ilockablecontainer = getContainer( state, worldIn, pos, false );
+			if( ilockablecontainer != null )
+			{
+				//player.displayGui( new Interface( ilockablecontainer ) );
+				//player.addStat( getOpenStat() );
+			}
+
+			return true;
+		}
+	}
+
+	@Override
 	protected Stat< ResourceLocation > getOpenStat()
 	{
 		return StatList.CUSTOM.get( StatList.OPEN_CHEST );
@@ -225,48 +253,50 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	 *            then the chest can still be blocked (used by hoppers).
 	 */
 	@Nullable
-	public ILockableContainer getContainer( IBlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
+	public TileEntityReinforcedChest getContainer( IBlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
 	{
 		final TileEntity tileentity = worldIn.getTileEntity( pos );
-		if( !( tileentity instanceof TileEntityChest ) )
+		if( !( tileentity instanceof TileEntityReinforcedChest ) )
+			return null;
+		else if( !allowBlockedChest && isBlocked( worldIn, pos ) )
 			return null;
 		else
-			if( !allowBlockedChest && isBlocked( worldIn, pos ) )
-				return null;
+		{
+			final TileEntityReinforcedChest ilockablecontainer = (TileEntityReinforcedChest)tileentity;
+			final ChestType chesttype = state.get( TYPE );
+			if( chesttype == ChestType.SINGLE )
+				return ilockablecontainer;
 			else
 			{
-				ILockableContainer ilockablecontainer = (TileEntityChest)tileentity;
-				final ChestType chesttype = state.get( TYPE );
-				if( chesttype == ChestType.SINGLE )
-					return ilockablecontainer;
-				else
+				final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
+				final IBlockState iblockstate = worldIn.getBlockState( blockpos );
+				if( iblockstate.getBlock() == this )
 				{
-					final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
-					final IBlockState iblockstate = worldIn.getBlockState( blockpos );
-					if( iblockstate.getBlock() == this )
+					final ChestType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != ChestType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
 					{
-						final ChestType chesttype1 = iblockstate.get( TYPE );
-						if( chesttype1 != ChestType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
-						{
-							if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
-								return null;
+						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
+							return null;
 
-							final TileEntity tileentity1 = worldIn.getTileEntity( blockpos );
-							if( tileentity1 instanceof TileEntityChest )
-							{
-								final ILockableContainer ilockablecontainer1 = chesttype == ChestType.RIGHT ? ilockablecontainer
-										: (ILockableContainer)tileentity1;
-								final ILockableContainer ilockablecontainer2 = chesttype == ChestType.RIGHT ? (ILockableContainer)tileentity1
-										: ilockablecontainer;
-								ilockablecontainer = new InventoryLargeChest( new TextComponentTranslation( "container.chestDouble" ),
-										ilockablecontainer1, ilockablecontainer2 );
-							}
-						}
+						final TileEntity tileentity1 = worldIn.getTileEntity( blockpos );
+						/*
+						 * if( tileentity1 instanceof TileEntityReinforcedChest )
+						 * {
+						 * final TileEntityReinforcedChest ilockablecontainer1 = chesttype == ChestType.RIGHT ? ilockablecontainer
+						 * : (TileEntityReinforcedChest)tileentity1;
+						 * final TileEntityReinforcedChest ilockablecontainer2 = chesttype == ChestType.RIGHT
+						 * ? (TileEntityReinforcedChest)tileentity1
+						 * : ilockablecontainer;
+						 * ilockablecontainer = new TileEntityReinforcedChest( new TextComponentTranslation( "container.chestDouble" ),
+						 * ilockablecontainer1, ilockablecontainer2 );
+						 * }
+						 */
 					}
-
-					return ilockablecontainer;
 				}
+
+				return ilockablecontainer;
 			}
+		}
 	}
 
 	@Override
@@ -323,5 +353,52 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	public boolean allowsMovement( IBlockState state, IBlockReader worldIn, BlockPos pos, PathType type )
 	{
 		return false;
+	}
+
+	public class Interface implements IInteractionObject
+	{
+		private TileEntityReinforcedChest chestLeft;
+		private TileEntityReinforcedChest chestRight;
+
+		public Interface( TileEntityReinforcedChest tileEntityReinforcedChest )
+		{
+			chestLeft = tileEntityReinforcedChest;
+		}
+
+		public Interface( TileEntityReinforcedChest tileEntityReinforcedChestL, TileEntityReinforcedChest tileEntityReinforcedChestR )
+		{
+			chestLeft = tileEntityReinforcedChestL;
+			chestRight = tileEntityReinforcedChestR;
+		}
+
+		@Override
+		public ITextComponent getName()
+		{
+			return new TextComponentTranslation( BetterStorageBlocks.REINFORCED_CHEST.getTranslationKey() + ".name" );
+		}
+
+		@Override
+		public boolean hasCustomName()
+		{
+			return chestLeft.hasCustomName() || chestRight != null && chestRight.hasCustomName();
+		}
+
+		@Override
+		public ITextComponent getCustomName()
+		{
+			return chestLeft.hasCustomName() ? chestLeft.getCustomName() : chestRight.getCustomName();
+		}
+
+		@Override
+		public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn )
+		{
+			return new ContainerBetterStorage( playerIn, null );
+		}
+
+		@Override
+		public String getGuiID()
+		{
+			return "betterstorage:reinforced_chest";
+		}
 	}
 }

@@ -5,8 +5,10 @@ import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStora
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-//@SideOnly( Side.CLIENT )
+@OnlyIn(Dist.CLIENT)
 public class GuiBetterStorage extends GuiContainer
 {
 	public final ContainerBetterStorage	container;
@@ -79,7 +81,7 @@ public class GuiBetterStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
-		fontRenderer.drawString( I18n.format( title ), 8, 6, 0x404040 );
+		fontRenderer.drawString( I18n.format( container.getName() ), 8, 6, 0x404040 );
 		fontRenderer.drawString( I18n.format( "container.inventory" ), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );
 	}
 

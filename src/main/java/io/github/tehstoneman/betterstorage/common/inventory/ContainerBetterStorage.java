@@ -7,27 +7,30 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 //@ChestContainer(isLargeChest = true)
 public class ContainerBetterStorage extends Container
 {
-	// private final ItemStackHandler inventoryContainer;
-	private final IInventory			inventoryPlayer;
-	private final TileEntityContainer	tileContainer;
+	private final LazyOptional< IItemHandler >	inventoryContainer;
+	private final IInventory					inventoryPlayer;
+	private final TileEntityContainer			tileContainer;
 
-	private final int					columns;
-	private final int					rows;
+	private final int							columns;
+	private final int							rows;
 
-	public int							indexStart, indexPlayer, indexHotbar;
+	public int									indexStart, indexPlayer, indexHotbar;
 
-	public final int					separation;
+	public final int							separation;
 
 	// @SideOnly( Side.CLIENT )
-	public GuiBetterStorage				updateGui;
+	public GuiBetterStorage						updateGui;
 
 	public ContainerBetterStorage( EntityPlayer player, TileEntityContainer tileContainer )
 	{
-		// inventoryContainer = (ItemStackHandler)tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
 		inventoryPlayer = player.inventory;
 		this.tileContainer = tileContainer;
 		tileContainer.onContainerOpened();
@@ -153,9 +156,8 @@ public class ContainerBetterStorage extends Container
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
 					return ItemStack.EMPTY;
 			}
-			else
-				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-					return ItemStack.EMPTY;
+			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+				return ItemStack.EMPTY;
 
 			if( itemStack.isEmpty() )
 				slot.putStack( ItemStack.EMPTY );

@@ -46,30 +46,18 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		return true;
 	}
 
-	/**
-	 * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
-	 * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
-	 */
 	@Override
 	public EnumBlockRenderType getRenderType( IBlockState state )
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
-	 */
 	@Override
 	public IBlockState rotate( IBlockState state, Rotation rot )
 	{
 		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
 	}
 
-	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
-	 */
 	@Override
 	public IBlockState mirror( IBlockState state, Mirror mirrorIn )
 	{
@@ -83,9 +71,6 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		builder.add( FACING );
 	}
 
-	/**
-	 * Called by ItemBlocks after a block is set in the world, to allow post-place logic
-	 */
 	@Override
 	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
 	{

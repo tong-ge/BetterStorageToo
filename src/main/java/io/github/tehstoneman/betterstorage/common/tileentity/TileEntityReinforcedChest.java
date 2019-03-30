@@ -1,21 +1,28 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import javax.annotation.Nullable;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEntityReinforcedChest extends TileEntity implements IChestLid, ITickable // TileEntityLockable
 {
-	public ItemStackHandler inventory;
+	public ItemStackHandler		inventory;
+	protected ITextComponent	customName;
 
 	protected TileEntityReinforcedChest( TileEntityType< ? > tileEntityTypeIn )
 	{
 		super( tileEntityTypeIn );
+		inventory = new ItemStackHandler( 33 );
 	}
 
 	public TileEntityReinforcedChest()
@@ -112,6 +119,22 @@ public class TileEntityReinforcedChest extends TileEntity implements IChestLid, 
 	 * }
 	 */
 
+	public boolean hasCustomName()
+	{
+		return customName != null;
+	}
+
+	public void setCustomName( @Nullable ITextComponent name )
+	{
+		customName = name;
+	}
+
+	@Nullable
+	public ITextComponent getCustomName()
+	{
+		return customName;
+	}
+
 	// TileEntity synchronization
 
 	/*
@@ -133,22 +156,28 @@ public class TileEntityReinforcedChest extends TileEntity implements IChestLid, 
 
 	// Reading from / writing to NBT
 
-	/*
-	 * @Override
-	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	 * {
-	 * super.writeToNBT( compound );
-	 * return compound;
-	 * }
-	 */
+	@Override
+	public NBTTagCompound write( NBTTagCompound compound )
+	{
+		compound = super.write( compound );
+		compound.setTag( "inventory", inventory.serializeNBT() );
 
-	/*
-	 * @Override
-	 * public void readFromNBT( NBTTagCompound compound )
-	 * {
-	 * super.readFromNBT( compound );
-	 * }
-	 */
+		final ITextComponent itextcomponent = getCustomName();
+		if( itextcomponent != null )
+			compound.setString( "CustomName", ITextComponent.Serializer.toJson( itextcomponent ) );
+		return compound;
+	}
+
+	@Override
+	public void read( NBTTagCompound compound )
+	{
+		super.read( compound );
+		if( compound.hasKey( "inventory" ) )
+			inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
+
+		if( compound.contains( "CustomName", 8 ) )
+			customName = ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) );
+	}
 
 	@Override
 	public void tick()
