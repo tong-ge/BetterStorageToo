@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockLockable;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
@@ -10,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.model.ModelChest;
 import net.minecraft.client.renderer.entity.model.ModelLargeChest;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -37,10 +37,10 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 
 		final IBlockState iblockstate = tileEntityChest.hasWorld() ? tileEntityChest.getBlockState()
 				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockLockable.FACING, EnumFacing.SOUTH );
-		final ChestType chesttype = iblockstate.has( BlockChest.TYPE ) ? iblockstate.get( BlockChest.TYPE ) : ChestType.SINGLE;
-		if( chesttype != ChestType.LEFT )
+		final EnumConnectedType chesttype = iblockstate.has( BlockLockable.TYPE ) ? iblockstate.get( BlockLockable.TYPE ) : EnumConnectedType.SINGLE;
+		if( chesttype != EnumConnectedType.SLAVE )
 		{
-			final boolean flag = chesttype != ChestType.SINGLE;
+			final boolean flag = chesttype != EnumConnectedType.SINGLE;
 			final ModelChest modelchest = getChestModel( tileEntityChest, destroyStage, flag );
 
 			if( destroyStage >= 0 )

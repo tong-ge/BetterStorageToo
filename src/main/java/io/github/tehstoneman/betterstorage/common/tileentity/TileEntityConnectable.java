@@ -1,77 +1,63 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import net.minecraft.entity.EntityLivingBase;
+import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import net.minecraft.block.BlockChest;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.state.properties.ChestType;
+import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityConnectable extends TileEntityContainer
+public abstract class TileEntityConnectable extends TileEntityContainer  implements IChestLid, ITickable
 {
+	public ConnectedStackHandler				connectedInventory;
+	private final LazyOptional< IItemHandler >	connectedHandler	= LazyOptional.of( () -> connectedInventory );
+
 	public TileEntityConnectable( TileEntityType< ? > tileEntityTypeIn )
 	{
 		super( tileEntityTypeIn );
-		// TODO Auto-generated constructor stub
 	}
 
-	protected BlockPos connectedPos = null;
-
-	/*
-	 * @Override
-	 * public <T> T getCapability( Capability< T > capability, EnumFacing facing )
-	 * {
-	 * if( isMain() )
-	 * if( isConnected() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-	 * return (T)new ConnectedStackHandler( inventory, getConnectedTileEntity().inventory );
-	 * else
-	 * return super.getCapability( capability, facing );
-	 * return getMainTileEntity().getCapability( capability, facing );
-	 * }
-	 */
-
-	/*
-	 * public EnumFacing getOrientation()
-	 * {
-	 * final IBlockState state = world.getBlockState( getPos() );
-	 * final EnumFacing orientation = state.getValue( BlockHorizontal.HORIZONTAL_FACING );
-	 * return orientation != null ? orientation : EnumFacing.NORTH;
-	 * }
-	 */
-
-	public BlockPos getConnected()
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
 	{
-		return connectedPos;
+		if( isMain() )
+			if( isConnected() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			{
+				connectedInventory = new ConnectedStackHandler( inventory, getConnectedTileEntity().inventory );
+				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, connectedHandler );
+			}
+			else
+				return super.getCapability( capability, facing );
+		return getMainTileEntity().getCapability( capability, facing );
 	}
 
-	public void setConnected( BlockPos connected )
-	{
-		connectedPos = connected;
-	}
-
-	/** Returns the possible directions the container can connect to. */
-	public abstract EnumFacing[] getPossibleNeighbors();
+	/** Returns position of the connected TileEntity */
+	public abstract BlockPos getConnected();
 
 	/** Returns if this container is connected to another one. */
-	public boolean isConnected()
-	{
-		return getConnected() != null;
-	}
+	public abstract boolean isConnected();
 
 	/** Returns if this container is the main container, or not connected to another container. */
-	public boolean isMain()
-	{
-		if( isConnected() )
-		{
-			final BlockPos connected = getConnected();
-			return connected.getX() > pos.getX() || connected.getY() > pos.getY() || connected.getZ() > pos.getZ();
-		}
-		return true;
-	}
+	public abstract boolean isMain();
 
 	/** Returns the main container. */
 	public TileEntityConnectable getMainTileEntity()
@@ -96,73 +82,22 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
 	}
 
-	/** Returns if the container can connect to the other container. */
 	/*
-	 * public boolean canConnect( TileEntityConnectable connectable )
-	 * {
-	 * return connectable != null && // check for null
-	 * !isConnected() && !connectable.isConnected() && // Make sure the containers are not already connected.
-	 * getBlockType() == connectable.getBlockType() && // check for same block type
-	 * getOrientation() == connectable.getOrientation(); // check for same orientation
-	 * }
+	 * ===================
+	 * TileEntityContainer
+	 * ===================
 	 */
-
-	/** Connects the container to any other containers nearby, if possible. */
-	public void checkForConnections()
-	{
-		if( getWorld().isRemote )
-			return;
-		/*
-		 * for( final EnumFacing dir : getPossibleNeighbors() )
-		 * if( !isConnected() )
-		 * {
-		 * final TileEntity tileentity = world.getTileEntity( pos.offset( dir ) );
-		 * if( tileentity instanceof TileEntityConnectable )
-		 * {
-		 * final TileEntityConnectable connectable = (TileEntityConnectable)tileentity;
-		 * if( canConnect( connectable ) )
-		 * {
-		 * setConnected( connectable.getPos() );
-		 * connectable.setConnected( getPos() );
-		 * // Mark the block for an update, sends description packet to players.
-		 * markForUpdate();
-		 * connectable.markForUpdate();
-		 * }
-		 * }
-		 * }
-		 */
-	}
-
-	/** Disconnects the container from its connected container, if it has one. */
-	public void disconnect()
-	{
-		if( !isConnected() )
-			return;
-		final TileEntityConnectable connectable = getConnectedTileEntity();
-		setConnected( null );
-		if( connectable != null )
-		{
-			connectable.setConnected( null );
-			connectable.markForUpdate();
-		}
-		else
-			if( BetterStorage.config.enableWarningMessages )
-				BetterStorage.LOGGER.warn( "getConnectedTileEntity() returned null in disconnect(). " + "Location: {},{},{}", pos.getX(), pos.getY(),
-						pos.getZ() );
-	}
-
-	// TileEntityContainer stuff
 
 	/**
 	 * Returns the unlocalized name of the container. <br>
 	 * "Large" will be appended if the container is connected to another one.
 	 */
-	protected abstract String getConnectableName();
+	protected abstract ITextComponent getConnectableName();
 
 	@Override
-	public final String getName()
+	public ITextComponent getName()
 	{
-		return getConnectableName() + ( isConnected() ? "_large" : "" );
+		return customName != null ? customName : getConnectableName().appendText( isConnected() ? "_large" : "" );
 	}
 
 	@Override
@@ -177,26 +112,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		if( isConnected() )
 			return super.getRows() * 2;
 		return super.getRows();
-	}
-
-	@Override
-	public final void onBlockPlaced( EntityLivingBase player, ItemStack stack )
-	{
-		super.onBlockPlaced( player, stack );
-		checkForConnections();
-	}
-
-	@Override
-	public void onBlockDestroyed()
-	{
-		super.onBlockDestroyed();
-		disconnect();
-	}
-
-	/** Returns if the container is accessible by other machines etc. */
-	protected boolean isAccessible()
-	{
-		return true;
 	}
 
 	@Override
@@ -246,11 +161,11 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 * public void update()
 	 * {
 	 * super.update();
-	 * 
+	 *
 	 * double x = pos.getX() + 0.5;
 	 * final double y = pos.getY() + 0.5;
 	 * double z = pos.getZ() + 0.5;
-	 * 
+	 *
 	 * if( isConnected() )
 	 * {
 	 * if( !isMain() )
@@ -263,9 +178,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 * lidAngle = Math.max( lidAngle, connectable.lidAngle );
 	 * }
 	 * }
-	 * 
+	 *
 	 * final float pitch = getWorld().rand.nextFloat() * 0.1F + 0.9F;
-	 * 
+	 *
 	 * // Play sound when opening
 	 * if( lidAngle > 0.0F && prevLidAngle == 0.0F )
 	 * getWorld().playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, pitch );
@@ -275,76 +190,24 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 * }
 	 */
 
-	// IInventory stuff
-
-	/*
-	 * @Override
-	 * public ITextComponent getDisplayName()
-	 * {
-	 * return new TextComponentString( getName() );
-	 * }
-	 */
-
 	@Override
-	public void markDirty()
+	public ContainerBetterStorage getContainer( EntityPlayer player )
 	{
-		super.markDirty();
-		if( isConnected() && getWorld() != null )
-		{
-			final TileEntity connected = getConnectedTileEntity();
-			connected.updateContainingBlockInfo();
-			getWorld().markChunkDirty( connected.getPos(), this );
-
-			/*
-			 * if( connected.getBlockType() != Blocks.AIR )
-			 * getWorld().updateComparatorOutputLevel( connected.getPos(), connected.getBlockType() );
-			 */
-		}
+		return new ContainerBetterStorage( getMainTileEntity(), player );
 	}
 
-	// Tile entity synchronization
-
-	@Override
-	public NBTTagCompound getUpdateTag()
-	{
-		final NBTTagCompound compound = super.getUpdateTag();
-		if( getConnected() != null )
-			compound.setLong( "connected", getConnected().toLong() );
-		return compound;
-	}
-
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-		if( compound.hasKey( "connected" ) )
-			connectedPos = BlockPos.fromLong( compound.getLong( "connected" ) );
-		else
-			connectedPos = null;
-	}
-
-	// Reading from / writing to NBT
-
 	/*
-	 * @Override
-	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	 * {
-	 * super.writeToNBT( compound );
-	 * if( getConnected() != null )
-	 * compound.setLong( "connected", getConnected().toLong() );
-	 * return compound;
-	 * }
+	 * =========
+	 * IChestLid
+	 * =========
 	 */
 
-	/*
-	 * @Override
-	 * public void readFromNBT( NBTTagCompound compound )
-	 * {
-	 * super.readFromNBT( compound );
-	 * if( compound.hasKey( "connected" ) )
-	 * setConnected( BlockPos.fromLong( compound.getLong( "connected" ) ) );
-	 * else
-	 * setConnected( null );
-	 * }
-	 */
+	protected abstract void playSound( SoundEvent soundIn );
+
+	@OnlyIn( Dist.CLIENT )
+	@Override
+	public float getLidAngle( float partialTicks )
+	{
+		return prevLidAngle + ( lidAngle - prevLidAngle ) * partialTicks;
+	}
 }

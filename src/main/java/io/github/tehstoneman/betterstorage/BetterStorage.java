@@ -6,17 +6,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
+import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.event.RegistryEventHandler;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
 import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -42,11 +52,34 @@ public class BetterStorage
 
 	public BetterStorage()
 	{
+		// Initialize random numbers
+		random = new Random();
+
+		ModLoadingContext.get().registerExtensionPoint( ExtensionPoint.GUIFACTORY, () ->
+		{
+			return ( openContainer ) ->
+			{
+				final ResourceLocation location = openContainer.getId();
+				if( location.toString().equals( "betterstorage:reinforced_chest" ) )
+				{
+					final EntityPlayerSP player = Minecraft.getInstance().player;
+					final BlockPos pos = openContainer.getAdditionalData().readBlockPos();
+					final TileEntity tileEntity = player.world.getTileEntity( pos );
+					if( tileEntity instanceof TileEntityReinforcedChest )
+					{
+						final TileEntityReinforcedChest reinforcedChest = (TileEntityReinforcedChest)tileEntity;
+						return new GuiBetterStorage( reinforcedChest.getContainer( player ) );
+					}
+				}
+				return null;
+			};
+		} );
+
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 
 		MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
-		// MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
+		MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
 	}
 
 	public void setup( FMLCommonSetupEvent event )
@@ -61,16 +94,8 @@ public class BetterStorage
 	 * final int messageID = 0;
 	 * simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
 	 *
-	 * logger = event.getModLog();
-	 * creativeTab = new CreativeTabBetterStorage();
-	 *
-	 * // Initialize random numbers
-	 * random = new Random();
-	 *
 	 * config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
 	 * config.syncFromFile();
-	 *
-	 * MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
 	 *
 	 * // Addon.initialize();
 	 * // Addon.setupConfigsAll();

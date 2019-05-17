@@ -7,46 +7,56 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 //@ChestContainer(isLargeChest = true)
 public class ContainerBetterStorage extends Container
 {
-	private final LazyOptional< IItemHandler >	inventoryContainer;
-	private final IInventory					inventoryPlayer;
-	private final TileEntityContainer			tileContainer;
+	private final IItemHandler			inventoryContainer;
+	private final IInventory			inventoryPlayer;
+	private final TileEntityContainer	tileContainer;
 
-	private final int							columns;
-	private final int							rows;
+	private final int					columns;
+	private final int					rows;
 
-	public int									indexStart, indexPlayer, indexHotbar;
+	public int							indexStart, indexPlayer, indexHotbar;
 
-	public final int							separation;
+	public final int					separation;
 
 	// @SideOnly( Side.CLIENT )
-	public GuiBetterStorage						updateGui;
+	public GuiBetterStorage				updateGui;
 
-	public ContainerBetterStorage( EntityPlayer player, TileEntityContainer tileContainer )
+	public ContainerBetterStorage( TileEntityContainer tileContainer, EntityPlayer player )
 	{
-		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
 		inventoryPlayer = player.inventory;
 		this.tileContainer = tileContainer;
-		tileContainer.onContainerOpened();
 
-		columns = tileContainer.getColumns();
-		rows = tileContainer.getRows();
+		if( inventoryContainer instanceof ExpandableStackHandler )
+		{
+			columns = ( (ExpandableStackHandler)inventoryContainer ).getColumns();
+			rows = ( (ExpandableStackHandler)inventoryContainer ).getRows();
+		}
+		else
+		{
+			columns = 9;
+			rows = 3;
+		}
+
+		tileContainer.openInventory( player );
 
 		indexStart = 0;
-		// indexHotbar = inventoryContainer.getSlots();
+		indexHotbar = inventoryContainer.getSlots();
 		indexPlayer = indexHotbar + 9;
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % columns * 18 + 8;
 			final int y = i / columns * 18 + 18;
-			// addSlotToContainer( new SlotItemHandler( inventoryContainer, i, x, y ) );
+			addSlot( new SlotItemHandler( inventoryContainer, i, x, y ) );
 		}
 
 		final int offsetX = ( columns - 9 ) / 2 * 18;
@@ -56,14 +66,14 @@ public class ContainerBetterStorage extends Container
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 14 + i / 9 * 18;
-			// addSlotToContainer( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
+			addSlot( new Slot( inventoryPlayer, i + 9, offsetX + x, offsetY + y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 72;
-			// addSlotToContainer( new Slot( inventoryPlayer, i, offsetX + x, offsetY + y ) );
+			addSlot( new Slot( inventoryPlayer, i, offsetX + x, offsetY + y ) );
 		}
 
 		separation = 14;
@@ -89,7 +99,7 @@ public class ContainerBetterStorage extends Container
 	@Override
 	public void onContainerClosed( EntityPlayer playerIn )
 	{
-		tileContainer.onContainerClosed();
+		tileContainer.closeInventory( playerIn );
 		super.onContainerClosed( playerIn );
 	}
 
@@ -98,7 +108,7 @@ public class ContainerBetterStorage extends Container
 		return ( getRows() + 4 ) * 18 + separation + 29;
 	}
 
-	public String getName()
+	public ITextComponent getName()
 	{
 		return tileContainer.getName();
 	}
@@ -136,8 +146,10 @@ public class ContainerBetterStorage extends Container
 	 */
 
 	/** Called when a slot is changed. */
-	public void onSlotChanged( int slot )
-	{}
+	/*
+	 * public void onSlotChanged( int slot )
+	 * {}
+	 */
 
 	@Override
 	public ItemStack transferStackInSlot( EntityPlayer playerIn, int index )

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.Block;
@@ -16,6 +17,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
@@ -25,10 +27,8 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.ChestType;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
@@ -44,25 +44,23 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockReinforcedChest extends BlockLockable implements IBucketPickupHandler, ILiquidContainer
 {
-	public static final EnumProperty< ChestType >	TYPE			= BlockStateProperties.CHEST_TYPE;
-	public static final BooleanProperty				WATERLOGGED		= BlockStateProperties.WATERLOGGED;
-	protected static final VoxelShape				SHAPE_NORTH		= Block.makeCuboidShape( 1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D );
-	protected static final VoxelShape				SHAPE_SOUTH		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D );
-	protected static final VoxelShape				SHAPE_WEST		= Block.makeCuboidShape( 0.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
-	protected static final VoxelShape				SHAPE_EAST		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D );
-	protected static final VoxelShape				SHAPE_SINGLE	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
+	public static final BooleanProperty	WATERLOGGED		= BlockStateProperties.WATERLOGGED;
+	protected static final VoxelShape	SHAPE_NORTH		= Block.makeCuboidShape( 1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape	SHAPE_SOUTH		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D );
+	protected static final VoxelShape	SHAPE_WEST		= Block.makeCuboidShape( 0.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape	SHAPE_EAST		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D );
+	protected static final VoxelShape	SHAPE_SINGLE	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 
 	public BlockReinforcedChest()
 	{
 		super( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
-													  .with( TYPE, ChestType.SINGLE )
-													  .with( WATERLOGGED, Boolean.valueOf( false ) ) );
+		setDefaultState( stateContainer.getBaseState().with( WATERLOGGED, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
@@ -81,13 +79,13 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 
 		if( facingState.getBlock() == this && facing.getAxis().isHorizontal() )
 		{
-			final ChestType chesttype = facingState.get( TYPE );
-			if( stateIn.get( TYPE ) == ChestType.SINGLE && chesttype != ChestType.SINGLE && stateIn.get( FACING ) == facingState.get( FACING )
-					&& getDirectionToAttached( facingState ) == facing.getOpposite() )
+			final EnumConnectedType chesttype = facingState.get( TYPE );
+			if( stateIn.get( TYPE ) == EnumConnectedType.SINGLE && chesttype != EnumConnectedType.SINGLE
+					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 				return stateIn.with( TYPE, chesttype.opposite() );
 		}
 		else if( getDirectionToAttached( stateIn ) == facing )
-			return stateIn.with( TYPE, ChestType.SINGLE );
+			return stateIn.with( TYPE, EnumConnectedType.SINGLE );
 
 		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
@@ -95,7 +93,7 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	@Override
 	public VoxelShape getShape( IBlockState state, IBlockReader worldIn, BlockPos pos )
 	{
-		if( state.get( TYPE ) == ChestType.SINGLE )
+		if( state.get( TYPE ) == EnumConnectedType.SINGLE )
 			return SHAPE_SINGLE;
 		else
 			switch( getDirectionToAttached( state ) )
@@ -119,13 +117,13 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	public static EnumFacing getDirectionToAttached( IBlockState state )
 	{
 		final EnumFacing enumfacing = state.get( FACING );
-		return state.get( TYPE ) == ChestType.LEFT ? enumfacing.rotateY() : enumfacing.rotateYCCW();
+		return state.get( TYPE ) == EnumConnectedType.SLAVE ? enumfacing.rotateY() : enumfacing.rotateYCCW();
 	}
 
 	@Override
 	public IBlockState getStateForPlacement( BlockItemUseContext context )
 	{
-		ChestType chesttype = ChestType.SINGLE;
+		EnumConnectedType chesttype = EnumConnectedType.SINGLE;
 		EnumFacing enumfacing = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState ifluidstate = context.getWorld().getFluidState( context.getPos() );
 		final boolean flag = context.isPlacerSneaking();
@@ -136,15 +134,15 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 			if( enumfacing2 != null && enumfacing2.getAxis() != enumfacing1.getAxis() )
 			{
 				enumfacing = enumfacing2;
-				chesttype = enumfacing2.rotateYCCW() == enumfacing1.getOpposite() ? ChestType.RIGHT : ChestType.LEFT;
+				chesttype = enumfacing2.rotateYCCW() == enumfacing1.getOpposite() ? EnumConnectedType.MASTER : EnumConnectedType.SLAVE;
 			}
 		}
 
-		if( chesttype == ChestType.SINGLE && !flag )
+		if( chesttype == EnumConnectedType.SINGLE && !flag )
 			if( enumfacing == getDirectionToAttach( context, enumfacing.rotateY() ) )
-				chesttype = ChestType.LEFT;
+				chesttype = EnumConnectedType.SLAVE;
 			else if( enumfacing == getDirectionToAttach( context, enumfacing.rotateYCCW() ) )
-				chesttype = ChestType.RIGHT;
+				chesttype = EnumConnectedType.MASTER;
 
 		return getDefaultState().with( FACING, enumfacing ).with( TYPE, chesttype ).with( WATERLOGGED,
 				Boolean.valueOf( ifluidstate.getFluid() == Fluids.WATER ) );
@@ -210,7 +208,7 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	private EnumFacing getDirectionToAttach( BlockItemUseContext context, EnumFacing facing )
 	{
 		final IBlockState iblockstate = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return iblockstate.getBlock() == this && iblockstate.get( TYPE ) == ChestType.SINGLE ? iblockstate.get( FACING ) : null;
+		return iblockstate.getBlock() == this && iblockstate.get( TYPE ) == EnumConnectedType.SINGLE ? iblockstate.get( FACING ) : null;
 	}
 
 	@Override
@@ -224,8 +222,11 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 			final TileEntityReinforcedChest ilockablecontainer = getContainer( state, worldIn, pos, false );
 			if( ilockablecontainer != null )
 			{
-				//player.displayGui( new Interface( ilockablecontainer ) );
-				//player.addStat( getOpenStat() );
+				NetworkHooks.openGui( (EntityPlayerMP)player, new Interface( ilockablecontainer ), ( buffer ) ->
+				{
+					buffer.writeBlockPos( pos );
+				} );
+				player.addStat( getOpenStat() );
 			}
 
 			return true;
@@ -263,8 +264,8 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 		else
 		{
 			final TileEntityReinforcedChest ilockablecontainer = (TileEntityReinforcedChest)tileentity;
-			final ChestType chesttype = state.get( TYPE );
-			if( chesttype == ChestType.SINGLE )
+			final EnumConnectedType chesttype = state.get( TYPE );
+			if( chesttype == EnumConnectedType.SINGLE )
 				return ilockablecontainer;
 			else
 			{
@@ -272,26 +273,10 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 				final IBlockState iblockstate = worldIn.getBlockState( blockpos );
 				if( iblockstate.getBlock() == this )
 				{
-					final ChestType chesttype1 = iblockstate.get( TYPE );
-					if( chesttype1 != ChestType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
-					{
+					final EnumConnectedType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != EnumConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
 						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
 							return null;
-
-						final TileEntity tileentity1 = worldIn.getTileEntity( blockpos );
-						/*
-						 * if( tileentity1 instanceof TileEntityReinforcedChest )
-						 * {
-						 * final TileEntityReinforcedChest ilockablecontainer1 = chesttype == ChestType.RIGHT ? ilockablecontainer
-						 * : (TileEntityReinforcedChest)tileentity1;
-						 * final TileEntityReinforcedChest ilockablecontainer2 = chesttype == ChestType.RIGHT
-						 * ? (TileEntityReinforcedChest)tileentity1
-						 * : ilockablecontainer;
-						 * ilockablecontainer = new TileEntityReinforcedChest( new TextComponentTranslation( "container.chestDouble" ),
-						 * ilockablecontainer1, ilockablecontainer2 );
-						 * }
-						 */
-					}
 				}
 
 				return ilockablecontainer;
@@ -331,7 +316,7 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
 	{
 		super.fillStateContainer( builder );
-		builder.add( TYPE, WATERLOGGED );
+		builder.add( WATERLOGGED );
 	}
 
 	/**
@@ -357,12 +342,13 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 
 	public class Interface implements IInteractionObject
 	{
-		private TileEntityReinforcedChest chestLeft;
-		private TileEntityReinforcedChest chestRight;
+		private final TileEntityReinforcedChest	chestLeft;
+		private final TileEntityReinforcedChest	chestRight;
 
 		public Interface( TileEntityReinforcedChest tileEntityReinforcedChest )
 		{
 			chestLeft = tileEntityReinforcedChest;
+			chestRight = null;
 		}
 
 		public Interface( TileEntityReinforcedChest tileEntityReinforcedChestL, TileEntityReinforcedChest tileEntityReinforcedChestR )
@@ -392,7 +378,7 @@ public class BlockReinforcedChest extends BlockLockable implements IBucketPickup
 		@Override
 		public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn )
 		{
-			return new ContainerBetterStorage( playerIn, null );
+			return new ContainerBetterStorage( chestLeft, playerIn );
 		}
 
 		@Override

@@ -59,7 +59,6 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 
 		//@formatter:off
 		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
-													  .with( TYPE, EnumLockerType.SINGLE )
 													  .with( HINGE, DoorHingeSide.LEFT )
 		  											  .with( WATERLOGGED, Boolean.valueOf( false ) ) );
 		//@formatter:on
@@ -342,7 +341,7 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
 	{
 		super.fillStateContainer( builder );
-		builder.add( TYPE, HINGE, WATERLOGGED );
+		builder.add( HINGE, WATERLOGGED );
 	}
 
 	@Override

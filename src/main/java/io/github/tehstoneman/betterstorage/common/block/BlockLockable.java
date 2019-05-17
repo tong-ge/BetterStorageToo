@@ -1,41 +1,42 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class BlockLockable extends BlockContainerBetterStorage
 {
-	public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+	public static final EnumProperty< EnumConnectedType >	TYPE	= EnumProperty.create( "type", EnumConnectedType.class );
+	public static final DirectionProperty					FACING	= BlockHorizontal.HORIZONTAL_FACING;
 
 	protected BlockLockable( Block.Properties builder )
 	{
 		super( builder );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH ) );
+		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
+													  .with( TYPE, EnumConnectedType.SINGLE ) );
 		//@formatter:on
 	}
 
@@ -68,7 +69,7 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
 	{
 		super.fillStateContainer( builder );
-		builder.add( FACING );
+		builder.add( FACING, TYPE );
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 		{
 			final TileEntity tileentity = worldIn.getTileEntity( pos );
 			if( tileentity instanceof TileEntityLockable )
-				( (TileEntityLockable)tileentity ).setCustomTitle( stack.getDisplayName() );
+				( (TileEntityLockable)tileentity ).setCustomName( stack.getDisplayName() );
 		}
 	}
 
@@ -101,7 +102,6 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	{
 		return StatList.CUSTOM.get( StatList.OPEN_CHEST );
 	}
-
 
 	/*
 	 * @Override

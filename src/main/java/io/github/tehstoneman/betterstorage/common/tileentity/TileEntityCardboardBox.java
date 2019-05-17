@@ -3,13 +3,14 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class TileEntityCardboardBox extends TileEntityContainer
 {
@@ -34,16 +35,18 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		 * if( ItemBlockCardboardBox.getUses() > 0 )
 		 * StackUtils.set( stack, uses, "uses" );
 		 */
-		if( getCustomTitle() != null )
-			stack.setDisplayName( getCustomTitle() );
+		/*
+		 * if( getCustomTitle() != null )
+		 * stack.setDisplayName( getCustomTitle() );
+		 */
 	}
 
 	// TileEntityContainer stuff
 
 	@Override
-	public String getName()
+	public ITextComponent getName()
 	{
-		return ModInfo.containerCardboardBox;
+		return customName != null ? customName : new TextComponentTranslation( ModInfo.containerCardboardBox );
 	}
 
 	@Override
@@ -52,27 +55,27 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return ItemBlockCardboardBox.getRows();
 	}
 
-	@Override
-	public void onBlockPlaced( EntityLivingBase player, ItemStack stack )
-	{
-		super.onBlockPlaced( player, stack );
-		uses = ItemBlockCardboardBox.getUses();
-
-		// If the cardboard box item has items, set the container contents to them.
-		/*
-		 * if( stack.hasTagCompound() )
-		 * {
-		 * final NBTTagCompound compound = stack.getTagCompound();
-		 * if( compound.hasKey( "Inventory" ) )
-		 * inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
-		 * if( uses > 0 && compound.hasKey( "uses" ) )
-		 * uses = Math.min( uses, compound.getInteger( "uses" ) );
-		 * if( compound.hasKey( "color" ) )
-		 * color = compound.getInteger( "color" );
-		 * }
-		 */
-		markDirty();
-	}
+	/*
+	 * @Override
+	 * public void onBlockPlaced( EntityLivingBase player, ItemStack stack )
+	 * {
+	 * super.onBlockPlaced( player, stack );
+	 * uses = ItemBlockCardboardBox.getUses();
+	 *
+	 * // If the cardboard box item has items, set the container contents to them.
+	 * if( stack.hasTagCompound() )
+	 * {
+	 * final NBTTagCompound compound = stack.getTagCompound();
+	 * if( compound.hasKey( "Inventory" ) )
+	 * inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
+	 * if( uses > 0 && compound.hasKey( "uses" ) )
+	 * uses = Math.min( uses, compound.getInteger( "uses" ) );
+	 * if( compound.hasKey( "color" ) )
+	 * color = compound.getInteger( "color" );
+	 * }
+	 * markDirty();
+	 * }
+	 */
 
 	@Override
 	public void onBlockDestroyed()

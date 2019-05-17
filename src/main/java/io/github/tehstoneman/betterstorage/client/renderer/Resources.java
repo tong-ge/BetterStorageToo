@@ -19,7 +19,7 @@ public final class Resources
 	// public static final ResourceLocation textureBackpack = new BetterStorageResource( "textures/models/backpack.png" );
 	// public static final ResourceLocation textureBackpackOverlay = new BetterStorageResource( "textures/models/backpack_overlay.png" );
 	// public static final ResourceLocation textureEnderBackpack = new BetterStorageResource( "textures/models/enderBackpack.png" );
-	public static final ResourceLocation	textureDrinkingHelmet		= new BetterStorageResource( "textures/models/drinkingHelmet.png" );
+	public static final ResourceLocation	textureDrinkingHelmet		= new BetterStorageResource( "textures/models/drinking_helmet.png" );
 	public static final ResourceLocation	textureCardboardArmor		= new BetterStorageResource( "textures/models/cardboard_armor.png" );
 	public static final ResourceLocation	textureCardboardLeggings	= new BetterStorageResource( "textures/models/cardboard_armor_leggings.png" );
 	// public static final ResourceLocation textureCluckOverlay = new BetterStorageResource( "textures/models/cluck.png" );

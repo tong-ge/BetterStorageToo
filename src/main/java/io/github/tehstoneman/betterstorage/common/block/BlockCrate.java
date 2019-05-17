@@ -1,85 +1,62 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 
 //@Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
-public class BlockCrate extends BlockBetterStorage// implements ITileEntityProvider//, ILaputaImmobile
+public class BlockCrate extends BlockContainerBetterStorage// implements ITileEntityProvider//, ILaputaImmobile
 {
-	// public static final PropertyBool CONNECTED_DOWN = PropertyBool.create( "down" );
-	// public static final PropertyBool CONNECTED_UP = PropertyBool.create( "up" );
-	// public static final PropertyBool CONNECTED_NORTH = PropertyBool.create( "north" );
-	// public static final PropertyBool CONNECTED_SOUTH = PropertyBool.create( "south" );
-	// public static final PropertyBool CONNECTED_EAST = PropertyBool.create( "east" );
-	// public static final PropertyBool CONNECTED_WEST = PropertyBool.create( "west" );
+	public static final BooleanProperty	NORTH	= BlockStateProperties.NORTH;
+	public static final BooleanProperty	EAST	= BlockStateProperties.EAST;
+	public static final BooleanProperty	SOUTH	= BlockStateProperties.SOUTH;
+	public static final BooleanProperty	WEST	= BlockStateProperties.WEST;
+	public static final BooleanProperty	UP		= BlockStateProperties.UP;
+	public static final BooleanProperty	DOWN	= BlockStateProperties.DOWN;
 
 	public BlockCrate()
 	{
 		super( Properties.from( Blocks.OAK_PLANKS ) );
-		// setHardness( 2.0f );
-		// setHarvestLevel( "axe", 0 );
-		// setSoundType( SoundType.WOOD );
 
 		//@formatter:off
-		/*setDefaultState( blockState.getBaseState().withProperty( CONNECTED_DOWN, false )
-												  .withProperty( CONNECTED_UP, false )
-												  .withProperty( CONNECTED_NORTH, false )
-												  .withProperty( CONNECTED_SOUTH, false )
-												  .withProperty( CONNECTED_EAST, false )
-												  .withProperty( CONNECTED_WEST, false ) );*/
+		setDefaultState( stateContainer.getBaseState().with( NORTH, Boolean.valueOf( false ) )
+													  .with( EAST, Boolean.valueOf( false ) )
+													  .with( SOUTH, Boolean.valueOf( false ) )
+													  .with( WEST, Boolean.valueOf( false ) )
+													  .with( UP, Boolean.valueOf( false ) )
+													  .with( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
-	/*
-	 * @Override
-	 * protected ItemBlock getItemBlock()
-	 * {
-	 * return new ItemBlockCrate( this );
-	 * }
-	 */
-
-	/*@Override
-	protected BlockStateContainer createBlockState()
+	@Override
+	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
 	{
-		//@formatter:off
-		final IProperty[] listedProperties = new IProperty[] { CONNECTED_DOWN,
-															   CONNECTED_UP,
-															   CONNECTED_NORTH,
-															   CONNECTED_SOUTH,
-															   CONNECTED_EAST,
-															   CONNECTED_WEST };
-		//@formatter:on
-		return new BlockStateContainer( this, listedProperties );
-	}*/
+		builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
+	}
 
-	/*
-	 * @Override
-	 * public IBlockState getStateFromMeta( int meta )
-	 * {
-	 * return getDefaultState();
-	 * }
-	 */
+	@Override
+	public IBlockState updatePostPlacement( IBlockState stateIn, EnumFacing facing, IBlockState facingState, IWorld worldIn, BlockPos currentPos,
+			BlockPos facingPos )
+	{
+		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+	}
 
-	/*
-	 * @Override
-	 * public int getMetaFromState( IBlockState state )
-	 * {
-	 * return 0;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public IBlockState getActualState( IBlockState state, IBlockAccess worldIn, BlockPos pos )
-	 * {
-	 * state = state.withProperty( CONNECTED_DOWN, canConnect( worldIn, pos, EnumFacing.DOWN ) );
-	 * state = state.withProperty( CONNECTED_UP, canConnect( worldIn, pos, EnumFacing.UP ) );
-	 * state = state.withProperty( CONNECTED_NORTH, canConnect( worldIn, pos, EnumFacing.NORTH ) );
-	 * state = state.withProperty( CONNECTED_SOUTH, canConnect( worldIn, pos, EnumFacing.SOUTH ) );
-	 * state = state.withProperty( CONNECTED_EAST, canConnect( worldIn, pos, EnumFacing.EAST ) );
-	 * state = state.withProperty( CONNECTED_WEST, canConnect( worldIn, pos, EnumFacing.WEST ) );
-	 * return state;
-	 * }
-	 */
+	private TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
+	{
+		final TileEntity tileEntity = world.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityCrate )
+			return (TileEntityCrate)tileEntity;
+		return null;
+	}
 
 	/**
 	 * Checks if this block can connect with a neighboring block
@@ -101,13 +78,11 @@ public class BlockCrate extends BlockBetterStorage// implements ITileEntityProvi
 	 * }
 	 */
 
-	/*
-	 * @Override
-	 * public TileEntity createNewTileEntity( World world, int metadata )
-	 * {
-	 * return new TileEntityCrate();
-	 * }
-	 */
+	@Override
+	public TileEntity createTileEntity( IBlockState state, IBlockReader world )
+	{
+		return new TileEntityCrate();
+	}
 
 	/**
 	 * Called to test special placement conditions
@@ -122,7 +97,7 @@ public class BlockCrate extends BlockBetterStorage// implements ITileEntityProvi
 	 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
 	 * if( stack.hasDisplayName() )
 	 * crate.setCustomTitle( stack.getDisplayName() );
-	 * 
+	 *
 	 * crate.attemptConnect( side.getOpposite() );
 	 * }
 	 * }
@@ -186,7 +161,7 @@ public class BlockCrate extends BlockBetterStorage// implements ITileEntityProvi
 	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
 	 * if( !( tileEntity instanceof TileEntityCrate ) )
 	 * return 0;
-	 * 
+	 *
 	 * final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
 	 * return tileCrate.getComparatorSignalStrength();
 	 * }
@@ -194,7 +169,7 @@ public class BlockCrate extends BlockBetterStorage// implements ITileEntityProvi
 
 	/*
 	 * @Method( modid = "Botania" )
-	 * 
+	 *
 	 * @Override
 	 * public boolean canMove( World world, BlockPos pos )
 	 * {

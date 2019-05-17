@@ -10,6 +10,7 @@ import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntityTypes;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
@@ -80,6 +81,8 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< TileEntityType< ? > > registry = event.getRegistry();
 
+		BetterStorageTileEntityTypes.CRATE = TileEntityType.register( ModInfo.modId + ":crate",
+				TileEntityType.Builder.create( TileEntityCrate::new ) );
 		BetterStorageTileEntityTypes.REINFORCED_CHEST = TileEntityType.register( ModInfo.modId + ":reinforced_chest",
 				TileEntityType.Builder.create( TileEntityReinforcedChest::new ) );
 		BetterStorageTileEntityTypes.LOCKER = TileEntityType.register( ModInfo.modId + ":locker",

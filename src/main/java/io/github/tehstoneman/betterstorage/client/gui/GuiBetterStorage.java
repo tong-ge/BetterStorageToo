@@ -1,18 +1,21 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@OnlyIn( Dist.CLIENT )
 public class GuiBetterStorage extends GuiContainer
 {
 	public final ContainerBetterStorage	container;
-	public final String					title;
+	public final ITextComponent					title;
 
 	private final int					columns;
 	private final int					rows;
@@ -25,7 +28,7 @@ public class GuiBetterStorage extends GuiContainer
 		title = container.getName();
 		columns = container.getColumns();
 		rows = container.getRows();
-
+		
 		xSize = 14 + columns * 18;
 		ySize = container.getHeight();
 
@@ -68,28 +71,26 @@ public class GuiBetterStorage extends GuiContainer
 	public void update( int par1, int par2 )
 	{}
 
-	/*
-	 * @Override
-	 * public void drawScreen( int mouseX, int mouseY, float partialTicks )
-	 * {
-	 * drawDefaultBackground();
-	 * super.drawScreen( mouseX, mouseY, partialTicks );
-	 * renderHoveredToolTip( mouseX, mouseY );
-	 * }
-	 */
+	@Override
+	public void render( int mouseX, int mouseY, float partialTicks )
+	{
+		drawDefaultBackground();
+		super.render( mouseX, mouseY, partialTicks );
+		renderHoveredToolTip( mouseX, mouseY );
+	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
-		fontRenderer.drawString( I18n.format( container.getName() ), 8, 6, 0x404040 );
+		fontRenderer.drawString( title.getFormattedText(), 8, 6, 0x404040 );
 		fontRenderer.drawString( I18n.format( "container.inventory" ), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
 	{
-		// mc.renderEngine.bindTexture( getResource() );
-		// GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F );
+		mc.getTextureManager().bindTexture( getResource() );
+		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 
 		final int m = 107;
 		final int m1 = ySize - m;

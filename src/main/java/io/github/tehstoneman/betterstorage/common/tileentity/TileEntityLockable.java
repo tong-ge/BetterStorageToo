@@ -19,6 +19,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class TileEntityLockable extends TileEntityConnectable implements ILockable, IHasAttachments
 {
@@ -39,15 +42,13 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		setAttachmentPosition();
 	}
 
-	/*
-	 * @Override
-	 * public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
-	 * {
-	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && !getLock().isEmpty() )
-	 * return false;
-	 * return super.hasCapability( capability, facing );
-	 * }
-	 */
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && !getLock().isEmpty() )
+			return LazyOptional.empty();
+		return super.getCapability( capability, facing );
+	}
 
 	public boolean canHaveLock()
 	{
@@ -64,18 +65,22 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		lockAttachment.setItem( lock );
 	}
 
-	public EnumReinforced getMaterial()
-	{
-		if( material == null )
-			material = EnumReinforced.IRON;
-		return material;
-	}
+	/*
+	 * public EnumReinforced getMaterial()
+	 * {
+	 * if( material == null )
+	 * material = EnumReinforced.IRON;
+	 * return material;
+	 * }
+	 */
 
-	public void setMaterial( EnumReinforced reinforcedMaterial )
-	{
-		material = reinforcedMaterial;
-		markDirty();
-	}
+	/*
+	 * public void setMaterial( EnumReinforced reinforcedMaterial )
+	 * {
+	 * material = reinforcedMaterial;
+	 * markDirty();
+	 * }
+	 */
 
 	// Attachment points
 
@@ -187,12 +192,6 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	 */
 
 	// TileEntityConnactable stuff
-
-	@Override
-	protected boolean isAccessible()
-	{
-		return getLock() == null;
-	}
 
 	/*
 	 * @Override

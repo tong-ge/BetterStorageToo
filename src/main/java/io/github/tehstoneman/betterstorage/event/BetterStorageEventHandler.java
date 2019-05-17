@@ -1,23 +1,8 @@
 package io.github.tehstoneman.betterstorage.event;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.ICardboardItem;
-import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent.Register;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class BetterStorageEventHandler
@@ -235,158 +220,161 @@ public class BetterStorageEventHandler
 		 */
 	}
 
-	public void registerEnchantments( Register< Enchantment > event )
-	{
-		final IForgeRegistry< Enchantment > registry = event.getRegistry();
+	/*
+	 * public void registerEnchantments( Register< Enchantment > event )
+	 * {
+	 * final IForgeRegistry< Enchantment > registry = event.getRegistry();
+	 *
+	 * // Add key enchantments
+	 * if( BetterStorage.config.keyEnabled )
+	 * {
+	 * if( BetterStorage.config.enchUnlockingEnabled )
+	 * {
+	 * EnchantmentBetterStorage.unlocking.setRegistryName( "unlocking" );
+	 * registry.register( EnchantmentBetterStorage.unlocking );
+	 * }
+	 * if( BetterStorage.config.enchLockpickingEnabled )
+	 * {
+	 * EnchantmentBetterStorage.lockpicking.setRegistryName( "lockpicking" );
+	 * registry.register( EnchantmentBetterStorage.lockpicking );
+	 * }
+	 * if( BetterStorage.config.enchMorphingEnabled )
+	 * {
+	 * EnchantmentBetterStorage.morphing.setRegistryName( "morphing" );
+	 * registry.register( EnchantmentBetterStorage.morphing );
+	 * }
+	 *
+	 * if( BetterStorage.config.enchLockpickingEnabled && BetterStorage.config.enchMorphingEnabled )
+	 * {
+	 * EnchantmentBetterStorage.lockpicking.setIncompatible( EnchantmentBetterStorage.morphing );
+	 * EnchantmentBetterStorage.morphing.setIncompatible( EnchantmentBetterStorage.lockpicking );
+	 * }
+	 * }
+	 *
+	 * // Add lock enchantments
+	 * if( BetterStorage.config.lockEnabled )
+	 * {
+	 * if( BetterStorage.config.enchPersistanceEnabled )
+	 * {
+	 * EnchantmentBetterStorage.persistance.setRegistryName( "persistance" );
+	 * registry.register( EnchantmentBetterStorage.persistance );
+	 * }
+	 * if( BetterStorage.config.enchSecurityEnabled )
+	 * {
+	 * EnchantmentBetterStorage.security.setRegistryName( "security" );
+	 * registry.register( EnchantmentBetterStorage.security );
+	 * }
+	 * if( BetterStorage.config.enchShockEnabled )
+	 * {
+	 * EnchantmentBetterStorage.shock.setRegistryName( "shock" );
+	 * registry.register( EnchantmentBetterStorage.shock );
+	 * }
+	 * if( BetterStorage.config.enchTriggerEnabled )
+	 * {
+	 * EnchantmentBetterStorage.trigger.setRegistryName( "trigger" );
+	 * registry.register( EnchantmentBetterStorage.trigger );
+	 * }
+	 * }
+	 * }
+	 */
 
-		// Add key enchantments
-		/*
-		 * if( BetterStorage.config.keyEnabled )
-		 * {
-		 * if( BetterStorage.config.enchUnlockingEnabled )
-		 * {
-		 * EnchantmentBetterStorage.unlocking.setRegistryName( "unlocking" );
-		 * registry.register( EnchantmentBetterStorage.unlocking );
-		 * }
-		 * if( BetterStorage.config.enchLockpickingEnabled )
-		 * {
-		 * EnchantmentBetterStorage.lockpicking.setRegistryName( "lockpicking" );
-		 * registry.register( EnchantmentBetterStorage.lockpicking );
-		 * }
-		 * if( BetterStorage.config.enchMorphingEnabled )
-		 * {
-		 * EnchantmentBetterStorage.morphing.setRegistryName( "morphing" );
-		 * registry.register( EnchantmentBetterStorage.morphing );
-		 * }
-		 *
-		 * if( BetterStorage.config.enchLockpickingEnabled && BetterStorage.config.enchMorphingEnabled )
-		 * {
-		 * EnchantmentBetterStorage.lockpicking.setIncompatible( EnchantmentBetterStorage.morphing );
-		 * EnchantmentBetterStorage.morphing.setIncompatible( EnchantmentBetterStorage.lockpicking );
-		 * }
-		 * }
-		 */
+	/*
+	 * public void onConfigChangeEvent( OnConfigChangedEvent event )
+	 * {
+	 * if( event.getModID().equals( ModInfo.modId ) && !event.isWorldRunning() )
+	 * BetterStorage.config.syncFromGUI();
+	 * }
+	 */
 
-		// Add lock enchantments
-		/*
-		 * if( BetterStorage.config.lockEnabled )
-		 * {
-		 * if( BetterStorage.config.enchPersistanceEnabled )
-		 * {
-		 * EnchantmentBetterStorage.persistance.setRegistryName( "persistance" );
-		 * registry.register( EnchantmentBetterStorage.persistance );
-		 * }
-		 * if( BetterStorage.config.enchSecurityEnabled )
-		 * {
-		 * EnchantmentBetterStorage.security.setRegistryName( "security" );
-		 * registry.register( EnchantmentBetterStorage.security );
-		 * }
-		 * if( BetterStorage.config.enchShockEnabled )
-		 * {
-		 * EnchantmentBetterStorage.shock.setRegistryName( "shock" );
-		 * registry.register( EnchantmentBetterStorage.shock );
-		 * }
-		 * if( BetterStorage.config.enchTriggerEnabled )
-		 * {
-		 * EnchantmentBetterStorage.trigger.setRegistryName( "trigger" );
-		 * registry.register( EnchantmentBetterStorage.trigger );
-		 * }
-		 * }
-		 */
-	}
+	/*
+	 * public void onPlayerInteract( PlayerInteractEvent event )
+	 * {
+	 * final World world = event.getEntity().world;
+	 * final BlockPos pos = event.getPos();
+	 * final EntityPlayer player = event.getEntityPlayer();
+	 * final ItemStack holding = player.getHeldItemMainhand();
+	 * final IBlockState state = world.getBlockState( pos );
+	 * final Block block = state.getBlock();
+	 * final EnumHand hand = event.getHand();
+	 *
+	 * // Use cauldron to remove color from dyable items
+	 * if( hand == EnumHand.MAIN_HAND && block == Blocks.CAULDRON && holding.getItem() instanceof IDyeableItem )
+	 * {
+	 * final int level = state.getValue( BlockCauldron.LEVEL );
+	 * if( level > 0 )
+	 * {
+	 * final IDyeableItem dyeable = (IDyeableItem)holding.getItem();
+	 * if( dyeable.canDye( holding ) && holding.hasTagCompound() )
+	 * {
+	 * final NBTTagCompound compound = holding.getTagCompound();
+	 * if( compound.hasKey( "color" ) )
+	 * {
+	 * compound.removeTag( "color" );
+	 * holding.setTagCompound( compound );
+	 * Blocks.CAULDRON.setWaterLevel( world, pos, state, level - 1 );
+	 *
+	 * event.setResult( Result.DENY );
+	 * }
+	 * }
+	 * }
+	 * }
+	 *
+	 * // Prevent players from breaking blocks with broken cardboard items.
+	 * if( hand == EnumHand.MAIN_HAND && holding.getItem() instanceof ICardboardItem && !ItemCardboardSheet.isEffective( holding ) )
+	 * {
+	 * if( event.isCancelable() )
+	 * event.setCanceled( true );
+	 * // event.setResult( Result.DENY );
+	 * return;
+	 * }
+	 *
+	 * // Attach locks to iron doors.
+	 * if( !world.isRemote && BetterStorage.config.lockableDoorEnabled && hand == EnumHand.MAIN_HAND && block == Blocks.IRON_DOOR
+	 * && holding.getItem() == BetterStorageItems.LOCK )
+	 * player.inventory.setInventorySlotContents( player.inventory.currentItem, ItemStack.EMPTY );
+	 *
+	 * // Prevent eating of slime buckets after capturing them.
+	 * if( preventSlimeBucketUse )
+	 * {
+	 * event.setCanceled( true );
+	 * preventSlimeBucketUse = false;
+	 * }
+	 * }
+	 */
 
-	public void onConfigChangeEvent( OnConfigChangedEvent event )
-	{
-		if( event.getModID().equals( ModInfo.modId ) && !event.isWorldRunning() )
-			BetterStorage.config.syncFromGUI();
-	}
+	/*
+	 * public void onEntityInteract( EntityInteract event )
+	 * {
+	 *
+	 * if( event.getEntity().world.isRemote || event.isCanceled() )
+	 * return;
+	 *
+	 * final EntityPlayer player = event.getEntityPlayer();
+	 * final Entity target = event.getTarget();
+	 * final ItemStack holding = player.getHeldItemMainhand();
+	 *
+	 * if( target.getClass() == EntityChicken.class && holding != null && holding.getItem() == Items.NAME_TAG )
+	 * {
+	 *
+	 * final EntityChicken chicken = (EntityChicken)target;
+	 * if( !chicken.isDead && !chicken.isChild() && "Cluckington".equals( holding.getDisplayName() ) )
+	 * EntityCluckington.spawn( chicken );
+	 *
+	 * }
+	 * if( BetterStorage.config.slimeBucketEnabled && target instanceof EntityLiving && holding != null && holding.getItem() == Items.BUCKET )
+	 * {
+	 * ItemBucketSlime.pickUpSlime( player, (EntityLiving)target );
+	 * if( player.getHeldItemMainhand().getItem() instanceof ItemBucketSlime )
+	 * preventSlimeBucketUse = true;
+	 * }
+	 * }
+	 */
 
-	public void onPlayerInteract( PlayerInteractEvent event )
-	{
-		final World world = event.getEntity().world;
-		final BlockPos pos = event.getPos();
-		final EntityPlayer player = event.getEntityPlayer();
-		final ItemStack holding = player.getHeldItemMainhand();
-		final IBlockState state = world.getBlockState( pos );
-		final Block block = state.getBlock();
-		final EnumHand hand = event.getHand();
-
-		// Use cauldron to remove color from dyable items
-		/*
-		 * if( hand == EnumHand.MAIN_HAND && block == Blocks.CAULDRON && holding.getItem() instanceof IDyeableItem )
-		 * {
-		 * final int level = state.getValue( BlockCauldron.LEVEL );
-		 * if( level > 0 )
-		 * {
-		 * final IDyeableItem dyeable = (IDyeableItem)holding.getItem();
-		 * if( dyeable.canDye( holding ) && holding.hasTagCompound() )
-		 * {
-		 * final NBTTagCompound compound = holding.getTagCompound();
-		 * if( compound.hasKey( "color" ) )
-		 * {
-		 * compound.removeTag( "color" );
-		 * holding.setTagCompound( compound );
-		 * Blocks.CAULDRON.setWaterLevel( world, pos, state, level - 1 );
-		 *
-		 * event.setResult( Result.DENY );
-		 * }
-		 * }
-		 * }
-		 * }
-		 */
-
-		// Prevent players from breaking blocks with broken cardboard items.
-		if( hand == EnumHand.MAIN_HAND && holding.getItem() instanceof ICardboardItem && !ItemCardboardSheet.isEffective( holding ) )
-		{
-			if( event.isCancelable() )
-				event.setCanceled( true );
-			// event.setResult( Result.DENY );
-			return;
-		}
-
-		// Attach locks to iron doors.
-		/*
-		 * if( !world.isRemote && BetterStorage.config.lockableDoorEnabled && hand == EnumHand.MAIN_HAND && block == Blocks.IRON_DOOR
-		 * && holding.getItem() == BetterStorageItems.LOCK )
-		 * player.inventory.setInventorySlotContents( player.inventory.currentItem, ItemStack.EMPTY );
-		 */
-
-		// Prevent eating of slime buckets after capturing them.
-		if( preventSlimeBucketUse )
-		{
-			event.setCanceled( true );
-			preventSlimeBucketUse = false;
-		}
-	}
-
-	public void onEntityInteract( EntityInteract event )
-	{
-
-		if( event.getEntity().world.isRemote || event.isCanceled() )
-			return;
-
-		final EntityPlayer player = event.getEntityPlayer();
-		final Entity target = event.getTarget();
-		final ItemStack holding = player.getHeldItemMainhand();
-
-		/*
-		 * if( target.getClass() == EntityChicken.class && holding != null && holding.getItem() == Items.NAME_TAG )
-		 * {
-		 *
-		 * final EntityChicken chicken = (EntityChicken)target;
-		 * if( !chicken.isDead && !chicken.isChild() && "Cluckington".equals( holding.getDisplayName() ) )
-		 * EntityCluckington.spawn( chicken );
-		 *
-		 * }
-		 */
-
-		/*
-		 * if( BetterStorage.config.slimeBucketEnabled && target instanceof EntityLiving && holding != null && holding.getItem() == Items.BUCKET )
-		 * {
-		 * ItemBucketSlime.pickUpSlime( player, (EntityLiving)target );
-		 * if( player.getHeldItemMainhand().getItem() instanceof ItemBucketSlime )
-		 * preventSlimeBucketUse = true;
-		 * }
-		 */
-	}
+	/*
+	 * @SubscribeEvent
+	 * public void onPlayerContainerEvent( PlayerContainerEvent event )
+	 * {
+	 * BetterStorage.LOGGER.info( "Player opened container" );
+	 * }
+	 */
 }

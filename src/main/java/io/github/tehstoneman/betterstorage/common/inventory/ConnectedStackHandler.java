@@ -3,14 +3,14 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ConnectedStackHandler extends ItemStackHandler
+public class ConnectedStackHandler extends ExpandableStackHandler
 {
 	private final ItemStackHandler	inventoryUpper;
 	private final ItemStackHandler	inventoryLower;
 
-	public ConnectedStackHandler( ItemStackHandler inventoryUpper, ItemStackHandler inventoryLower )
+	public ConnectedStackHandler( ExpandableStackHandler inventoryUpper, ExpandableStackHandler inventoryLower )
 	{
-		super();
+		super(Math.max( inventoryUpper.getColumns(), inventoryLower.getColumns()), inventoryUpper.getRows()+inventoryLower.getRows() );
 		this.inventoryUpper = inventoryUpper;
 		this.inventoryLower = inventoryLower;
 	}
