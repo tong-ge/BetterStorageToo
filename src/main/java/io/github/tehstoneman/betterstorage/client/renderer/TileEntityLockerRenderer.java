@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.api.EnumLockerType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLocker;
@@ -45,12 +46,12 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 		final IBlockState iblockstate = tileEntityLocker.hasWorld() ? tileEntityLocker.getBlockState()
 				: BetterStorageBlocks.LOCKER.getDefaultState().with( BlockLockable.FACING, EnumFacing.SOUTH );
-		final EnumLockerType lockertype = iblockstate.has( BlockLocker.TYPE ) ? iblockstate.get( BlockLocker.TYPE ) : EnumLockerType.SINGLE;
+		final EnumConnectedType lockertype = iblockstate.has( BlockLocker.TYPE ) ? iblockstate.get( BlockLockable.TYPE ) : EnumConnectedType.SINGLE;
 		final DoorHingeSide hingeSide = iblockstate.has( BlockStateProperties.DOOR_HINGE ) ? iblockstate.get( BlockStateProperties.DOOR_HINGE )
 				: DoorHingeSide.LEFT;
-		if( lockertype != EnumLockerType.TOP )
+		if( lockertype != EnumConnectedType.SLAVE )
 		{
-			final boolean flag = lockertype != EnumLockerType.SINGLE;
+			final boolean flag = lockertype != EnumConnectedType.SINGLE;
 			final ModelLocker modelchest = getLockerModel( tileEntityLocker, destroyStage, flag );
 
 			if( destroyStage >= 0 )

@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.EnumLockerType;
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.IBucketPickupHandler;
@@ -14,9 +15,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityOcelot;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.init.Fluids;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
@@ -27,20 +32,22 @@ import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockLocker extends BlockLockable implements IBucketPickupHandler, ILiquidContainer
 {
-	public static final EnumProperty< EnumLockerType >	TYPE		= EnumProperty.create( "type", EnumLockerType.class );
 	public static final EnumProperty< DoorHingeSide >	HINGE		= BlockStateProperties.DOOR_HINGE;
 	public static final BooleanProperty					WATERLOGGED	= BlockStateProperties.WATERLOGGED;
 	protected static final VoxelShape					SHAPE_NORTH	= Block.makeCuboidShape( 0.0D, 0.0D, 1.0D, 16.0D, 16.0D, 16.0D );
@@ -79,15 +86,14 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 
 		if( facingState.getBlock() == this && facing.getAxis().isVertical() )
 		{
-			final EnumLockerType lockerType = facingState.get( TYPE );
+			final EnumConnectedType lockerType = facingState.get( TYPE );
 
-			if( stateIn.get( TYPE ) == EnumLockerType.SINGLE && lockerType != EnumLockerType.SINGLE
+			if( stateIn.get( TYPE ) == EnumConnectedType.SINGLE && lockerType != EnumConnectedType.SINGLE
 					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 				return stateIn.with( TYPE, lockerType.opposite() );
 		}
-		else
-			if( getDirectionToAttached( stateIn ) == facing )
-				return stateIn.with( TYPE, EnumLockerType.SINGLE );
+		else if( getDirectionToAttached( stateIn ) == facing )
+			return stateIn.with( TYPE, EnumConnectedType.SINGLE );
 
 		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
@@ -114,13 +120,13 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 	 */
 	public static EnumFacing getDirectionToAttached( IBlockState state )
 	{
-		return state.get( TYPE ) == EnumLockerType.TOP ? EnumFacing.DOWN : EnumFacing.UP;
+		return state.get( TYPE ) == EnumConnectedType.SLAVE ? EnumFacing.DOWN : EnumFacing.UP;
 	}
 
 	@Override
 	public IBlockState getStateForPlacement( BlockItemUseContext context )
 	{
-		EnumLockerType chesttype = EnumLockerType.SINGLE;
+		EnumConnectedType chesttype = EnumConnectedType.SINGLE;
 		final EnumFacing enumfacing = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState ifluidstate = context.getWorld().getFluidState( context.getPos() );
 		final boolean flag = context.isPlacerSneaking();
@@ -138,18 +144,17 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 		 * }
 		 */
 
-		if( chesttype == EnumLockerType.SINGLE && !flag )
+		if( chesttype == EnumConnectedType.SINGLE && !flag )
 			if( enumfacing == getDirectionToAttach( context, EnumFacing.DOWN ) )
 			{
-				chesttype = EnumLockerType.TOP;
+				chesttype = EnumConnectedType.SLAVE;
 				hingeSide = context.getWorld().getBlockState( context.getPos().offset( EnumFacing.DOWN ) ).get( HINGE );
 			}
-			else
-				if( enumfacing == getDirectionToAttach( context, enumfacing.rotateYCCW() ) )
-				{
-					chesttype = EnumLockerType.BOTTOM;
-					hingeSide = context.getWorld().getBlockState( context.getPos().offset( EnumFacing.DOWN ) ).get( HINGE );
-				}
+			else if( enumfacing == getDirectionToAttach( context, enumfacing.rotateYCCW() ) )
+			{
+				chesttype = EnumConnectedType.MASTER;
+				hingeSide = context.getWorld().getBlockState( context.getPos().offset( EnumFacing.DOWN ) ).get( HINGE );
+			}
 
 		return getDefaultState().with( FACING, enumfacing ).with( HINGE, hingeSide ).with( TYPE, chesttype ).with( WATERLOGGED,
 				Boolean.valueOf( ifluidstate.getFluid() == Fluids.WATER ) );
@@ -169,8 +174,8 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 		final IBlockState blockAboveRight = blockReader.getBlockState( blockAbove.offset( facingRight ) );
 		final int i = ( blockLeft.isBlockNormalCube() ? -1 : 0 ) + ( blockAboveLeft.isBlockNormalCube() ? -1 : 0 )
 				+ ( blockRight.isBlockNormalCube() ? 1 : 0 ) + ( blockAboveRight.isBlockNormalCube() ? 1 : 0 );
-		final boolean flagLeft = blockLeft.getBlock() == this && blockLeft.get( TYPE ) != EnumLockerType.TOP;
-		final boolean flagRight = blockRight.getBlock() == this && blockLeft.get( TYPE ) != EnumLockerType.TOP;
+		final boolean flagLeft = blockLeft.getBlock() == this && blockLeft.get( TYPE ) != EnumConnectedType.SLAVE;
+		final boolean flagRight = blockRight.getBlock() == this && blockLeft.get( TYPE ) != EnumConnectedType.SLAVE;
 		if( ( !flagLeft || flagRight ) && i <= 0 )
 		{
 			if( ( !flagRight || flagLeft ) && i >= 0 )
@@ -240,7 +245,29 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 	{
 		final IBlockState blockState = context.getWorld().getBlockState( context.getPos() );
 		final IBlockState faceState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return faceState.getBlock() == this && faceState.get( TYPE ) == EnumLockerType.SINGLE ? faceState.get( FACING ) : null;
+		return faceState.getBlock() == this && faceState.get( TYPE ) == EnumConnectedType.SINGLE ? faceState.get( FACING ) : null;
+	}
+
+	@Override
+	public boolean onBlockActivated( IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
+			float hitY, float hitZ )
+	{
+		if( worldIn.isRemote )
+			return true;
+		else
+		{
+			final TileEntityLocker ilockablecontainer = getContainer( state, worldIn, pos, false );
+			if( ilockablecontainer != null )
+			{
+				NetworkHooks.openGui( (EntityPlayerMP)player, new Interface( ilockablecontainer ), ( buffer ) ->
+				{
+					buffer.writeBlockPos( pos );
+				} );
+				player.addStat( getOpenStat() );
+			}
+
+			return true;
+		}
 	}
 
 	@Override
@@ -264,49 +291,34 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 	 *            then the chest can still be blocked (used by hoppers).
 	 */
 	@Nullable
-	public ILockableContainer getContainer( IBlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
+	public TileEntityLocker getContainer( IBlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
 	{
 		final TileEntity tileentity = worldIn.getTileEntity( pos );
-		if( !( tileentity instanceof TileEntityChest ) )
+		if( !( tileentity instanceof TileEntityLocker ) )
+			return null;
+		else if( !allowBlockedChest && isBlocked( worldIn, pos ) )
 			return null;
 		else
-			if( !allowBlockedChest && isBlocked( worldIn, pos ) )
-				return null;
+		{
+			final TileEntityLocker ilockablecontainer = (TileEntityLocker)tileentity;
+			final EnumConnectedType chesttype = state.get( TYPE );
+			if( chesttype == EnumConnectedType.SINGLE )
+				return ilockablecontainer;
 			else
 			{
-				final ILockableContainer ilockablecontainer = (TileEntityChest)tileentity;
-				/*
-				 * final ChestType chesttype = state.get( TYPE );
-				 * if( chesttype == ChestType.SINGLE )
-				 * return ilockablecontainer;
-				 * else
-				 * {
-				 * final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
-				 * final IBlockState iblockstate = worldIn.getBlockState( blockpos );
-				 * if( iblockstate.getBlock() == this )
-				 * {
-				 * final ChestType chesttype1 = iblockstate.get( TYPE );
-				 * if( chesttype1 != ChestType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
-				 * {
-				 * if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
-				 * return null;
-				 *
-				 * final TileEntity tileentity1 = worldIn.getTileEntity( blockpos );
-				 * if( tileentity1 instanceof TileEntityChest )
-				 * {
-				 * final ILockableContainer ilockablecontainer1 = chesttype == ChestType.RIGHT ? ilockablecontainer
-				 * : (ILockableContainer)tileentity1;
-				 * final ILockableContainer ilockablecontainer2 = chesttype == ChestType.RIGHT ? (ILockableContainer)tileentity1
-				 * : ilockablecontainer;
-				 * ilockablecontainer = new InventoryLargeChest( new TextComponentTranslation( "container.chestDouble" ),
-				 * ilockablecontainer1, ilockablecontainer2 );
-				 * }
-				 * }
-				 * }
-				 */
+				final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
+				final IBlockState iblockstate = worldIn.getBlockState( blockpos );
+				if( iblockstate.getBlock() == this )
+				{
+					final EnumConnectedType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != EnumConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
+							return null;
+				}
 
 				return ilockablecontainer;
 			}
+		}
 	}
 
 	@Override
@@ -354,5 +366,53 @@ public class BlockLocker extends BlockLockable implements IBucketPickupHandler, 
 	public boolean allowsMovement( IBlockState state, IBlockReader worldIn, BlockPos pos, PathType type )
 	{
 		return false;
+	}
+
+	public class Interface implements IInteractionObject
+	{
+		private final TileEntityLocker	chestLeft;
+		private final TileEntityLocker	chestRight;
+
+		public Interface( TileEntityLocker tileEntityReinforcedChest )
+		{
+			chestLeft = tileEntityReinforcedChest;
+			chestRight = null;
+		}
+
+		public Interface( TileEntityLocker tileEntityReinforcedChestL, TileEntityLocker tileEntityReinforcedChestR )
+		{
+			chestLeft = tileEntityReinforcedChestL;
+			chestRight = tileEntityReinforcedChestR;
+		}
+
+		@Override
+		public ITextComponent getName()
+		{
+			return new TextComponentTranslation( BetterStorageBlocks.LOCKER.getTranslationKey() + ".name" );
+		}
+
+		@Override
+		public boolean hasCustomName()
+		{
+			return chestLeft.hasCustomName() || chestRight != null && chestRight.hasCustomName();
+		}
+
+		@Override
+		public ITextComponent getCustomName()
+		{
+			return chestLeft.hasCustomName() ? chestLeft.getCustomName() : chestRight.getCustomName();
+		}
+
+		@Override
+		public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn )
+		{
+			return new ContainerBetterStorage( chestLeft, playerIn );
+		}
+
+		@Override
+		public String getGuiID()
+		{
+			return "betterstorage:locker";
+		}
 	}
 }

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import io.github.tehstoneman.betterstorage.api.IProxy;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
@@ -69,6 +70,17 @@ public class BetterStorage
 					{
 						final TileEntityReinforcedChest reinforcedChest = (TileEntityReinforcedChest)tileEntity;
 						return new GuiBetterStorage( reinforcedChest.getContainer( player ) );
+					}
+				}
+				if( location.toString().equals( "betterstorage:locker" ) )
+				{
+					final EntityPlayerSP player = Minecraft.getInstance().player;
+					final BlockPos pos = openContainer.getAdditionalData().readBlockPos();
+					final TileEntity tileEntity = player.world.getTileEntity( pos );
+					if( tileEntity instanceof TileEntityLocker )
+					{
+						final TileEntityLocker locker = (TileEntityLocker)tileEntity;
+						return new GuiBetterStorage( locker.getContainer( player ) );
 					}
 				}
 				return null;

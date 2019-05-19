@@ -4,6 +4,8 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker
 {
@@ -12,11 +14,11 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER );
 	}
 
-	/*@Override
+	@Override
 	public boolean canHaveLock()
 	{
 		return true;
-	}*/
+	}
 
 	/*@Override
 	public void setAttachmentPosition()
@@ -27,17 +29,18 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		lockAttachment.setScale( 0.375F, 1.5F );
 	}*/
 
-	/*@Override
+	@Override
 	public int getColumns()
 	{
-		return BetterStorage.config.reinforcedColumns;
-	}*/
+		return 13;
+		// return BetterStorage.config.reinforcedColumns;
+	}
 
-	/*@Override
-	protected String getConnectableName()
+	@Override
+	protected ITextComponent getConnectableName()
 	{
-		return ModInfo.containerReinforcedLocker;
-	}*/
+		return new TextComponentTranslation( ModInfo.containerReinforcedLocker );
+	}
 
 	/*@Override
 	public void setMaterial( EnumReinforced reinforcedMaterial )

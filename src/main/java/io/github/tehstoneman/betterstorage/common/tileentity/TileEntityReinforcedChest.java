@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TileEntityReinforcedChest extends TileEntityLockable implements IChestLid, ITickable
+public class TileEntityReinforcedChest extends TileEntityLockable
 {
 	protected int ticksSinceSync;
 
