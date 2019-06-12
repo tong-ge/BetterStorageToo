@@ -1,16 +1,19 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
+import java.util.List;
+
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 //@InventoryContainer
 public class ContainerCrate extends Container
 {
-	// private final CrateStackHandler inventoryCrate;
+	private final CrateStackHandler	inventoryCrate;
 	private final IInventory		inventoryPlayer;
 	private final TileEntityCrate	tileCrate;
 
@@ -18,36 +21,36 @@ public class ContainerCrate extends Container
 
 	public int						volume	= 0;
 
-	public ContainerCrate( EntityPlayer player, TileEntityCrate tileCrate )
+	public ContainerCrate( TileEntityCrate tileCrate, EntityPlayer player )
 	{
 		this.tileCrate = tileCrate;
-		// inventoryCrate = (CrateStackHandler)tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
+		inventoryCrate = (CrateStackHandler)tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
 		inventoryPlayer = player.inventory;
 
 		indexStart = 0;
-		// indexHotbar = Math.min( tileCrate.getCapacity(), 54 );
+		indexHotbar = Math.min( tileCrate.getCapacity(), 54 );
 		indexPlayer = indexHotbar + 9;
-		// final List< Integer > slotList = inventoryCrate.getShuffledIndexes( indexHotbar );
+		final List< Integer > slotList = inventoryCrate.getShuffledIndexes( indexHotbar );
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = i / 9 * 18 + 18;
-			// addSlotToContainer( new CrateSlotHandler( inventoryCrate, slotList.get( i ), x, y ) );
+			addSlot( new CrateSlotHandler( inventoryCrate, slotList.get( i ), x, y ) );
 		}
 
 		for( int i = 0; i < 27; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 32 + ( indexHotbar + i ) / 9 * 18;
-			// addSlotToContainer( new Slot( inventoryPlayer, i + 9, x, y ) );
+			addSlot( new Slot( inventoryPlayer, i + 9, x, y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
 			final int y = 90 + indexHotbar / 9 * 18;
-			// addSlotToContainer( new Slot( inventoryPlayer, i, x, y ) );
+			addSlot( new Slot( inventoryPlayer, i, x, y ) );
 		}
 	}
 
@@ -62,7 +65,7 @@ public class ContainerCrate extends Container
 	{
 		super.detectAndSendChanges();
 
-		// volume = inventoryCrate.getOccupiedSlots() * 100 / inventoryCrate.getSlots();
+		volume = inventoryCrate.getOccupiedSlots() * 100 / inventoryCrate.getSlots();
 		for( int j = 0; j < listeners.size(); ++j )
 			listeners.get( j ).sendWindowProperty( this, 0, volume );
 	}
@@ -92,10 +95,10 @@ public class ContainerCrate extends Container
 				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
 					return ItemStack.EMPTY;
 			}
-			else
-				if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-					return ItemStack.EMPTY;
-			// if( itemStack.getCount() > 0 ) inventoryCrate.addItems( itemStack );
+			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+				return ItemStack.EMPTY;
+			if( itemStack.getCount() > 0 )
+				inventoryCrate.addItems( itemStack );
 
 			if( itemStack.isEmpty() )
 				slot.putStack( ItemStack.EMPTY );
@@ -110,15 +113,16 @@ public class ContainerCrate extends Container
 	public void onContainerClosed( EntityPlayer playerIn )
 	{
 		super.onContainerClosed( playerIn );
-		// inventoryCrate.consolidateStacks();
+		inventoryCrate.consolidateStacks();
 		tileCrate.markDirty();
 	}
 
 	@Override
 	protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
 	{
-		final boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );
-		// if( !flag && endIndex <= indexHotbar ) flag = inventoryCrate.mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
+		boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );
+		if( !flag && endIndex <= indexHotbar )
+			flag = inventoryCrate.mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
 		return flag;
 	}
 

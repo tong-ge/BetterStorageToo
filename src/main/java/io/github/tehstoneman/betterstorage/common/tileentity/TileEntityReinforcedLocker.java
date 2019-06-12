@@ -32,14 +32,13 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 	@Override
 	public int getColumns()
 	{
-		return 13;
-		// return BetterStorage.config.reinforcedColumns;
+		return BetterStorage.config.GENERAL.reinforcedColumns.get();
 	}
 
 	@Override
-	protected ITextComponent getConnectableName()
+	protected String getConnectableName()
 	{
-		return new TextComponentTranslation( ModInfo.containerReinforcedLocker );
+		return ModInfo.containerReinforcedLocker;
 	}
 
 	/*@Override

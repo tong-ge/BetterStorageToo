@@ -18,6 +18,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -67,7 +68,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 		final TileEntityConnectable connectable = getConnectedTileEntity();
 		if( connectable != null )
 			return connectable;
-		if( BetterStorage.config.enableWarningMessages )
+		if( BetterStorage.config.GENERAL.enableWarningMessages.get() )
 			BetterStorage.LOGGER.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(),
 					pos.getY(), pos.getZ() );
 		return this;
@@ -92,12 +93,12 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 	 * Returns the unlocalized name of the container. <br>
 	 * "Large" will be appended if the container is connected to another one.
 	 */
-	protected abstract ITextComponent getConnectableName();
+	protected abstract String getConnectableName();
 
 	@Override
 	public ITextComponent getName()
 	{
-		return customName != null ? customName : getConnectableName().appendText( isConnected() ? "_large" : "" );
+		return customName != null ? customName : new TextComponentTranslation( getConnectableName().concat( isConnected() ? "_large" : "" ) );
 	}
 
 	@Override

@@ -4,18 +4,40 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.inventory.Region;
+import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class TileEntityCrate extends TileEntity
 {
+	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> getCrateStackHandler() );
+
+	public static final int						slotsPerCrate		= 18;
+	public static final int						maxCrates			= 125;
+	public static final int						maxPerSide			= 5;
+
+	private UUID								pileID;
+	protected ITextComponent					customName;
+
+	private int									numCrates;
+	private int									capacity;
+
 	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
 	{
 		super( tileEntityTypeIn );
@@ -26,76 +48,48 @@ public class TileEntityCrate extends TileEntity
 		this( BetterStorageTileEntityTypes.CRATE );
 	}
 
-	public static final int		slotsPerCrate	= 18;
-	public static final int		maxCrates		= 125;
-	public static final int		maxPerSide		= 5;
-
-	private UUID				pileID;
-	protected ITextComponent	customName;
-
-	private int					numCrates;
-	private int					capacity;
-
-	/*
-	 * @Override
-	 * public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
-	 * {
-	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-	 * if( facing == null || BetterStorage.config.enableCrateInventoryInterface )
-	 * return true;
-	 * return super.hasCapability( capability, facing );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public <T> T getCapability( Capability< T > capability, EnumFacing facing )
-	 * {
-	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-	 * if( facing == null || BetterStorage.config.enableCrateInventoryInterface )
-	 * return (T)getCrateStackHandler();
-	 * return super.getCapability( capability, facing );
-	 * }
-	 */
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+		if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+		return super.getCapability( capability, facing );
+	}
 
 	/** Helper function to add crate to handler */
-	/*
-	 * public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
-	 * {
-	 * if( !getWorld().isRemote && pileID == null )
-	 * {
-	 * getCrateStackHandler().addCrate( this );
-	 * markDirty();
-	 * }
-	 * }
-	 */
+	public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
+	{
+		if( !getWorld().isRemote && pileID == null )
+		{
+			getCrateStackHandler().addCrate( this );
+			markDirty();
+		}
+	}
 
 	/** Get the crate stack handler for this tile entity. */
-	/*
-	 * public CrateStackHandler getCrateStackHandler()
-	 * {
-	 * final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
-	 * if( getWorld().isRemote )
-	 * return new CrateStackHandler( getCapacity() );
-	 * final CrateStackHandler handler = collection.getCratePile( pileID );
-	 * handler.sendUpdatesTo( this );
-	 * return handler;
-	 * }
-	 */
+	public CrateStackHandler getCrateStackHandler()
+	{
+		final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
+		if( getWorld().isRemote )
+			return new CrateStackHandler( getCapacity() );
+		final CrateStackHandler handler = collection.getCratePile( pileID );
+		handler.sendUpdatesTo( this );
+		return handler;
+	}
 
 	/** Get the pile ID for this tile entity */
-	/*
-	 * public UUID getPileID()
-	 * {
-	 * if( pileID == null )
-	 * {
-	 * final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
-	 * final CrateStackHandler handler = collection.createCratePile();
-	 * pileID = handler.getPileID();
-	 * }
-	 * return pileID;
-	 * }
-	 */
+	public UUID getPileID()
+	{
+		if( pileID == null )
+		{
+			final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
+			final CrateStackHandler handler = collection.createCratePile();
+			pileID = handler.getPileID();
+		}
+		return pileID;
+	}
 
 	/** Sets the pile ID for this tile entity */
 	public void setPileID( UUID pileID )
@@ -319,9 +313,9 @@ public class TileEntityCrate extends TileEntity
 	/** Get the total capacity this tile entity */
 	public int getCapacity()
 	{
-		// if( getWorld().isRemote )
-		return capacity;
-		// return getCrateStackHandler().getCapacity();
+		if( getWorld().isRemote )
+			return capacity;
+		return getCrateStackHandler().getCapacity();
 	}
 
 	// Comparator related

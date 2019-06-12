@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
@@ -40,8 +41,7 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	@Override
 	public int getColumns()
 	{
-		return 13;
-		// return BetterStorage.config.reinforcedColumns;
+		return BetterStorage.config.GENERAL.reinforcedColumns.get();
 	}
 
 	/*
@@ -77,9 +77,9 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	}
 
 	@Override
-	protected ITextComponent getConnectableName()
+	protected String getConnectableName()
 	{
-		return new TextComponentTranslation( ModInfo.containerReinforcedChest );
+		return ModInfo.containerReinforcedChest;
 	}
 
 	/*

@@ -211,8 +211,8 @@ public class LockAttachment extends ItemAttachment
 
 	private boolean canHurtLock( ItemStack stack )
 	{
-		if( stack == null || !BetterStorage.config.lockBreakable )
-			return false;
+		/*if( stack == null || !BetterStorage.config.lockBreakable )
+			return false;*/
 		final Item item = stack.getItem();
 		return item instanceof ItemSword || item instanceof ItemPickaxe || item instanceof ItemAxe;
 	}

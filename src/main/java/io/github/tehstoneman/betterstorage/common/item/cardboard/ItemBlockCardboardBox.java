@@ -136,16 +136,16 @@ public class ItemBlockCardboardBox extends ItemBlockBetterStorage implements ICo
 	// Helper functions
 
 	/** Returns the amount of rows in a cardboard box. */
-	public static int getRows()
+	/*public static int getRows()
 	{
 		return BetterStorage.config.cardboardBoxRows;
-	}
+	}*/
 
 	/** Returns how many times cardboard boxes can be reused. */
-	public static int getUses()
+	/*public static int getUses()
 	{
 		return BetterStorage.config.cardboardBoxUses;
-	}
+	}*/
 
 	// Cardboard items
 	@Override

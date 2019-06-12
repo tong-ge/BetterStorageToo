@@ -198,7 +198,7 @@ public class CrateStackHandler extends ItemStackHandler
 		numCrates++;
 		stacks = copyStack( stacks, this.getCapacity() );
 		crate.setPileID( getPileID() );
-		// setSize( getCapacity() );
+		setSize( getCapacity() );
 	}
 
 	/**

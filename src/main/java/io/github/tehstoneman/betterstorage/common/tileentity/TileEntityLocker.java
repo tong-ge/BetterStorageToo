@@ -240,9 +240,9 @@ public class TileEntityLocker extends TileEntityLockable
 	}
 
 	@Override
-	protected ITextComponent getConnectableName()
+	protected String getConnectableName()
 	{
-		return new TextComponentTranslation( ModInfo.containerLocker );
+		return ModInfo.containerLocker;
 	}
 
 	@Override

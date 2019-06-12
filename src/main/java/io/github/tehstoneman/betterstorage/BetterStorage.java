@@ -7,7 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
+import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
@@ -83,9 +86,22 @@ public class BetterStorage
 						return new GuiBetterStorage( locker.getContainer( player ) );
 					}
 				}
+				if( location.toString().equals( "betterstorage:crate" ) )
+				{
+					final EntityPlayerSP player = Minecraft.getInstance().player;
+					final BlockPos pos = openContainer.getAdditionalData().readBlockPos();
+					final TileEntity tileEntity = player.world.getTileEntity( pos );
+					if( tileEntity instanceof TileEntityCrate )
+					{
+						final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+						return new GuiCrate( crate, new ContainerCrate( crate, player ) );
+					}
+				}
 				return null;
 			};
 		} );
+
+		BetterStorageConfig.register( ModLoadingContext.get() );
 
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );

@@ -24,10 +24,10 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public boolean	destroyed	= false;
 	public int		color		= -1;
 
-	protected boolean canPickUp()
+	/*protected boolean canPickUp()
 	{
 		return uses >= 0 || ItemBlockCardboardBox.getUses() == 0;
-	}
+	}*/
 
 	protected void onItemDropped( ItemStack stack )
 	{
@@ -49,11 +49,11 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return customName != null ? customName : new TextComponentTranslation( ModInfo.containerCardboardBox );
 	}
 
-	@Override
+	/*@Override
 	public int getRows()
 	{
 		return ItemBlockCardboardBox.getRows();
-	}
+	}*/
 
 	/*
 	 * @Override
@@ -80,20 +80,20 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	@Override
 	public void onBlockDestroyed()
 	{
-		if( !canPickUp() || destroyed )
-			return;
+		/*if( !canPickUp() || destroyed )
+			return;*/
 
 		final boolean empty = isEmpty( inventory );
 		if( !empty )
 		{
 			if( uses >= 0 )
 				uses--;
-			if( !canPickUp() )
+			/*if( !canPickUp() )
 			{
 				destroyed = true;
 				dropContents();
 				return;
-			}
+			}*/
 		}
 
 		// Don't drop an empty cardboard box in creative.

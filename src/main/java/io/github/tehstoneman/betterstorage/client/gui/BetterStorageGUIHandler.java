@@ -1,14 +1,10 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -24,15 +20,17 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new ContainerKeyring( player, itemStack, player.inventory.currentItem );
 		}
-		if( ID == EnumGui.CRATE.getGuiID() )
-		{
-			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-			if( tileEntity instanceof TileEntityCrate )
-			{
-				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-				return new ContainerCrate( player, crate );
-			}
-		}
+		/*
+		 * if( ID == EnumGui.CRATE.getGuiID() )
+		 * {
+		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+		 * if( tileEntity instanceof TileEntityCrate )
+		 * {
+		 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+		 * return new ContainerCrate( player, crate );
+		 * }
+		 * }
+		 */
 		/*
 		 * if( ID == EnumGui.GENERAL.getGuiID() )
 		 * {
@@ -68,15 +66,17 @@ public class BetterStorageGUIHandler implements IGuiHandler
 				return null;
 			return new GuiKeyring( new ContainerKeyring( player, itemStack, player.inventory.currentItem ) );
 		}
-		if( ID == EnumGui.CRATE.getGuiID() )
-		{
-			final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-			if( tileEntity instanceof TileEntityCrate )
-			{
-				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-				return new GuiCrate( crate, new ContainerCrate( player, crate ) );
-			}
-		}
+		/*
+		 * if( ID == EnumGui.CRATE.getGuiID() )
+		 * {
+		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+		 * if( tileEntity instanceof TileEntityCrate )
+		 * {
+		 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+		 * return new GuiCrate( crate, new ContainerCrate( player, crate ) );
+		 * }
+		 * }
+		 */
 		/*
 		 * if( ID == EnumGui.GENERAL.getGuiID() )
 		 * {
