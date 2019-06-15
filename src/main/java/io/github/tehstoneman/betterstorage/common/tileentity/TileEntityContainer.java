@@ -3,38 +3,22 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
-import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.INameable;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityContainer extends TileEntity implements ITickable, INameable
+public abstract class TileEntityContainer extends TileEntity implements /* ITickable, */ INameable
 {
 	public ExpandableStackHandler				inventory;
 	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> inventory );
@@ -67,13 +51,15 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			inventory = null;
 	}
 
-	@Override
-	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-		return super.getCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	 * {
+	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+	 * return super.getCapability( capability, facing );
+	 * }
+	 */
 
 	/** The amount of columns in the container. */
 	public int getColumns()
@@ -104,10 +90,12 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * the GUI is opened and then again every tick. Returning false when the
 	 * GUI is open, like when the player is too far away, will close the GUI.
 	 */
-	public boolean canPlayerUseContainer( EntityPlayer player )
-	{
-		return player.getDistanceSq( pos ) <= 64;
-	}
+	/*
+	 * public boolean canPlayerUseContainer( EntityPlayer player )
+	 * {
+	 * return player.getDistanceSq( pos ) <= 64;
+	 * }
+	 */
 
 	// Block functions
 
@@ -127,16 +115,18 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Called then the block is activated (right clicked).
 	 * Usually opens the GUI of the container.
 	 */
-	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ )
-	{
-		if( getWorld().isRemote )
-			return true;
-		if( !canPlayerUseContainer( player ) )
-			return false;
-		// player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
-		return true;
-	}
+	/*
+	 * public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+	 * float hitZ )
+	 * {
+	 * if( getWorld().isRemote )
+	 * return true;
+	 * if( !canPlayerUseContainer( player ) )
+	 * return false;
+	 * // player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
+	 * return true;
+	 * }
+	 */
 
 	/**
 	 * Called when the block is picked (default: middle mouse).
@@ -151,11 +141,13 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Called when a block is attempted to be broken by a player.
 	 * Returns if the block should actually be broken.
 	 */
-	public boolean onBlockBreak( EntityPlayer player )
-	{
-		// brokenInCreative = player.getCapabilities().isCreativeMode;
-		return true;
-	}
+	/*
+	 * public boolean onBlockBreak( EntityPlayer player )
+	 * {
+	 * // brokenInCreative = player.getCapabilities().isCreativeMode;
+	 * return true;
+	 * }
+	 */
 
 	/** Called when a neighbor block changes. */
 	/*
@@ -169,22 +161,20 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	/** Called after the block is destroyed, drops contents etc. */
 	public void onBlockDestroyed()
 	{
-		dropContents();
+		// dropContents();
 		brokenInCreative = false;
 	}
 
 	/** Called when the container is destroyed to drop its contents. */
-	public void dropContents()
-	{
-		if( inventory != null )
-			for( int i = 0; i < inventory.getSlots(); i++ )
-			{
-				final ItemStack stack = inventory.getStackInSlot( i );
-				if( !stack.isEmpty() )
-					getWorld().spawnEntity( new EntityItem( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack ) );
-			}
-	}
-
+	/*
+	 * public void dropContents()
+	 * {
+	 * if( inventory != null )
+	 * for( int i = 0; i < inventory.getSlots(); i++ ) final ItemStack stack = inventory.getStackInSlot( i );
+	 * if( !stack.isEmpty() )
+	 * getWorld().spawnEntity( new EntityItem( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack ) );
+	 * }
+	 */
 	/**
 	 * Called before the tile entity is being rendered as an item.
 	 * Sets things like the material taken from the stack. <br>
@@ -329,10 +319,12 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Returns the container's comparator signal strength. Calculated
 	 * automatically if it implements IInventory. Overridden if necessary.
 	 */
-	protected int getComparatorSignalStengthInternal()
-	{
-		return this instanceof IInventory ? Container.calcRedstoneFromInventory( (IInventory)this ) : 0;
-	}
+	/*
+	 * protected int getComparatorSignalStengthInternal()
+	 * {
+	 * return this instanceof IInventory ? Container.calcRedstoneFromInventory( (IInventory)this ) : 0;
+	 * }
+	 */
 
 	/** Resets accessed and contents changed flags and updates nearby blocks. */
 	protected void comparatorUpdateAndReset()
@@ -439,30 +431,30 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * =================
 	 */
 
-	@Override
-	public void tick()
-	{
-		/*
-		 * if( ticksExisted++ == 0 )
-		 * // Only run once after tile entity has loaded.
-		 * checkForRedstoneChange();
-		 *
-		 * // If a comparator or such has accessed the container and
-		 * // the contents have been changed, send a block update.
-		 * if( hasComparatorAccessed() && hasContentsChanged() )
-		 * comparatorUpdateAndReset();
-		 *
-		 * prevLidAngle = lidAngle;
-		 * if( playersUsing > 0 )
-		 * {
-		 * if( lidAngle < 1.0F )
-		 * lidAngle = Math.min( 1.0F, lidAngle + getLidSpeed() );
-		 * }
-		 * else
-		 * if( lidAngle > 0.0F )
-		 * lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
-		 */
-	}
+	/*
+	 * @Override
+	 * public void tick()
+	 * {
+	 * if( ticksExisted++ == 0 )
+	 * // Only run once after tile entity has loaded.
+	 * checkForRedstoneChange();
+	 *
+	 * // If a comparator or such has accessed the container and
+	 * // the contents have been changed, send a block update.
+	 * if( hasComparatorAccessed() && hasContentsChanged() )
+	 * comparatorUpdateAndReset();
+	 *
+	 * prevLidAngle = lidAngle;
+	 * if( playersUsing > 0 )
+	 * {
+	 * if( lidAngle < 1.0F )
+	 * lidAngle = Math.min( 1.0F, lidAngle + getLidSpeed() );
+	 * }
+	 * else
+	 * if( lidAngle > 0.0F )
+	 * lidAngle = Math.max( 0.0F, lidAngle - getLidSpeed() );
+	 * }
+	 */
 
 	protected float getLidSpeed()
 	{
@@ -496,7 +488,6 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		return customName;
 	}
 
-
 	/*
 	 * @Override
 	 * public void readFromNBT( NBTTagCompound compound )
@@ -527,7 +518,7 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * Utility functions
 	 * =================
 	 */
-	
+
 	protected static int EVENT_PLAYER_USING = 1;
 
 	/**
@@ -540,28 +531,32 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		markDirty();
 	}
 
-	public void openInventory( EntityPlayer player )
-	{
-		if( !player.isSpectator() )
-		{
-			if( numPlayersUsing < 0 )
-				numPlayersUsing = 0;
+	/*
+	 * public void openInventory( EntityPlayer player )
+	 * {
+	 * if( !player.isSpectator() )
+	 * {
+	 * if( numPlayersUsing < 0 )
+	 * numPlayersUsing = 0;
+	 *
+	 * ++numPlayersUsing;
+	 * onOpenOrClose();
+	 * }
+	 *
+	 * }
+	 */
 
-			++numPlayersUsing;
-			onOpenOrClose();
-		}
-
-	}
-
-	public void closeInventory( EntityPlayer player )
-	{
-		if( !player.isSpectator() )
-		{
-			--numPlayersUsing;
-			onOpenOrClose();
-		}
-
-	}
+	/*
+	 * public void closeInventory( EntityPlayer player )
+	 * {
+	 * if( !player.isSpectator() )
+	 * {
+	 * --numPlayersUsing;
+	 * onOpenOrClose();
+	 * }
+	 *
+	 * }
+	 */
 
 	protected void onOpenOrClose()
 	{
@@ -573,18 +568,20 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 		}
 	}
 
-	public static int getPlayersUsing( IBlockReader reader, BlockPos posIn )
-	{
-		final IBlockState iblockstate = reader.getBlockState( posIn );
-		if( iblockstate.hasTileEntity() )
-		{
-			final TileEntity tileentity = reader.getTileEntity( posIn );
-			if( tileentity instanceof TileEntityContainer )
-				return ( (TileEntityContainer)tileentity ).numPlayersUsing;
-		}
-
-		return 0;
-	}
+	/*
+	 * public static int getPlayersUsing( IBlockReader reader, BlockPos posIn )
+	 * {
+	 * final IBlockState iblockstate = reader.getBlockState( posIn );
+	 * if( iblockstate.hasTileEntity() )
+	 * {
+	 * final TileEntity tileentity = reader.getTileEntity( posIn );
+	 * if( tileentity instanceof TileEntityContainer )
+	 * return ( (TileEntityContainer)tileentity ).numPlayersUsing;
+	 * }
+	 *
+	 * return 0;
+	 * }
+	 */
 
 	@Override
 	public boolean receiveClientEvent( int id, int type )
@@ -598,10 +595,12 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 			return super.receiveClientEvent( id, type );
 	}
 
-	public ContainerBetterStorage getContainer( EntityPlayer player )
-	{
-		return new ContainerBetterStorage( this, player );
-	}
+	/*
+	 * public ContainerBetterStorage getContainer( EntityPlayer player )
+	 * {
+	 * return new ContainerBetterStorage( this, player );
+	 * }
+	 */
 
 	/*
 	 * ==========================
@@ -609,53 +608,61 @@ public abstract class TileEntityContainer extends TileEntity implements ITickabl
 	 * ==========================
 	 */
 
-	@Override
-	public NBTTagCompound getUpdateTag()
-	{
-		final NBTTagCompound compound = super.getUpdateTag();
+	/*
+	 * @Override
+	 * public NBTTagCompound getUpdateTag()
+	 * {
+	 * final NBTTagCompound compound = super.getUpdateTag();
+	 *
+	 * if( inventory.getSlots() > 0 )
+	 * compound.setTag( "inventory", inventory.serializeNBT() );
+	 *
+	 * if( hasCustomName() )
+	 * compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+	 *
+	 * return compound;
+	 * }
+	 */
 
-		if( inventory.getSlots() > 0 )
-			compound.setTag( "inventory", inventory.serializeNBT() );
+	/*
+	 * @Override
+	 * public void handleUpdateTag( NBTTagCompound compound )
+	 * {
+	 * super.handleUpdateTag( compound );
+	 *
+	 * if( compound.hasKey( "inventory" ) )
+	 * inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
+	 *
+	 * if( compound.hasKey( "CustomName" ) )
+	 * setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
+	 * }
+	 */
 
-		if( hasCustomName() )
-			compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+	/*
+	 * @Override
+	 * public NBTTagCompound write( NBTTagCompound compound )
+	 * {
+	 * compound = super.write( compound );
+	 * if( inventory.getSlots() > 0 )
+	 * compound.setTag( "inventory", inventory.serializeNBT() );
+	 *
+	 * if( hasCustomName() )
+	 * compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+	 *
+	 * return compound;
+	 * }
+	 */
 
-		return compound;
-	}
-
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-
-		if( compound.hasKey( "inventory" ) )
-			inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
-
-		if( compound.hasKey( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
-	}
-
-	@Override
-	public NBTTagCompound write( NBTTagCompound compound )
-	{
-		compound = super.write( compound );
-		if( inventory.getSlots() > 0 )
-			compound.setTag( "inventory", inventory.serializeNBT() );
-
-		if( hasCustomName() )
-			compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
-
-		return compound;
-	}
-
-	@Override
-	public void read( NBTTagCompound compound )
-	{
-		super.read( compound );
-		if( compound.hasKey( "inventory" ) )
-			inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
-
-		if( compound.hasKey( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
-	}
+	/*
+	 * @Override
+	 * public void read( NBTTagCompound compound )
+	 * {
+	 * super.read( compound );
+	 * if( compound.hasKey( "inventory" ) )
+	 * inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
+	 *
+	 * if( compound.hasKey( "CustomName" ) )
+	 * setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
+	 * }
+	 */
 }

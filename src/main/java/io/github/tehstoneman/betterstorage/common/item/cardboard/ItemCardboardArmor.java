@@ -1,9 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 
 public class ItemCardboardArmor extends ItemBetterStorage // ItemArmor implements ICardboardItem, ISpecialArmor
 {
@@ -11,11 +8,19 @@ public class ItemCardboardArmor extends ItemBetterStorage // ItemArmor implement
 
 	private static final String[]	armorText	= { "Helmet", "Chestplate", "Leggings", "Boots" };
 
-	public ItemCardboardArmor( EntityEquipmentSlot armorType )
+	public ItemCardboardArmor( String name, Properties properties )
 	{
-		super( "cardboard_armour", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
-		// super( ItemCardboardSheet.armorMaterial, 0, armorType );
+		super( name, properties );
+		// TODO Auto-generated constructor stub
 	}
+
+	/*
+	 * public ItemCardboardArmor( EntityEquipmentSlot armorType )
+	 * {
+	 * super( "cardboard_armour", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+	 * // super( ItemCardboardSheet.armorMaterial, 0, armorType );
+	 * }
+	 */
 
 	/*
 	 * public void register( String name )

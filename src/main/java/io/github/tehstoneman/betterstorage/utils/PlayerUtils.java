@@ -1,36 +1,35 @@
 package io.github.tehstoneman.betterstorage.utils;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-
 public final class PlayerUtils
 {
 	private PlayerUtils()
 	{}
 
 	// @SideOnly( Side.CLIENT )
-	public static EntityPlayer getLocalPlayer()
-	{
-		return Minecraft.getInstance().player;
-	}
+	/*
+	 * public static EntityPlayer getLocalPlayer()
+	 * {
+	 * return Minecraft.getInstance().player;
+	 * }
+	 */
 
-	public static void openGui( EntityPlayer pl, String name, int columns, int rows, String title, Container container )
-	{
-		final EntityPlayerMP player = (EntityPlayerMP)pl;
-		if( title == null )
-			title = "";
-
-		player.closeContainer();
-		player.getNextWindowId();
-
-		// BetterStorage.networkChannel.sendTo(new PacketOpenGui(player.currentWindowId, name, columns, rows, title), player);
-
-		player.openContainer = container;
-		player.openContainer.windowId = player.currentWindowId;
-		// player.openContainer.addCraftingToCrafters(player);
-	}
+	/*
+	 * public static void openGui( EntityPlayer pl, String name, int columns, int rows, String title, Container container )
+	 * {
+	 * final EntityPlayerMP player = (EntityPlayerMP)pl;
+	 * if( title == null )
+	 * title = "";
+	 * 
+	 * player.closeContainer();
+	 * player.getNextWindowId();
+	 * 
+	 * // BetterStorage.networkChannel.sendTo(new PacketOpenGui(player.currentWindowId, name, columns, rows, title), player);
+	 * 
+	 * player.openContainer = container;
+	 * player.openContainer.windowId = player.currentWindowId;
+	 * // player.openContainer.addCraftingToCrafters(player);
+	 * }
+	 */
 
 	/*
 	 * @SideOnly( Side.CLIENT )

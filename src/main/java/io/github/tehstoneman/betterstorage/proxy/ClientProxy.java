@@ -19,8 +19,8 @@ public class ClientProxy implements IProxy
 	public void setup( FMLCommonSetupEvent event )
 	{
 		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
+		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 	}
 
 	/*

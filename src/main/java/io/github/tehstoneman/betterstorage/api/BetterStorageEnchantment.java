@@ -5,12 +5,12 @@ import java.util.Map;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.ItemStack;
 
 public final class BetterStorageEnchantment
 {
-	public static Map< String, EnumEnchantmentType > enchantmentTypes = new HashMap<>();
+	public static Map< String, EnchantmentType > enchantmentTypes = new HashMap<>();
 	// public static Map< String, Enchantment > enchantments = new HashMap<>();
 
 	private BetterStorageEnchantment()
@@ -20,7 +20,7 @@ public final class BetterStorageEnchantment
 	 * Returns a BetterStorage enchantment type with that name. <br>
 	 * <b>Types:</b> key, lock
 	 */
-	public static EnumEnchantmentType getType( String name )
+	public static EnchantmentType getType( String name )
 	{
 		return enchantmentTypes.get( name );
 	}

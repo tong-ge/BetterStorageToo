@@ -4,18 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 public class ItemBucketSlime extends ItemBetterStorage
 {
@@ -60,7 +51,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public boolean hasEffect( ItemStack stack )
 	 * {
@@ -70,7 +61,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	 * {
@@ -91,7 +82,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * : BetterStorage.proxy.localize( handler.entityName );
 	 * tooltip.add( BetterStorage.proxy.localize( "tooltip.betterstorage.bucket.slime.contains", localName ) );
 	 * }
-	 * 
+	 *
 	 * if( stack.hasTagCompound() )
 	 * {
 	 * final NBTTagCompound compound = stack.getTagCompound();
@@ -101,26 +92,26 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * if( effectList != null && handler != null )
 	 * {
 	 * final int max = toolTipFlag.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
-	 * 
+	 *
 	 * for( int i = 0; i < Math.min( effectList.tagCount(), max ); i++ )
 	 * {
 	 * final PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT( effectList.getCompoundTagAt( i ) );
 	 * final Potion potion = effect.getPotion();
 	 * final int duration = (int)( effect.getDuration() * handler.durationMultiplier() );
-	 * 
+	 *
 	 * final StringBuilder str = new StringBuilder().append( potion.isBadEffect() ? TextFormatting.RED : TextFormatting.GRAY )
 	 * .append( BetterStorage.proxy.localize( effect.getEffectName() ) );
-	 * 
+	 *
 	 * if( effect.getAmplifier() > 0 )
 	 * str.append( " " ).append( BetterStorage.proxy.localize( "potion.potency." + effect.getAmplifier() ) );
-	 * 
+	 *
 	 * str.append( " (" ).append( StringUtils.ticksToElapsedTime( duration ) ).append( ")" );
-	 * 
+	 *
 	 * tooltip.add( str.toString() );
 	 * }
-	 * 
+	 *
 	 * final int more = effectList.tagCount() - max;
-	 * 
+	 *
 	 * if( more > 0 )
 	 * tooltip.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + LanguageUtils
 	 * .translateTooltip( "bucketSlime.more." + ( more == 1 ? "1" : "x" ), "%X%", Integer.toString( more ) ) );
@@ -140,24 +131,24 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * // instead of placing it in the world.
 	 * if( player.isSneaking() )
 	 * return EnumActionResult.FAIL;
-	 * 
+	 *
 	 * if( worldIn.isRemote )
 	 * return EnumActionResult.PASS;
-	 * 
+	 *
 	 * final ResourceLocation resourceLocation = getSlimeId( stack );
-	 * 
+	 *
 	 * final BlockPos blockpos = pos.offset( facing );
 	 * final Handler handler = getHandler( resourceLocation );
 	 * final double d0 = getYOffset( worldIn, blockpos );
 	 * final Entity entity = ItemMonsterPlacer.spawnCreature( worldIn, handler.resourceLocation, blockpos.getX() + 0.5D, blockpos.getY() + d0,
 	 * blockpos.getZ() + 0.5D );
-	 * 
+	 *
 	 * if( entity != null && handler != null && entity instanceof EntityLiving )
 	 * {
 	 * final EntityLiving slime = (EntityLiving)entity;
-	 * 
+	 *
 	 * handler.setSize( slime, 1 );
-	 * 
+	 *
 	 * if( stack.hasTagCompound() )
 	 * {
 	 * final NBTTagCompound compound = stack.getTagCompound();
@@ -168,11 +159,11 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * for( int i = 0; i < effectList.tagCount(); i++ )
 	 * slime.addPotionEffect( PotionEffect.readCustomPotionEffectFromNBT( effectList.getCompoundTagAt( i ) ) );
 	 * }
-	 * 
+	 *
 	 * if( !player.capabilities.isCreativeMode )
 	 * player.setHeldItem( EnumHand.MAIN_HAND, new ItemStack( Items.BUCKET ) );
 	 * }
-	 * 
+	 *
 	 * return EnumActionResult.SUCCESS;
 	 * }
 	 */
@@ -195,19 +186,21 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * }
 	 */
 
-	@Override
-	public ActionResult< ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn )
-	{
-		if( handIn == EnumHand.MAIN_HAND )
-		{
-			final ItemStack stack = playerIn.getHeldItem( handIn );
-			// playerIn.canEat( true );
-			playerIn.setActiveHand( handIn );
-			return new ActionResult( EnumActionResult.SUCCESS, playerIn.getHeldItem( handIn ) );
-		}
-
-		return super.onItemRightClick( worldIn, playerIn, handIn );
-	}
+	/*
+	 * @Override
+	 * public ActionResult< ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn )
+	 * {
+	 * if( handIn == EnumHand.MAIN_HAND )
+	 * {
+	 * final ItemStack stack = playerIn.getHeldItem( handIn );
+	 * // playerIn.canEat( true );
+	 * playerIn.setActiveHand( handIn );
+	 * return new ActionResult( EnumActionResult.SUCCESS, playerIn.getHeldItem( handIn ) );
+	 * }
+	 * 
+	 * return super.onItemRightClick( worldIn, playerIn, handIn );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -255,9 +248,9 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * final Handler handler = getHandler( slime );
 	 * if( slime.isDead || handler == null || handler.getSize( slime ) != 1 )
 	 * return;
-	 * 
+	 *
 	 * final ItemStack stack = new ItemStack( BetterStorageItems.SLIME_BUCKET, 1, EnumSlime.byName( handler.name ).getMetadata() );
-	 * 
+	 *
 	 * final String entityId = EntityList.getEntityString( slime );
 	 * if( slime.hasCustomName() )
 	 * {
@@ -267,7 +260,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * compound.setString( "name", slime.getCustomNameTag() );
 	 * stack.setTagCompound( compound );
 	 * }
-	 * 
+	 *
 	 * final Collection< PotionEffect > effects = slime.getActivePotionEffects();
 	 * if( !effects.isEmpty() )
 	 * {
@@ -282,17 +275,17 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * }
 	 * if( player.getHeldItemMainhand().getCount() <= 1 )
 	 * player.setHeldItem( EnumHand.MAIN_HAND, stack );
-	 * 
+	 *
 	 * else
 	 * {
 	 * player.getHeldItemMainhand().shrink( 1 );
 	 * if( !player.inventory.addItemStackToInventory( stack ) )
 	 * player.dropItem( stack, true, false );
-	 * 
+	 *
 	 * else
 	 * ( (EntityPlayerMP)player ).inventoryContainer.detectAndSendChanges();
 	 * }
-	 * 
+	 *
 	 * slime.playSound( SoundEvents.ENTITY_SLIME_JUMP, 1.2F, 0.8F );
 	 * slime.isDead = true;
 	 * }
@@ -336,7 +329,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public void registerItemModels()
 	 * {
@@ -353,16 +346,16 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * {
 	 * final AxisAlignedBB axisalignedbb = new AxisAlignedBB( p_190909_2_ ).expand( 0.0D, -1.0D, 0.0D );
 	 * final List< AxisAlignedBB > list = p_190909_1_.getCollisionBoxes( (Entity)null, axisalignedbb );
-	 * 
+	 *
 	 * if( list.isEmpty() )
 	 * return 0.0D;
 	 * else
 	 * {
 	 * double d0 = axisalignedbb.minY;
-	 * 
+	 *
 	 * for( final AxisAlignedBB axisalignedbb1 : list )
 	 * d0 = Math.max( axisalignedbb1.maxY, d0 );
-	 * 
+	 *
 	 * return d0 - p_190909_2_.getY();
 	 * }
 	 * }
@@ -375,13 +368,13 @@ public class ItemBucketSlime extends ItemBetterStorage
 		/*
 		 * registerHandler( new Handler( EnumSlime.GREEN_SLIME.name, new ResourceLocation( EnumSlime.GREEN_SLIME.getUnlocalizedName() ) )
 		 * {
-		 * 
+		 *
 		 * @Override
 		 * public int foodAmount()
 		 * {
 		 * return 3;
 		 * }
-		 * 
+		 *
 		 * @Override
 		 * public float saturationAmount()
 		 * {
@@ -392,13 +385,13 @@ public class ItemBucketSlime extends ItemBetterStorage
 		/*
 		 * registerHandler( new Handler( EnumSlime.MAGMA_CUBE.name, new ResourceLocation( EnumSlime.MAGMA_CUBE.getUnlocalizedName() ) )
 		 * {
-		 * 
+		 *
 		 * @Override
 		 * public float durationMultiplier()
 		 * {
 		 * return 0.4F;
 		 * }
-		 * 
+		 *
 		 * @Override
 		 * public void onEaten( EntityPlayer player, boolean potionEffects )
 		 * {
@@ -412,7 +405,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		/*
 		 * registerHandler( new Handler( EnumSlime.MAZE_SLIME.name, "TwilightForest.Maze Slime" )
 		 * {
-		 * 
+		 *
 		 * @Override
 		 * public void onEaten(EntityPlayer player, boolean potionEffects) {
 		 * player.attackEntityFrom(DamageSource.magic, 3.0F);
@@ -425,7 +418,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		/*
 		 * registerHandler( new Handler( EnumSlime.PINK_SLIME.name, "MineFactoryReloaded.mfrEntityPinkSlime" )
 		 * {
-		 * 
+		 *
 		 * @Override
 		 * public int foodAmount()
 		 * {
@@ -510,24 +503,28 @@ public class ItemBucketSlime extends ItemBetterStorage
 		}
 
 		/** Returns the size of the slime. */
-		public int getSize( EntityLiving slime )
-		{
-			if( slime instanceof EntitySlime )
-				return ( (EntitySlime)slime ).getSlimeSize();
-			else
-				return 0;
-		}
+		/*
+		 * public int getSize( EntityLiving slime )
+		 * {
+		 * if( slime instanceof EntitySlime )
+		 * return ( (EntitySlime)slime ).getSlimeSize();
+		 * else
+		 * return 0;
+		 * }
+		 */
 
 		/** Sets the size of the slime. */
-		public void setSize( EntityLiving slime, int size )
-		{
-			final NBTTagCompound compound = new NBTTagCompound();
-			/*
-			 * slime.writeToNBT( compound );
-			 * compound.setInteger( "Size", size - 1 );
-			 * slime.readFromNBT( compound );
-			 */
-		}
+		/*
+		 * public void setSize( EntityLiving slime, int size )
+		 * {
+		 * final NBTTagCompound compound = new NBTTagCompound();
+		 * 
+		 * slime.writeToNBT( compound );
+		 * compound.setInteger( "Size", size - 1 );
+		 * slime.readFromNBT( compound );
+		 * 
+		 * }
+		 */
 
 		/** How much food is restored when eating this slime. */
 		public int foodAmount()

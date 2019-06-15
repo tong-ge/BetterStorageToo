@@ -1,107 +1,103 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.stats.Stat;
-import net.minecraft.stats.StatList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class BlockLockable extends BlockContainerBetterStorage
 {
-	public static final EnumProperty< EnumConnectedType >	TYPE	= EnumProperty.create( "type", EnumConnectedType.class );
-	public static final DirectionProperty					FACING	= BlockHorizontal.HORIZONTAL_FACING;
+	public static final EnumProperty< EnumConnectedType > TYPE = EnumProperty.create( "type", EnumConnectedType.class );
+	// public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
 
 	protected BlockLockable( Block.Properties builder )
 	{
 		super( builder );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
-													  .with( TYPE, EnumConnectedType.SINGLE ) );
+		/*setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
+													  .with( TYPE, EnumConnectedType.SINGLE ) );*/
 		//@formatter:on
 	}
 
-	@Override
-	@OnlyIn( Dist.CLIENT )
-	public boolean hasCustomBreakingProgress( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * 
+	 * @OnlyIn( Dist.CLIENT )
+	 * public boolean hasCustomBreakingProgress( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
-	@Override
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
+	/*
+	 * @Override
+	 * public EnumBlockRenderType getRenderType( IBlockState state )
+	 * {
+	 * return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	 * }
+	 */
 
-	@Override
-	public IBlockState rotate( IBlockState state, Rotation rot )
-	{
-		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
-	}
+	/*
+	 * @Override
+	 * public IBlockState rotate( IBlockState state, Rotation rot )
+	 * {
+	 * return state.with( FACING, rot.rotate( state.get( FACING ) ) );
+	 * }
+	 */
 
-	@Override
-	public IBlockState mirror( IBlockState state, Mirror mirrorIn )
-	{
-		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
-	}
+	/*
+	 * @Override
+	 * public IBlockState mirror( IBlockState state, Mirror mirrorIn )
+	 * {
+	 * return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
+	 * }
+	 */
 
-	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
-	{
-		super.fillStateContainer( builder );
-		builder.add( FACING, TYPE );
-	}
+	/*
+	 * @Override
+	 * protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
+	 * {
+	 * super.fillStateContainer( builder );
+	 * builder.add( FACING, TYPE );
+	 * }
+	 */
 
-	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
-	{
-		if( stack.hasDisplayName() )
-		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
-			if( tileentity instanceof TileEntityLockable )
-				( (TileEntityLockable)tileentity ).setCustomName( stack.getDisplayName() );
-		}
-	}
+	/*
+	 * @Override
+	 * public void onBlockPlacedBy( World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack )
+	 * {
+	 * if( stack.hasDisplayName() )
+	 * {
+	 * final TileEntity tileentity = worldIn.getTileEntity( pos );
+	 * if( tileentity instanceof TileEntityLockable )
+	 * ( (TileEntityLockable)tileentity ).setCustomName( stack.getDisplayName() );
+	 * }
+	 * }
+	 */
 
-	@Override
-	public void onReplaced( IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving )
-	{
-		if( state.getBlock() != newState.getBlock() )
-		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
-			if( tileentity instanceof IInventory )
-			{
-				InventoryHelper.dropInventoryItems( worldIn, pos, (IInventory)tileentity );
-				worldIn.updateComparatorOutputLevel( pos, this );
-			}
-			super.onReplaced( state, worldIn, pos, newState, isMoving );
-		}
-	}
+	/*
+	 * @Override
+	 * public void onReplaced( IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving )
+	 * {
+	 * if( state.getBlock() != newState.getBlock() )
+	 * {
+	 * final TileEntity tileentity = worldIn.getTileEntity( pos );
+	 * if( tileentity instanceof IInventory )
+	 * {
+	 * InventoryHelper.dropInventoryItems( worldIn, pos, (IInventory)tileentity );
+	 * worldIn.updateComparatorOutputLevel( pos, this );
+	 * }
+	 * super.onReplaced( state, worldIn, pos, newState, isMoving );
+	 * }
+	 * }
+	 */
 
-	protected Stat< ResourceLocation > getOpenStat()
-	{
-		return StatList.CUSTOM.get( StatList.OPEN_CHEST );
-	}
+	/*
+	 * protected Stat< ResourceLocation > getOpenStat()
+	 * {
+	 * return StatList.CUSTOM.get( StatList.OPEN_CHEST );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -179,19 +175,23 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	 * }
 	 */
 
-	@Override
-	public boolean hasComparatorInputOverride( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean hasComparatorInputOverride( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	// Trigger enchantment related
 
-	@Override
-	public boolean canProvidePower( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean canProvidePower( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	/*
 	 * @Override

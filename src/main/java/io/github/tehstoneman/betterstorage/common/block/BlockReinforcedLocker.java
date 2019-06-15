@@ -1,12 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
 
 public class BlockReinforcedLocker extends BlockLocker
 {
@@ -15,11 +11,13 @@ public class BlockReinforcedLocker extends BlockLocker
 		super( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 	}
 
-	@Override
-	public TileEntity createTileEntity( IBlockState state, IBlockReader world )
-	{
-		return new TileEntityReinforcedLocker();
-	}
+	/*
+	 * @Override
+	 * public TileEntity createTileEntity( IBlockState state, IBlockReader world )
+	 * {
+	 * return new TileEntityReinforcedLocker();
+	 * }
+	 */
 
 	/*
 	 * @Override

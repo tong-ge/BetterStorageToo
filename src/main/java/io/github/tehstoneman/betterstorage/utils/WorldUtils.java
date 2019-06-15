@@ -2,14 +2,9 @@ package io.github.tehstoneman.betterstorage.utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public final class WorldUtils
@@ -39,71 +34,81 @@ public final class WorldUtils
 	// Item spawning related functions
 
 	/** Spawns an ItemStack in the world. */
-	public static EntityItem spawnItem( World world, double x, double y, double z, ItemStack stack )
-	{
-		if( stack == null || stack.getCount() <= 0 )
-			return null;
-		final EntityItem item = new EntityItem( world, x, y, z, stack );
-		world.spawnEntity( item );
-		return item;
-	}
+	/*
+	 * public static EntityItem spawnItem( World world, double x, double y, double z, ItemStack stack )
+	 * {
+	 * if( stack == null || stack.getCount() <= 0 )
+	 * return null;
+	 * final EntityItem item = new EntityItem( world, x, y, z, stack );
+	 * world.spawnEntity( item );
+	 * return item;
+	 * }
+	 */
 
 	/** Spawns an ItemStack in the world with random motion. */
-	public static EntityItem spawnItemWithMotion( World world, double x, double y, double z, ItemStack stack )
-	{
-		final EntityItem item = spawnItem( world, x, y, z, stack );
-		if( item != null )
-		{
-			item.motionX = RandomUtils.getGaussian() * 0.05F;
-			item.motionY = RandomUtils.getGaussian() * 0.05F + 0.2F;
-			item.motionZ = RandomUtils.getGaussian() * 0.05F;
-		}
-		return item;
-	}
+	/*
+	 * public static EntityItem spawnItemWithMotion( World world, double x, double y, double z, ItemStack stack )
+	 * {
+	 * final EntityItem item = spawnItem( world, x, y, z, stack );
+	 * if( item != null )
+	 * {
+	 * item.motionX = RandomUtils.getGaussian() * 0.05F;
+	 * item.motionY = RandomUtils.getGaussian() * 0.05F + 0.2F;
+	 * item.motionZ = RandomUtils.getGaussian() * 0.05F;
+	 * }
+	 * return item;
+	 * }
+	 */
 
 	/** Spawn an ItemStack dropping from a destroyed block. */
-	public static EntityItem dropStackFromBlock( World world, int x, int y, int z, ItemStack stack )
-	{
-		final float itemX = x + RandomUtils.getFloat( 0.1F, 0.9F );
-		final float itemY = y + RandomUtils.getFloat( 0.1F, 0.9F );
-		final float itemZ = z + RandomUtils.getFloat( 0.1F, 0.9F );
-		return spawnItemWithMotion( world, itemX, itemY, itemZ, stack );
-	}
+	/*
+	 * public static EntityItem dropStackFromBlock( World world, int x, int y, int z, ItemStack stack )
+	 * {
+	 * final float itemX = x + RandomUtils.getFloat( 0.1F, 0.9F );
+	 * final float itemY = y + RandomUtils.getFloat( 0.1F, 0.9F );
+	 * final float itemZ = z + RandomUtils.getFloat( 0.1F, 0.9F );
+	 * return spawnItemWithMotion( world, itemX, itemY, itemZ, stack );
+	 * }
+	 */
 
 	/** Spawn an ItemStack dropping from a destroyed block. */
-	public static EntityItem dropStackFromBlock( TileEntity te, ItemStack stack )
-	{
-		return dropStackFromBlock( te.getWorld(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), stack );
-	}
+	/*
+	 * public static EntityItem dropStackFromBlock( TileEntity te, ItemStack stack )
+	 * {
+	 * return dropStackFromBlock( te.getWorld(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), stack );
+	 * }
+	 */
 
 	/** Spawns an ItemStack as if it was dropped from an entity on death. */
-	public static EntityItem dropStackFromEntity( Entity entity, ItemStack stack, float speed )
-	{
-		final EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer)entity : null;
-		EntityItem item;
-		if( player == null )
-		{
-			final double y = entity.posY + entity.getEyeHeight() - 0.3;
-			item = spawnItem( entity.world, entity.posX, y, entity.posZ, stack );
-			if( item == null )
-				return null;
-			// item.delayBeforeCanPickup = 40;
-			final float f1 = RandomUtils.getFloat( 0.5F );
-			final float f2 = RandomUtils.getFloat( (float)Math.PI * 2.0F );
-			item.motionX = -MathHelper.sin( f2 ) * f1;
-			item.motionY = 0.2;
-			item.motionZ = MathHelper.cos( f2 ) * f1;
-			return item;
-		}
-		else
-			item = player.dropItem( stack, true );
-		if( item != null )
-		{
-			item.motionX *= speed / 4;
-			item.motionZ *= speed / 4;
-		}
-		return item;
-	}
+	/*
+	 * public static EntityItem dropStackFromEntity( Entity entity, ItemStack stack, float speed )
+	 * {
+	 * final EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer)entity : null;
+	 * EntityItem item;
+	 * if( player == null )
+	 * {
+	 * final double y = entity.posY + entity.getEyeHeight() - 0.3;
+	 * item = spawnItem( entity.world, entity.posX, y, entity.posZ, stack );
+	 * if( item == null )
+	 * return null;
+	 * // item.delayBeforeCanPickup = 40;
+	 * final float f1 = RandomUtils.getFloat( 0.5F );
+	 * final float f2 = RandomUtils.getFloat( (float)Math.PI * 2.0F );
+	 * item.motionX = -MathHelper.sin( f2 ) * f1;
+	 * item.motionY = 0.2;
+	 * item.motionZ = MathHelper.cos( f2 ) * f1;
+	 * return item;
+	 * }
+	 * else
+	 * item = player.dropItem( stack, true );
+	 * if( item != null )
+	 * {
+	 * item.motionX *= speed / 4;
+	 * item.motionZ *= speed / 4;
+	 * }
+	 * return item;
+	 * }
+	 */
 
 	// TileEntity related functions
 
@@ -125,11 +130,13 @@ public final class WorldUtils
 	 */
 
 	/** Returns if the TileEntity can be used by this player. */
-	public static boolean isTileEntityUsableByPlayer( TileEntity entity, EntityPlayer player )
-	{
-		return entity.getWorld().getTileEntity( entity.getPos() ) == entity
-				&& player.getDistanceSq( entity.getPos().getX() + 0.5, entity.getPos().getY() + 0.5, entity.getPos().getZ() + 0.5 ) <= 64.0;
-	}
+	/*
+	 * public static boolean isTileEntityUsableByPlayer( TileEntity entity, EntityPlayer player )
+	 * {
+	 * return entity.getWorld().getTileEntity( entity.getPos() ) == entity
+	 * && player.getDistanceSq( entity.getPos().getX() + 0.5, entity.getPos().getY() + 0.5, entity.getPos().getZ() + 0.5 ) <= 64.0;
+	 * }
+	 */
 
 	/** Counts and returns the number of players who're accessing a tile entity. */
 	/*

@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -113,24 +112,22 @@ public class CrateStackHandler extends ItemStackHandler
 					stack.setCount( 0 );
 					break;
 				}
-				else
-					if( ItemStack.areItemsEqual( stack, itemstack ) )
-					{
-						final int newSize = itemstack.getCount() + stack.getCount();
+				else if( ItemStack.areItemsEqual( stack, itemstack ) )
+				{
+					final int newSize = itemstack.getCount() + stack.getCount();
 
-						if( newSize <= stack.getMaxStackSize() )
-						{
-							stack.setCount( 0 );
-							itemstack.setCount( newSize );
-						}
-						else
-							if( itemstack.getCount() < stack.getMaxStackSize() )
-							{
-								final int count = stack.getMaxStackSize() - itemstack.getCount();
-								stack.setCount( stack.getCount() - count );
-								itemstack.setCount( stack.getMaxStackSize() );
-							}
+					if( newSize <= stack.getMaxStackSize() )
+					{
+						stack.setCount( 0 );
+						itemstack.setCount( newSize );
 					}
+					else if( itemstack.getCount() < stack.getMaxStackSize() )
+					{
+						final int count = stack.getMaxStackSize() - itemstack.getCount();
+						stack.setCount( stack.getCount() - count );
+						itemstack.setCount( stack.getMaxStackSize() );
+					}
+				}
 
 				++i;
 			}
@@ -163,24 +160,22 @@ public class CrateStackHandler extends ItemStackHandler
 			if( width >= maxDiff + Math.min( height, depth ) )
 				return false;
 		}
-		else
-			if( crate.getPos().getZ() < region.posMin.getZ() || crate.getPos().getZ() > region.posMax.getZ() )
-			{
-				if( depth >= maxCratePileSize )
-					return false;
-				final int maxDiff = width == 1 ? 1 : 3;
-				if( depth >= maxDiff + Math.min( height, depth ) )
-					return false;
-			}
-			else
-				if( crate.getPos().getY() < region.posMin.getY() || crate.getPos().getY() > region.posMax.getY() )
-				{
-					if( height >= maxCratePileSize )
-						return false;
-					final int maxDiff = width == 1 || depth == 1 ? 1 : 4;
-					if( height >= maxDiff + Math.min( width, depth ) )
-						return false;
-				}
+		else if( crate.getPos().getZ() < region.posMin.getZ() || crate.getPos().getZ() > region.posMax.getZ() )
+		{
+			if( depth >= maxCratePileSize )
+				return false;
+			final int maxDiff = width == 1 ? 1 : 3;
+			if( depth >= maxDiff + Math.min( height, depth ) )
+				return false;
+		}
+		else if( crate.getPos().getY() < region.posMin.getY() || crate.getPos().getY() > region.posMax.getY() )
+		{
+			if( height >= maxCratePileSize )
+				return false;
+			final int maxDiff = width == 1 || depth == 1 ? 1 : 4;
+			if( height >= maxDiff + Math.min( width, depth ) )
+				return false;
+		}
 
 		return true;
 	}
@@ -415,31 +410,35 @@ public class CrateStackHandler extends ItemStackHandler
 		indexSlots = getShuffledIndexes( stacks.size() );
 	}
 
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		final NBTTagCompound compound = super.serializeNBT();
+	/*
+	 * @Override
+	 * public NBTTagCompound serializeNBT()
+	 * {
+	 * final NBTTagCompound compound = super.serializeNBT();
+	 * 
+	 * compound.setInt( "NumCrates", numCrates );
+	 * if( pileID != null )
+	 * compound.setUniqueId( "PileID", pileID );
+	 * 
+	 * if( region != null )
+	 * compound.setTag( "Region", region.toCompound() );
+	 * return compound;
+	 * }
+	 */
 
-		compound.setInt( "NumCrates", numCrates );
-		if( pileID != null )
-			compound.setUniqueId( "PileID", pileID );
-
-		if( region != null )
-			compound.setTag( "Region", region.toCompound() );
-		return compound;
-	}
-
-	@Override
-	public void deserializeNBT( NBTTagCompound compound )
-	{
-		super.deserializeNBT( compound );
-
-		numCrates = compound.getInt( "NumCrates" );
-		if( compound.hasUniqueId( "PileID" ) )
-			pileID = compound.getUniqueId( "PileID" );
-
-		if( compound.hasKey( "Region" ) )
-			region = Region.fromCompound( compound.getCompound( "Region" ) );
-		onLoad();
-	}
+	/*
+	 * @Override
+	 * public void deserializeNBT( NBTTagCompound compound )
+	 * {
+	 * super.deserializeNBT( compound );
+	 * 
+	 * numCrates = compound.getInt( "NumCrates" );
+	 * if( compound.hasUniqueId( "PileID" ) )
+	 * pileID = compound.getUniqueId( "PileID" );
+	 * 
+	 * if( compound.hasKey( "Region" ) )
+	 * region = Region.fromCompound( compound.getCompound( "Region" ) );
+	 * onLoad();
+	 * }
+	 */
 }

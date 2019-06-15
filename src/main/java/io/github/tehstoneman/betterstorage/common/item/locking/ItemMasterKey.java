@@ -1,9 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class ItemMasterKey extends ItemKey
 {
@@ -13,9 +11,11 @@ public class ItemMasterKey extends ItemKey
 		// setMaxDamage( 0 );
 	}
 
-	@Override
-	public void onCreated( ItemStack stack, World world, EntityPlayer player )
-	{}
+	/*
+	 * @Override
+	 * public void onCreated( ItemStack stack, World world, EntityPlayer player )
+	 * {}
+	 */
 
 	/*
 	 * @Override

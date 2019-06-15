@@ -1,7 +1,6 @@
 package io.github.tehstoneman.betterstorage.utils;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 public final class DirectionUtils
@@ -11,7 +10,7 @@ public final class DirectionUtils
 	{}
 
 	/** Gets the EnumFacing from the direction an entity is facing. */
-	public static EnumFacing getOrientation( Entity entity )
+	/*public static EnumFacing getOrientation( Entity entity )
 	{
 		final int dir = MathHelper.floor( entity.rotationYaw * 4.0 / 360.0 + 0.5 ) & 3;
 		switch( dir )
@@ -25,22 +24,20 @@ public final class DirectionUtils
 		default:
 			return EnumFacing.SOUTH;
 		}
-	}
+	}*/
 
 	/** Gets the direction from a EnumFacing in degrees. */
-	public static int getRotation( EnumFacing dir )
+	/*public static int getRotation( EnumFacing dir )
 	{
 		if( dir == EnumFacing.WEST )
 			return 90;
+		else if( dir == EnumFacing.NORTH )
+			return 180;
+		else if( dir == EnumFacing.EAST )
+			return 270;
 		else
-			if( dir == EnumFacing.NORTH )
-				return 180;
-			else
-				if( dir == EnumFacing.EAST )
-					return 270;
-				else
-					return 0;
-	}
+			return 0;
+	}*/
 
 	/** Returns the difference between the two angles in degrees (-180 to 180). */
 	public static double angleDifference( double angle1, double angle2 )

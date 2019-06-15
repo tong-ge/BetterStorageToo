@@ -3,25 +3,13 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import java.security.InvalidParameterException;
 
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
-import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class TileEntityLockable extends TileEntityConnectable implements ILockable, IHasAttachments
 {
@@ -42,13 +30,15 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		setAttachmentPosition();
 	}
 
-	@Override
-	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && !getLock().isEmpty() )
-			return LazyOptional.empty();
-		return super.getCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	 * {
+	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null && !getLock().isEmpty() )
+	 * return LazyOptional.empty();
+	 * return super.getCapability( capability, facing );
+	 * }
+	 */
 
 	public boolean canHaveLock()
 	{
@@ -123,29 +113,33 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 
 	// TileEntityContainer stuff
 
-	@Override
-	public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ )
-	{
-		if( !getWorld().isRemote )
-			if( canHaveLock() && !getLock().isEmpty() )
-			{
-				// if( state.getValue( BlockHorizontal.FACING ) == side )
-				// {
-				final ItemStack stack = player.getHeldItem( hand );
-				if( !( stack.getItem() instanceof IKey ) && !canPlayerUseContainer( player ) )
-					( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
-				// }
-				return false;
-			}
-		return super.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
-	}
+	/*
+	 * @Override
+	 * public boolean onBlockActivated( BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+	 * float hitZ )
+	 * {
+	 * if( !getWorld().isRemote )
+	 * if( canHaveLock() && !getLock().isEmpty() )
+	 * {
+	 * // if( state.getValue( BlockHorizontal.FACING ) == side )
+	 * // {
+	 * final ItemStack stack = player.getHeldItem( hand );
+	 * if( !( stack.getItem() instanceof IKey ) && !canPlayerUseContainer( player ) )
+	 * ( (ILock)getLock().getItem() ).applyEffects( getLock(), this, player, EnumLockInteraction.OPEN );
+	 * // }
+	 * return false;
+	 * }
+	 * return super.onBlockActivated( pos, state, player, hand, side, hitX, hitY, hitZ );
+	 * }
+	 */
 
-	@Override
-	public boolean canPlayerUseContainer( EntityPlayer player )
-	{
-		return super.canPlayerUseContainer( player ) && ( getLock().isEmpty() || canUse( player ) );
-	}
+	/*
+	 * @Override
+	 * public boolean canPlayerUseContainer( EntityPlayer player )
+	 * {
+	 * return super.canPlayerUseContainer( player ) && ( getLock().isEmpty() || canUse( player ) );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -167,17 +161,19 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 	 * }
 	 */
 
-	@Override
-	public void dropContents()
-	{
-		super.dropContents();
-		if( !canHaveLock() )
-			return;
-		final ItemStack stack = getLock();
-		if( !stack.isEmpty() )
-			getWorld().spawnEntity( new EntityItem( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack ) );
-		setLock( ItemStack.EMPTY );
-	}
+	/*
+	 * @Override
+	 * public void dropContents()
+	 * {
+	 * super.dropContents();
+	 * if( !canHaveLock() )
+	 * return;
+	 * final ItemStack stack = getLock();
+	 * if( !stack.isEmpty() )
+	 * getWorld().spawnEntity( new EntityItem( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack ) );
+	 * setLock( ItemStack.EMPTY );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -231,17 +227,21 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 		markDirty();
 	}
 
-	@Override
-	public boolean canUse( EntityPlayer player )
-	{
-		return getMainTileEntity().getPlayersUsing() > 0;
-	}
+	/*
+	 * @Override
+	 * public boolean canUse( EntityPlayer player )
+	 * {
+	 * return getMainTileEntity().getPlayersUsing() > 0;
+	 * }
+	 */
 
-	@Override
-	public void useUnlocked( EntityPlayer player )
-	{
-		// player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
-	}
+	/*
+	 * @Override
+	 * public void useUnlocked( EntityPlayer player )
+	 * {
+	 * // player.openGui( ModInfo.modId, EnumGui.GENERAL.getGuiID(), getWorld(), pos.getX(), pos.getY(), pos.getZ() );
+	 * }
+	 */
 
 	@Override
 	public void applyTrigger()
@@ -311,35 +311,39 @@ public abstract class TileEntityLockable extends TileEntityConnectable implement
 
 	// TileEntity synchronization
 
-	@Override
-	public NBTTagCompound getUpdateTag()
-	{
-		final NBTTagCompound compound = super.getUpdateTag();
-		if( material != null )
-			compound.setString( "material", material.getName() );
-		/*
-		 * if( canHaveLock() )
-		 * {
-		 * final ItemStack lock = getLockInternal();
-		 * if( !lock.isEmpty() ) compound.setTag( "lock", lock.writeToNBT( new NBTTagCompound() ) );
-		 * }
-		 */
-		return compound;
-	}
+	/*
+	 * @Override
+	 * public NBTTagCompound getUpdateTag()
+	 * {
+	 * final NBTTagCompound compound = super.getUpdateTag();
+	 * if( material != null )
+	 * compound.setString( "material", material.getName() );
+	 * 
+	 * if( canHaveLock() )
+	 * {
+	 * final ItemStack lock = getLockInternal();
+	 * if( !lock.isEmpty() ) compound.setTag( "lock", lock.writeToNBT( new NBTTagCompound() ) );
+	 * }
+	 * 
+	 * return compound;
+	 * }
+	 */
 
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-		if( compound.hasKey( "material" ) )
-			material = EnumReinforced.byName( compound.getString( "material" ) );
-		if( canHaveLock() )
-		{
-			final ItemStack itemStack = ItemStack.EMPTY;
-			// if( compound.hasKey( "lock" ) ) itemStack = new ItemStack( compound.getCompoundTag( "lock" ) );
-			setLockInternal( itemStack );
-		}
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( NBTTagCompound compound )
+	 * {
+	 * super.handleUpdateTag( compound );
+	 * if( compound.hasKey( "material" ) )
+	 * material = EnumReinforced.byName( compound.getString( "material" ) );
+	 * if( canHaveLock() )
+	 * {
+	 * final ItemStack itemStack = ItemStack.EMPTY;
+	 * // if( compound.hasKey( "lock" ) ) itemStack = new ItemStack( compound.getCompoundTag( "lock" ) );
+	 * setLockInternal( itemStack );
+	 * }
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 

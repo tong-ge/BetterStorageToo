@@ -7,9 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
@@ -19,10 +16,10 @@ import net.minecraft.world.World;
 public class Attachments implements Iterable< Attachment >
 {
 
-	public static final ThreadLocal< EntityPlayer >	playerLocal	= new ThreadLocal<>();
+	// public static final ThreadLocal< EntityPlayer > playerLocal = new ThreadLocal<>();
 
-	public final TileEntity							tileEntity;
-	private final Map< Integer, Attachment >		attachments	= new HashMap<>();
+	public final TileEntity						tileEntity;
+	private final Map< Integer, Attachment >	attachments	= new HashMap<>();
 
 	public Attachments( TileEntity tileEntity )
 	{
@@ -30,11 +27,13 @@ public class Attachments implements Iterable< Attachment >
 	}
 
 	// Called in CommonProxy.onPlayerInteract.
-	public boolean interact( RayTraceResult target, EntityPlayer player, EnumAttachmentInteraction interactionType )
-	{
-		final Attachment attachment = target != null ? get( target.subHit ) : null;
-		return attachment != null ? attachment.interact( player, interactionType ) : false;
-	}
+	/*
+	 * public boolean interact( RayTraceResult target, EntityPlayer player, EnumAttachmentInteraction interactionType )
+	 * {
+	 * final Attachment attachment = target != null ? get( target.subHit ) : null;
+	 * return attachment != null ? attachment.interact( player, interactionType ) : false;
+	 * }
+	 */
 
 	// Called in TileEntityContainer.onPickBlock.
 	public ItemStack pick( RayTraceResult target )
@@ -52,7 +51,7 @@ public class Attachments implements Iterable< Attachment >
 		 * new BlockPos( x, y, z ) );
 		 * RayTraceResult target = aabb.calculateIntercept( start, end );
 		 * final EntityPlayer player = playerLocal.get();
-		 * 
+		 *
 		 * double distance = target != null ? start.distanceTo( target.hitVec ) : Double.MAX_VALUE;
 		 * for( final Attachment attachment : this )
 		 * {
@@ -92,21 +91,23 @@ public class Attachments implements Iterable< Attachment >
 
 	// Called in TileEntityRenderer.renderTileEntityAt.
 	// @SideOnly( Side.CLIENT )
-	public void render( float partialTicks )
-	{
-		for( final Attachment attachment : this )
-		{
-			final float rotation = attachment.getRotation();
-			GL11.glPushMatrix();
-			GL11.glTranslated( 0.5, 0.5, 0.5 );
-			GL11.glPushMatrix();
-			GL11.glRotatef( rotation, 0, -1, 0 );
-			GL11.glTranslated( 0.5 - attachment.getX(), 0.5 - attachment.getY(), 0.5 - attachment.getZ() );
-			attachment.getRenderer().render( attachment, partialTicks );
-			GL11.glPopMatrix();
-			GL11.glPopMatrix();
-		}
-	}
+	/*
+	 * public void render( float partialTicks )
+	 * {
+	 * for( final Attachment attachment : this )
+	 * {
+	 * final float rotation = attachment.getRotation();
+	 * GL11.glPushMatrix();
+	 * GL11.glTranslated( 0.5, 0.5, 0.5 );
+	 * GL11.glPushMatrix();
+	 * GL11.glRotatef( rotation, 0, -1, 0 );
+	 * GL11.glTranslated( 0.5 - attachment.getX(), 0.5 - attachment.getY(), 0.5 - attachment.getZ() );
+	 * attachment.getRenderer().render( attachment, partialTicks );
+	 * GL11.glPopMatrix();
+	 * GL11.glPopMatrix();
+	 * }
+	 * }
+	 */
 
 	public <T extends Attachment> T add( Class< T > attachmentClass )
 	{

@@ -1,15 +1,15 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
+import net.minecraft.block.Block.Properties;
 import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemSword;
 
-public abstract class ItemBetterStorageSword extends ItemSword
+public abstract class ItemBetterStorageSword// extends ItemSword
 {
 	private final String name;
 
 	public ItemBetterStorageSword( String name, IItemTier tier, int maxDamage, float attackDamage, Properties builder )
 	{
-		super( tier, maxDamage, attackDamage, builder );
+		// super( tier, maxDamage, attackDamage, builder );
 
 		this.name = name;
 	}

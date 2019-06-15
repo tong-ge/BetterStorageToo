@@ -1,7 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import net.minecraft.block.state.IBlockState;
-
 public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 {
 	protected BlockContainerBetterStorage( Properties properties )
@@ -9,11 +7,11 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 		super( properties );
 	}
 
-	@Override
+	/*@Override
 	public boolean hasTileEntity( IBlockState state )
 	{
 		return true;
-	}
+	}*/
 
 	/*
 	 * @Override

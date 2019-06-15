@@ -1,12 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import io.github.tehstoneman.betterstorage.api.lock.ILockable;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class ItemLock extends ItemKeyLock implements ILock
 {
@@ -141,15 +138,17 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return "normal";
 	}
 
-	@Override
-	public void onUnlock( ItemStack lock, ItemStack key, ILockable lockable, EntityPlayer player, boolean success )
-	{
-		if( success )
-			return;
-		// Power is 2 when a key was used to open the lock, 1 otherwise.
-		final EnumLockInteraction interaction = key != null ? EnumLockInteraction.PICK : EnumLockInteraction.OPEN;
-		applyEffects( lock, lockable, player, interaction );
-	}
+	/*
+	 * @Override
+	 * public void onUnlock( ItemStack lock, ItemStack key, ILockable lockable, EntityPlayer player, boolean success )
+	 * {
+	 * if( success )
+	 * return;
+	 * // Power is 2 when a key was used to open the lock, 1 otherwise.
+	 * final EnumLockInteraction interaction = key != null ? EnumLockInteraction.PICK : EnumLockInteraction.OPEN;
+	 * applyEffects( lock, lockable, player, interaction );
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -182,10 +181,12 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return true;
 	}
 
-	@Override
-	public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
-	{
-		// TODO Auto-generated method stub
-
-	}
+	/*
+	 * @Override
+	 * public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
+	 * {
+	 * // TODO Auto-generated method stub
+	 * 
+	 * }
+	 */
 }

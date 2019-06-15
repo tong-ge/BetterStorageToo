@@ -1,106 +1,95 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
-import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class BetterStorageGUIHandler implements IGuiHandler
 {
-	@Override
-	public Object getServerGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z )
-	{
-		if( ID == EnumGui.KEYRING.getGuiID() )
-		{
-			final ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.KEYRING )
-				return null;
-			return new ContainerKeyring( player, itemStack, player.inventory.currentItem );
-		}
-		/*
-		 * if( ID == EnumGui.CRATE.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityCrate )
-		 * {
-		 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-		 * return new ContainerCrate( player, crate );
-		 * }
-		 * }
-		 */
-		/*
-		 * if( ID == EnumGui.GENERAL.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityContainer )
-		 * {
-		 * final TileEntityContainer chest = (TileEntityContainer)tileEntity;
-		 * return new ContainerBetterStorage( player, chest );
-		 * }
-		 * }
-		 */
-		/*
-		 * if( ID == EnumGui.CRAFTING.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityCraftingStation )
-		 * {
-		 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
-		 * return new ContainerCraftingStation( player, station );
-		 * }
-		 * }
-		 */
-		return null;
-	}
+	/*
+	 * @Override
+	 * public Object getServerGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z )
+	 * {
+	 * if( ID == EnumGui.KEYRING.getGuiID() )
+	 * {
+	 * final ItemStack itemStack = player.getHeldItemMainhand();
+	 * if( itemStack.getItem() != BetterStorageItems.KEYRING )
+	 * return null;
+	 * return new ContainerKeyring( player, itemStack, player.inventory.currentItem );
+	 * }
+	 * if( ID == EnumGui.CRATE.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityCrate )
+	 * {
+	 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+	 * return new ContainerCrate( player, crate );
+	 * }
+	 * }
+	 * if( ID == EnumGui.GENERAL.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityContainer )
+	 * {
+	 * final TileEntityContainer chest = (TileEntityContainer)tileEntity;
+	 * return new ContainerBetterStorage( player, chest );
+	 * }
+	 * }
+	 * if( ID == EnumGui.CRAFTING.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityCraftingStation )
+	 * {
+	 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
+	 * return new ContainerCraftingStation( player, station );
+	 * }
+	 * }
+	 * return null;
+	 * }
+	 */
 
-	@Override
-	public Object getClientGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z )
-	{
-		if( ID == EnumGui.KEYRING.getGuiID() )
-		{
-			final ItemStack itemStack = player.getHeldItemMainhand();
-			if( itemStack.getItem() != BetterStorageItems.KEYRING )
-				return null;
-			return new GuiKeyring( new ContainerKeyring( player, itemStack, player.inventory.currentItem ) );
-		}
-		/*
-		 * if( ID == EnumGui.CRATE.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityCrate )
-		 * {
-		 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-		 * return new GuiCrate( crate, new ContainerCrate( player, crate ) );
-		 * }
-		 * }
-		 */
-		/*
-		 * if( ID == EnumGui.GENERAL.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityContainer )
-		 * {
-		 * final TileEntityContainer chest = (TileEntityContainer)tileEntity;
-		 * return new GuiBetterStorage( new ContainerBetterStorage( player, chest ) );
-		 * }
-		 * }
-		 */
-		/*
-		 * if( ID == EnumGui.CRAFTING.getGuiID() )
-		 * {
-		 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
-		 * if( tileEntity instanceof TileEntityCraftingStation )
-		 * {
-		 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
-		 * return new GuiCraftingStation( new ContainerCraftingStation( player, station ) );
-		 * }
-		 * }
-		 */
-		return null;
-	}
+	/*
+	 * @Override
+	 * public Object getClientGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z )
+	 * {
+	 * if( ID == EnumGui.KEYRING.getGuiID() )
+	 * {
+	 * final ItemStack itemStack = player.getHeldItemMainhand();
+	 * if( itemStack.getItem() != BetterStorageItems.KEYRING )
+	 * return null;
+	 * return new GuiKeyring( new ContainerKeyring( player, itemStack, player.inventory.currentItem ) );
+	 * }
+	 * if( ID == EnumGui.CRATE.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityCrate )
+	 * {
+	 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+	 * return new GuiCrate( crate, new ContainerCrate( player, crate ) );
+	 * }
+	 * }
+	 * if( ID == EnumGui.GENERAL.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityContainer )
+	 * {
+	 * final TileEntityContainer chest = (TileEntityContainer)tileEntity;
+	 * return new GuiBetterStorage( new ContainerBetterStorage( player, chest ) );
+	 * }
+	 * }
+	 * if( ID == EnumGui.CRAFTING.getGuiID() )
+	 * {
+	 * final TileEntity tileEntity = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * if( tileEntity instanceof TileEntityCraftingStation )
+	 * {
+	 * final TileEntityCraftingStation station = (TileEntityCraftingStation)tileEntity;
+	 * return new GuiCraftingStation( new ContainerCraftingStation( player, station ) );
+	 * }
+	 * }
+	 * return null;
+	 * }
+	 */
 
 	public static enum EnumGui implements IStringSerializable
 	{
@@ -152,5 +141,19 @@ public class BetterStorageGUIHandler implements IGuiHandler
 			for( final EnumGui gui : values() )
 				ID_LOOKUP[gui.getGuiID()] = gui;
 		}
+	}
+
+	@Override
+	public Object getServerGuiElement( int ID, PlayerEntity player, World world, int x, int y, int z )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getClientGuiElement( int ID, PlayerEntity player, World world, int x, int y, int z )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

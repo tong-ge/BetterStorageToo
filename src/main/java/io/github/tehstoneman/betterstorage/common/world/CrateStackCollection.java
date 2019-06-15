@@ -7,8 +7,7 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.storage.WorldSavedData;
 
 /** Holds all CratePileData objects for one world / dimension. */
@@ -29,18 +28,20 @@ public class CrateStackCollection extends WorldSavedData
 	}
 
 	/** Gets or creates a CratePileCollection for the world. */
-	public static CrateStackCollection getCollection( World world )
-	{
-		CrateStackCollection collection = world.func_212411_a( world.getDimension().getType(), CrateStackCollection::new, filename );
-		// CrateStackCollection collection = (CrateStackCollection)world.loadData( CrateStackCollection.class, filename );
-		if( collection == null )
-		{
-			collection = new CrateStackCollection();
-			world.func_212409_a( world.getDimension().getType(), filename, collection );
-			// world.setData( filename, collection );
-		}
-		return collection;
-	}
+	/*
+	 * public static CrateStackCollection getCollection( World world )
+	 * {
+	 * CrateStackCollection collection = world.func_212411_a( world.getDimension().getType(), CrateStackCollection::new, filename );
+	 * // CrateStackCollection collection = (CrateStackCollection)world.loadData( CrateStackCollection.class, filename );
+	 * if( collection == null )
+	 * {
+	 * collection = new CrateStackCollection();
+	 * world.func_212409_a( world.getDimension().getType(), filename, collection );
+	 * // world.setData( filename, collection );
+	 * }
+	 * return collection;
+	 * }
+	 */
 
 	/** Get the stack handler for the associated ID */
 	public CrateStackHandler getCratePile( UUID pileID )
@@ -117,24 +118,42 @@ public class CrateStackCollection extends WorldSavedData
 	 * }
 	 */
 
+	/*
+	 * @Override
+	 * public void read( NBTTagCompound compound )
+	 * {
+	 * if( !compound.isEmpty() )
+	 * for( final String key : compound.keySet() )
+	 * {
+	 * final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
+	 * crateStackHandler.deserializeNBT( compound.getCompound( key ) );
+	 * pileDataMap.put( UUID.fromString( key ), crateStackHandler );
+	 * }
+	 * }
+	 */
+
+	/*
+	 * @Override
+	 * public NBTTagCompound write( NBTTagCompound compound )
+	 * {
+	 * if( !pileDataMap.isEmpty() )
+	 * for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
+	 * compound.setTag( entry.getKey().toString(), entry.getValue().serializeNBT() );
+	 * return compound;
+	 * }
+	 */
+
 	@Override
-	public void read( NBTTagCompound compound )
+	public void read( CompoundNBT nbt )
 	{
-		if( !compound.isEmpty() )
-			for( final String key : compound.keySet() )
-			{
-				final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
-				crateStackHandler.deserializeNBT( compound.getCompound( key ) );
-				pileDataMap.put( UUID.fromString( key ), crateStackHandler );
-			}
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public NBTTagCompound write( NBTTagCompound compound )
+	public CompoundNBT write( CompoundNBT compound )
 	{
-		if( !pileDataMap.isEmpty() )
-			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
-				compound.setTag( entry.getKey().toString(), entry.getValue().serializeNBT() );
-		return compound;
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

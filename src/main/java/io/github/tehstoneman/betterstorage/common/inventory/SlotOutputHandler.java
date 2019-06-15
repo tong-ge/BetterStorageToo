@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -20,11 +19,13 @@ public class SlotOutputHandler extends SlotItemHandler
 		return false;
 	}
 
-	@Override
-	public boolean canTakeStack( EntityPlayer playerIn )
-	{
-		return isGhosted ? false : super.canTakeStack( playerIn );
-	}
+	/*
+	 * @Override
+	 * public boolean canTakeStack( EntityPlayer playerIn )
+	 * {
+	 * return isGhosted ? false : super.canTakeStack( playerIn );
+	 * }
+	 */
 
 	/*
 	 * @SideOnly(Side.CLIENT)

@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -12,18 +11,18 @@ public class BlockCardboardBox extends Block// BlockContainerBetterStorage
 {
 	protected static final VoxelShape	SHAPE_BOX	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 
-	private static Properties			properties	= Properties.create( Material.CLOTH ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH );
+	private static Properties			properties	= Properties.create( Material.WOOL ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH );
 
 	public BlockCardboardBox()
 	{
 		super( properties );
 	}
 
-	@Override
+	/*@Override
 	public VoxelShape getShape( IBlockState state, IBlockReader worldIn, BlockPos pos )
 	{
 		return SHAPE_BOX;
-	}
+	}*/
 
 	/*
 	 * @Override
@@ -33,11 +32,11 @@ public class BlockCardboardBox extends Block// BlockContainerBetterStorage
 	 * }
 	 */
 
-	@Override
+	/*@Override
 	public boolean isFullCube( IBlockState state )
 	{
 		return false;
-	}
+	}*/
 
 	/*
 	 * @Override

@@ -6,11 +6,8 @@ import java.util.List;
 import io.github.tehstoneman.betterstorage.api.IContainerItem;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
 
 public final class StackUtils
 {
@@ -191,20 +188,24 @@ public final class StackUtils
 
 	// Stack matching
 
-	public static boolean matches( Item item1, int damage1, NBTTagCompound data1, Item item2, int damage2, NBTTagCompound data2 )
-	{
-		return item1 == item2 && damage1 == damage2 && nbtEquals( data1, data2 );
-	}
+	/*
+	 * public static boolean matches( Item item1, int damage1, NBTTagCompound data1, Item item2, int damage2, NBTTagCompound data2 )
+	 * {
+	 * return item1 == item2 && damage1 == damage2 && nbtEquals( data1, data2 );
+	 * }
+	 */
 
 	/**
 	 * Returns if the two NBT compounds are equal.
 	 * Used instead of default comparison because this function
 	 * makes sure the names of the main NBT tags match before comparing.
 	 */
-	public static boolean nbtEquals( NBTTagCompound nbt1, NBTTagCompound nbt2 )
-	{
-		return nbt1 == nbt2 || !( nbt1 == null || nbt2 == null ) && nbt1.equals( nbt2 );
-	}
+	/*
+	 * public static boolean nbtEquals( NBTTagCompound nbt1, NBTTagCompound nbt2 )
+	 * {
+	 * return nbt1 == nbt2 || !( nbt1 == null || nbt2 == null ) && nbt1.equals( nbt2 );
+	 * }
+	 */
 
 	/**
 	 * Returns if the two item stacks match. <br>
@@ -233,29 +234,31 @@ public final class StackUtils
 	// Enchantment functions
 
 	/** Represents an enchantment entry on an item stack. */
-	public static class StackEnchantment
-	{
-		public final ItemStack			stack;
-		public final Enchantment		ench;
-		private final NBTTagCompound	entry;
-
-		public int getLevel()
-		{
-			return entry.getShort( "lvl" );
-		}
-
-		public void setLevel( int level )
-		{
-			entry.setShort( "lvl", (short)level );
-		}
-
-		public StackEnchantment( ItemStack stack, NBTTagCompound entry )
-		{
-			this.stack = stack;
-			this.entry = entry;
-			ench = Enchantment.getEnchantmentByID( entry.getShort( "id" ) );
-		}
-	}
+	/*
+	 * public static class StackEnchantment
+	 * {
+	 * public final ItemStack stack;
+	 * public final Enchantment ench;
+	 * private final NBTTagCompound entry;
+	 * 
+	 * public int getLevel()
+	 * {
+	 * return entry.getShort( "lvl" );
+	 * }
+	 * 
+	 * public void setLevel( int level )
+	 * {
+	 * entry.setShort( "lvl", (short)level );
+	 * }
+	 * 
+	 * public StackEnchantment( ItemStack stack, NBTTagCompound entry )
+	 * {
+	 * this.stack = stack;
+	 * this.entry = entry;
+	 * ench = Enchantment.getEnchantmentByID( entry.getShort( "id" ) );
+	 * }
+	 * }
+	 */
 
 	// Other functions, mostly BetterStorage related
 

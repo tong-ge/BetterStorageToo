@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.network;
 
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 
 public abstract class AbstractPacket<T extends AbstractPacket< T >> // implements IMessage, IMessageHandler< T, IMessage >
@@ -11,7 +10,7 @@ public abstract class AbstractPacket<T extends AbstractPacket< T >> // implement
 
 	public abstract void decode( PacketBuffer buffer ) throws IOException;
 
-	public abstract void handle( EntityPlayer player );
+	// public abstract void handle( EntityPlayer player );
 
 	// IMessage implementation
 

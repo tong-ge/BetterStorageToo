@@ -1,11 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.EnumReinforced;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker
 {
@@ -20,19 +16,21 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		return true;
 	}
 
-	/*@Override
-	public void setAttachmentPosition()
-	{
-		final double x = mirror ? 13.5 : 2.5;
-		final double y = isConnected() ? 0 : 8;
-		lockAttachment.setBox( x, y, 0.5, 5, 5, 1 );
-		lockAttachment.setScale( 0.375F, 1.5F );
-	}*/
+	/*
+	 * @Override
+	 * public void setAttachmentPosition()
+	 * {
+	 * final double x = mirror ? 13.5 : 2.5;
+	 * final double y = isConnected() ? 0 : 8;
+	 * lockAttachment.setBox( x, y, 0.5, 5, 5, 1 );
+	 * lockAttachment.setScale( 0.375F, 1.5F );
+	 * }
+	 */
 
 	@Override
 	public int getColumns()
 	{
-		return BetterStorage.config.GENERAL.reinforcedColumns.get();
+		return BetterStorageConfig.GENERAL.reinforcedColumns.get();
 	}
 
 	@Override
@@ -41,10 +39,12 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		return ModInfo.containerReinforcedLocker;
 	}
 
-	/*@Override
-	public void setMaterial( EnumReinforced reinforcedMaterial )
-	{
-		material = reinforcedMaterial;
-		markDirty();
-	}*/
+	/*
+	 * @Override
+	 * public void setMaterial( EnumReinforced reinforcedMaterial )
+	 * {
+	 * material = reinforcedMaterial;
+	 * markDirty();
+	 * }
+	 */
 }

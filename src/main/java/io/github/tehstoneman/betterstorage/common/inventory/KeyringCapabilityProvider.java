@@ -1,13 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
 
-public class KeyringCapabilityProvider implements ICapabilitySerializable< NBTTagCompound >
+public class KeyringCapabilityProvider// implements ICapabilitySerializable< NBTTagCompound >
 {
 	private final ItemStack		invItem;
 	public KeyringStackHandler	inventory;
@@ -59,22 +54,46 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< NBTTa
 		// invItem.setItemDamage( (int)Math.ceil( count / 3.0 ) );
 	}
 
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		return inventory.serializeNBT();
-	}
+	/*
+	 * @Override
+	 * public NBTTagCompound serializeNBT()
+	 * {
+	 * return inventory.serializeNBT();
+	 * }
+	 */
 
-	@Override
-	public void deserializeNBT( NBTTagCompound nbt )
-	{
-		inventory.deserializeNBT( nbt );
-	}
+	/*
+	 * @Override
+	 * public void deserializeNBT( NBTTagCompound nbt )
+	 * {
+	 * inventory.deserializeNBT( nbt );
+	 * }
+	 */
 
-	@Override
-	public <T> LazyOptional< T > getCapability( Capability< T > cap, EnumFacing side )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > cap, EnumFacing side )
+	 * {
+	 * // TODO Auto-generated method stub
+	 * return null;
+	 * }
+	 */
+
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > cap, Direction side )
+	 * {
+	 * // TODO Auto-generated method stub
+	 * return null;
+	 * }
+	 */
+
+	/*
+	 * @Override
+	 * public NBTTagCompound serializeNBT()
+	 * {
+	 * // TODO Auto-generated method stub
+	 * return null;
+	 * }
+	 */
 }

@@ -4,39 +4,23 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
-import io.github.tehstoneman.betterstorage.common.inventory.Region;
-import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class TileEntityCrate extends TileEntity
 {
-	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> getCrateStackHandler() );
+	// private final LazyOptional< IItemHandler > inventoryHandler = LazyOptional.of( () -> getCrateStackHandler() );
 
-	public static final int						slotsPerCrate		= 18;
-	public static final int						maxCrates			= 125;
-	public static final int						maxPerSide			= 5;
+	public static final int		slotsPerCrate	= 18;
+	public static final int		maxCrates		= 125;
+	public static final int		maxPerSide		= 5;
 
-	private UUID								pileID;
-	protected ITextComponent					customName;
+	private UUID				pileID;
+	protected ITextComponent	customName;
 
-	private int									numCrates;
-	private int									capacity;
+	private int					numCrates;
+	private int					capacity;
 
 	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
 	{
@@ -48,48 +32,56 @@ public class TileEntityCrate extends TileEntity
 		this( BetterStorageTileEntityTypes.CRATE );
 	}
 
-	@Override
-	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-		if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-		return super.getCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	 * {
+	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+	 * if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
+	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+	 * return super.getCapability( capability, facing );
+	 * }
+	 */
 
 	/** Helper function to add crate to handler */
-	public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
-	{
-		if( !getWorld().isRemote && pileID == null )
-		{
-			getCrateStackHandler().addCrate( this );
-			markDirty();
-		}
-	}
+	/*
+	 * public void onBlockPlaced( EntityLivingBase placer, ItemStack stack )
+	 * {
+	 * if( !getWorld().isRemote && pileID == null )
+	 * {
+	 * getCrateStackHandler().addCrate( this );
+	 * markDirty();
+	 * }
+	 * }
+	 */
 
 	/** Get the crate stack handler for this tile entity. */
-	public CrateStackHandler getCrateStackHandler()
-	{
-		final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
-		if( getWorld().isRemote )
-			return new CrateStackHandler( getCapacity() );
-		final CrateStackHandler handler = collection.getCratePile( pileID );
-		handler.sendUpdatesTo( this );
-		return handler;
-	}
+	/*
+	 * public CrateStackHandler getCrateStackHandler()
+	 * {
+	 * final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
+	 * if( getWorld().isRemote )
+	 * return new CrateStackHandler( getCapacity() );
+	 * final CrateStackHandler handler = collection.getCratePile( pileID );
+	 * handler.sendUpdatesTo( this );
+	 * return handler;
+	 * }
+	 */
 
 	/** Get the pile ID for this tile entity */
-	public UUID getPileID()
-	{
-		if( pileID == null )
-		{
-			final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
-			final CrateStackHandler handler = collection.createCratePile();
-			pileID = handler.getPileID();
-		}
-		return pileID;
-	}
+	/*
+	 * public UUID getPileID()
+	 * {
+	 * if( pileID == null )
+	 * {
+	 * final CrateStackCollection collection = CrateStackCollection.getCollection( getWorld() );
+	 * final CrateStackHandler handler = collection.createCratePile();
+	 * pileID = handler.getPileID();
+	 * }
+	 * return pileID;
+	 * }
+	 */
 
 	/** Sets the pile ID for this tile entity */
 	public void setPileID( UUID pileID )
@@ -269,18 +261,20 @@ public class TileEntityCrate extends TileEntity
 	 */
 
 	/** Notify all matching crates within a region of an update */
-	public void notifyRegionUpdate( Region region, UUID pileID )
-	{
-		for( final BlockPos blockPos : BlockPos.getAllInBox( region.posMin, region.posMax ) )
-		{
-			final TileEntity te = getWorld().getTileEntity( blockPos );
-			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
-			{
-				final IBlockState state = getWorld().getBlockState( blockPos );
-				getWorld().notifyBlockUpdate( blockPos, state, state, 3 );
-			}
-		}
-	}
+	/*
+	 * public void notifyRegionUpdate( Region region, UUID pileID )
+	 * {
+	 * for( final BlockPos blockPos : BlockPos.getAllInBox( region.posMin, region.posMax ) )
+	 * {
+	 * final TileEntity te = getWorld().getTileEntity( blockPos );
+	 * if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
+	 * {
+	 * final IBlockState state = getWorld().getBlockState( blockPos );
+	 * getWorld().notifyBlockUpdate( blockPos, state, state, 3 );
+	 * }
+	 * }
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -311,12 +305,14 @@ public class TileEntityCrate extends TileEntity
 	 */
 
 	/** Get the total capacity this tile entity */
-	public int getCapacity()
-	{
-		if( getWorld().isRemote )
-			return capacity;
-		return getCrateStackHandler().getCapacity();
-	}
+	/*
+	 * public int getCapacity()
+	 * {
+	 * if( getWorld().isRemote )
+	 * return capacity;
+	 * return getCrateStackHandler().getCapacity();
+	 * }
+	 */
 
 	// Comparator related
 
@@ -359,72 +355,84 @@ public class TileEntityCrate extends TileEntity
 
 	// TileEntity synchronization
 
-	@Override
-	public NBTTagCompound getUpdateTag()
-	{
-		final NBTTagCompound compound = super.getUpdateTag();
+	/*
+	 * @Override
+	 * public NBTTagCompound getUpdateTag()
+	 * {
+	 * final NBTTagCompound compound = super.getUpdateTag();
+	 * 
+	 * if( pileID != null )
+	 * compound.setUniqueId( "PileID", pileID );
+	 * compound.setInt( "NumCrates", getNumCrates() );
+	 * compound.setInt( "Capacity", getCapacity() );
+	 * 
+	 * return compound;
+	 * }
+	 */
 
-		if( pileID != null )
-			compound.setUniqueId( "PileID", pileID );
-		compound.setInt( "NumCrates", getNumCrates() );
-		compound.setInt( "Capacity", getCapacity() );
+	/*
+	 * @Override
+	 * public SPacketUpdateTileEntity getUpdatePacket()
+	 * {
+	 * final NBTTagCompound compound = getUpdateTag();
+	 * return new SPacketUpdateTileEntity( getPos(), 0, compound );
+	 * }
+	 */
 
-		return compound;
-	}
+	/*
+	 * @Override
+	 * public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
+	 * {
+	 * final NBTTagCompound compound = packet.getNbtCompound();
+	 * if( compound.hasUniqueId( "PileID" ) )
+	 * pileID = compound.getUniqueId( "PileID" );
+	 * numCrates = compound.getInt( "NumCrates" );
+	 * capacity = compound.getInt( "Capacity" );
+	 * 
+	 * getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
+	 * }
+	 */
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
-	{
-		final NBTTagCompound compound = getUpdateTag();
-		return new SPacketUpdateTileEntity( getPos(), 0, compound );
-	}
-
-	@Override
-	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
-	{
-		final NBTTagCompound compound = packet.getNbtCompound();
-		if( compound.hasUniqueId( "PileID" ) )
-			pileID = compound.getUniqueId( "PileID" );
-		numCrates = compound.getInt( "NumCrates" );
-		capacity = compound.getInt( "Capacity" );
-
-		getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
-	}
-
-	@Override
-	public void handleUpdateTag( NBTTagCompound compound )
-	{
-		super.handleUpdateTag( compound );
-
-		if( compound.hasUniqueId( "PileID" ) )
-			pileID = compound.getUniqueId( "PileID" );
-		numCrates = compound.getInt( "NumCrates" );
-		capacity = compound.getInt( "Capacity" );
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( NBTTagCompound compound )
+	 * {
+	 * super.handleUpdateTag( compound );
+	 * 
+	 * if( compound.hasUniqueId( "PileID" ) )
+	 * pileID = compound.getUniqueId( "PileID" );
+	 * numCrates = compound.getInt( "NumCrates" );
+	 * capacity = compound.getInt( "Capacity" );
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 
-	@Override
-	public NBTTagCompound write( NBTTagCompound compound )
-	{
-		super.write( compound );
+	/*
+	 * @Override
+	 * public NBTTagCompound write( NBTTagCompound compound )
+	 * {
+	 * super.write( compound );
+	 * 
+	 * if( pileID != null )
+	 * compound.setUniqueId( "PileID", pileID );
+	 * compound.setInt( "NumCrates", getNumCrates() );
+	 * compound.setInt( "Capacity", getCapacity() );
+	 * 
+	 * return compound;
+	 * }
+	 */
 
-		if( pileID != null )
-			compound.setUniqueId( "PileID", pileID );
-		compound.setInt( "NumCrates", getNumCrates() );
-		compound.setInt( "Capacity", getCapacity() );
-
-		return compound;
-	}
-
-	@Override
-	public void read( NBTTagCompound compound )
-	{
-		super.read( compound );
-
-		if( compound.hasUniqueId( "PileID" ) )
-			pileID = compound.getUniqueId( "PileID" );
-		numCrates = compound.getInt( "NumCrates" );
-		capacity = compound.getInt( "Capacity" );
-	}
+	/*
+	 * @Override
+	 * public void read( NBTTagCompound compound )
+	 * {
+	 * super.read( compound );
+	 * 
+	 * if( compound.hasUniqueId( "PileID" ) )
+	 * pileID = compound.getUniqueId( "PileID" );
+	 * numCrates = compound.getInt( "NumCrates" );
+	 * capacity = compound.getInt( "Capacity" );
+	 * }
+	 */
 }

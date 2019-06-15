@@ -1,15 +1,12 @@
 package io.github.tehstoneman.betterstorage.utils;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
 public final class DyeUtils
 {
-	private static final Map< String, EnumDyeColor > dyes = new HashMap<>();
+	// private static final Map< String, EnumDyeColor > dyes = new HashMap<>();
 	/*
 	 * static
 	 * {
@@ -39,21 +36,21 @@ public final class DyeUtils
 	 * Gets the dye color of the item stack. <br>
 	 * If it's not a dye, it will return null.
 	 */
-	public static EnumDyeColor getDyeColor( ItemStack stack )
-	{
-		if( stack == null )
-			return null;
-		// final int[] oreIds = OreDictionary.getOreIDs( stack );
-		/*
-		 * for( final int ore : oreIds )
-		 * {
-		 * final String name = OreDictionary.getOreName( ore );
-		 * if( dyes.containsKey( name ) )
-		 * return dyes.get( name );
-		 * }
-		 */
-		return null;
-	}
+	/*
+	 * public static EnumDyeColor getDyeColor( ItemStack stack )
+	 * {
+	 * if( stack == null )
+	 * return null;
+	 * // final int[] oreIds = OreDictionary.getOreIDs( stack );
+	 * for( final int ore : oreIds )
+	 * {
+	 * final String name = OreDictionary.getOreName( ore );
+	 * if( dyes.containsKey( name ) )
+	 * return dyes.get( name );
+	 * }
+	 * return null;
+	 * }
+	 */
 
 	/** Returns if the item stack is a dye. */
 	public static boolean isDye( ItemStack stack )

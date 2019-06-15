@@ -2,32 +2,21 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
-import net.minecraft.block.BlockChest;
-import net.minecraft.entity.player.EntityPlayer;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityConnectable extends TileEntityContainer  implements IChestLid, ITickable
+public abstract class TileEntityConnectable extends TileEntityContainer implements IChestLid// , ITickable
 {
 	public ConnectedStackHandler				connectedInventory;
 	private final LazyOptional< IItemHandler >	connectedHandler	= LazyOptional.of( () -> connectedInventory );
@@ -37,19 +26,21 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 		super( tileEntityTypeIn );
 	}
 
-	@Override
-	public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	{
-		if( isMain() )
-			if( isConnected() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			{
-				connectedInventory = new ConnectedStackHandler( inventory, getConnectedTileEntity().inventory );
-				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, connectedHandler );
-			}
-			else
-				return super.getCapability( capability, facing );
-		return getMainTileEntity().getCapability( capability, facing );
-	}
+	/*
+	 * @Override
+	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
+	 * {
+	 * if( isMain() )
+	 * if( isConnected() && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+	 * {
+	 * connectedInventory = new ConnectedStackHandler( inventory, getConnectedTileEntity().inventory );
+	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, connectedHandler );
+	 * }
+	 * else
+	 * return super.getCapability( capability, facing );
+	 * return getMainTileEntity().getCapability( capability, facing );
+	 * }
+	 */
 
 	/** Returns position of the connected TileEntity */
 	public abstract BlockPos getConnected();
@@ -68,7 +59,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 		final TileEntityConnectable connectable = getConnectedTileEntity();
 		if( connectable != null )
 			return connectable;
-		if( BetterStorage.config.GENERAL.enableWarningMessages.get() )
+		if( BetterStorageConfig.GENERAL.enableWarningMessages.get() )
 			BetterStorage.LOGGER.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(),
 					pos.getY(), pos.getZ() );
 		return this;
@@ -95,11 +86,13 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 	 */
 	protected abstract String getConnectableName();
 
-	@Override
-	public ITextComponent getName()
-	{
-		return customName != null ? customName : new TextComponentTranslation( getConnectableName().concat( isConnected() ? "_large" : "" ) );
-	}
+	/*
+	 * @Override
+	 * public ITextComponent getName()
+	 * {
+	 * return customName != null ? customName : new TextComponentTranslation( getConnectableName().concat( isConnected() ? "_large" : "" ) );
+	 * }
+	 */
 
 	@Override
 	protected boolean doesSyncPlayers()
@@ -191,11 +184,13 @@ public abstract class TileEntityConnectable extends TileEntityContainer  impleme
 	 * }
 	 */
 
-	@Override
-	public ContainerBetterStorage getContainer( EntityPlayer player )
-	{
-		return new ContainerBetterStorage( getMainTileEntity(), player );
-	}
+	/*
+	 * @Override
+	 * public ContainerBetterStorage getContainer( EntityPlayer player )
+	 * {
+	 * return new ContainerBetterStorage( getMainTileEntity(), player );
+	 * }
+	 */
 
 	/*
 	 * =========

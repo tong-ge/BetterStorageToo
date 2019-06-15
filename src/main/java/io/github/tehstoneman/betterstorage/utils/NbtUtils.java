@@ -1,11 +1,5 @@
 package io.github.tehstoneman.betterstorage.utils;
 
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-
 public final class NbtUtils
 {
 
@@ -46,64 +40,70 @@ public final class NbtUtils
 		//@formatter:on
 	}*/
 
-	public static NBTTagList createList( Object... values )
-	{
-		final NBTTagList list = new NBTTagList();
-		/*
-		 * for( final Object value : values )
-		 * list.appendTag( value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
-		 */
-		return list;
-	}
+	/*
+	 * public static NBTTagList createList( Object... values )
+	 * {
+	 * final NBTTagList list = new NBTTagList();
+	 * 
+	 * for( final Object value : values )
+	 * list.appendTag( value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
+	 * 
+	 * return list;
+	 * }
+	 */
 
-	public static NBTTagCompound createCompound( Object... nameValuePairs )
-	{
-		final NBTTagCompound compound = new NBTTagCompound();
-		for( int i = 0; i < nameValuePairs.length; i += 2 )
-		{
-			final String key = (String)nameValuePairs[i];
-			final Object value = nameValuePairs[i + 1];
-			// compound.setTag( key, value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
-		}
-		return compound;
-	}
+	/*
+	 * public static NBTTagCompound createCompound( Object... nameValuePairs )
+	 * {
+	 * final NBTTagCompound compound = new NBTTagCompound();
+	 * for( int i = 0; i < nameValuePairs.length; i += 2 )
+	 * {
+	 * final String key = (String)nameValuePairs[i];
+	 * final Object value = nameValuePairs[i + 1];
+	 * // compound.setTag( key, value instanceof NBTBase ? (NBTBase)value : createTag( value ) );
+	 * }
+	 * return compound;
+	 * }
+	 */
 
-	public static void readItems( ItemStack[] contents, NBTTagList items )
-	{
-		for( int i = 0; i < contents.length; i++ )
-			contents[i] = null;
-		/*
-		 * for( int i = 0; i < items.tagCount(); i++ )
-		 * {
-		 * final NBTTagCompound item = items.getCompoundTagAt( i );
-		 * final int slot = item.getByte( "Slot" ) & 255;
-		 * if( slot >= 0 && slot < contents.length )
-		 * contents[slot] = new ItemStack( item );
-		 * }
-		 */
-	}
+	/*
+	 * public static void readItems( ItemStack[] contents, NBTTagList items )
+	 * {
+	 * for( int i = 0; i < contents.length; i++ )
+	 * contents[i] = null;
+	 * for( int i = 0; i < items.tagCount(); i++ )
+	 * {
+	 * final NBTTagCompound item = items.getCompoundTagAt( i );
+	 * final int slot = item.getByte( "Slot" ) & 255;
+	 * if( slot >= 0 && slot < contents.length )
+	 * contents[slot] = new ItemStack( item );
+	 * }
+	 * }
+	 */
 
-	public static void readItems( List< ItemStack > list, NBTTagList items )
-	{
-		/*
-		 * for( int i = 0; i < items.tagCount(); i++ )
-		 * list.add( new ItemStack( items.getCompoundTagAt( i ) ) );
-		 */
-	}
+	/*
+	 * public static void readItems( List< ItemStack > list, NBTTagList items )
+	 * {
+	 * for( int i = 0; i < items.tagCount(); i++ )
+	 * list.add( new ItemStack( items.getCompoundTagAt( i ) ) );
+	 * }
+	 */
 
-	public static NBTTagList writeItems( ItemStack[] contents )
-	{
-		final NBTTagList items = new NBTTagList();
-		for( int i = 0; i < contents.length; i++ )
-		{
-			if( contents[i] == null )
-				continue;
-			final NBTTagCompound item = new NBTTagCompound();
-			item.setByte( "Slot", (byte)i );
-			// contents[i].writeToNBT( item );
-			// items.appendTag( item );
-		}
-		return items;
-	}
+	/*
+	 * public static NBTTagList writeItems( ItemStack[] contents )
+	 * {
+	 * final NBTTagList items = new NBTTagList();
+	 * for( int i = 0; i < contents.length; i++ )
+	 * {
+	 * if( contents[i] == null )
+	 * continue;
+	 * final NBTTagCompound item = new NBTTagCompound();
+	 * item.setByte( "Slot", (byte)i );
+	 * // contents[i].writeToNBT( item );
+	 * // items.appendTag( item );
+	 * }
+	 * return items;
+	 * }
+	 */
 
 }

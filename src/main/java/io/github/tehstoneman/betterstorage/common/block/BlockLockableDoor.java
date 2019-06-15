@@ -1,12 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class BlockLockableDoor extends BlockBetterStorage
 {
@@ -50,7 +45,7 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * final EnumFacing enumfacing = state.getValue( BlockDoor.FACING );
 	 * final boolean flag = !state.getValue( BlockDoor.OPEN ).booleanValue();
 	 * final boolean flag1 = state.getValue( BlockDoor.HINGE ) == EnumHingePosition.RIGHT;
-	 * 
+	 *
 	 * switch( enumfacing )
 	 * {
 	 * case EAST:
@@ -91,11 +86,13 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * }
 	 */
 
-	@Override
-	public boolean isFullCube( IBlockState state )
-	{
-		return false;
-	}
+	/*
+	 * @Override
+	 * public boolean isFullCube( IBlockState state )
+	 * {
+	 * return false;
+	 * }
+	 */
 
 	public static int getCloseSound()
 	{
@@ -125,22 +122,22 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * public int getMetaFromState( IBlockState state )
 	 * {
 	 * int i = 0;
-	 * 
+	 *
 	 * if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
 	 * {
 	 * i = i | 8;
-	 * 
+	 *
 	 * if( state.getValue( BlockDoor.HINGE ) == EnumHingePosition.RIGHT )
 	 * i |= 1;
 	 * }
 	 * else
 	 * {
 	 * i = i | state.getValue( BlockDoor.FACING ).rotateY().getHorizontalIndex();
-	 * 
+	 *
 	 * if( state.getValue( BlockDoor.OPEN ).booleanValue() )
 	 * i |= 4;
 	 * }
-	 * 
+	 *
 	 * return i;
 	 * }
 	 */
@@ -152,19 +149,19 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER )
 	 * {
 	 * final IBlockState iblockstate = worldIn.getBlockState( pos.up() );
-	 * 
+	 *
 	 * if( iblockstate.getBlock() == this )
 	 * state = state.withProperty( BlockDoor.HINGE, iblockstate.getValue( BlockDoor.HINGE ) );
 	 * }
 	 * else
 	 * {
 	 * final IBlockState iblockstate1 = worldIn.getBlockState( pos.down() );
-	 * 
+	 *
 	 * if( iblockstate1.getBlock() == this )
 	 * state = state.withProperty( BlockDoor.FACING, iblockstate1.getValue( BlockDoor.FACING ) ).withProperty( BlockDoor.OPEN,
 	 * iblockstate1.getValue( BlockDoor.OPEN ) );
 	 * }
-	 * 
+	 *
 	 * return state;
 	 * }
 	 */
@@ -247,28 +244,26 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * }
 	 */
 
-	@Override
-	public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player )
-	{
-		final BlockPos blockpos = pos.down();
-		final BlockPos blockpos1 = pos.up();
-
-		/*
-		 * if( player.capabilities.isCreativeMode && state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER
-		 * && worldIn.getBlockState( blockpos ).getBlock() == this )
-		 * worldIn.setBlockToAir( blockpos );
-		 */
-
-		/*
-		 * if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER && worldIn.getBlockState( blockpos1 ).getBlock() == this )
-		 * {
-		 * if( player.capabilities.isCreativeMode )
-		 * worldIn.setBlockToAir( pos );
-		 * 
-		 * worldIn.setBlockToAir( blockpos1 );
-		 * }
-		 */
-	}
+	/*
+	 * @Override
+	 * public void onBlockHarvested( World worldIn, BlockPos pos, IBlockState state, EntityPlayer player )
+	 * {
+	 * final BlockPos blockpos = pos.down();
+	 * final BlockPos blockpos1 = pos.up();
+	 * 
+	 * if( player.capabilities.isCreativeMode && state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER
+	 * && worldIn.getBlockState( blockpos ).getBlock() == this )
+	 * worldIn.setBlockToAir( blockpos );
+	 * 
+	 * if( state.getValue( BlockDoor.HALF ) == EnumDoorHalf.LOWER && worldIn.getBlockState( blockpos1 ).getBlock() == this )
+	 * {
+	 * if( player.capabilities.isCreativeMode )
+	 * worldIn.setBlockToAir( pos );
+	 * 
+	 * worldIn.setBlockToAir( blockpos1 );
+	 * }
+	 * }
+	 */
 
 	/*
 	 * @Override
@@ -326,16 +321,19 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * }
 	 */
 
-	@Override
-	// @SideOnly( Side.CLIENT )
-	public EnumBlockRenderType getRenderType( IBlockState state )
-	{
-		return EnumBlockRenderType.MODEL;
-	}
-
 	/*
 	 * @Override
 	 * 
+	 * @SideOnly( Side.CLIENT )
+	 * public EnumBlockRenderType getRenderType( IBlockState state )
+	 * {
+	 * return EnumBlockRenderType.MODEL;
+	 * }
+	 */
+
+	/*
+	 * @Override
+	 *
 	 * @SideOnly( Side.CLIENT )
 	 * public BlockRenderLayer getBlockLayer()
 	 * {
@@ -350,11 +348,13 @@ public class BlockLockableDoor extends BlockBetterStorage
 	 * }
 	 */
 
-	@Override
-	public boolean canProvidePower( IBlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean canProvidePower( IBlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	/*
 	 * @Override

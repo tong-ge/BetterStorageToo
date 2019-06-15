@@ -1,12 +1,10 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.IContainerItem;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockBetterStorage;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
 public class ItemBlockCardboardBox extends ItemBlockBetterStorage implements IContainerItem, ICardboardItem
@@ -136,16 +134,20 @@ public class ItemBlockCardboardBox extends ItemBlockBetterStorage implements ICo
 	// Helper functions
 
 	/** Returns the amount of rows in a cardboard box. */
-	/*public static int getRows()
-	{
-		return BetterStorage.config.cardboardBoxRows;
-	}*/
+	/*
+	 * public static int getRows()
+	 * {
+	 * return BetterStorage.config.cardboardBoxRows;
+	 * }
+	 */
 
 	/** Returns how many times cardboard boxes can be reused. */
-	/*public static int getUses()
-	{
-		return BetterStorage.config.cardboardBoxUses;
-	}*/
+	/*
+	 * public static int getUses()
+	 * {
+	 * return BetterStorage.config.cardboardBoxUses;
+	 * }
+	 */
 
 	// Cardboard items
 	@Override
@@ -183,8 +185,8 @@ public class ItemBlockCardboardBox extends ItemBlockBetterStorage implements ICo
 	@Override
 	public void setColor( ItemStack itemstack, int colorRGB )
 	{
-		final NBTTagCompound compound;
 		/*
+		 * final NBTTagCompound compound;
 		 * if( itemstack.hasTagCompound() )
 		 * compound = itemstack.getTagCompound();
 		 * else
