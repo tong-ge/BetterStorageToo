@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shaped",
+	"type": "minecraft:crafting_shaped",
 	"group": "betterstorage:locker",
 	"pattern":
 	[
@@ -9,8 +9,8 @@
 	],
 	"key":
 	{
-		"o": { "type": "forge:ore_dict", "ore": "plankWood" },
-		"|": { "item": "minecraft:trapdoor" }
+		"o": { "tag": "minecraft:planks" },
+		"|": { "tag": "minecraft:trapdoors" }
 	},
 	"result": { "item": "betterstorage:locker" }
 }

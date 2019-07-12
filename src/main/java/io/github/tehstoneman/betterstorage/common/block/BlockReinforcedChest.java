@@ -15,7 +15,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public class BlockReinforcedChest extends BlockLockable implements IBucketPickupHandler, ILiquidContainer
+public class BlockReinforcedChest extends BlockConnectableContainer implements IBucketPickupHandler, ILiquidContainer
 {
 	public static final BooleanProperty	WATERLOGGED		= BlockStateProperties.WATERLOGGED;
 	protected static final VoxelShape	SHAPE_NORTH		= Block.makeCuboidShape( 1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D );

@@ -2,12 +2,12 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.api.IContainerItem;
-import io.github.tehstoneman.betterstorage.common.item.ItemBlockBetterStorage;
+import io.github.tehstoneman.betterstorage.common.item.BlockItemBetterStorage;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
-public class ItemBlockCardboardBox extends ItemBlockBetterStorage implements IContainerItem, ICardboardItem
+public class ItemBlockCardboardBox extends BlockItemBetterStorage implements IContainerItem, ICardboardItem
 {
 	public ItemBlockCardboardBox( Block block )
 	{

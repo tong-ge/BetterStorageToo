@@ -2,23 +2,31 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityContainer extends TileEntity implements /* ITickable, */ INameable
+public abstract class TileEntityContainer extends TileEntity implements INamedContainerProvider, INameable
 {
 	public ExpandableStackHandler				inventory;
 	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> inventory );
@@ -51,15 +59,19 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 			inventory = null;
 	}
 
-	/*
-	 * @Override
-	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	 * {
-	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-	 * return super.getCapability( capability, facing );
-	 * }
-	 */
+	@Nullable
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, @Nullable Direction facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+		return super.getCapability( capability, facing );
+	}
+
+	private IItemHandler createHandler()
+	{
+		return new ExpandableStackHandler( getColumns(), getRows() );
+	}
 
 	/** The amount of columns in the container. */
 	public int getColumns()
@@ -78,6 +90,12 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 	{
 		return getColumns() * getRows();
 	}
+
+	/*
+	 * ===========
+	 * Interaction
+	 * ===========
+	 */
 
 	/** The number of players which are currently accessing this container. */
 	public final int getPlayersUsing()
@@ -98,18 +116,6 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 	 */
 
 	// Block functions
-
-	/**
-	 * Called when a block is placed by a player. Sets data of the tile
-	 * entity, like custom container title, enchantments or similar.
-	 */
-	/*
-	 * public void onBlockPlaced( EntityLivingBase player, ItemStack stack )
-	 * {
-	 * if( stack.hasDisplayName() )
-	 * setCustomTitle( stack.getDisplayName() );
-	 * }
-	 */
 
 	/**
 	 * Called then the block is activated (right clicked).
@@ -467,13 +473,6 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 	 * ===================
 	 */
 
-	/** Returns if the container has a custom title. */
-	@Override
-	public boolean hasCustomName()
-	{
-		return customName != null;
-	}
-
 	/** Sets the custom title of this container. Has no effect if it can't be set. */
 	public void setCustomName( @Nullable ITextComponent name )
 	{
@@ -486,6 +485,14 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 	public ITextComponent getCustomName()
 	{
 		return customName;
+	}
+
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		if( hasCustomName() )
+			return getCustomName();
+		return getName();
 	}
 
 	/*
@@ -531,32 +538,37 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 		markDirty();
 	}
 
-	/*
-	 * public void openInventory( EntityPlayer player )
-	 * {
-	 * if( !player.isSpectator() )
-	 * {
-	 * if( numPlayersUsing < 0 )
-	 * numPlayersUsing = 0;
-	 *
-	 * ++numPlayersUsing;
-	 * onOpenOrClose();
-	 * }
-	 *
-	 * }
-	 */
+	public void dropInventoryItems()
+	{
+		if( inventory != null )
+			for( int i = 0; i < inventory.getSlots(); i++ )
+			{
+				final ItemStack stack = inventory.getStackInSlot( i );
+				if( !stack.isEmpty() )
+					InventoryHelper.spawnItemStack( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack );
+			}
+	}
 
-	/*
-	 * public void closeInventory( EntityPlayer player )
-	 * {
-	 * if( !player.isSpectator() )
-	 * {
-	 * --numPlayersUsing;
-	 * onOpenOrClose();
-	 * }
-	 *
-	 * }
-	 */
+	public void openInventory( PlayerEntity player )
+	{
+		if( !player.isSpectator() )
+		{
+			if( numPlayersUsing < 0 )
+				numPlayersUsing = 0;
+
+			++numPlayersUsing;
+			onOpenOrClose();
+		}
+	}
+
+	public void closeInventory( PlayerEntity player )
+	{
+		if( !player.isSpectator() )
+		{
+			--numPlayersUsing;
+			onOpenOrClose();
+		}
+	}
 
 	protected void onOpenOrClose()
 	{
@@ -638,31 +650,28 @@ public abstract class TileEntityContainer extends TileEntity implements /* ITick
 	 * }
 	 */
 
-	/*
-	 * @Override
-	 * public NBTTagCompound write( NBTTagCompound compound )
-	 * {
-	 * compound = super.write( compound );
-	 * if( inventory.getSlots() > 0 )
-	 * compound.setTag( "inventory", inventory.serializeNBT() );
-	 *
-	 * if( hasCustomName() )
-	 * compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
-	 *
-	 * return compound;
-	 * }
-	 */
+	@Override
+	public CompoundNBT write( CompoundNBT compound )
+	{
+		compound = super.write( compound );
 
-	/*
-	 * @Override
-	 * public void read( NBTTagCompound compound )
-	 * {
-	 * super.read( compound );
-	 * if( compound.hasKey( "inventory" ) )
-	 * inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
-	 *
-	 * if( compound.hasKey( "CustomName" ) )
-	 * setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
-	 * }
-	 */
+		if( inventory.getSlots() > 0 )
+			compound.put( "inventory", inventory.serializeNBT() );
+
+		if( hasCustomName() )
+			compound.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+		return compound;
+	}
+
+	@Override
+	public void read( CompoundNBT compound )
+	{
+		super.read( compound );
+
+		if( compound.contains( "inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)compound.get( "inventory" ) );
+
+		if( compound.contains( "CustomName" ) )
+			setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
+	}
 }

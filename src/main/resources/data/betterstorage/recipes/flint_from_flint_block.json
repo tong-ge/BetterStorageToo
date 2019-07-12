@@ -1,9 +1,9 @@
 {
-	"type": "forge:ore_shapeless",
+	"type": "minecraft:crafting_shapeless",
 	"group": "minecraft:flint",
 	"ingredients":
 	[
-		{ "item": "betterstorage:flint_block" }
+		{ "item": "betterstorage:block_flint" }
 	],
 	"result": { "item": "minecraft:flint", "count": 9 }
 }

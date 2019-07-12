@@ -2,31 +2,31 @@
 	"parent": "minecraft:recipes/root",
 	"rewards":
 	{
-		"recipes": [ "betterstorage:locker" ]
+		"recipes": [ "betterstorage:flint_from_flint_block" ]
 	},
 	"criteria":
 	{
-		"has_wood":
+		"has_flint":
 		{
 			"trigger": "minecraft:inventory_changed",
 			"conditions":
 			{
         		"items":
         		[
-          			{ "item": "minecraft:planks" }
+          			{ "item": "betterstorage:block_flint" }
 				]
 			}
 		},
 		"has_the_recipe":
 		{
 			"trigger": "minecraft:recipe_unlocked",
-			"conditions": { "recipe": "betterstorage:locker" }
+			"conditions": { "recipe": "betterstorage:flint_from_flint_block" }
 		}
 	},
 	"requirements":
 	[
 		[
-			"has_wood",
+			"has_flint",
 			"has_the_recipe"
 		]
 	]

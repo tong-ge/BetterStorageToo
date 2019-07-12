@@ -2,26 +2,28 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
 
-public abstract class BlockLockable extends BlockContainerBetterStorage
+public abstract class BlockConnectableContainer extends BlockContainerBetterStorage
 {
 	public static final EnumProperty< EnumConnectedType > TYPE = EnumProperty.create( "type", EnumConnectedType.class );
 	// public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
 
-	protected BlockLockable( Block.Properties builder )
+	protected BlockConnectableContainer( Block.Properties builder )
 	{
 		super( builder );
 
 		//@formatter:off
-		/*setDefaultState( stateContainer.getBaseState().with( FACING, EnumFacing.NORTH )
-													  .with( TYPE, EnumConnectedType.SINGLE ) );*/
+		setDefaultState( stateContainer.getBaseState().with( TYPE, EnumConnectedType.SINGLE ) );
+		// .with( FACING, EnumFacing.NORTH )
 		//@formatter:on
 	}
 
 	/*
 	 * @Override
-	 * 
+	 *
 	 * @OnlyIn( Dist.CLIENT )
 	 * public boolean hasCustomBreakingProgress( IBlockState state )
 	 * {
@@ -53,14 +55,12 @@ public abstract class BlockLockable extends BlockContainerBetterStorage
 	 * }
 	 */
 
-	/*
-	 * @Override
-	 * protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
-	 * {
-	 * super.fillStateContainer( builder );
-	 * builder.add( FACING, TYPE );
-	 * }
-	 */
+	@Override
+	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	{
+		super.fillStateContainer( builder );
+		builder.add( TYPE );
+	}
 
 	/*
 	 * @Override

@@ -1,119 +1,128 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLocker;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
+import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoorHingeSide;
+import net.minecraft.tileentity.IChestLid;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn( Dist.CLIENT )
-public class TileEntityLockerRenderer// extends TileEntityRenderer< TileEntityLocker >
+public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLocker >
 {
-	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE		= new ResourceLocation( ModInfo.modId,
+	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE		= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/locker/normal_double.png" );
-	private static final ResourceLocation	TEXTURE_NORMAL				= new ResourceLocation( ModInfo.modId, "textures/entity/locker/normal.png" );
-	private static final ResourceLocation	TEXTURE_REINFORCED_DOUBLE	= new ResourceLocation( ModInfo.modId,
+	private static final ResourceLocation	TEXTURE_NORMAL				= new ResourceLocation( ModInfo.MOD_ID, "textures/entity/locker/normal.png" );
+	private static final ResourceLocation	TEXTURE_REINFORCED_DOUBLE	= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/locker/reinforced_double.png" );
-	private static final ResourceLocation	TEXTURE_REINFORCED			= new ResourceLocation( ModInfo.modId,
+	private static final ResourceLocation	TEXTURE_REINFORCED			= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/locker/reinforced.png" );
 
 	private final ModelLocker				simpleLocker				= new ModelLocker();
 	private final ModelLocker				largeLocker					= new ModelLargeLocker();
 
-	/*
-	 * @Override
-	 * public void render( TileEntityLocker tileEntityLocker, double x, double y, double z, float partialTicks, int destroyStage )
-	 * {
-	 * // Modified from vanilla chest
-	 * GlStateManager.enableDepthTest();
-	 * GlStateManager.depthFunc( 515 );
-	 * GlStateManager.depthMask( true );
-	 * 
-	 * final IBlockState iblockstate = tileEntityLocker.hasWorld() ? tileEntityLocker.getBlockState()
-	 * : BetterStorageBlocks.LOCKER.getDefaultState().with( BlockLockable.FACING, EnumFacing.SOUTH );
-	 * final EnumConnectedType lockertype = iblockstate.has( BlockLocker.TYPE ) ? iblockstate.get( BlockLockable.TYPE ) : EnumConnectedType.SINGLE;
-	 * final DoorHingeSide hingeSide = iblockstate.has( BlockStateProperties.DOOR_HINGE ) ? iblockstate.get( BlockStateProperties.DOOR_HINGE )
-	 * : DoorHingeSide.LEFT;
-	 * if( lockertype != EnumConnectedType.SLAVE )
-	 * {
-	 * final boolean flag = lockertype != EnumConnectedType.SINGLE;
-	 * final ModelLocker modelchest = getLockerModel( tileEntityLocker, destroyStage, flag );
-	 * 
-	 * if( destroyStage >= 0 )
-	 * {
-	 * GlStateManager.matrixMode( 5890 );
-	 * GlStateManager.pushMatrix();
-	 * GlStateManager.scalef( flag ? 8.0F : 4.0F, 4.0F, 1.0F );
-	 * GlStateManager.translatef( 0.0625F, 0.0625F, 0.0625F );
-	 * GlStateManager.matrixMode( 5888 );
-	 * }
-	 * else
-	 * GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-	 * 
-	 * GlStateManager.pushMatrix();
-	 * GlStateManager.enableRescaleNormal();
-	 * GlStateManager.translatef( (float)x, (float)y + 1.0F, (float)z + 1.0F );
-	 * GlStateManager.scalef( 1.0F, -1.0F, -1.0F );
-	 * 
-	 * final float f = iblockstate.get( BlockChest.FACING ).getHorizontalAngle();
-	 * if( Math.abs( f ) > 1.0E-5D )
-	 * {
-	 * GlStateManager.translatef( 0.5F, 0.5F, 0.5F );
-	 * GlStateManager.rotatef( f, 0.0F, 1.0F, 0.0F );
-	 * GlStateManager.translatef( -0.5F, -0.5F, -0.5F );
-	 * }
-	 * 
-	 * rotateDoor( tileEntityLocker, partialTicks, modelchest, hingeSide );
-	 * modelchest.renderAll( hingeSide == DoorHingeSide.LEFT );
-	 * 
-	 * GlStateManager.disableRescaleNormal();
-	 * GlStateManager.popMatrix();
-	 * GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-	 * if( destroyStage >= 0 )
-	 * {
-	 * GlStateManager.matrixMode( 5890 );
-	 * GlStateManager.popMatrix();
-	 * GlStateManager.matrixMode( 5888 );
-	 * }
-	 * }
-	 * }
-	 */
+	@Override
+	public void render( TileEntityLocker tileEntityLocker, double x, double y, double z, float partialTicks, int destroyStage )
+	{
+		// Modified from vanilla chest
+		GlStateManager.enableDepthTest();
+		GlStateManager.depthFunc( 515 );
+		GlStateManager.depthMask( true );
 
-	/*
-	 * private ModelLocker getLockerModel( TileEntityLocker tileEntityLocker, int destroyStage, boolean flag )
-	 * {
-	 * ResourceLocation resourcelocation;
-	 * if( destroyStage >= 0 )
-	 * resourcelocation = DESTROY_STAGES[destroyStage];
-	 * else if( tileEntityLocker instanceof TileEntityReinforcedLocker )
-	 * resourcelocation = flag ? TEXTURE_REINFORCED_DOUBLE : TEXTURE_REINFORCED;
-	 * else
-	 * resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
-	 * 
-	 * bindTexture( resourcelocation );
-	 * return flag ? largeLocker : simpleLocker;
-	 * }
-	 */
+		final BlockState iblockstate = tileEntityLocker.hasWorld() ? tileEntityLocker.getBlockState()
+				: BetterStorageBlocks.LOCKER.getDefaultState().with( BlockLocker.FACING, Direction.SOUTH );
+		final EnumConnectedType lockertype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
+				: EnumConnectedType.SINGLE;
+		final DoorHingeSide hingeSide = iblockstate.has( BlockStateProperties.DOOR_HINGE ) ? iblockstate.get( BlockStateProperties.DOOR_HINGE )
+				: DoorHingeSide.LEFT;
+		if( lockertype != EnumConnectedType.SLAVE )
+		{
+			final boolean flag = lockertype != EnumConnectedType.SINGLE;
+			final ModelLocker modelchest = getLockerModel( tileEntityLocker, destroyStage, flag );
 
-	/*
-	 * private void rotateDoor( TileEntityLocker tileEntityLocker, float partialTicks, ModelLocker modelLocker, DoorHingeSide hingeSide )
-	 * {
-	 * float f = ( (IChestLid)tileEntityLocker ).getLidAngle( partialTicks );
-	 * f = 1.0F - f;
-	 * f = 1.0F - f * f * f;
-	 * switch( hingeSide )
-	 * {
-	 * case LEFT:
-	 * default:
-	 * modelLocker.getDoor( true ).rotateAngleY = f * ( (float)Math.PI / 2F );
-	 * break;
-	 * case RIGHT:
-	 * modelLocker.getDoor( false ).rotateAngleY = -( f * ( (float)Math.PI / 2F ) );
-	 * break;
-	 * }
-	 * }
-	 */
+			if( destroyStage >= 0 )
+			{
+				GlStateManager.matrixMode( 5890 );
+				GlStateManager.pushMatrix();
+				GlStateManager.scalef( flag ? 8.0F : 4.0F, 4.0F, 1.0F );
+				GlStateManager.translatef( 0.0625F, 0.0625F, 0.0625F );
+				GlStateManager.matrixMode( 5888 );
+			}
+			else
+				GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+
+			GlStateManager.pushMatrix();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.translatef( (float)x, (float)y + 1.0F, (float)z + 1.0F );
+			GlStateManager.scalef( 1.0F, -1.0F, -1.0F );
+
+			final float f = iblockstate.get( BlockLocker.FACING ).getHorizontalAngle();
+			if( Math.abs( f ) > 1.0E-5D )
+			{
+				GlStateManager.translatef( 0.5F, 0.5F, 0.5F );
+				GlStateManager.rotatef( f, 0.0F, 1.0F, 0.0F );
+				GlStateManager.translatef( -0.5F, -0.5F, -0.5F );
+			}
+
+			rotateDoor( tileEntityLocker, partialTicks, modelchest, hingeSide );
+			modelchest.renderAll( hingeSide == DoorHingeSide.LEFT );
+
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.popMatrix();
+			GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+			if( destroyStage >= 0 )
+			{
+				GlStateManager.matrixMode( 5890 );
+				GlStateManager.popMatrix();
+				GlStateManager.matrixMode( 5888 );
+			}
+		}
+	}
+
+	private ModelLocker getLockerModel( TileEntityLocker tileEntityLocker, int destroyStage, boolean flag )
+	{
+		ResourceLocation resourcelocation;
+		if( destroyStage >= 0 )
+			resourcelocation = DESTROY_STAGES[destroyStage];
+		else if( tileEntityLocker instanceof TileEntityReinforcedLocker )
+			resourcelocation = flag ? TEXTURE_REINFORCED_DOUBLE : TEXTURE_REINFORCED;
+		else
+			resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
+
+		bindTexture( resourcelocation );
+		return flag ? largeLocker : simpleLocker;
+	}
+
+	private void rotateDoor( TileEntityLocker tileEntityLocker, float partialTicks, ModelLocker modelLocker, DoorHingeSide hingeSide )
+	{
+		float f = ( (IChestLid)tileEntityLocker ).getLidAngle( partialTicks );
+		f = 1.0F - f;
+		f = 1.0F - f * f * f;
+		switch( hingeSide )
+		{
+		case LEFT:
+		default:
+			modelLocker.getDoor( true ).rotateAngleY = f * ( (float)Math.PI / 2F );
+			break;
+		case RIGHT:
+			modelLocker.getDoor( false ).rotateAngleY = -( f * ( (float)Math.PI / 2F ) );
+			break;
+		}
+	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
 	/*

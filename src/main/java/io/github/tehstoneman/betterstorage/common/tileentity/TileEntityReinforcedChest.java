@@ -2,6 +2,9 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +31,7 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	@Override
 	public int getColumns()
 	{
-		return BetterStorageConfig.GENERAL.reinforcedColumns.get();
+		return BetterStorageConfig.COMMON.reinforcedColumns.get();
 	}
 
 	/*
@@ -119,10 +122,10 @@ public class TileEntityReinforcedChest extends TileEntityLockable
 	}
 
 	@Override
-	protected void playSound( SoundEvent soundIn )
+	public Container createMenu( int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_ )
 	{
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	/*

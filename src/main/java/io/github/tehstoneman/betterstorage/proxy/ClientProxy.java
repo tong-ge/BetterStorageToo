@@ -1,12 +1,13 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.IProxy;
+import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
-import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -18,11 +19,18 @@ public class ClientProxy implements IProxy
 	@Override
 	public void setup( FMLCommonSetupEvent event )
 	{
-		OBJLoader.INSTANCE.addDomain( ModInfo.modId );
-		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
-		//ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+		// OBJLoader.INSTANCE.addDomain( ModInfo.modId );
+		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+
+		ScreenManager.registerFactory( BetterStorageContainerTypes.LOCKER, GuiBetterStorage::new );
 	}
 
+	@Override
+	public World getClientWorld()
+	{
+		return Minecraft.getInstance().world;
+	}
 	/*
 	 * @Override
 	 * public void initialize()
@@ -30,9 +38,6 @@ public class ClientProxy implements IProxy
 	 * super.initialize();
 	 *
 	 * // new KeyBindingHandler();
-	 *
-	 * // BetterStorageBlocks.registerItemModels();
-	 * // BetterStorageItems.registerItemModels();
 	 *
 	 * registerRenderers();
 	 * BetterStorageColorHandler.registerColorHandlers();
@@ -69,19 +74,10 @@ public class ClientProxy implements IProxy
 	 * // RenderingRegistry.registerEntityRenderingHandler(EntityCluckington.class, new RenderChicken(new ModelCluckington(), 0.4F));
 	 *
 	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
-	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
 	 * // ClientRegistry.bindTileEntitySpecialRenderer( TileEntityPresent.class, new TileEntityPresentRenderer() );
 	 * // Addon.registerRenderersAll();
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public String localize( String unlocalized, Object... args )
-	 * {
-	 * return I18n.format( unlocalized, args );
 	 * }
 	 */
 }

@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shaped",
+	"type": "minecraft:crafting_shaped",
 	"group": "betterstorage:flint_block",
 	"pattern":
 	[
@@ -11,5 +11,5 @@
 	{
 		"o": { "item": "minecraft:flint" }
 	},
-	"result": { "item": "betterstorage:flint_block" }
+	"result": { "item": "betterstorage:block_flint" }
 }

@@ -15,7 +15,7 @@ public class ReinforcedMaterial
 
 	public ReinforcedMaterial( String name, Object ingot, Object block )
 	{
-		this( ModInfo.modId, name, ingot, block );
+		this( ModInfo.MOD_ID, name, ingot, block );
 	}
 
 	public ReinforcedMaterial( String modID, String name, Object ingot, Object block )
@@ -28,7 +28,7 @@ public class ReinforcedMaterial
 
 	private ReinforcedMaterial( String name )
 	{
-		this( ModInfo.modId, name, null, null );
+		this( ModInfo.MOD_ID, name, null, null );
 	}
 
 	/*public ShapedOreRecipe getReinforcedRecipe( Block middle, Block result )

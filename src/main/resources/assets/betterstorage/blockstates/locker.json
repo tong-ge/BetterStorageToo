@@ -1,3 +1,6 @@
 {
-    "variants": { "": { "model": "betterstorage:block/locker" } }
+    "variants":
+    {
+        "": { "model": "betterstorage:block/locker" }
+    }
 }

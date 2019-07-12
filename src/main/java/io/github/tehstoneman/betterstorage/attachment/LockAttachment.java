@@ -59,13 +59,13 @@ public class LockAttachment extends ItemAttachment
 	 * }
 	 */
 
-	@Override
+	/*@Override
 	public ItemStack pick()
 	{
 		if( item == null )
 			return null;
 		final ItemStack key = new ItemStack( BetterStorageItems.KEY );
-		/*
+		
 		 * ItemKeyLock.setID( key, ItemKeyLock.getID( item ) );
 		 * final int color = ItemKeyLock.getKeyColor1( item );
 		 * if( color >= 0 )
@@ -73,9 +73,9 @@ public class LockAttachment extends ItemAttachment
 		 * final int fullColor = ItemKeyLock.getKeyColor2( item );
 		 * if( fullColor >= 0 )
 		 * ItemKeyLock.setKeyColor2( key, fullColor );
-		 */
+		 
 		return key;
-	}
+	}*/
 
 	/*
 	 * private boolean attack( EntityPlayer player, ItemStack holding )

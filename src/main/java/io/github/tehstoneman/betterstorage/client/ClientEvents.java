@@ -1,10 +1,24 @@
 package io.github.tehstoneman.betterstorage.client;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class ClientEvents
 {
+	public static void clientStartup( final FMLClientSetupEvent event )
+	{
+		// do something that can only be done on the client
+		BetterStorage.LOGGER.info( "==== Got game settings {} ====", event.getMinecraftSupplier().get().gameSettings );
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
+	}
+
 	// @SubscribeEvent
 	public void onRegisterModels( ModelRegistryEvent event )
 	{
@@ -118,7 +132,7 @@ public class ClientEvents
 	/*
 	 * private final StateMapperBase propertyStringMapper = new StateMapperBase()
 	 * {
-	 * 
+	 *
 	 * @Override
 	 * protected ModelResourceLocation getModelResourceLocation( IBlockState state )
 	 * {
@@ -141,7 +155,7 @@ public class ClientEvents
 	 * private void registerBlockItemModelForMeta( IBlockState state, int metadata )
 	 * {
 	 * final Item item = Item.getItemFromBlock( state.getBlock() );
-	 * 
+	 *
 	 * if( item != Items.AIR )
 	 * registerItemModel( item, metadata, propertyStringMapper.getPropertyString( state.getProperties() ) );
 	 * }
@@ -151,7 +165,7 @@ public class ClientEvents
 	 * private void registerItemModel( Block block )
 	 * {
 	 * final Item item = Item.getItemFromBlock( block );
-	 * 
+	 *
 	 * if( item != Items.AIR )
 	 * registerItemModel( item );
 	 * }
@@ -161,7 +175,7 @@ public class ClientEvents
 	 * private void registerItemModel( Block block, int metadata, String modelLocation )
 	 * {
 	 * final Item item = Item.getItemFromBlock( block );
-	 * 
+	 *
 	 * if( item != Items.AIR )
 	 * registerItemModel( item, metadata, modelLocation );
 	 * }

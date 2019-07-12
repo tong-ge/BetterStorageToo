@@ -13,7 +13,7 @@
 			{
         		"items":
         		[
-          			{ "item": "minecraft:planks" }
+          			{ "tag": "minecraft:planks" }
 				]
 			}
 		},

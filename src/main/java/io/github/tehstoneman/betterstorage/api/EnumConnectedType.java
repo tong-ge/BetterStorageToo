@@ -4,7 +4,7 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumConnectedType implements IStringSerializable
 {
-	SINGLE( "single", 0 ), MASTER( "master", 2 ), SLAVE( "slave", 1 );
+	SINGLE( "single", 0 ), MASTER( "master", 2 ), SLAVE( "slave", 1 ), PILE( "pile", 3 );
 
 	public static final EnumConnectedType[]	VALUES	= values();
 	private final String					name;

@@ -5,8 +5,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class BetterStorageResource extends ResourceLocation
 {
+	@Deprecated
 	public BetterStorageResource( String location )
 	{
-		super( ModInfo.modId, location );
+		super( ModInfo.MOD_ID, location );
 	}
 }

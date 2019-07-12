@@ -10,11 +10,11 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER );
 	}
 
-	@Override
+	/*@Override
 	public boolean canHaveLock()
 	{
 		return true;
-	}
+	}*/
 
 	/*
 	 * @Override
@@ -30,7 +30,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 	@Override
 	public int getColumns()
 	{
-		return BetterStorageConfig.GENERAL.reinforcedColumns.get();
+		return BetterStorageConfig.COMMON.reinforcedColumns.get();
 	}
 
 	@Override

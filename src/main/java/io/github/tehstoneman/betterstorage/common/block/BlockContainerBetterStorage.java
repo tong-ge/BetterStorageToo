@@ -1,5 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 {
 	protected BlockContainerBetterStorage( Properties properties )
@@ -7,20 +13,18 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 		super( properties );
 	}
 
-	/*@Override
-	public boolean hasTileEntity( IBlockState state )
+	@Override
+	public boolean hasTileEntity( BlockState state )
 	{
 		return true;
-	}*/
+	}
 
-	/*
-	 * @Override
-	 * public boolean eventReceived( IBlockState state, World worldIn, BlockPos pos, int id, int param )
-	 * {
-	 * final TileEntity te = worldIn.getTileEntity( pos );
-	 * return te != null ? te.receiveClientEvent( id, param ) : false;
-	 * }
-	 */
+	@Override
+	public boolean eventReceived( BlockState state, World worldIn, BlockPos pos, int id, int param )
+	{
+		final TileEntity te = worldIn.getTileEntity( pos );
+		return te != null ? te.receiveClientEvent( id, param ) : false;
+	}
 
 	// Pass actions to TileEntityContainer
 	/*
@@ -115,7 +119,7 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
 	 * if( !( tileEntity instanceof TileEntityContainer ) )
 	 * return 0;
-	 * 
+	 *
 	 * final TileEntityContainer tileContainer = (TileEntityContainer)tileEntity;
 	 * return tileContainer.getComparatorSignalStrength();
 	 * }

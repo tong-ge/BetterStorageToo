@@ -17,7 +17,7 @@ public final class LanguageUtils
 			return null;
 		if( replacements.length % 2 != 0 )
 			throw new IllegalArgumentException( "replacements must contain an even number of elements." );
-		String translated = I18n.format( "tooltip." + ModInfo.modId + "." + thing );
+		String translated = I18n.format( "tooltip." + ModInfo.MOD_ID + "." + thing );
 		for( int i = 0; i < replacements.length; i += 2 )
 			translated = translated.replace( replacements[i], replacements[i + 1] );
 		return translated;

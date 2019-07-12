@@ -74,7 +74,7 @@ public enum EnumReinforced implements IStringSerializable
 
 	public String getUnlocalizedName()
 	{
-		return "material." + ModInfo.modId + "." + name;
+		return "material." + ModInfo.MOD_ID + "." + name;
 	}
 
 	public static EnumReinforced byMetadata( int meta )

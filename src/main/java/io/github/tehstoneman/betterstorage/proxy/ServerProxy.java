@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class ServerProxy implements IProxy
@@ -11,6 +12,11 @@ public class ServerProxy implements IProxy
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public World getClientWorld()
+	{
+		throw new IllegalStateException( "Only run this on the client!" );
+	}
 	// private final boolean preventSlimeBucketUse = false;
 
 	/*

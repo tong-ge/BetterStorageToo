@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:block",
+	"pools":
+	[
+		{
+			"name": "betterstorage",
+			"rolls": 1,
+			"entries":
+			[
+				{
+					"type": "minecraft:item",
+					"name": "betterstorage:block_flint"
+				}
+			],
+			"conditions":
+			[
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			]
+		}
+	]
+}

@@ -1,11 +1,16 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageTileEntityTypes
 {
-	public static TileEntityType< TileEntityCrate >				CRATE;
-	public static TileEntityType< TileEntityReinforcedChest >	REINFORCED_CHEST;
-	public static TileEntityType< TileEntityLocker >			LOCKER;
-	public static TileEntityType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
+	//@formatter:off
+	@ObjectHolder( "crate" )				public static TileEntityType< TileEntityCrate >				CRATE;
+	@ObjectHolder( "reinforced_chest" )		public static TileEntityType< TileEntityReinforcedChest >	REINFORCED_CHEST;
+	@ObjectHolder( "locker" )				public static TileEntityType< TileEntityLocker >			LOCKER;
+	@ObjectHolder( "reinforced_locker" )	public static TileEntityType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
+	//@formatter:on
 }

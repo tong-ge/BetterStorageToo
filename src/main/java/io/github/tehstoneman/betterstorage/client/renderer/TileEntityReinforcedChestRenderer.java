@@ -8,9 +8,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn( Dist.CLIENT )
 public class TileEntityReinforcedChestRenderer// extends TileEntityRenderer< TileEntityReinforcedChest >
 {
-	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.modId,
+	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/chest/reinforced_double.png" );
-	private static final ResourceLocation	TEXTURE_NORMAL			= new ResourceLocation( ModInfo.modId, "textures/entity/chest/reinforced.png" );
+	private static final ResourceLocation	TEXTURE_NORMAL			= new ResourceLocation( ModInfo.MOD_ID, "textures/entity/chest/reinforced.png" );
 
 	// private final ModelChest simpleChest = new ModelChest();
 	// private final ModelChest largeChest = new ModelLargeChest();

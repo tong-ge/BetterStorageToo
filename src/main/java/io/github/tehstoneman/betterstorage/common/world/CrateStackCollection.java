@@ -13,7 +13,7 @@ import net.minecraft.world.storage.WorldSavedData;
 /** Holds all CratePileData objects for one world / dimension. */
 public class CrateStackCollection extends WorldSavedData
 {
-	private static final String						filename	= ModInfo.modId + "_cratepile";
+	private static final String						filename	= ModInfo.MOD_ID + "_cratepile";
 
 	private final Map< UUID, CrateStackHandler >	pileDataMap	= new HashMap<>();
 

@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients":
+	[
+		{ "item": "minecraft:paper" }, { "item": "minecraft:paper" }, { "item": "minecraft:paper" },
+		{ "item": "minecraft:paper" }, { "item": "minecraft:slime_ball" }, { "item": "minecraft:paper" },
+		{ "item": "minecraft:paper" }, { "item": "minecraft:paper" }, { "item": "minecraft:paper" }
+	],
+	"result": { "item": "betterstorage:cardboard_sheet", "count": 4 }
+}
