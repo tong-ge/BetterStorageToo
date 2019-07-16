@@ -1,15 +1,27 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import javax.annotation.Nullable;
+
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 //@Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
-public class BlockCrate extends BlockContainerBetterStorage// implements ITileEntityProvider//, ILaputaImmobile
+public class BlockCrate extends BlockConnectableContainer// implements ILaputaImmobile
 {
 	public static final BooleanProperty	NORTH	= BlockStateProperties.NORTH;
 	public static final BooleanProperty	EAST	= BlockStateProperties.EAST;
@@ -23,22 +35,59 @@ public class BlockCrate extends BlockContainerBetterStorage// implements ITileEn
 		super( Properties.from( Blocks.OAK_PLANKS ) );
 
 		//@formatter:off
-		/*setDefaultState( stateContainer.getBaseState().with( NORTH, Boolean.valueOf( false ) )
+		setDefaultState( stateContainer.getBaseState().with( NORTH, Boolean.valueOf( false ) )
 													  .with( EAST, Boolean.valueOf( false ) )
 													  .with( SOUTH, Boolean.valueOf( false ) )
 													  .with( WEST, Boolean.valueOf( false ) )
 													  .with( UP, Boolean.valueOf( false ) )
-													  .with( DOWN, Boolean.valueOf( false ) ) );*/
+													  .with( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
+	@Override
+	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	{
+		super.fillStateContainer( builder );
+		builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
+	}
+
 	/*
-	 * @Override
-	 * protected void fillStateContainer( StateContainer.Builder< Block, IBlockState > builder )
-	 * {
-	 * builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
-	 * }
+	 * ======================
+	 * TileEntity / Rendering
+	 * ======================
 	 */
+
+	@Override
+	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	{
+		return new TileEntityCrate();
+	}
+
+	/*
+	 * =========
+	 * Placement
+	 * =========
+	 */
+
+	/*
+	 * ===========
+	 * Interaction
+	 * ===========
+	 */
+
+	/*@Override
+	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	{
+		if( worldIn.isRemote )
+			return true;
+		else
+		{
+			final INamedContainerProvider tileEntityCrate = getContainer( state, worldIn, pos );
+			if( tileEntityCrate != null )
+				NetworkHooks.openGui( (ServerPlayerEntity)player, tileEntityCrate, pos );
+			return true;
+		}
+	}*/
 
 	/*
 	 * @Override
@@ -47,11 +96,25 @@ public class BlockCrate extends BlockContainerBetterStorage// implements ITileEn
 	 * {
 	 * if( facingState.getBlock() == this )
 	 * {
-	 * 
+	 *
 	 * }
 	 * return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	 * }
 	 */
+
+	@Override
+	@Nullable
+	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	{
+		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		if( !( tileentity instanceof TileEntityCrate ) )
+			return null;
+		else
+		{
+			final TileEntityCrate crate = (TileEntityCrate)tileentity;
+			return crate;
+		}
+	}
 
 	private TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
 	{
@@ -75,14 +138,6 @@ public class BlockCrate extends BlockContainerBetterStorage// implements ITileEn
 	 * if( thisCrate != null && connectedCrate != null )
 	 * return thisCrate.getPileID().equals( connectedCrate.getPileID() );
 	 * return false;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public TileEntity createTileEntity( IBlockState state, IBlockReader world )
-	 * {
-	 * return new TileEntityCrate();
 	 * }
 	 */
 
@@ -112,29 +167,6 @@ public class BlockCrate extends BlockContainerBetterStorage// implements ITileEn
 	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
 	 * if( tileEntity instanceof TileEntityCrate )
 	 * ( (TileEntityCrate)tileEntity ).onBlockPlaced( placer, stack );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean onBlockActivated( IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
-	 * float hitY, float hitZ )
-	 * {
-	 * if( worldIn.isRemote )
-	 * return true;
-	 * else
-	 * {
-	 * final TileEntityCrate tileEntityCrate = getCrateAt( worldIn, pos );
-	 * if( tileEntityCrate != null )
-	 * {
-	 * NetworkHooks.openGui( (EntityPlayerMP)player, new Interface( tileEntityCrate ), ( buffer ) ->
-	 * {
-	 * buffer.writeBlockPos( pos );
-	 * } );
-	 * }
-	 * 
-	 * return true;
-	 * }
 	 * }
 	 */
 
@@ -193,36 +225,36 @@ public class BlockCrate extends BlockContainerBetterStorage// implements ITileEn
 	 * public class Interface implements IInteractionObject
 	 * {
 	 * private final TileEntityCrate crate;
-	 * 
+	 *
 	 * public Interface( TileEntityCrate tileEntityCrate )
 	 * {
 	 * crate = tileEntityCrate;
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public ITextComponent getName()
 	 * {
 	 * return new TextComponentTranslation( BetterStorageBlocks.CRATE.getTranslationKey() + ".name" );
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public boolean hasCustomName()
 	 * {
 	 * return crate.hasCustomName();
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public ITextComponent getCustomName()
 	 * {
 	 * return crate.getCustomName();
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public Container createContainer( InventoryPlayer playerInventory, EntityPlayer playerIn )
 	 * {
 	 * return new ContainerCrate( crate, playerIn );
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public String getGuiID()
 	 * {

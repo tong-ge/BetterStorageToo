@@ -58,7 +58,10 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
-		return new ContainerBetterStorage( windowID, playerInventory, world, pos );
+		if( isMain() )
+			return new ContainerBetterStorage( windowID, playerInventory, world, pos );
+		else
+			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
 
 	@Override
@@ -72,18 +75,18 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 		{
 			numPlayersUsing = 0;
 			final float f = 5.0F;
-	
+
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
 				if( entityplayer.openContainer instanceof ContainerBetterStorage )
 					++numPlayersUsing;
 		}
-	
+
 		prevLidAngle = lidAngle;
 		final float f1 = 0.1F;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
 			playSound( SoundEvents.BLOCK_CHEST_OPEN );
-	
+
 		if( numPlayersUsing == 0 && lidAngle > 0.0F || numPlayersUsing > 0 && lidAngle < 1.0F )
 		{
 			final float f2 = lidAngle;
@@ -91,14 +94,14 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 				lidAngle += 0.1F;
 			else
 				lidAngle -= 0.1F;
-	
+
 			if( lidAngle > 1.0F )
 				lidAngle = 1.0F;
-	
+
 			final float f3 = 0.5F;
 			if( lidAngle < 0.5F && f2 >= 0.5F )
 				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
-	
+
 			if( lidAngle < 0.0F )
 				lidAngle = 0.0F;
 		}

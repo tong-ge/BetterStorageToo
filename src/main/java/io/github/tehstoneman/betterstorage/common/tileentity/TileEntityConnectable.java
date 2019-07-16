@@ -117,16 +117,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		return true;
 	}
 
-	/*
-	 * @Override
-	 * public int getRows()
-	 * {
-	 * if( isConnected() )
-	 * return super.getRows() * 2;
-	 * return super.getRows();
-	 * }
-	 */
-
 	@Override
 	public int getComparatorSignalStrength()
 	{
@@ -200,14 +190,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 * // Play sound when closing
 	 * if( lidAngle < 0.5F && prevLidAngle >= 0.5F )
 	 * getWorld().playSound( (EntityPlayer)null, x, y, z, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, pitch );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public ContainerBetterStorage getContainer( EntityPlayer player )
-	 * {
-	 * return new ContainerBetterStorage( getMainTileEntity(), player );
 	 * }
 	 */
 }

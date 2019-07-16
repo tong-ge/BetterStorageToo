@@ -7,7 +7,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public final class BetterStorageBlocks
 {
 	//@formatter:off
-	// public static BlockCrate CRATE = new BlockCrate();
+	@ObjectHolder( "crate" )		public static BlockCrate			CRATE;
 	// public static BlockReinforcedChest REINFORCED_CHEST = new BlockReinforcedChest();
 	@ObjectHolder( "locker" )		public static BlockLocker			LOCKER;
 	// public static BlockReinforcedLocker REINFORCED_LOCKER = new BlockReinforcedLocker();

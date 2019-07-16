@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class CrateStackHandler extends ItemStackHandler
+public class CrateStackHandler extends ExpandableStackHandler
 {
 	private static final int	maxCratePileSize	= 125;
 
@@ -23,10 +23,10 @@ public class CrateStackHandler extends ItemStackHandler
 
 	private TileEntityCrate		crateToUpdate;
 
-	public CrateStackHandler( int size )
+	public CrateStackHandler( int columns, int rows )
 	{
-		super( size );
-		indexSlots = getShuffledIndexes( size );
+		super( columns, rows );
+		indexSlots = getShuffledIndexes( this.getSlots() );
 	}
 
 	/** Returns the number of crates attached. */

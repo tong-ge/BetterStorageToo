@@ -4,11 +4,14 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockBetterStorage;
+import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
-import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.LockerItem;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
@@ -33,7 +36,7 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< Block > registry = event.getRegistry();
 
-		// registry.register( BetterStorageBlocks.CRATE.setRegistryName( "crate" ) );
+		registry.register( new BlockCrate().setRegistryName( "crate" ) );
 		// registry.register( BetterStorageBlocks.REINFORCED_CHEST.setRegistryName( "reinforced_chest" ) );
 		registry.register( new BlockLocker().setRegistryName( ModInfo.MOD_ID, "locker" ) );
 		// registry.register( BetterStorageBlocks.REINFORCED_LOCKER.setRegistryName( "reinforced_locker" ) );
@@ -50,7 +53,7 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< Item > registry = event.getRegistry();
 
-		// registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE ).setRegistryName( "crate" ) );
+		registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
 		// registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST ).setRegistryName( "reinforced_chest" ) );
 		registry.register( new LockerItem( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 		// registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER ).setRegistryName( "reinforced_locker" ) );
@@ -84,7 +87,8 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< TileEntityType< ? > > registry = event.getRegistry();
 
-		// BetterStorageTileEntityTypes.CRATE = TileEntityType.register( ModInfo.modId + ":crate", TileEntityType.Builder.create( TileEntityCrate::new ) );
+		registry.register( TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE ).build( null )
+				.setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
 		// BetterStorageTileEntityTypes.REINFORCED_CHEST = TileEntityType.register( ModInfo.modId + ":reinforced_chest", TileEntityType.Builder.create(
 		// TileEntityReinforcedChest::new ) );
 		registry.register( TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER ).build( null )
@@ -98,10 +102,14 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< ContainerType< ? > > registry = event.getRegistry();
 
-		//registry.register( new ContainerType<>( ContainerBetterStorage::new ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 		{
-			BlockPos pos = data.readBlockPos();
+			final BlockPos pos = data.readBlockPos();
+			return new ContainerCrate( windowID, inv, BetterStorage.proxy.getClientWorld(), pos );
+		} ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
+		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
+		{
+			final BlockPos pos = data.readBlockPos();
 			return new ContainerBetterStorage( windowID, inv, BetterStorage.proxy.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 	}

@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.storage.WorldSavedData;
 
@@ -44,47 +43,55 @@ public class CrateStackCollection extends WorldSavedData
 	 */
 
 	/** Get the stack handler for the associated ID */
-	public CrateStackHandler getCratePile( UUID pileID )
-	{
-		if( pileID != null && pileDataMap.containsKey( pileID ) )
-			return pileDataMap.get( pileID );
-		return createCratePile();
-	}
+	/*
+	 * public CrateStackHandler getCratePile( UUID pileID )
+	 * {
+	 * if( pileID != null && pileDataMap.containsKey( pileID ) )
+	 * return pileDataMap.get( pileID );
+	 * return createCratePile();
+	 * }
+	 */
 
 	/**
 	 * Get or create a crate handler for the given UUID
 	 * Used for syncing client with server
 	 */
 	// @SideOnly( Side.CLIENT )
-	public CrateStackHandler getOrCreateCratePile( UUID pileID )
-	{
-		if( !pileDataMap.containsKey( pileID ) )
-		{
-			final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
-			pileDataMap.put( pileID, cratePile );
-			cratePile.setPileID( pileID );
-		}
-		return pileDataMap.get( pileID );
-	}
+	/*
+	 * public CrateStackHandler getOrCreateCratePile( UUID pileID )
+	 * {
+	 * if( !pileDataMap.containsKey( pileID ) )
+	 * {
+	 * final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
+	 * pileDataMap.put( pileID, cratePile );
+	 * cratePile.setPileID( pileID );
+	 * }
+	 * return pileDataMap.get( pileID );
+	 * }
+	 */
 
 	/** Creates and adds a new crate to this collection. */
-	public CrateStackHandler createCratePile()
-	{
-		UUID pileID = UUID.randomUUID();
-		while( pileDataMap.containsKey( pileID ) )
-			pileID = UUID.randomUUID();
-		return addCrateToPile( pileID );
-	}
+	/*
+	 * public CrateStackHandler createCratePile()
+	 * {
+	 * UUID pileID = UUID.randomUUID();
+	 * while( pileDataMap.containsKey( pileID ) )
+	 * pileID = UUID.randomUUID();
+	 * return addCrateToPile( pileID );
+	 * }
+	 */
 
 	/** Adds a new crate pile to this collection. */
-	public CrateStackHandler addCrateToPile( UUID pileID )
-	{
-		final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
-		pileDataMap.put( pileID, cratePile );
-		cratePile.setPileID( pileID );
-		markDirty();
-		return cratePile;
-	}
+	/*
+	 * public CrateStackHandler addCrateToPile( UUID pileID )
+	 * {
+	 * final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
+	 * pileDataMap.put( pileID, cratePile );
+	 * cratePile.setPileID( pileID );
+	 * markDirty();
+	 * return cratePile;
+	 * }
+	 */
 
 	/** Removes the crate pile from the collection, deletes the pile's file. */
 	public void removeCratePile( UUID pileID )

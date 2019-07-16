@@ -33,9 +33,9 @@ public class GuiBetterStorage extends ContainerScreen< ContainerBetterStorage >
 	protected ResourceLocation getResource()
 	{
 		if( columns <= 9 )
-			return new ResourceLocation( "textures/gui/container/generic_54.png" );
+			return Resources.CONTAINER_GENERIC;
 		else
-			return Resources.containerReinforcedChest;
+			return Resources.CONTAINER_EXPANDABLE;
 	}
 
 	@Override

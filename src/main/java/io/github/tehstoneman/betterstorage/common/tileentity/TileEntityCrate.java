@@ -4,23 +4,36 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.tileentity.TileEntity;
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class TileEntityCrate extends TileEntity
+public class TileEntityCrate extends TileEntityConnectable
 {
-	// private final LazyOptional< IItemHandler > inventoryHandler = LazyOptional.of( () -> getCrateStackHandler() );
+	public CrateStackHandler					crateInventory;
+	private final LazyOptional< IItemHandler >	crateHandler	= LazyOptional.of( () -> crateInventory );
 
-	public static final int		slotsPerCrate	= 18;
-	public static final int		maxCrates		= 125;
-	public static final int		maxPerSide		= 5;
+	public static final int						slotsPerCrate		= 18;
+	public static final int						maxCrates			= 125;
+	public static final int						maxPerSide			= 5;
 
-	private UUID				pileID;
-	protected ITextComponent	customName;
+	private UUID								pileID;
+	protected ITextComponent					customName;
 
-	private int					numCrates;
-	private int					capacity;
+	private int									numCrates;
+	private int									capacity;
 
 	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
 	{
@@ -32,17 +45,18 @@ public class TileEntityCrate extends TileEntity
 		this( BetterStorageTileEntityTypes.CRATE );
 	}
 
-	/*
-	 * @Override
-	 * public <T> LazyOptional< T > getCapability( Capability< T > capability, EnumFacing facing )
-	 * {
-	 * if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-	 * if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
-	 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-	 * return super.getCapability( capability, facing );
-	 * }
-	 */
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, crateHandler );
+
+		/*
+		 * if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
+		 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+		 */
+		return super.getCapability( capability, facing );
+	}
 
 	/** Helper function to add crate to handler */
 	/*
@@ -305,14 +319,13 @@ public class TileEntityCrate extends TileEntity
 	 */
 
 	/** Get the total capacity this tile entity */
-	/*
-	 * public int getCapacity()
-	 * {
-	 * if( getWorld().isRemote )
-	 * return capacity;
-	 * return getCrateStackHandler().getCapacity();
-	 * }
-	 */
+
+	public int getCapacity()
+	{
+		// if( getWorld().isRemote )
+		return capacity;
+		// return getCrateStackHandler().getCapacity();
+	}
 
 	// Comparator related
 
@@ -337,20 +350,49 @@ public class TileEntityCrate extends TileEntity
 	 * }
 	 */
 
+	@Override
 	public boolean hasCustomName()
 	{
 		return customName != null;
 	}
 
+	@Override
 	public void setCustomName( @Nullable ITextComponent name )
 	{
 		customName = name;
 	}
 
+	@Override
 	@Nullable
 	public ITextComponent getCustomName()
 	{
 		return customName;
+	}
+
+	@Override
+	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
+	{
+		return new ContainerCrate( windowID, playerInventory, world, pos );
+	}
+
+	@Override
+	public ITextComponent getName()
+	{
+		return new TranslationTextComponent( ModInfo.CONTAINER_CRATE_NAME );
+	}
+
+	@Override
+	public BlockPos getConnected()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getConnectableName()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// TileEntity synchronization
@@ -360,12 +402,12 @@ public class TileEntityCrate extends TileEntity
 	 * public NBTTagCompound getUpdateTag()
 	 * {
 	 * final NBTTagCompound compound = super.getUpdateTag();
-	 * 
+	 *
 	 * if( pileID != null )
 	 * compound.setUniqueId( "PileID", pileID );
 	 * compound.setInt( "NumCrates", getNumCrates() );
 	 * compound.setInt( "Capacity", getCapacity() );
-	 * 
+	 *
 	 * return compound;
 	 * }
 	 */
@@ -388,7 +430,7 @@ public class TileEntityCrate extends TileEntity
 	 * pileID = compound.getUniqueId( "PileID" );
 	 * numCrates = compound.getInt( "NumCrates" );
 	 * capacity = compound.getInt( "Capacity" );
-	 * 
+	 *
 	 * getWorld().markBlockRangeForRenderUpdate( pos.add( -1, -1, -1 ), pos.add( 1, 1, 1 ) );
 	 * }
 	 */
@@ -398,7 +440,7 @@ public class TileEntityCrate extends TileEntity
 	 * public void handleUpdateTag( NBTTagCompound compound )
 	 * {
 	 * super.handleUpdateTag( compound );
-	 * 
+	 *
 	 * if( compound.hasUniqueId( "PileID" ) )
 	 * pileID = compound.getUniqueId( "PileID" );
 	 * numCrates = compound.getInt( "NumCrates" );
@@ -413,12 +455,12 @@ public class TileEntityCrate extends TileEntity
 	 * public NBTTagCompound write( NBTTagCompound compound )
 	 * {
 	 * super.write( compound );
-	 * 
+	 *
 	 * if( pileID != null )
 	 * compound.setUniqueId( "PileID", pileID );
 	 * compound.setInt( "NumCrates", getNumCrates() );
 	 * compound.setInt( "Capacity", getCapacity() );
-	 * 
+	 *
 	 * return compound;
 	 * }
 	 */
@@ -428,7 +470,7 @@ public class TileEntityCrate extends TileEntity
 	 * public void read( NBTTagCompound compound )
 	 * {
 	 * super.read( compound );
-	 * 
+	 *
 	 * if( compound.hasUniqueId( "PileID" ) )
 	 * pileID = compound.getUniqueId( "PileID" );
 	 * numCrates = compound.getInt( "NumCrates" );

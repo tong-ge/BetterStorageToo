@@ -13,11 +13,23 @@ public abstract class BlockContainerBetterStorage extends BlockBetterStorage
 		super( properties );
 	}
 
+	/*
+	 * ======================
+	 * TileEntity / Rendering
+	 * ======================
+	 */
+
 	@Override
 	public boolean hasTileEntity( BlockState state )
 	{
 		return true;
 	}
+
+	/*
+	 * ===========
+	 * Interaction
+	 * ===========
+	 */
 
 	@Override
 	public boolean eventReceived( BlockState state, World worldIn, BlockPos pos, int id, int param )

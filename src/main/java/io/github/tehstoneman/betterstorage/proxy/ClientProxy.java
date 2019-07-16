@@ -1,17 +1,19 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
+import io.github.tehstoneman.betterstorage.client.ClientEventHandler;
 import io.github.tehstoneman.betterstorage.client.gui.GuiBetterStorage;
+import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-//@SideOnly( Side.CLIENT )
 public class ClientProxy implements IProxy
 {
 	// public static final Map< Class< ? extends TileEntity >, BetterStorageRenderingHandler > renderingHandlers = new HashMap<>();
@@ -19,11 +21,14 @@ public class ClientProxy implements IProxy
 	@Override
 	public void setup( FMLCommonSetupEvent event )
 	{
+		//MinecraftForge.EVENT_BUS.register( new ClientEventHandler() );
+
 		// OBJLoader.INSTANCE.addDomain( ModInfo.modId );
 		// ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 
 		ScreenManager.registerFactory( BetterStorageContainerTypes.LOCKER, GuiBetterStorage::new );
+		ScreenManager.registerFactory( BetterStorageContainerTypes.CRATE, GuiCrate::new );
 	}
 
 	@Override

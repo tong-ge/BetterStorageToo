@@ -6,16 +6,16 @@ import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeSt
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class ClientEvents
+public class ClientEventHandler
 {
-	public static void clientStartup( final FMLClientSetupEvent event )
+	@SubscribeEvent
+	public static void onClientStartup( final FMLClientSetupEvent event )
 	{
-		// do something that can only be done on the client
-		BetterStorage.LOGGER.info( "==== Got game settings {} ====", event.getMinecraftSupplier().get().gameSettings );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
 	}
 

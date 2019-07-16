@@ -43,7 +43,7 @@ public class ContainerBetterStorage extends Container
 		}
 
 		indexStart = 0;
-		indexHotbar = inventoryContainer.getSlots();
+		indexHotbar = rows;
 		indexPlayer = indexHotbar + 9;
 
 		for( int i = 0; i < indexHotbar; i++ )

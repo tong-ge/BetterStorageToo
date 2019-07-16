@@ -14,11 +14,11 @@ public class ItemLock extends ItemKeyLock implements ILock
 		// setMaxStackSize( 1 );
 	}
 
-	@Override
+	/*@Override
 	public boolean isRepairable()
 	{
 		return true;
-	}
+	}*/
 
 	@Override
 	public boolean getIsRepairable( ItemStack stack, ItemStack material )

@@ -30,7 +30,9 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -217,6 +219,24 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 
 			super.onReplaced( state, worldIn, pos, newState, isMoving );
 		}
+	}
+
+	/*
+	 * ===========
+	 * Adjustments
+	 * ===========
+	 */
+
+	@Override
+	public BlockState rotate( BlockState state, Rotation rot )
+	{
+		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
+	}
+
+	@Override
+	public BlockState mirror( BlockState state, Mirror mirrorIn )
+	{
+		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
 	}
 
 	/*
