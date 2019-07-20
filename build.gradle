@@ -16,7 +16,7 @@ apply plugin: 'maven-publish'
 
 archivesBaseName = "BetterStorageToo"
 group = "io.github.thestoneman.betterstorage"
-version = "1.14.3-4.0.0.0-alpha2"
+version = "1.14.3-4.0.0.0-alpha3"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 

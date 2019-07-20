@@ -2,21 +2,24 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import java.util.List;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 //@InventoryContainer
 public class ContainerCrate extends Container
 {
-	private final CrateStackHandler	inventoryCrate;
+	private final IItemHandler		inventoryCrate;
 	private final TileEntityCrate	tileCrate;
 
 	private final int				rows;
@@ -28,15 +31,16 @@ public class ContainerCrate extends Container
 	{
 		super( BetterStorageContainerTypes.CRATE, windowID );
 		tileCrate = (TileEntityCrate)world.getTileEntity( pos );
-		inventoryCrate = (CrateStackHandler)(tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null ));
+		inventoryCrate = tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
 
-		rows = Math.min( tileCrate.getCapacity(), 54 );
+		rows = Math.min( tileCrate.getCapacity() / 9, 6 );
 
 		indexStart = 0;
-		indexHotbar = rows;
+		indexHotbar = rows * 9;
 		indexPlayer = indexHotbar + 9;
 
-		final List< Integer > slotList = inventoryCrate.getShuffledIndexes( indexHotbar );
+		final List< Integer > slotList = ( (CrateStackHandler)inventoryCrate ).getShuffledIndexes( indexHotbar );
+		BetterStorage.LOGGER.info( slotList );
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
@@ -83,59 +87,53 @@ public class ContainerCrate extends Container
 	 * }
 	 */
 
-	/*
-	 * @Override
-	 * public ItemStack transferStackInSlot( EntityPlayer player, int index )
-	 * {
-	 * final Slot slot = inventorySlots.get( index );
-	 * ItemStack returnStack = ItemStack.EMPTY;
-	 *
-	 * if( slot != null && slot.getHasStack() )
-	 * {
-	 * final ItemStack itemStack = slot.getStack();
-	 * returnStack = itemStack.copy();
-	 *
-	 * if( index < indexHotbar )
-	 * {
-	 * // Try to transfer from crate to player
-	 * if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
-	 * return ItemStack.EMPTY;
-	 * }
-	 * else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
-	 * return ItemStack.EMPTY;
-	 * if( itemStack.getCount() > 0 )
-	 * inventoryCrate.addItems( itemStack );
-	 *
-	 * if( itemStack.isEmpty() )
-	 * slot.putStack( ItemStack.EMPTY );
-	 * else
-	 * slot.onSlotChanged();
-	 * }
-	 *
-	 * return returnStack;
-	 * }
-	 */
+	@Override
+	public ItemStack transferStackInSlot( PlayerEntity player, int index )
+	{
+		final Slot slot = inventorySlots.get( index );
+		ItemStack returnStack = ItemStack.EMPTY;
 
-	/*
-	 * @Override
-	 * public void onContainerClosed( EntityPlayer playerIn )
-	 * {
-	 * super.onContainerClosed( playerIn );
-	 * inventoryCrate.consolidateStacks();
-	 * tileCrate.markDirty();
-	 * }
-	 */
+		if( slot != null && slot.getHasStack() )
+		{
+			final ItemStack itemStack = slot.getStack();
+			returnStack = itemStack.copy();
 
-	/*
-	 * @Override
-	 * protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
-	 * {
-	 * boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );
-	 * if( !flag && endIndex <= indexHotbar )
-	 * flag = inventoryCrate.mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
-	 * return flag;
-	 * }
-	 */
+			if( index < indexHotbar )
+			{
+				// Try to transfer from crate to player
+				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+					return ItemStack.EMPTY;
+			}
+			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+				return ItemStack.EMPTY;
+			if( itemStack.getCount() > 0 )
+				( (CrateStackHandler)inventoryCrate ).addItems( itemStack );
+
+			if( itemStack.isEmpty() )
+				slot.putStack( ItemStack.EMPTY );
+			else
+				slot.onSlotChanged();
+		}
+
+		return returnStack;
+	}
+
+	@Override
+	public void onContainerClosed( PlayerEntity playerIn )
+	{
+		super.onContainerClosed( playerIn );
+		( (CrateStackHandler)inventoryCrate ).consolidateStacks();
+		tileCrate.markDirty();
+	}
+
+	@Override
+	protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
+	{
+		boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );
+		if( !flag && endIndex <= indexHotbar )
+			flag = ( (CrateStackHandler)inventoryCrate ).mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
+		return flag;
+	}
 
 	/** Returns the recorded volume of this container */
 	public int getVolume()

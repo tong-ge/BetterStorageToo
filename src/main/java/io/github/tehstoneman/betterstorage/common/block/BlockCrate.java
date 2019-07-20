@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -75,7 +76,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	 * ===========
 	 */
 
-	/*@Override
+	@Override
 	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( worldIn.isRemote )
@@ -87,7 +88,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 				NetworkHooks.openGui( (ServerPlayerEntity)player, tileEntityCrate, pos );
 			return true;
 		}
-	}*/
+	}
 
 	/*
 	 * @Override
@@ -169,6 +170,22 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	 * ( (TileEntityCrate)tileEntity ).onBlockPlaced( placer, stack );
 	 * }
 	 */
+
+	@Override
+	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
+	{
+		if( state.getBlock() != newState.getBlock() )
+		{
+			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			if( tileentity instanceof TileEntityContainer )
+			{
+				( (TileEntityContainer)tileentity ).dropInventoryItems();
+				worldIn.updateComparatorOutputLevel( pos, this );
+			}
+
+			super.onReplaced( state, worldIn, pos, newState, isMoving );
+		}
+	}
 
 	/*
 	 * @Override

@@ -14,6 +14,13 @@ public class ExpandableStackHandler extends ItemStackHandler
 		this.rows = rows;
 	}
 
+	public ExpandableStackHandler( ExpandableStackHandler inventory )
+	{
+		super( inventory.stacks );
+		columns = inventory.getColumns();
+		rows = inventory.getRows();
+	}
+
 	public int getColumns()
 	{
 		return columns;

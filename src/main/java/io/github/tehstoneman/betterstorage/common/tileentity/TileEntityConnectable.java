@@ -67,7 +67,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		if( state.has( BlockConnectableContainer.TYPE ) )
 			return state.get( BlockConnectableContainer.TYPE ) == EnumConnectedType.SINGLE
 					|| state.get( BlockConnectableContainer.TYPE ) == EnumConnectedType.MASTER;
-		return false;
+		return true;
 	}
 
 	/** Returns the main container. */

@@ -4,12 +4,15 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -25,15 +28,16 @@ public class TileEntityCrate extends TileEntityConnectable
 	public CrateStackHandler					crateInventory;
 	private final LazyOptional< IItemHandler >	crateHandler	= LazyOptional.of( () -> crateInventory );
 
-	public static final int						slotsPerCrate		= 18;
-	public static final int						maxCrates			= 125;
-	public static final int						maxPerSide			= 5;
+	public static final int						slotsPerCrate	= 18;
+	public static final int						maxCrates		= 125;
+	public static final int						maxPerSide		= 5;
 
 	private UUID								pileID;
+	private BlockPos							mainPos;
 	protected ITextComponent					customName;
 
-	private int									numCrates;
-	private int									capacity;
+	private final int							numCrates		= 1;
+	private final int							capacity		= slotsPerCrate;
 
 	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
 	{
@@ -48,14 +52,28 @@ public class TileEntityCrate extends TileEntityConnectable
 	@Override
 	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
 	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, crateHandler );
+		if( isMain() )
+			if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			{
+				crateInventory = new CrateStackHandler( inventory );
+				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, crateHandler );
+			}
+			else
+				return super.getCapability( capability, facing );
+		return getMainTileEntity().getCapability( capability, facing );
+	}
 
-		/*
-		 * if( facing == null || BetterStorageConfig.GENERAL.enableCrateInventoryInterface.get() )
-		 * return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-		 */
-		return super.getCapability( capability, facing );
+	@Override
+	public TileEntityConnectable getMainTileEntity()
+	{
+		if( isMain() )
+			return this;
+		final TileEntity tileEntity = getWorld().getTileEntity( mainPos );
+		if( tileEntity instanceof TileEntityCrate )
+			return (TileEntityCrate)tileEntity;
+		if( BetterStorageConfig.COMMON.enableWarningMessages.get() )
+			BetterStorage.LOGGER.warn( "getMainTileEntity() returned null. " + "Location: {},{},{}", pos.getX(), pos.getY(), pos.getZ() );
+		return this;
 	}
 
 	/** Helper function to add crate to handler */

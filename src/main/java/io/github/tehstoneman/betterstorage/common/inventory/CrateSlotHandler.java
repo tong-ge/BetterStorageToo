@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -84,18 +85,16 @@ public class CrateSlotHandler extends SlotItemHandler
 		return maxInput - ( !remainder.isEmpty() ? remainder.getCount() : 0 );
 	}
 
-	/*
-	 * @Override
-	 * public boolean canTakeStack( EntityPlayer playerIn )
-	 * {
-	 * final IItemHandler handler = getItemHandler();
-	 * if( !( handler instanceof CrateStackHandler ) )
-	 * return super.canTakeStack( playerIn );
-	 * 
-	 * final CrateStackHandler crateHandler = (CrateStackHandler)handler;
-	 * return !crateHandler.extractItemFixed( index, 1, true ).isEmpty();
-	 * }
-	 */
+	@Override
+	public boolean canTakeStack( PlayerEntity playerIn )
+	{
+		final IItemHandler handler = getItemHandler();
+		if( !( handler instanceof CrateStackHandler ) )
+			return super.canTakeStack( playerIn );
+
+		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
+		return !crateHandler.extractItemFixed( index, 1, true ).isEmpty();
+	}
 
 	@Override
 	public ItemStack decrStackSize( int amount )

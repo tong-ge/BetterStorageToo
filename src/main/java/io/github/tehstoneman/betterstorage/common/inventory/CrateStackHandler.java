@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class CrateStackHandler extends ExpandableStackHandler
 {
@@ -26,7 +26,13 @@ public class CrateStackHandler extends ExpandableStackHandler
 	public CrateStackHandler( int columns, int rows )
 	{
 		super( columns, rows );
-		indexSlots = getShuffledIndexes( this.getSlots() );
+		indexSlots = getShuffledIndexes( getSlots() );
+	}
+
+	public CrateStackHandler( ExpandableStackHandler inventory )
+	{
+		super( inventory );
+		indexSlots = getShuffledIndexes( getSlots() );
 	}
 
 	/** Returns the number of crates attached. */
@@ -350,7 +356,7 @@ public class CrateStackHandler extends ExpandableStackHandler
 		return super.getStackInSlot( getIndexedSlot( slot ) );
 	}
 
-	/** Bypass the randomization of the overrided version of this function */
+	/** Bypass the randomization of the overridden version of this function */
 	public ItemStack getStackInSlotFixed( int slot )
 	{
 		return super.getStackInSlot( slot );
@@ -362,7 +368,7 @@ public class CrateStackHandler extends ExpandableStackHandler
 		return super.extractItem( getIndexedSlot( slot ), amount, simulate );
 	}
 
-	/** Bypass the randomization of the overrided version of this function */
+	/** Bypass the randomization of the overridden version of this function */
 	public ItemStack extractItemFixed( int slot, int amount, boolean simulate )
 	{
 		doShuffle = false;
@@ -374,10 +380,11 @@ public class CrateStackHandler extends ExpandableStackHandler
 	@Override
 	public ItemStack insertItem( int slot, ItemStack stack, boolean simulate )
 	{
+		BetterStorage.LOGGER.info(  slot + " : " + stack );
 		return super.insertItem( getIndexedSlot( slot ), stack, simulate );
 	}
 
-	/** Bypass the randomization of the overrided version of this function */
+	/** Bypass the randomization of the overridden version of this function */
 	public ItemStack insertItemFixed( int slot, ItemStack stack, boolean simulate )
 	{
 		doShuffle = false;
@@ -415,11 +422,11 @@ public class CrateStackHandler extends ExpandableStackHandler
 	 * public NBTTagCompound serializeNBT()
 	 * {
 	 * final NBTTagCompound compound = super.serializeNBT();
-	 * 
+	 *
 	 * compound.setInt( "NumCrates", numCrates );
 	 * if( pileID != null )
 	 * compound.setUniqueId( "PileID", pileID );
-	 * 
+	 *
 	 * if( region != null )
 	 * compound.setTag( "Region", region.toCompound() );
 	 * return compound;
@@ -431,11 +438,11 @@ public class CrateStackHandler extends ExpandableStackHandler
 	 * public void deserializeNBT( NBTTagCompound compound )
 	 * {
 	 * super.deserializeNBT( compound );
-	 * 
+	 *
 	 * numCrates = compound.getInt( "NumCrates" );
 	 * if( compound.hasUniqueId( "PileID" ) )
 	 * pileID = compound.getUniqueId( "PileID" );
-	 * 
+	 *
 	 * if( compound.hasKey( "Region" ) )
 	 * region = Region.fromCompound( compound.getCompound( "Region" ) );
 	 * onLoad();
