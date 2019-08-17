@@ -10,7 +10,12 @@ import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStora
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.LockerItem;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardHoe;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardPickaxe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardShovel;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSword;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.Block;
@@ -67,11 +72,11 @@ public class RegistryEventHandler
 
 		// registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX ).setRegistryName( "cardboard_box" ) );
 
-		// registry.register( BetterStorageItems.CARDBOARD_SWORD.setRegistryName( "cardboard_sword" ) );
-		// registry.register( BetterStorageItems.CARDBOARD_SHOVEL.setRegistryName( "cardboard_shovel" ) );
-		// registry.register( BetterStorageItems.CARDBOARD_PICKAXE.setRegistryName( "cardboard_pickaxe" ) );
-		// registry.register( BetterStorageItems.CARDBOARD_AXE.setRegistryName( "cardboard_axe" ) );
-		// registry.register( BetterStorageItems.CARDBOARD_HOE.setRegistryName( "cardboard_hoe" ) );
+		registry.register( new ItemCardboardSword().setRegistryName( ModInfo.MOD_ID, "cardboard_sword" ) );
+		registry.register( new ItemCardboardShovel().setRegistryName( ModInfo.MOD_ID, "cardboard_shovel" ) );
+		registry.register( new ItemCardboardPickaxe().setRegistryName( ModInfo.MOD_ID, "cardboard_pickaxe" ) );
+		registry.register( new ItemCardboardAxe().setRegistryName( ModInfo.MOD_ID, "cardboard_axe" ) );
+		registry.register( new ItemCardboardHoe().setRegistryName( ModInfo.MOD_ID, "cardboard_hoe" ) );
 
 		// registry.register( BetterStorageItems.CARDBOARD_HELMET.setRegistryName( "cardboard_helmet" ) );
 		// registry.register( BetterStorageItems.CARDBOARD_CHESTPLATE.setRegistryName( "cardboard_chestplate" ) );

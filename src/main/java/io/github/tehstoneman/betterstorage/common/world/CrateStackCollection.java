@@ -7,10 +7,12 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.common.util.WorldCapabilityData;
 
 /** Holds all CratePileData objects for one world / dimension. */
-public class CrateStackCollection extends WorldSavedData
+public class CrateStackCollection extends WorldCapabilityData
 {
 	private static final String						filename	= ModInfo.MOD_ID + "_cratepile";
 
@@ -27,71 +29,59 @@ public class CrateStackCollection extends WorldSavedData
 	}
 
 	/** Gets or creates a CratePileCollection for the world. */
-	/*
-	 * public static CrateStackCollection getCollection( World world )
-	 * {
-	 * CrateStackCollection collection = world.func_212411_a( world.getDimension().getType(), CrateStackCollection::new, filename );
-	 * // CrateStackCollection collection = (CrateStackCollection)world.loadData( CrateStackCollection.class, filename );
-	 * if( collection == null )
-	 * {
-	 * collection = new CrateStackCollection();
-	 * world.func_212409_a( world.getDimension().getType(), filename, collection );
-	 * // world.setData( filename, collection );
-	 * }
-	 * return collection;
-	 * }
-	 */
+	public static CrateStackCollection getCollection( World world )
+	{
+		return null;
+		/*CrateStackCollection collection = (CrateStackCollection)world.loadData( CrateStackCollection.class, filename );
+		if( collection == null )
+		{
+			collection = new CrateStackCollection();
+			world.setData( filename, collection );
+		}
+		return collection;*/
+	}
 
 	/** Get the stack handler for the associated ID */
-	/*
-	 * public CrateStackHandler getCratePile( UUID pileID )
-	 * {
-	 * if( pileID != null && pileDataMap.containsKey( pileID ) )
-	 * return pileDataMap.get( pileID );
-	 * return createCratePile();
-	 * }
-	 */
+	public CrateStackHandler getCratePile( UUID pileID )
+	{
+		if( pileID != null && pileDataMap.containsKey( pileID ) )
+			return pileDataMap.get( pileID );
+		return createCratePile();
+	}
 
 	/**
 	 * Get or create a crate handler for the given UUID
 	 * Used for syncing client with server
 	 */
-	// @SideOnly( Side.CLIENT )
-	/*
-	 * public CrateStackHandler getOrCreateCratePile( UUID pileID )
-	 * {
-	 * if( !pileDataMap.containsKey( pileID ) )
-	 * {
-	 * final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
-	 * pileDataMap.put( pileID, cratePile );
-	 * cratePile.setPileID( pileID );
-	 * }
-	 * return pileDataMap.get( pileID );
-	 * }
-	 */
+	public CrateStackHandler getOrCreateCratePile( UUID pileID )
+	{
+		if( !pileDataMap.containsKey( pileID ) )
+		{
+			final CrateStackHandler cratePile = new CrateStackHandler(18 );
+			pileDataMap.put( pileID, cratePile );
+			//cratePile.setPileID( pileID );
+		}
+		return pileDataMap.get( pileID );
+	}
 
 	/** Creates and adds a new crate to this collection. */
-	/*
-	 * public CrateStackHandler createCratePile()
-	 * {
-	 * UUID pileID = UUID.randomUUID();
-	 * while( pileDataMap.containsKey( pileID ) )
-	 * pileID = UUID.randomUUID();
-	 * return addCrateToPile( pileID );
-	 * }
-	 */
+	public CrateStackHandler createCratePile()
+	{
+		UUID pileID = UUID.randomUUID();
+		while( pileDataMap.containsKey( pileID ) )
+			pileID = UUID.randomUUID();
+		return addCrateToPile( pileID );
+	}
 
 	/** Adds a new crate pile to this collection. */
-	/*
-	 * public CrateStackHandler addCrateToPile( UUID pileID )
-	 * {
-	 * final CrateStackHandler cratePile = new CrateStackHandler( TileEntityCrate.slotsPerCrate );
-	 * pileDataMap.put( pileID, cratePile );
-	 * cratePile.setPileID( pileID );
-	 * markDirty();
-	 * return cratePile;
-	 * }
-	 */
+	public CrateStackHandler addCrateToPile( UUID pileID )
+	{
+		final CrateStackHandler cratePile = new CrateStackHandler( 18 );
+		pileDataMap.put( pileID, cratePile );
+		//cratePile.setPileID( pileID );
+		markDirty();
+		return cratePile;
+	}
 
 	/** Removes the crate pile from the collection, deletes the pile's file. */
 	public void removeCratePile( UUID pileID )

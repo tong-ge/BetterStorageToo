@@ -11,6 +11,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,19 +20,18 @@ import net.minecraftforge.items.IItemHandler;
 //@InventoryContainer
 public class ContainerCrate extends Container
 {
-	private final IItemHandler		inventoryCrate;
-	private final TileEntityCrate	tileCrate;
+	private final IItemHandler			inventoryCrate;
+	private final TileEntityCrate		tileCrate;
 
-	private final int				rows;
-	public int						indexStart, indexPlayer, indexHotbar;
-
-	public int						volume	= 0;
+	private final int					rows;
+	public int							indexStart, indexPlayer, indexHotbar;
+	private final IntReferenceHolder	volume	= IntReferenceHolder.single();
 
 	public ContainerCrate( int windowID, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CRATE, windowID );
 		tileCrate = (TileEntityCrate)world.getTileEntity( pos );
-		inventoryCrate = tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
+		inventoryCrate = tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( new CrateStackHandler( 18 ) );
 
 		rows = Math.min( tileCrate.getCapacity() / 9, 6 );
 
@@ -40,7 +40,6 @@ public class ContainerCrate extends Container
 		indexPlayer = indexHotbar + 9;
 
 		final List< Integer > slotList = ( (CrateStackHandler)inventoryCrate ).getShuffledIndexes( indexHotbar );
-		BetterStorage.LOGGER.info( slotList );
 
 		for( int i = 0; i < indexHotbar; i++ )
 		{
@@ -64,28 +63,17 @@ public class ContainerCrate extends Container
 			final int y = 72;
 			addSlot( new Slot( playerInventory, i, x, y + offsetY ) );
 		}
+
+		trackInt( volume );
 	}
 
-	/*
-	 * @Override
-	 * public void detectAndSendChanges()
-	 * {
-	 * super.detectAndSendChanges();
-	 *
-	 * volume = inventoryCrate.getOccupiedSlots() * 100 / inventoryCrate.getSlots();
-	 * for( int j = 0; j < listeners.size(); ++j )
-	 * listeners.get( j ).sendWindowProperty( this, 0, volume );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void updateProgressBar( int id, int val )
-	 * {
-	 * if( id == 0 )
-	 * volume = val;
-	 * }
-	 */
+	@Override
+	public void detectAndSendChanges()
+	{
+		BetterStorage.LOGGER.info( ( (CrateStackHandler)inventoryCrate ).getOccupiedSlots() + " : " + inventoryCrate.getSlots() );
+		volume.set( ( (CrateStackHandler)inventoryCrate ).getOccupiedSlots() * 100 / inventoryCrate.getSlots() );
+		super.detectAndSendChanges();
+	}
 
 	@Override
 	public ItemStack transferStackInSlot( PlayerEntity player, int index )
@@ -138,7 +126,7 @@ public class ContainerCrate extends Container
 	/** Returns the recorded volume of this container */
 	public int getVolume()
 	{
-		return volume;
+		return volume.get();
 	}
 
 	@Override

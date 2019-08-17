@@ -1,16 +1,11 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "betterstorage:locker",
-	"pattern":
+	"ingredients":
 	[
-		"ooo",
-		"o |",
-		"ooo"
+		{ "item": "minecraft:chest" },
+		{ "item": "minecraft:chest" },
+		{ "tag": "minecraft:wooden_doors" }
 	],
-	"key":
-	{
-		"o": { "tag": "minecraft:planks" },
-		"|": { "tag": "minecraft:trapdoors" }
-	},
-	"result": { "item": "betterstorage:locker" }
+	"result": { "item": "betterstorage:locker", "count": 2 }
 }

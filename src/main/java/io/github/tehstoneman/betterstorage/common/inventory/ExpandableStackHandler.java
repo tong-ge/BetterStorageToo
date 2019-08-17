@@ -1,11 +1,13 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ExpandableStackHandler extends ItemStackHandler
 {
-	private final int	columns;
-	private final int	rows;
+	private int	columns;
+	private int	rows;
 
 	public ExpandableStackHandler( int columns, int rows )
 	{
@@ -29,5 +31,33 @@ public class ExpandableStackHandler extends ItemStackHandler
 	public int getRows()
 	{
 		return rows;
+	}
+
+	@Override
+	public void setSize( int size )
+	{
+		stacks = copyStacks( stacks, size );
+		rows = size / 9;
+		columns = size % 9;
+	}
+
+	public NonNullList< ItemStack > copyStacks( NonNullList< ItemStack > stackIn, int size )
+	{
+		return copyStacks( stackIn, 0, size );
+	}
+
+	public NonNullList< ItemStack > copyStacks( NonNullList< ItemStack > stackIn, int from, int to )
+	{
+		final int size = to - from;
+		final NonNullList< ItemStack > stackOut = NonNullList.withSize( size, ItemStack.EMPTY );
+		for( int i = 0; i < Math.min( size, stackIn.size() ); i++ )
+			stackOut.set( i, stackIn.get( i + from ) );
+		return stackOut;
+	}
+
+	public NonNullList< ItemStack > copyStacks( int from, int to )
+	{
+		final int size = to - from;
+		return copyStacks( this.stacks, from, size );
 	}
 }

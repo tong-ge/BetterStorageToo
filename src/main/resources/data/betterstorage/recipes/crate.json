@@ -9,8 +9,8 @@
 	],
 	"key":
 	{
-		"o": { "type": "forge:ore_dict", "ore": "plankWood" },
-		"/": { "type": "forge:ore_dict", "ore": "stickWood" }
+		"o": { "tag": "minecraft:planks" },
+		"/": { "item": "minecraft:stick" }
 	},
 	"result": { "item": "betterstorage:crate" }
 }

@@ -6,10 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
-import io.github.tehstoneman.betterstorage.client.ClientEventHandler;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.world.storage.CapabilityCrate;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.event.RegistryEventHandler;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
 import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
@@ -83,15 +82,18 @@ public class BetterStorage
 
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
-		//FMLJavaModLoadingContext.get().getModEventBus().addListener( ClientEvents::clientStartup );
+		// FMLJavaModLoadingContext.get().getModEventBus().addListener( ClientEvents::clientStartup );
 
-		//MinecraftForge.EVENT_BUS.register( new ClientEventHandler() );
+		// MinecraftForge.EVENT_BUS.register( new ClientEventHandler() );
 		MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
-		//MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
+		// MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
 	}
 
 	public void setup( FMLCommonSetupEvent event )
 	{
+		// Register capabilities
+		CapabilityCrate.register();
+		
 		proxy.setup( event );
 	}
 

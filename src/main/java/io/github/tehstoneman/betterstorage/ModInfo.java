@@ -6,10 +6,10 @@ public final class ModInfo
 	public static final String	MOD_NAME					= "BetterStorageToo";
 	public static final String	guiFactory					= "io.github.tehstoneman.betterstorage.client.gui.BetterStorageGuiFactory";
 
+	public static final String	CONTAINER_CAPACITY			= "container." + MOD_ID + ".crate.capacity";
 	public static final String	CONTAINER_CRATE_NAME		= "container." + MOD_ID + ".crate";
-	public static final String	containerCapacity			= "container." + MOD_ID + ".crate.capacity";
-	public static final String	containerReinforcedChest	= "container." + MOD_ID + ".reinforced_chest";
 	public static final String	CONTAINER_LOCKER_NAME		= "container." + MOD_ID + ".locker";
+	public static final String	containerReinforcedChest	= "container." + MOD_ID + ".reinforced_chest";
 	public static final String	containerReinforcedLocker	= "container." + MOD_ID + ".reinforced_locker";
 	public static final String	containerArmorStand			= "container." + MOD_ID + ".armorStand";
 	public static final String	containerCardboardBox		= "container." + MOD_ID + ".cardboard_box";

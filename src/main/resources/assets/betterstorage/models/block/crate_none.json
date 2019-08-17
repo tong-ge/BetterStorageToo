@@ -1,11 +1,11 @@
 {
-	"parent": "block/block",
+    "parent": "block/block",
     "textures":
     {
-    	"all": "betterstorage:blocks/crate/none",
-    	"particle": "betterstorage:blocks/crate/none"
+    	"all": "betterstorage:block/crate/none",
+    	"particle": "betterstorage:block/crate/none"
     },
-	"elements":
+    "elements":
 	[{
 		"from": [ 0, 0, 0 ],
 		"to": [ 16, 1, 16 ],

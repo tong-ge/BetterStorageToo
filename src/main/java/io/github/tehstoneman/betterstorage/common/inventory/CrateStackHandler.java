@@ -5,13 +5,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.ICrateStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.world.storage.CapabilityCrate;
+import io.github.tehstoneman.betterstorage.common.world.storage.CrateStorage;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class CrateStackHandler extends ExpandableStackHandler
+public class CrateStackHandler extends ItemStackHandler
 {
 	private static final int	maxCratePileSize	= 125;
 
@@ -23,16 +32,10 @@ public class CrateStackHandler extends ExpandableStackHandler
 
 	private TileEntityCrate		crateToUpdate;
 
-	public CrateStackHandler( int columns, int rows )
+	public CrateStackHandler( int size )
 	{
-		super( columns, rows );
-		indexSlots = getShuffledIndexes( getSlots() );
-	}
-
-	public CrateStackHandler( ExpandableStackHandler inventory )
-	{
-		super( inventory );
-		indexSlots = getShuffledIndexes( getSlots() );
+		super( size );
+		indexSlots = getShuffledIndexes( size );
 	}
 
 	/** Returns the number of crates attached. */
@@ -199,7 +202,7 @@ public class CrateStackHandler extends ExpandableStackHandler
 		numCrates++;
 		stacks = copyStack( stacks, this.getCapacity() );
 		crate.setPileID( getPileID() );
-		setSize( getCapacity() );
+		// setSize( getCapacity() );
 	}
 
 	/**
@@ -208,23 +211,25 @@ public class CrateStackHandler extends ExpandableStackHandler
 	 *
 	 * @return Overflow contents
 	 */
-	/*
-	 * public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
-	 * {
-	 * if( numCrates > 1 )
-	 * {
-	 * final NonNullList< ItemStack > overflow = copyStack( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.size() );
-	 * setNumCrates( numCrates - 1 );
-	 * CrateStackCollection.getCollection( crate.getWorld() ).markDirty();
-	 * return overflow;
-	 * }
-	 * else
-	 * {
-	 * CrateStackCollection.getCollection( crate.getWorld() ).removeCratePile( pileID );
-	 * return stacks;
-	 * }
-	 * }
-	 */
+	public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
+	{
+		if( numCrates > 1 )
+		{
+			final NonNullList< ItemStack > overflow = copyStack( stacks, CrateStackHandler.getCapacity( numCrates - 1 ), stacks.size() );
+			setNumCrates( numCrates - 1 );
+			// final LazyOptional< CrateCapability > capability = crate.getWorld().getCapability( CrateStorage.CRATE_PILE_CAPABILITY );
+			// final CrateCapability collection = capability.orElseThrow( null );
+			// collection.markDirty();
+			return overflow;
+		}
+		else
+		{
+			final LazyOptional< ICrateStorage > capability = crate.getWorld().getCapability( CapabilityCrate.CRATE_PILE_CAPABILITY );
+			final CrateStorage collection = (CrateStorage)capability.orElse( new CrateStorage() );
+			collection.removeCratePile( pileID );
+			return stacks;
+		}
+	}
 
 	/** Sets the region of this handler */
 	public void setRegion( Region region )
@@ -293,27 +298,25 @@ public class CrateStackHandler extends ExpandableStackHandler
 	 * This is needed when crates are not removed in order, for
 	 * example when they're split.
 	 */
-	/*
-	 * public void trimRegion( World world )
-	 * {
-	 * Region region = null;
-	 * for( final BlockPos pos : BlockPos.getAllInBox( this.region.posMin, this.region.posMax ) )
-	 * {
-	 * final TileEntity tileEntity = world.getTileEntity( pos );
-	 * if( tileEntity instanceof TileEntityCrate )
-	 * {
-	 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-	 * if( crate.getPileID().equals( pileID ) )
-	 * if( region == null )
-	 * region = new Region( pos, pos );
-	 * else
-	 * region.expandToContain( pos );
-	 * }
-	 * }
-	 * if( region != null )
-	 * this.region = region;
-	 * }
-	 */
+	public void trimRegion( World world )
+	{
+		Region region = null;
+		for( final BlockPos pos : BlockPos.getAllInBox( this.region.posMin, this.region.posMax ).collect( Collectors.toList() ) )
+		{
+			final TileEntity tileEntity = world.getTileEntity( pos );
+			if( tileEntity instanceof TileEntityCrate )
+			{
+				final TileEntityCrate crate = (TileEntityCrate)tileEntity;
+				if( crate.getPileID().equals( pileID ) )
+					if( region == null )
+						region = new Region( pos, pos );
+					else
+						region.expandToContain( pos );
+			}
+		}
+		if( region != null )
+			this.region = region;
+	}
 
 	@Override
 	public void setSize( int size )
@@ -342,7 +345,7 @@ public class CrateStackHandler extends ExpandableStackHandler
 		super.setStackInSlot( getIndexedSlot( slot ), stack );
 	}
 
-	/** Bypass the randomization of the overrided version of this function */
+	/** Bypass the randomization of the overridden version of this function */
 	public void setStackInSlotFixed( int slot, ItemStack stack )
 	{
 		doShuffle = false;
@@ -380,7 +383,6 @@ public class CrateStackHandler extends ExpandableStackHandler
 	@Override
 	public ItemStack insertItem( int slot, ItemStack stack, boolean simulate )
 	{
-		BetterStorage.LOGGER.info(  slot + " : " + stack );
 		return super.insertItem( getIndexedSlot( slot ), stack, simulate );
 	}
 
@@ -417,35 +419,31 @@ public class CrateStackHandler extends ExpandableStackHandler
 		indexSlots = getShuffledIndexes( stacks.size() );
 	}
 
-	/*
-	 * @Override
-	 * public NBTTagCompound serializeNBT()
-	 * {
-	 * final NBTTagCompound compound = super.serializeNBT();
-	 *
-	 * compound.setInt( "NumCrates", numCrates );
-	 * if( pileID != null )
-	 * compound.setUniqueId( "PileID", pileID );
-	 *
-	 * if( region != null )
-	 * compound.setTag( "Region", region.toCompound() );
-	 * return compound;
-	 * }
-	 */
+	@Override
+	public CompoundNBT serializeNBT()
+	{
+		final CompoundNBT compound = super.serializeNBT();
 
-	/*
-	 * @Override
-	 * public void deserializeNBT( NBTTagCompound compound )
-	 * {
-	 * super.deserializeNBT( compound );
-	 *
-	 * numCrates = compound.getInt( "NumCrates" );
-	 * if( compound.hasUniqueId( "PileID" ) )
-	 * pileID = compound.getUniqueId( "PileID" );
-	 *
-	 * if( compound.hasKey( "Region" ) )
-	 * region = Region.fromCompound( compound.getCompound( "Region" ) );
-	 * onLoad();
-	 * }
-	 */
+		compound.putInt( "NumCrates", numCrates );
+		if( pileID != null )
+			compound.putUniqueId( "PileID", pileID );
+
+		if( region != null )
+			compound.put( "Region", region.toCompound() );
+		return compound;
+	}
+
+	@Override
+	public void deserializeNBT( CompoundNBT compound )
+	{
+		super.deserializeNBT( compound );
+
+		numCrates = compound.getInt( "NumCrates" );
+		if( compound.hasUniqueId( "PileID" ) )
+			pileID = compound.getUniqueId( "PileID" );
+
+		if( compound.contains( "Region" ) )
+			region = Region.fromCompound( compound.getCompound( "Region" ) );
+		onLoad();
+	}
 }

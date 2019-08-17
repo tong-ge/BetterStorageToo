@@ -2,8 +2,8 @@
     "parent": "block/block",
     "textures":
     {
-    	"all": "betterstorage:blocks/crate/tl",
-    	"particle": "betterstorage:blocks/crate/tl"
+    	"all": "betterstorage:block/crate/tl",
+    	"particle": "betterstorage:block/crate/tl"
     },
     "elements":
 	[{

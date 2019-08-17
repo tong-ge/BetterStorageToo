@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shaped",
+	"type": "minecraft:crafting_shaped",
 	"group": "betterstorage:cardboard_shovel",
 	"pattern":
 	[
@@ -9,8 +9,8 @@
 	],
 	"key":
 	{
-		"o": { "type": "forge:ore_dict", "ore": "sheetCardboard" },
-		"/": { "type": "forge:ore_dict", "ore": "stickWood" }
+		"o": { "item": "betterstorage:cardboard_sheet" },
+		"/": { "item": "minecraft:stick" }
 	},
 	"result": { "item": "betterstorage:cardboard_shovel" }
 }

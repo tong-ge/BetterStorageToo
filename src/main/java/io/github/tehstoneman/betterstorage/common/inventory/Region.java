@@ -1,5 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
+import com.google.common.base.MoreObjects;
+
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -114,25 +117,21 @@ public class Region
 	}
 
 	/** Convert region to NBT data for serialization */
-	/*
-	 * public NBTTagCompound toCompound()
-	 * {
-	 * final NBTTagCompound compound = new NBTTagCompound();
-	 * compound.setLong( "posMin", posMin.toLong() );
-	 * compound.setLong( "posMax", posMax.toLong() );
-	 * return compound;
-	 * }
-	 */
+	public CompoundNBT toCompound()
+	{
+		final CompoundNBT compound = new CompoundNBT();
+		compound.putLong( "posMin", posMin.toLong() );
+		compound.putLong( "posMax", posMax.toLong() );
+		return compound;
+	}
 
 	/** Convert NBT data to region for deserialization */
-	/*
-	 * public static Region fromCompound( NBTTagCompound compound )
-	 * {
-	 * final BlockPos posMin = BlockPos.fromLong( compound.getLong( "posMin" ) );
-	 * final BlockPos posMax = BlockPos.fromLong( compound.getLong( "posMax" ) );
-	 * return new Region( posMin, posMax );
-	 * }
-	 */
+	public static Region fromCompound( CompoundNBT compound )
+	{
+		final BlockPos posMin = BlockPos.fromLong( compound.getLong( "posMin" ) );
+		final BlockPos posMax = BlockPos.fromLong( compound.getLong( "posMax" ) );
+		return new Region( posMin, posMax );
+	}
 
 	@Override
 	public Region clone()
@@ -143,7 +142,6 @@ public class Region
 	@Override
 	public String toString()
 	{
-		return "[ " + posMin.getX() + "," + posMin.getY() + "," + posMin.getZ() + " : " + posMax.getX() + "," + posMax.getY() + "," + posMax.getZ()
-				+ " ]";
+		return MoreObjects.toStringHelper( this ).add( "min", posMin.toString() ).add( "max", posMax.toString() ).toString();
 	}
 }

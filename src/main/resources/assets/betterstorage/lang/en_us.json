@@ -7,7 +7,7 @@
 	"block.betterstorage.reinforced_chest":"Reinforced Chest",
 	"block.betterstorage.reinforced_locker":"Reinforced Locker",
 	"container.betterstorage.crate":"Storage Crate",
-	"container.betterstorage.crate.capacity":"%% Capacity",
+	"container.betterstorage.crate.capacity":"%s%% Capacity",
 	"container.betterstorage.locker":"Locker",
 	"container.betterstorage.locker_large":"Large Locker",
 	"container.betterstorage.reinforced_chest":"Reinforced Chest",

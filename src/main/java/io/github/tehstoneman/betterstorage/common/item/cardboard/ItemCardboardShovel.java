@@ -1,18 +1,21 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.nbt.CompoundNBT;
 
-public class ItemCardboardShovel extends ItemBetterStorage // ItemSpade implements ICardboardItem
+public class ItemCardboardShovel extends ShovelItem implements ICardboardItem
 {
 
 	public ItemCardboardShovel()
 	{
-		super( "cardboard_shovel", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().group( ItemGroup.TOOLS ) );
 	}
-
-	private String name;
 
 	/*
 	 * public ItemCardboardShovel()
@@ -75,51 +78,39 @@ public class ItemCardboardShovel extends ItemBetterStorage // ItemSpade implemen
 	 */
 
 	// Cardboard items
-	/*
-	 * @Override
-	 * public boolean canDye( ItemStack stack )
-	 * {
-	 * return true;
-	 * }
-	 */
+	@Override
+	public boolean canDye( ItemStack stack )
+	{
+		return true;
+	}
 
-	/*
-	 * @Override
-	 * public int getColor( ItemStack itemstack )
-	 * {
-	 * if( hasColor( itemstack ) )
-	 * {
-	 * final NBTTagCompound compound = itemstack.getTagCompound();
-	 * return compound.getInteger( "color" );
-	 * }
-	 * return 0x705030;
-	 * }
-	 */
+	@Override
+	public int getColor( ItemStack itemstack )
+	{
+		if( hasColor( itemstack ) )
+		{
+			final CompoundNBT compound = itemstack.getTag();
+			return compound.getInt( "color" );
+		}
+		return 0x705030;
+	}
 
-	/*
-	 * @Override
-	 * public boolean hasColor( ItemStack itemstack )
-	 * {
-	 * if( itemstack.hasTagCompound() )
-	 * {
-	 * final NBTTagCompound compound = itemstack.getTagCompound();
-	 * return compound.hasKey( "color" );
-	 * }
-	 * return false;
-	 * }
-	 */
+	@Override
+	public boolean hasColor( ItemStack itemstack )
+	{
+		if( itemstack.hasTag() )
+		{
+			final CompoundNBT compound = itemstack.getTag();
+			return compound.contains( "color" );
+		}
+		return false;
+	}
 
-	/*
-	 * @Override
-	 * public void setColor( ItemStack itemstack, int colorRGB )
-	 * {
-	 * NBTTagCompound compound;
-	 * if( itemstack.hasTagCompound() )
-	 * compound = itemstack.getTagCompound();
-	 * else
-	 * compound = new NBTTagCompound();
-	 * compound.setInteger( "color", colorRGB );
-	 * itemstack.setTagCompound( compound );
-	 * }
-	 */
+	@Override
+	public void setColor( ItemStack itemstack, int colorRGB )
+	{
+		final CompoundNBT compound = itemstack.getOrCreateTag();
+		compound.putInt( "color", colorRGB );
+		itemstack.setTag( compound );
+	}
 }

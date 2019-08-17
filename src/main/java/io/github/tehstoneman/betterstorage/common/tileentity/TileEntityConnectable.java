@@ -62,7 +62,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	/** Returns if this container is the main container, or not connected to another container. */
 	public boolean isMain()
 	{
-
 		final BlockState state = getBlockState();
 		if( state.has( BlockConnectableContainer.TYPE ) )
 			return state.get( BlockConnectableContainer.TYPE ) == EnumConnectedType.SINGLE

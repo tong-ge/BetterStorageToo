@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "betterstorage:locker",
+	"pattern":
+	[
+		"ooo",
+		"o |",
+		"ooo"
+	],
+	"key":
+	{
+		"o": { "tag": "minecraft:planks" },
+		"|": { "tag": "minecraft:wooden_trapdoors" }
+	},
+	"result": { "item": "betterstorage:locker" }
+}
