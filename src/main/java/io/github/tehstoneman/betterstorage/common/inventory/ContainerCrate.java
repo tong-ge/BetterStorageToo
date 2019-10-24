@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.entity.player.PlayerEntity;
@@ -67,10 +66,20 @@ public class ContainerCrate extends Container
 		trackInt( volume );
 	}
 
+	public int getRows()
+	{
+		return rows;
+	}
+
+	/** Returns the recorded volume of this container */
+	public int getVolume()
+	{
+		return volume.get();
+	}
+
 	@Override
 	public void detectAndSendChanges()
 	{
-		BetterStorage.LOGGER.info( ( (CrateStackHandler)inventoryCrate ).getOccupiedSlots() + " : " + inventoryCrate.getSlots() );
 		volume.set( ( (CrateStackHandler)inventoryCrate ).getOccupiedSlots() * 100 / inventoryCrate.getSlots() );
 		super.detectAndSendChanges();
 	}
@@ -123,20 +132,9 @@ public class ContainerCrate extends Container
 		return flag;
 	}
 
-	/** Returns the recorded volume of this container */
-	public int getVolume()
-	{
-		return volume.get();
-	}
-
 	@Override
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileCrate.getWorld(), tileCrate.getPos() ), playerIn, BetterStorageBlocks.CRATE );
-	}
-
-	public int getRows()
-	{
-		return rows;
 	}
 }

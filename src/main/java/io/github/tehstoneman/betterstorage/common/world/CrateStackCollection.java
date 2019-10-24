@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.common.util.WorldCapabilityData;
 
 /** Holds all CratePileData objects for one world / dimension. */
-public class CrateStackCollection extends WorldCapabilityData
+public class CrateStackCollection extends WorldSavedData
 {
 	private static final String						filename	= ModInfo.MOD_ID + "_cratepile";
 
@@ -28,43 +31,58 @@ public class CrateStackCollection extends WorldCapabilityData
 		super( filename );
 	}
 
-	/** Gets or creates a CratePileCollection for the world. */
+	/**
+	 * Gets or creates a CratePileCollection for a world.
+	 *
+	 * @param world
+	 *            The world that the collection is stored in
+	 * @return The collection for the world, or null if client
+	 */
+	@Nullable
 	public static CrateStackCollection getCollection( World world )
 	{
-		return null;
-		/*CrateStackCollection collection = (CrateStackCollection)world.loadData( CrateStackCollection.class, filename );
-		if( collection == null )
-		{
-			collection = new CrateStackCollection();
-			world.setData( filename, collection );
-		}
-		return collection;*/
-	}
+		if( world.isRemote )
+			return null;
 
-	/** Get the stack handler for the associated ID */
-	public CrateStackHandler getCratePile( UUID pileID )
-	{
-		if( pileID != null && pileDataMap.containsKey( pileID ) )
-			return pileDataMap.get( pileID );
-		return createCratePile();
+		final DimensionType dimType = world.getDimension().getType();
+		final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
+		final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
+
+		return (CrateStackCollection)data;
 	}
 
 	/**
-	 * Get or create a crate handler for the given UUID
-	 * Used for syncing client with server
+	 * Get or create a {@link CrateStackHandler} for the given {@link UUID}
+	 * 
+	 * @param pileID
+	 *            {@link UUID} for the stack handler we are looking for<BR>
+	 *            (Null to create new ID)
+	 * @return The {@link CrateStackHandler} for the given {@link UUID}
 	 */
-	public CrateStackHandler getOrCreateCratePile( UUID pileID )
+	public CrateStackHandler getOrCreateCratePile( @Nullable UUID pileID )
 	{
+		// Check if pileID is null, and create a new ID if so
+		if( pileID == null )
+			do
+				pileID = UUID.randomUUID();
+			while( pileDataMap.containsKey( pileID ) );
+
+		// Check if pileID is in collection, and create a new handler if not
 		if( !pileDataMap.containsKey( pileID ) )
 		{
-			final CrateStackHandler cratePile = new CrateStackHandler(18 );
+			final CrateStackHandler cratePile = new CrateStackHandler( 18 );
 			pileDataMap.put( pileID, cratePile );
-			//cratePile.setPileID( pileID );
+			return addCrateToPile( pileID );
 		}
+
 		return pileDataMap.get( pileID );
 	}
 
-	/** Creates and adds a new crate to this collection. */
+	/**
+	 * Creates and adds a new crate to this collection.
+	 *
+	 * @return The new {@link CrateStackHandler}
+	 */
 	public CrateStackHandler createCratePile()
 	{
 		UUID pileID = UUID.randomUUID();
@@ -73,84 +91,52 @@ public class CrateStackCollection extends WorldCapabilityData
 		return addCrateToPile( pileID );
 	}
 
-	/** Adds a new crate pile to this collection. */
+	/**
+	 * Adds a new crate pile to this collection.
+	 *
+	 * @param pileID
+	 *            The ID to add to this collection
+	 * @return The new {@link CrateStackHandler}
+	 */
 	public CrateStackHandler addCrateToPile( UUID pileID )
 	{
 		final CrateStackHandler cratePile = new CrateStackHandler( 18 );
+		cratePile.setPileID( pileID );
 		pileDataMap.put( pileID, cratePile );
-		//cratePile.setPileID( pileID );
 		markDirty();
 		return cratePile;
 	}
 
-	/** Removes the crate pile from the collection, deletes the pile's file. */
+	/**
+	 * Removes the crate pile from the collection, deletes the pile's file.
+	 *
+	 * @param pileID
+	 *            The ID to delete
+	 */
 	public void removeCratePile( UUID pileID )
 	{
 		pileDataMap.remove( pileID );
 		markDirty();
 	}
 
-	/*
-	 * @Override
-	 * public void readFromNBT( NBTTagCompound compound )
-	 * {
-	 * if( !compound.hasNoTags() )
-	 * for( final String key : compound.getKeySet() )
-	 * {
-	 * final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
-	 * crateStackHandler.deserializeNBT( compound.getCompoundTag( key ) );
-	 * pileDataMap.put( UUID.fromString( key ), crateStackHandler );
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	 * {
-	 * if( !pileDataMap.isEmpty() )
-	 * for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
-	 * compound.setTag( entry.getKey().toString(), entry.getValue().serializeNBT() );
-	 * return compound;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void read( NBTTagCompound compound )
-	 * {
-	 * if( !compound.isEmpty() )
-	 * for( final String key : compound.keySet() )
-	 * {
-	 * final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
-	 * crateStackHandler.deserializeNBT( compound.getCompound( key ) );
-	 * pileDataMap.put( UUID.fromString( key ), crateStackHandler );
-	 * }
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public NBTTagCompound write( NBTTagCompound compound )
-	 * {
-	 * if( !pileDataMap.isEmpty() )
-	 * for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
-	 * compound.setTag( entry.getKey().toString(), entry.getValue().serializeNBT() );
-	 * return compound;
-	 * }
-	 */
-
 	@Override
 	public void read( CompoundNBT nbt )
 	{
-		// TODO Auto-generated method stub
-
+		if( !nbt.isEmpty() )
+			for( final String key : nbt.keySet() )
+			{
+				final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
+				crateStackHandler.deserializeNBT( nbt.getCompound( key ) );
+				pileDataMap.put( UUID.fromString( key ), crateStackHandler );
+			}
 	}
 
 	@Override
-	public CompoundNBT write( CompoundNBT compound )
+	public CompoundNBT write( CompoundNBT nbt )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if( !pileDataMap.isEmpty() )
+			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
+				nbt.put( entry.getKey().toString(), entry.getValue().serializeNBT() );
+		return nbt;
 	}
 }

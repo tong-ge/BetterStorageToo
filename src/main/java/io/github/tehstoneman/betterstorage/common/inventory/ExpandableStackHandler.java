@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -38,7 +39,7 @@ public class ExpandableStackHandler extends ItemStackHandler
 	{
 		stacks = copyStacks( stacks, size );
 		rows = size / 9;
-		columns = size % 9;
+		columns = 9;
 	}
 
 	public NonNullList< ItemStack > copyStacks( NonNullList< ItemStack > stackIn, int size )
@@ -58,6 +59,23 @@ public class ExpandableStackHandler extends ItemStackHandler
 	public NonNullList< ItemStack > copyStacks( int from, int to )
 	{
 		final int size = to - from;
-		return copyStacks( this.stacks, from, size );
+		return copyStacks( stacks, from, size );
+	}
+
+	@Override
+	public CompoundNBT serializeNBT()
+	{
+		final CompoundNBT nbt = super.serializeNBT();
+		nbt.putInt( "Columns", columns );
+		nbt.putInt( "Rows", rows );
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT( CompoundNBT nbt )
+	{
+		super.deserializeNBT( nbt );
+		columns = nbt.contains( "Columns" ) ? columns = nbt.getInt( "Columns" ) : 9;
+		rows = nbt.contains( "Rows" ) ? nbt.getInt( "Rows" ) : stacks.size() / 9;
 	}
 }

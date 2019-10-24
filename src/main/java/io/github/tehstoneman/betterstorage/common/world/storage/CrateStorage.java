@@ -3,10 +3,13 @@ package io.github.tehstoneman.betterstorage.common.world.storage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICrateStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 
 /** Holds all CratePile objects for one world / dimension. */
 public class CrateStorage implements ICrateStorage
@@ -51,7 +54,7 @@ public class CrateStorage implements ICrateStorage
 	{
 		final CrateStackHandler cratePile = new CrateStackHandler( 18 );
 		pileDataMap.put( pileID, cratePile );
-		// cratePile.setPileID( pileID );
+		cratePile.setPileID( pileID );
 		// markDirty();
 		return cratePile;
 	}
@@ -66,6 +69,7 @@ public class CrateStorage implements ICrateStorage
 	@Override
 	public CompoundNBT serializeNBT()
 	{
+		Logger.getLogger( ModInfo.MOD_ID ).info( "Saving crate storage" );
 		final CompoundNBT compound = new CompoundNBT();
 		if( !pileDataMap.isEmpty() )
 			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
@@ -76,6 +80,7 @@ public class CrateStorage implements ICrateStorage
 	@Override
 	public void deserializeNBT( CompoundNBT compound )
 	{
+		Logger.getLogger( ModInfo.MOD_ID ).info( "Loading crate storage" );
 		if( !compound.isEmpty() )
 			for( final String key : compound.keySet() )
 			{

@@ -1,8 +1,19 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
 /** Common base class for locks and keys **/
 public abstract class ItemKeyLock extends ItemBetterStorage
@@ -14,8 +25,7 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 
 	public ItemKeyLock( String name )
 	{
-		super( name, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
-		// setMaxStackSize( 1 );
+		super( name, new Item.Properties().group( BetterStorage.ITEM_GROUP ).maxStackSize( 1 ) );
 	}
 
 	@Override
@@ -103,46 +113,40 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 	 * }
 	 */
 
-	/*
-	 * public static UUID getID( ItemStack stack )
-	 * {
-	 * if( !stack.hasTagCompound() || !stack.getTagCompound().hasUniqueId( TAG_KEYLOCK_ID ) )
-	 * setID( stack, UUID.randomUUID() );
-	 *
-	 * return stack.getTagCompound().getUniqueId( TAG_KEYLOCK_ID );
-	 * }
-	 */
+	public static UUID getID( ItemStack stack )
+	{
+		final CompoundNBT tag = stack.getChildTag( TAG_KEYLOCK_ID );
+		if( tag == null )
+			setID( stack, UUID.randomUUID() );
 
-	/*
-	 * public static void setID( ItemStack stack, UUID uuid )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag == null )
-	 * tag = new NBTTagCompound();
-	 *
-	 * tag.setUniqueId( TAG_KEYLOCK_ID, uuid );
-	 * stack.setTagCompound( tag );
-	 * }
-	 */
+		return tag.getUniqueId( TAG_KEYLOCK_ID );
+	}
 
-	/*
-	 * @SideOnly( Side.CLIENT )
-	 *
-	 * @Override
-	 * public void addInformation( ItemStack stack, World worldIn, List< String > tooltip, ITooltipFlag toolTipFlag )
-	 * {
-	 * final NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag != null )
-	 * {
-	 *
-	 * if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-	 * tooltip.add( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) );
-	 *
-	 * if( tag.hasKey( TAG_COLOR1 ) )
-	 * tooltip.add( "Color 1 : #" + Integer.toHexString( tag.getInteger( TAG_COLOR1 ) ).toUpperCase() );
-	 * if( tag.hasKey( TAG_COLOR2 ) )
-	 * tooltip.add( "Color 2 : #" + Integer.toHexString( tag.getInteger( TAG_COLOR2 ) ).toUpperCase() );
-	 * }
-	 * }
-	 */
+	public static void setID( ItemStack stack, UUID uuid )
+	{
+		final CompoundNBT tag = stack.getOrCreateTag();
+		tag.putUniqueId( TAG_KEYLOCK_ID, uuid );
+		stack.setTag( tag );
+	}
+
+	@Override
+	public void addInformation( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
+	{
+		super.addInformation( stack, worldIn, tooltip, flagIn );
+		if( flagIn.isAdvanced() )
+		{
+			final CompoundNBT tag = stack.getTag();
+			if( tag != null )
+			{
+				if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+					tooltip.add( new TranslationTextComponent( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) ) );
+
+				if( tag.contains( TAG_COLOR1 ) )
+					tooltip.add( new TranslationTextComponent( "Color 1 : #" + Integer.toHexString( tag.getInt( TAG_COLOR1 ) ).toUpperCase() ) );
+				if( tag.contains( TAG_COLOR2 ) )
+					tooltip.add( new TranslationTextComponent( "Color 2 : #" + Integer.toHexString( tag.getInt( TAG_COLOR2 ) ).toUpperCase() ) );
+			}
+		}
+	}
+
 }

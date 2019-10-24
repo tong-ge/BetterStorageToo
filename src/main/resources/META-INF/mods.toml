@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[28,)"
 issueTrackerURL="https://github.com/TehStoneMan/BetterStorageToo/issues"
 [[mods]]
 modId="betterstorage"
 version="${file.jarVersion}"
 displayName="BetterStorageToo"
-# updateJSONURL="http://tehstoneman.github.io/betterstorage.json"
+updateJSONURL="http://tehstoneman.github.io/betterstorage.json"
 displayURL="http://minecraft.curseforge.com/projects/betterstoragetoo"
 authors="TehStoneMan, copygirl, Vic Nightfall"
 description='''Adds more storage related blocks and items to the game.'''

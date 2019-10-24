@@ -1,0 +1,3 @@
+Testing chest:
+/setblock ~1 ~ ~ chest[facing=north]{Items: [{Slot: 0, id: "minecraft:white_wool", Count: 1},{Slot:1,id:"minecraft:orange_wool",Count:1},{Slot:2,id:"minecraft:magenta_wool",Count:1},{Slot:3,id:"minecraft:light_blue_wool",Count:1},{Slot:4,id:"minecraft:yellow_wool",Count:1},{Slot:5,id:"minecraft:lime_wool",Count:1},{Slot:6,id:"minecraft:pink_wool",Count:1},{Slot:7,id:"minecraft:gray_wool",Count:1},{Slot:8,id:"minecraft:light_gray_wool",Count:1},{Slot:9,id:"minecraft:cyan_wool",Count:1},{Slot:10,id:"minecraft:purple_wool",Count:1},{Slot:11,id:"minecraft:blue_wool",Count:1},{Slot:12,id:"minecraft:brown_wool",Count:1},{Slot:13,id:"minecraft:green_wool",Count:1},{Slot:14,id:"minecraft:red_wool",Count:1},{Slot:15,id:"minecraft:black_wool",Count:1}]} replace
+

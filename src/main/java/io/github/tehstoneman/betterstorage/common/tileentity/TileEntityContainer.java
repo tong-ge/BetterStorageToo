@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
@@ -620,58 +619,54 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 * ==========================
 	 */
 
-	/*
-	 * @Override
-	 * public NBTTagCompound getUpdateTag()
-	 * {
-	 * final NBTTagCompound compound = super.getUpdateTag();
-	 *
-	 * if( inventory.getSlots() > 0 )
-	 * compound.setTag( "inventory", inventory.serializeNBT() );
-	 *
-	 * if( hasCustomName() )
-	 * compound.setString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
-	 *
-	 * return compound;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void handleUpdateTag( NBTTagCompound compound )
-	 * {
-	 * super.handleUpdateTag( compound );
-	 *
-	 * if( compound.hasKey( "inventory" ) )
-	 * inventory.deserializeNBT( (NBTTagCompound)compound.getTag( "inventory" ) );
-	 *
-	 * if( compound.hasKey( "CustomName" ) )
-	 * setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
-	 * }
-	 */
-
 	@Override
-	public CompoundNBT write( CompoundNBT compound )
+	public CompoundNBT getUpdateTag()
 	{
-		compound = super.write( compound );
+		final CompoundNBT nbt = super.getUpdateTag();
 
 		if( inventory.getSlots() > 0 )
-			compound.put( "inventory", inventory.serializeNBT() );
+			nbt.put( "inventory", inventory.serializeNBT() );
 
 		if( hasCustomName() )
-			compound.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
-		return compound;
+			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+
+		return nbt;
 	}
 
 	@Override
-	public void read( CompoundNBT compound )
+	public void handleUpdateTag( CompoundNBT nbt )
 	{
-		super.read( compound );
+		super.handleUpdateTag( nbt );
 
-		if( compound.contains( "inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)compound.get( "inventory" ) );
+		if( nbt.contains( "inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
 
-		if( compound.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( compound.getString( "CustomName" ) ) );
+		if( nbt.contains( "CustomName" ) )
+			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+	}
+
+	@Override
+	public CompoundNBT write( CompoundNBT nbt )
+	{
+		nbt = super.write( nbt );
+
+		if( inventory.getSlots() > 0 )
+			nbt.put( "inventory", inventory.serializeNBT() );
+
+		if( hasCustomName() )
+			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+		return nbt;
+	}
+
+	@Override
+	public void read( CompoundNBT nbt )
+	{
+		super.read( nbt );
+
+		if( nbt.contains( "inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+
+		if( nbt.contains( "CustomName" ) )
+			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
 	}
 }

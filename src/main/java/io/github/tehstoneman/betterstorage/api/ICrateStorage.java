@@ -2,10 +2,13 @@ package io.github.tehstoneman.betterstorage.api;
 
 import java.util.UUID;
 
+import io.github.tehstoneman.betterstorage.common.capabilities.CapabilityCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
+import io.github.tehstoneman.betterstorage.common.world.storage.CrateStorage;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 public interface ICrateStorage extends INBTSerializable< CompoundNBT >
 {
@@ -26,4 +29,12 @@ public interface ICrateStorage extends INBTSerializable< CompoundNBT >
 
 	/** Removes the crate pile from the collection, deletes the pile's file. */
 	public void removeCratePile( UUID pileID );
+
+	/** Retrive the crate storage for the given world */
+	public static ICrateStorage getCrateStorage( World world )
+	{
+		final LazyOptional< ICrateStorage > capability = world.getCapability( CapabilityCrate.CRATE_PILE_CAPABILITY );
+		final ICrateStorage crateStorage = capability.orElse( new CrateStorage() );
+		return crateStorage;
+	}
 }

@@ -7,16 +7,20 @@ import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardPi
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardShovel;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSword;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageItems
 {
 	//@formatter:off
-	// public static ItemKey KEY = new ItemKey();
-	// public static ItemMasterKey MASTER_KEY = new ItemMasterKey();
-	// public static ItemKeyring KEYRING = new ItemKeyring();
-	// public static ItemLock LOCK = new ItemLock();
+	@ObjectHolder( "key" )					public static ItemKey KEY;
+	@ObjectHolder( "master_key" )			public static ItemMasterKey MASTER_KEY;
+	@ObjectHolder( "keyring" )				public static ItemKeyring KEYRING;
+	@ObjectHolder( "lock" )					public static ItemLock LOCK;
 	@ObjectHolder( "cardboard_sheet" )		public static ItemCardboardSheet CARDBOARD_SHEET;
 
 	@ObjectHolder( "cardboard_sword" )		public static ItemCardboardSword CARDBOARD_SWORD;

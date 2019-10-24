@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
@@ -20,9 +21,7 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 		super( container, playerInventory, title );
 
 		rows = container.getRows();
-
 		ySize = 114 + rows * 18;
-
 		offsetY = 17 + rows * 18;
 	}
 

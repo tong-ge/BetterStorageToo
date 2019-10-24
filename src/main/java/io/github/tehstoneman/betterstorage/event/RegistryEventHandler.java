@@ -16,6 +16,10 @@ import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardPi
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSheet;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardShovel;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardSword;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.Block;
@@ -63,10 +67,10 @@ public class RegistryEventHandler
 		registry.register( new LockerItem( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 		// registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER ).setRegistryName( "reinforced_locker" ) );
 
-		// registry.register( BetterStorageItems.KEY.setRegistryName( "key" ) );
-		// registry.register( BetterStorageItems.KEYRING.setRegistryName( "keyring" ) );
-		// registry.register( BetterStorageItems.MASTER_KEY.setRegistryName( "master_key" ) );
-		// registry.register( BetterStorageItems.LOCK.setRegistryName( "lock" ) );
+		registry.register( new ItemKey().setRegistryName( "key" ) );
+		registry.register( new ItemKeyring().setRegistryName( "keyring" ) );
+		registry.register( new ItemMasterKey().setRegistryName( "master_key" ) );
+		registry.register( new ItemLock().setRegistryName( "lock" ) );
 
 		registry.register( new ItemCardboardSheet().setRegistryName( ModInfo.MOD_ID, "cardboard_sheet" ) );
 
@@ -110,12 +114,12 @@ public class RegistryEventHandler
 		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 		{
 			final BlockPos pos = data.readBlockPos();
-			return new ContainerCrate( windowID, inv, BetterStorage.proxy.getClientWorld(), pos );
+			return new ContainerCrate( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
 		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 		{
 			final BlockPos pos = data.readBlockPos();
-			return new ContainerBetterStorage( windowID, inv, BetterStorage.proxy.getClientWorld(), pos );
+			return new ContainerBetterStorage( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 	}
 }

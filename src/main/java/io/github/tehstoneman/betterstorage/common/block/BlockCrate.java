@@ -1,14 +1,22 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Maps;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -18,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -28,12 +37,21 @@ import net.minecraftforge.fml.network.NetworkHooks;
 //@Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
 public class BlockCrate extends BlockConnectableContainer// implements ILaputaImmobile
 {
-	public static final BooleanProperty	NORTH	= BlockStateProperties.NORTH;
-	public static final BooleanProperty	EAST	= BlockStateProperties.EAST;
-	public static final BooleanProperty	SOUTH	= BlockStateProperties.SOUTH;
-	public static final BooleanProperty	WEST	= BlockStateProperties.WEST;
-	public static final BooleanProperty	UP		= BlockStateProperties.UP;
-	public static final BooleanProperty	DOWN	= BlockStateProperties.DOWN;
+	public static final BooleanProperty						NORTH					= BlockStateProperties.NORTH;
+	public static final BooleanProperty						EAST					= BlockStateProperties.EAST;
+	public static final BooleanProperty						SOUTH					= BlockStateProperties.SOUTH;
+	public static final BooleanProperty						WEST					= BlockStateProperties.WEST;
+	public static final BooleanProperty						UP						= BlockStateProperties.UP;
+	public static final BooleanProperty						DOWN					= BlockStateProperties.DOWN;
+	public static final Map< Direction, BooleanProperty >	FACING_TO_PROPERTY_MAP	= Util.make( Maps.newEnumMap( Direction.class ), ( facing ) ->
+																					{
+																						facing.put( Direction.NORTH, NORTH );
+																						facing.put( Direction.EAST, EAST );
+																						facing.put( Direction.SOUTH, SOUTH );
+																						facing.put( Direction.WEST, WEST );
+																						facing.put( Direction.UP, UP );
+																						facing.put( Direction.DOWN, DOWN );
+																					} );
 
 	public BlockCrate()
 	{
@@ -56,40 +74,44 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 		builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
 	}
 
-	/*
-	 * ======================
-	 * TileEntity / Rendering
-	 * ======================
-	 */
-
 	@Override
 	public TileEntity createTileEntity( BlockState state, IBlockReader world )
 	{
 		return new TileEntityCrate();
 	}
 
-	/*
-	 * =========
-	 * Placement
-	 * =========
-	 */
-
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
-			BlockPos facingPos )
+	public void onBlockPlacedBy( World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack )
 	{
-		final TileEntityCrate tileCrate = getCrateAt( worldIn, currentPos );
-		final TileEntityCrate facingCrate = getCrateAt( worldIn, facingPos );
-		if( tileCrate != null )
-			tileCrate.onBlockPlaced( facingCrate );
-		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+		super.onBlockPlacedBy( worldIn, pos, state, placer, stack );
+		if( !worldIn.isRemote )
+		{
+			final TileEntityCrate crate = TileEntityCrate.getCrateAt( worldIn, pos );
+			if( crate != null && !crate.hasID() )
+			{
+				final CrateStackHandler handler = crate.getCrateStackHandler();
+				handler.addCrate( crate );
+			}
+		}
 	}
 
-	/*
-	 * ===========
-	 * Interaction
-	 * ===========
-	 */
+	@Override
+	public BlockState updatePostPlacement( BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos,
+			BlockPos facingPos )
+	{
+		if( !world.isRemote() )
+		{
+			final TileEntityCrate tileCrate = TileEntityCrate.getCrateAt( world, pos );
+			if( tileCrate != null )
+			{
+				final TileEntityCrate facingCrate = TileEntityCrate.getCrateAt( world, facingPos );
+				state = state.with( FACING_TO_PROPERTY_MAP.get( facing ), tileCrate.tryAddCrate( facingCrate ) ).with( TYPE,
+						tileCrate.getNumCrates() > 1 ? EnumConnectedType.PILE : EnumConnectedType.SINGLE );
+			}
+			//tileCrate.updateConnections();
+		}
+		return super.updatePostPlacement( state, facing, facingState, world, pos, facingPos );
+	}
 
 	@Override
 	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
@@ -109,19 +131,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	@Nullable
 	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
 	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
-		if( !( tileentity instanceof TileEntityCrate ) )
-			return null;
-		else
-		{
-			final TileEntityCrate crate = (TileEntityCrate)tileentity;
-			return crate;
-		}
-	}
-
-	private TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
-	{
-		final TileEntity tileEntity = world.getTileEntity( pos );
+		final TileEntity tileEntity = worldIn.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityCrate )
 			return (TileEntityCrate)tileEntity;
 		return null;
@@ -130,18 +140,16 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	@Override
 	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
-		if( state.getBlock() != newState.getBlock() )
+		if( !world.isRemote && state.getBlock() != newState.getBlock() )
 		{
-			final TileEntityCrate tileCrate = getCrateAt( world, pos );
-			if( !world.isRemote && tileCrate != null )
+			final TileEntityCrate tileCrate = TileEntityCrate.getCrateAt( world, pos );
+			if( tileCrate != null )
 			{
 				final CrateStackHandler handler = tileCrate.getCrateStackHandler();
-				final NonNullList< ItemStack > overflow = handler.removeCrate( tileCrate );
+				final NonNullList< ItemStack > overflow = tileCrate.removeCrate();
+				if( !overflow.isEmpty() )
+					InventoryHelper.dropItems( world, pos, overflow );
 				tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
-				// if( !overflow.isEmpty() )
-				// for( final ItemStack stack : overflow )
-				// if( !stack.isEmpty() )
-				// world.spawnEntity( new ItemEntity( world, pos.getX(), pos.getY(), pos.getZ(), stack ) );
 			}
 
 		}
@@ -149,25 +157,15 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	}
 
 	/*
-	 * @Override
-	 * public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest )
+	 * @Nullable
+	 * private TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
 	 * {
 	 * final TileEntity tileEntity = world.getTileEntity( pos );
-	 * if( !world.isRemote && tileEntity instanceof TileEntityCrate )
-	 * {
-	 * final TileEntityCrate tileCrate = (TileEntityCrate)tileEntity;
-	 * final CrateStackHandler handler = tileCrate.getCrateStackHandler();
-	 * final NonNullList< ItemStack > overflow = handler.removeCrate( tileCrate );
-	 * tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
-	 * if( !overflow.isEmpty() )
-	 * for( final ItemStack stack : overflow )
-	 * if( !stack.isEmpty() )
-	 * world.spawnEntity( new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack ) );
-	 * }
-	 * return super.removedByPlayer( state, world, pos, player, willHarvest );
+	 * if( tileEntity instanceof TileEntityCrate )
+	 * return (TileEntityCrate)tileEntity;
+	 * return null;
 	 * }
 	 */
-
 	/*
 	 * @Override
 	 * public boolean hasComparatorInputOverride( IBlockState state )

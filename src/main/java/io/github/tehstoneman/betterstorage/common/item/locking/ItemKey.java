@@ -1,22 +1,26 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
+import java.util.UUID;
+
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 
 public class ItemKey extends ItemKeyLock implements IKey
 {
 	public ItemKey()
 	{
 		this( "key" );
-		// setMaxDamage( 64 );
 	}
 
 	public ItemKey( String name )
 	{
 		super( name );
-		// setMaxStackSize( 1 );
 	}
 
 	@Override
@@ -30,24 +34,6 @@ public class ItemKey extends ItemKeyLock implements IKey
 	{
 		return stack;
 	}
-
-	/*
-	 * @Override
-	 * public void onCreated( ItemStack stack, World world, EntityPlayer player )
-	 * {
-	 * if( !world.isRemote )
-	 * ensureHasID( stack );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void onUpdate( ItemStack stack, World world, Entity entity, int slot, boolean isBeingHeld )
-	 * {
-	 * if( !world.isRemote )
-	 * ensureHasID( stack );
-	 * }
-	 */
 
 	/*
 	 * @Override
@@ -87,21 +73,6 @@ public class ItemKey extends ItemKeyLock implements IKey
 	 * }
 	 * }
 	 * return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
-	 * }
-	 */
-
-	/** Gives the key a random ID if it doesn't have one already. */
-	/*
-	 * public static void ensureHasID( ItemStack stack )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag == null )
-	 * tag = new NBTTagCompound();
-	 * if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-	 * {
-	 * tag.setUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
-	 * stack.setTagCompound( tag );
-	 * }
 	 * }
 	 */
 
