@@ -2,7 +2,7 @@
 	"parent": "minecraft:recipes/root",
 	"rewards":
 	{
-		"recipes": [ "betterstorage:reinforced_chest_tin" ]
+		"recipes": [ "betterstorage:reinforced_chest" ]
 	},
 	"criteria":
 	{
@@ -20,7 +20,7 @@
 		"has_the_recipe":
 		{
 			"trigger": "minecraft:recipe_unlocked",
-			"conditions": { "recipe": "betterstorage:reinforced_chest_tin" }
+			"conditions": { "recipe": "betterstorage:reinforced_chest" }
 		}
 	},
 	"requirements":

@@ -4,6 +4,7 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
+import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

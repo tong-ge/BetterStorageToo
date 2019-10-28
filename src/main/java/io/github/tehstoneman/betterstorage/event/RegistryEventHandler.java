@@ -6,10 +6,17 @@ import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockBetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
+import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
-import io.github.tehstoneman.betterstorage.common.item.LockerItem;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardHoe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardPickaxe;
@@ -22,6 +29,8 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.material.Material;
@@ -45,16 +54,14 @@ public class RegistryEventHandler
 	{
 		final IForgeRegistry< Block > registry = event.getRegistry();
 
-		registry.register( new BlockCrate().setRegistryName( "crate" ) );
-		// registry.register( BetterStorageBlocks.REINFORCED_CHEST.setRegistryName( "reinforced_chest" ) );
+		registry.register( new BlockCrate().setRegistryName( ModInfo.MOD_ID, "crate" ) );
+		registry.register( new BlockReinforcedChest().setRegistryName( ModInfo.MOD_ID, "reinforced_chest" ) );
 		registry.register( new BlockLocker().setRegistryName( ModInfo.MOD_ID, "locker" ) );
-		// registry.register( BetterStorageBlocks.REINFORCED_LOCKER.setRegistryName( "reinforced_locker" ) );
+		registry.register( new BlockReinforcedLocker().setRegistryName( ModInfo.MOD_ID, "reinforced_locker" ) );
 		// registry.register( BetterStorageBlocks.LOCKABLE_DOOR.setRegistryName( "lockable_door" ) );
 		// registry.register( BetterStorageBlocks.CARDBOARD_BOX.setRegistryName( "cardboard_box" ) );
 		registry.register( new BlockBetterStorage( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance( 5.0F, 6.0F ) )
 				.setRegistryName( ModInfo.MOD_ID, "block_flint" ) );
-
-		// GameRegistry.registerTileEntity( TileEntityCrate.class, ModInfo.containerCrate );
 	}
 
 	@SubscribeEvent
@@ -63,9 +70,11 @@ public class RegistryEventHandler
 		final IForgeRegistry< Item > registry = event.getRegistry();
 
 		registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
-		// registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST ).setRegistryName( "reinforced_chest" ) );
-		registry.register( new LockerItem( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
-		// registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER ).setRegistryName( "reinforced_locker" ) );
+		registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST )
+				.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
+		registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+		registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER )
+				.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
 
 		registry.register( new ItemKey().setRegistryName( "key" ) );
 		registry.register( new ItemKeyring().setRegistryName( "keyring" ) );
@@ -98,12 +107,12 @@ public class RegistryEventHandler
 
 		registry.register( TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE ).build( null )
 				.setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
-		// BetterStorageTileEntityTypes.REINFORCED_CHEST = TileEntityType.register( ModInfo.modId + ":reinforced_chest", TileEntityType.Builder.create(
-		// TileEntityReinforcedChest::new ) );
+		registry.register( TileEntityType.Builder.create( TileEntityReinforcedChest::new, BetterStorageBlocks.REINFORCED_CHEST ).build( null )
+				.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
 		registry.register( TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER ).build( null )
 				.setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
-		// BetterStorageTileEntityTypes.REINFORCED_LOCKER = TileEntityType.register( ModInfo.modId + ":reinforced_locker", TileEntityType.Builder.create(
-		// TileEntityReinforcedLocker::new ) );
+		registry.register( TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER ).build( null )
+				.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
 	}
 
 	@SubscribeEvent
@@ -121,5 +130,15 @@ public class RegistryEventHandler
 			final BlockPos pos = data.readBlockPos();
 			return new ContainerBetterStorage( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
+		{
+			final BlockPos pos = data.readBlockPos();
+			return new ContainerReinforcedChest( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
+		} ).setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
+		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
+		{
+			final BlockPos pos = data.readBlockPos();
+			return new ContainerReinforcedLocker( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
+		} ).setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
 	}
 }

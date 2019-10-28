@@ -15,7 +15,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBetterStorage extends Container
+public class ContainerReinforcedChest extends Container
 {
 	private final IItemHandler			inventoryContainer;
 	private final TileEntityContainer	tileContainer;
@@ -25,9 +25,9 @@ public class ContainerBetterStorage extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerBetterStorage( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ContainerReinforcedChest( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.LOCKER, windowId );
+		super( BetterStorageContainerTypes.REINFORCED_CHEST, windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
@@ -174,7 +174,7 @@ public class ContainerBetterStorage extends Container
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
-				BetterStorageBlocks.LOCKER );
+				BetterStorageBlocks.REINFORCED_CHEST );
 	}
 
 	/*

@@ -2,9 +2,9 @@ package io.github.tehstoneman.betterstorage.common.item;
 
 import net.minecraft.block.Block;
 
-public class LockerItem extends BlockItemBetterStorage
+public class ItemBlockLocker extends BlockItemBetterStorage
 {
-	public LockerItem( Block block )
+	public ItemBlockLocker( Block block )
 	{
 		super( block );
 	}

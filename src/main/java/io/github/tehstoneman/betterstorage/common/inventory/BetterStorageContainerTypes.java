@@ -8,9 +8,9 @@ import net.minecraftforge.registries.ObjectHolder;
 public final class BetterStorageContainerTypes
 {
 	//@formatter:off
-	@ObjectHolder( "crate" )				public static ContainerType< ContainerCrate >					CRATE;
-	//@ObjectHolder( "reinforced_chest" )		public static ContainerType< TileEntityReinforcedChest >	REINFORCED_CHEST;
-	@ObjectHolder( "locker" )				public static ContainerType< ContainerBetterStorage >			LOCKER;
-	//@ObjectHolder( "reinforced_locker" )	public static ContainerType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
+	@ObjectHolder( "crate" )				public static ContainerType< ContainerCrate >				CRATE;
+	@ObjectHolder( "reinforced_chest" )		public static ContainerType< ContainerReinforcedChest >		REINFORCED_CHEST;
+	@ObjectHolder( "locker" )				public static ContainerType< ContainerBetterStorage >		LOCKER;
+	@ObjectHolder( "reinforced_locker" )	public static ContainerType< ContainerReinforcedLocker >	REINFORCED_LOCKER;
 	//@formatter:on
 }

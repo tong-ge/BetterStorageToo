@@ -1,23 +1,49 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
+import javax.annotation.Nullable;
+
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public class BlockReinforcedLocker extends BlockLocker
 {
 	public BlockReinforcedLocker()
 	{
-		super( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
+		this( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 	}
 
-	/*
-	 * @Override
-	 * public TileEntity createTileEntity( IBlockState state, IBlockReader world )
-	 * {
-	 * return new TileEntityReinforcedLocker();
-	 * }
-	 */
+	public BlockReinforcedLocker( Properties properties )
+	{
+		super( properties );
+	}
+
+	@Override
+	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	{
+		return new TileEntityReinforcedLocker();
+	}
+
+	@Override
+	@Nullable
+	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	{
+		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		if( !( tileentity instanceof TileEntityReinforcedLocker ) )
+			return null;
+		else
+		{
+			final TileEntityReinforcedLocker locker = (TileEntityReinforcedLocker)tileentity;
+			return locker;
+		}
+	}
 
 	/*
 	 * @Override

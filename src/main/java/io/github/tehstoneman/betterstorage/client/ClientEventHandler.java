@@ -1,24 +1,10 @@
 package io.github.tehstoneman.betterstorage.client;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.block.statemap.SizeStateMap;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class ClientEventHandler
 {
-	@SubscribeEvent
-	public static void onClientStartup( final FMLClientSetupEvent event )
-	{
-		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLocker.class, new TileEntityLockerRenderer() );
-	}
-
 	// @SubscribeEvent
 	public void onRegisterModels( ModelRegistryEvent event )
 	{

@@ -2,7 +2,7 @@
 	"parent": "minecraft:recipes/root",
 	"rewards":
 	{
-		"recipes": [ "betterstorage:reinforced_chest_zinc" ]
+		"recipes": [ "betterstorage:reinforced_locker" ]
 	},
 	"criteria":
 	{
@@ -13,14 +13,14 @@
 			{
         		"items":
         		[
-          			{ "item": "minecraft:chest" }
+          			{ "item": "betterstorage:locker" }
 				]
 			}
 		},
 		"has_the_recipe":
 		{
 			"trigger": "minecraft:recipe_unlocked",
-			"conditions": { "recipe": "betterstorage:reinforced_chest_zinc" }
+			"conditions": { "recipe": "betterstorage:reinforced_locker" }
 		}
 	},
 	"requirements":

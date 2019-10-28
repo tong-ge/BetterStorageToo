@@ -7,13 +7,11 @@ import net.minecraftforge.registries.ObjectHolder;
 public final class BetterStorageBlocks
 {
 	//@formatter:off
-	@ObjectHolder( "crate" )		public static BlockCrate			CRATE;
-	// public static BlockReinforcedChest REINFORCED_CHEST = new BlockReinforcedChest();
-	@ObjectHolder( "locker" )		public static BlockLocker			LOCKER;
-	// public static BlockReinforcedLocker REINFORCED_LOCKER = new BlockReinforcedLocker();
-	@ObjectHolder( "block_flint" )	public static BlockBetterStorage	BLOCK_FLINT;
-	// public static BlockBetterStorage BLOCK_FLINT = new BlockBetterStorage( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance(
-	// 1.5F, 6.0F ) );
+	@ObjectHolder( "crate" )				public static BlockCrate			CRATE;
+	@ObjectHolder( "reinforced_chest" )		public static BlockReinforcedChest	REINFORCED_CHEST;
+	@ObjectHolder( "locker" )				public static BlockLocker			LOCKER;
+	@ObjectHolder( "reinforced_locker" )	public static BlockReinforcedLocker REINFORCED_LOCKER;
+	@ObjectHolder( "block_flint" )			public static BlockBetterStorage	BLOCK_FLINT;
 	// public static BlockLockableDoor LOCKABLE_DOOR = new BlockLockableDoor();
 	// public static BlockCardboardBox CARDBOARD_BOX = new BlockCardboardBox();
 	//@formatter:on

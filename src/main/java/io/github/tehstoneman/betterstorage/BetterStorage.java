@@ -47,39 +47,6 @@ public class BetterStorage
 		// Initialize random numbers
 		RANDOM = new Random();
 
-		/*
-		 * ModLoadingContext.get().registerExtensionPoint( ExtensionPoint.GUIFACTORY, () ->
-		 * {
-		 * return ( openContainer ) ->
-		 * {
-		 * final ResourceLocation location = openContainer.getId();
-		 * if( location.toString().equals( "betterstorage:reinforced_chest" ) )
-		 * {
-		 * final EntityPlayerSP player = Minecraft.getInstance().player;
-		 * final BlockPos pos = openContainer.getAdditionalData().readBlockPos();
-		 * final TileEntity tileEntity = player.world.getTileEntity( pos );
-		 * if( tileEntity instanceof TileEntityReinforcedChest )
-		 * {
-		 * final TileEntityReinforcedChest reinforcedChest = (TileEntityReinforcedChest)tileEntity;
-		 * return new GuiBetterStorage( reinforcedChest.getContainer( player ) );
-		 * }
-		 * }
-		 * if( location.toString().equals( "betterstorage:crate" ) )
-		 * {
-		 * final EntityPlayerSP player = Minecraft.getInstance().player;
-		 * final BlockPos pos = openContainer.getAdditionalData().readBlockPos();
-		 * final TileEntity tileEntity = player.world.getTileEntity( pos );
-		 * if( tileEntity instanceof TileEntityCrate )
-		 * {
-		 * final TileEntityCrate crate = (TileEntityCrate)tileEntity;
-		 * return new GuiCrate( crate, new ContainerCrate( crate, player ) );
-		 * }
-		 * }
-		 * return null;
-		 * };
-		 * } );
-		 */
-
 		BetterStorageConfig.register( ModLoadingContext.get() );
 
 		// Register the setup method for modloading
