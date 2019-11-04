@@ -1,30 +1,22 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class ItemMasterKey extends ItemKey
 {
 	public ItemMasterKey()
 	{
 		super( "master_key" );
-		// setMaxDamage( 0 );
 	}
 
-	/*
-	 * @Override
-	 * public void onCreated( ItemStack stack, World world, EntityPlayer player )
-	 * {}
-	 */
-
-	/*
-	 * @Override
-	 * public void onUpdate( ItemStack stack, World world, Entity entity, int slot, boolean isBeingHeld )
-	 * {}
-	 */
+	@Override
+	public void onCreated( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	{}
 
 	@Override
-	// @SideOnly( Side.CLIENT )
 	public boolean hasEffect( ItemStack stack )
 	{
 		return true;

@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.client.renderer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
@@ -13,14 +12,19 @@ import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLocker >
 {
@@ -80,6 +84,8 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 			rotateDoor( tileEntityLocker, partialTicks, modelchest, hingeSide );
 			modelchest.renderAll( hingeSide == DoorHingeSide.LEFT );
+			if( tileEntityLocker instanceof TileEntityReinforcedLocker )
+				renderItem( (TileEntityReinforcedLocker)tileEntityLocker, partialTicks, destroyStage, iblockstate );
 
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.popMatrix();
@@ -125,46 +131,39 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
-	/*
-	 * private void renderItem( TileEntityLocker locker, float partialTicks, int destroyStage, IBlockState state )
-	 * {
-	 * final ItemStack itemstack = locker.getLock();
-	 *
-	 * if( itemstack != null )
-	 * {
-	 * final EntityItem entityitem = new EntityItem( locker.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-	 * final Item item = entityitem.getItem().getItem();
-	 * GlStateManager.pushMatrix();
-	 * GlStateManager.disableLighting();
-	 *
-	 * float openAngle = locker.prevLidAngle + ( locker.lidAngle - locker.prevLidAngle ) * partialTicks;
-	 * openAngle = 1.0F - openAngle;
-	 * openAngle = 1.0F - openAngle * openAngle * openAngle;
-	 * openAngle = openAngle * 90;
-	 *
-	 * final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
-	 * final boolean left = state.getValue( BlockDoor.HINGE ) == EnumHingePosition.LEFT;
-	 *
-	 * GlStateManager.translatef( left ? 15F / 16F : 1F / 16F, 0, 1.0 / 16.0 );
-	 * GlStateManager.rotate( left ? -openAngle : openAngle, 0, 1, 0 );
-	 * GlStateManager.translatef( left ? -15F / 16F : -1F / 16F, 0, -1.0 / 16.0 );
-	 *
-	 * GlStateManager.rotate( 180.0F, 0.0F, 1.0F, 0.0F );
-	 * final double x = left ? -3.5 / 16.0 : -12.5 / 16.0;
-	 * final double y = locker.isConnected() ? 12.0 / 16.0 : 6.0 / 16.0;
-	 * final double z = -0.5 / 16.0;
-	 * GlStateManager.translatef( x, y, z );
-	 * GlStateManager.scale( 0.5, 0.5, 0.5 );
-	 *
-	 * GlStateManager.pushAttrib();
-	 * RenderHelper.enableStandardItemLighting();
-	 * itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
-	 * RenderHelper.disableStandardItemLighting();
-	 * GlStateManager.popAttrib();
-	 *
-	 * GlStateManager.enableLighting();
-	 * GlStateManager.popMatrix();
-	 * }
-	 * }
-	 */
+	private void renderItem( TileEntityReinforcedLocker locker, float partialTicks, int destroyStage, BlockState state )
+	{
+		final ItemStack itemstack = locker.getLock();
+
+		if( !itemstack.isEmpty() )
+		{
+			final ItemEntity ItemEntity = new ItemEntity( locker.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			// final Item item = ItemEntity.getItem().getItem();
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			float openAngle = locker.prevLidAngle + ( locker.lidAngle - locker.prevLidAngle ) * partialTicks;
+			openAngle = 1.0F - openAngle;
+			openAngle = 1.0F - openAngle * openAngle * openAngle;
+			openAngle = openAngle * 90;
+
+			final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
+
+			GlStateManager.translated( left ? 15F / 16F : 1F / 16F, 0, 1.0 / 16.0 );
+			GlStateManager.rotated( left ? -openAngle : openAngle, 0, 1, 0 );
+			GlStateManager.translated( left ? -15F / 16F : -1F / 16F, 0, -1.0 / 16.0 );
+
+			GlStateManager.rotated( 180.0F, 0.0F, 0.0F, 1.0F );
+			GlStateManager.translated( left ? -0.8125 : -0.1875, locker.isConnected() ? -0.125 : -0.625, 0.03125 );
+			GlStateManager.scaled( 0.5, 0.5, 0.5 );
+
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
+	}
 }

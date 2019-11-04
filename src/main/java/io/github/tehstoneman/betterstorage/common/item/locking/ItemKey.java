@@ -2,13 +2,23 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.util.UUID;
 
+import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemKey extends ItemKeyLock implements IKey
@@ -24,6 +34,26 @@ public class ItemKey extends ItemKeyLock implements IKey
 	}
 
 	@Override
+	public void onCreated( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	{
+		if( !worldIn.isRemote )
+			ensureHasID( stack );
+	}
+
+	/** Gives the key a random ID if it doesn't have one already. */
+	public static void ensureHasID( ItemStack stack )
+	{
+		CompoundNBT tag = stack.getTag();
+		if( tag == null )
+			tag = new CompoundNBT();
+		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+		{
+			tag.putUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
+			stack.setTag( tag );
+		}
+	}
+
+	@Override
 	public int getItemEnchantability()
 	{
 		return 20;
@@ -35,46 +65,47 @@ public class ItemKey extends ItemKeyLock implements IKey
 		return stack;
 	}
 
-	/*
-	 * @Override
-	 * public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
-	 * float hitZ )
-	 * {
-	 * if( !worldIn.isRemote && hand == EnumHand.MAIN_HAND )
-	 * {
-	 * final ItemStack stack = playerIn.getHeldItem( hand );
-	 * TileEntity tileEntity = worldIn.getTileEntity( pos );
-	 * if( tileEntity == null )
-	 * {
-	 * final IBlockState state = worldIn.getBlockState( pos );
-	 * if( state.getProperties().containsKey( BlockDoor.HALF ) && state.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
-	 * {
-	 * pos = pos.down();
-	 * tileEntity = worldIn.getTileEntity( pos );
-	 * }
-	 * }
-	 *
-	 * if( tileEntity instanceof ILockable )
-	 * {
-	 * final ILockable lockable = (ILockable)tileEntity;
-	 * if( unlock( stack, lockable.getLock(), false ) )
-	 * {
-	 * if( playerIn.isSneaking() )
-	 * {
-	 * worldIn.spawnEntity( new EntityItem( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
-	 * lockable.setLock( ItemStack.EMPTY );
-	 * }
-	 * else
-	 * lockable.useUnlocked( playerIn );
-	 * return EnumActionResult.SUCCESS;
-	 * }
-	 * else
-	 * ( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, EnumLockInteraction.PICK );
-	 * }
-	 * }
-	 * return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
-	 * }
-	 */
+	@Override
+	public ActionResultType onItemUse( ItemUseContext context )
+	{
+		final World worldIn = context.getWorld();
+		final Hand hand = context.getHand();
+		if( !worldIn.isRemote && hand == Hand.MAIN_HAND )
+		{
+			final PlayerEntity playerIn = context.getPlayer();
+			final ItemStack stack = playerIn.getHeldItem( hand );
+			BlockPos pos = context.getPos();
+			TileEntity tileEntity = worldIn.getTileEntity( pos );
+			if( tileEntity == null )
+			{
+				final BlockState state = worldIn.getBlockState( pos );
+				if( state.getProperties().contains( DoorBlock.HALF ) && state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
+				{
+					pos = pos.down();
+					tileEntity = worldIn.getTileEntity( pos );
+				}
+			}
+
+			if( tileEntity instanceof IKeyLockable )
+			{
+				final IKeyLockable lockable = (IKeyLockable)tileEntity;
+				if( unlock( stack, lockable.getLock(), false ) )
+				{
+					if( playerIn.isSneaking() )
+					{
+						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
+						lockable.setLock( ItemStack.EMPTY );
+					}
+					else
+						lockable.useUnlocked( playerIn );
+					return ActionResultType.SUCCESS;
+				}
+				else
+					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, EnumLockInteraction.PICK );
+			}
+		}
+		return super.onItemUse( context );
+	}
 
 	// IKey implementation
 	@Override
@@ -92,14 +123,12 @@ public class ItemKey extends ItemKeyLock implements IKey
 		if( lockType.getLockType() != "normal" )
 			return false;
 
-		// final UUID lockId = getID( lock );
-		// final UUID keyId = getID( key );
+		final UUID lockId = getID( lock );
+		final UUID keyId = getID( key );
 
 		// If the lock and key IDs match, return true.
-		/*
-		 * if( lockId.equals( keyId ) )
-		 * return true;
-		 */
+		if( lockId.equals( keyId ) )
+			return true;
 
 		// final int lockSecurity = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.security );
 		// final int unlocking = BetterStorageEnchantment.getLevel( key, EnchantmentBetterStorage.unlocking );

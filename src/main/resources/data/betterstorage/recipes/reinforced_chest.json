@@ -9,10 +9,10 @@
 	],
 	"key":
 	{
-		"C": { "item": "minecraft:chest" },
+		"C": { "tag": "forge:chests/wooden" },
 		"#": { "tag": "minecraft:logs" },
-		"o": { "item": "minecraft:iron_ingot" },
-		"O": { "item": "minecraft:iron_block" }
+		"o": { "tag": "forge:ingots/iron" },
+		"O": { "tag": "forge:storage_blocks/iron" }
 	},
 	"result": { "item": "betterstorage:reinforced_chest" }
 }

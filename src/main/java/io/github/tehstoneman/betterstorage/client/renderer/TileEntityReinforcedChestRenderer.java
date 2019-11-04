@@ -9,9 +9,15 @@ import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContaine
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.model.ChestModel;
 import net.minecraft.client.renderer.tileentity.model.LargeChestModel;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -68,6 +74,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 
 			rotateLid( tileEntityChest, partialTicks, modelchest );
 			modelchest.renderAll();
+			renderItem( tileEntityChest, partialTicks, destroyStage, iblockstate );
 
 			GlStateManager.disableRescaleNormal();
 			GlStateManager.popMatrix();
@@ -102,36 +109,29 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
-	/*
-	 * private void renderItem( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, IBlockState state )
-	 * {
-	 * final ItemStack itemstack = chest.getLock();
-	 *
-	 * if( !itemstack.isEmpty() )
-	 * {
-	 * final EntityItem entityitem = new EntityItem( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-	 * final Item item = entityitem.getItem().getItem();
-	 * GlStateManager.pushMatrix();
-	 * GlStateManager.disableLighting();
-	 *
-	 * final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
-	 *
-	 * GlStateManager.rotatef( 180.0F, 0.0F, 1.0F, 0.0F );
-	 * final double x = chest.isConnected() ? 0F : -8.0 / 16.0;
-	 * final double y = 6.0 / 16.0;
-	 * final double z = -0.5 / 16.0;
-	 * GlStateManager.translatef( x, y, z );
-	 * GlStateManager.scale( 0.5, 0.5, 0.5 );
-	 *
-	 * GlStateManager.pushAttrib();
-	 * RenderHelper.enableStandardItemLighting();
-	 * itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
-	 * RenderHelper.disableStandardItemLighting();
-	 * GlStateManager.popAttrib();
-	 *
-	 * GlStateManager.enableLighting();
-	 * GlStateManager.popMatrix();
-	 * }
-	 * }
-	 */
+	private void renderItem( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, BlockState state )
+	{
+		final ItemStack itemstack = chest.getLock();
+
+		if( !itemstack.isEmpty() )
+		{
+			final ItemEntity entityitem = new ItemEntity( chest.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			// final Item item = entityitem.getItem().getItem();
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
+			GlStateManager.rotatef( 180.0F, 0.0F, 0.0F, 1.0F );
+			GlStateManager.translated( chest.isConnected() ? -1.0 : -0.5, -0.5625, 0.03125 );
+			GlStateManager.scaled( 0.5, 0.5, 0.5 );
+
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
+	}
 }

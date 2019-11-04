@@ -14,6 +14,7 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -259,6 +260,18 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 			return true;
 		else
 		{
+			final TileEntityReinforcedChest tileChest = getChestAt( worldIn, pos );
+			if( tileChest != null && tileChest.isLocked() )
+			{
+				if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
+					return false;
+				if( player.isSneaking() )
+				{
+					worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
+					tileChest.setLock( ItemStack.EMPTY );
+					return true;
+				}
+			}
 			final INamedContainerProvider chest = getContainer( state, worldIn, pos );
 			if( chest != null )
 			{
@@ -268,6 +281,15 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 
 			return true;
 		}
+	}
+
+	@Nullable
+	public static TileEntityReinforcedChest getChestAt( World world, BlockPos pos )
+	{
+		final TileEntity tileEntity = world.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityReinforcedChest )
+			return (TileEntityReinforcedChest)tileEntity;
+		return null;
 	}
 
 	protected Stat< ResourceLocation > getOpenStat()

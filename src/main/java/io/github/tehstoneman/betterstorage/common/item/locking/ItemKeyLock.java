@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,7 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 
 	public ItemKeyLock( String name )
 	{
-		super( name, new Item.Properties().group( BetterStorage.ITEM_GROUP ).maxStackSize( 1 ) );
+		super( name, new Item.Properties().maxStackSize( 1 ) );
 	}
 
 	@Override
@@ -36,88 +36,78 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 
 	// NBT helper functions
 	// Only used by keys and locks currently.
-	/*
-	 * public static int getKeyColor1( ItemStack stack )
-	 * {
-	 * if( stack.hasTagCompound() )
-	 * {
-	 * final NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag.hasKey( TAG_COLOR1 ) )
-	 * return tag.getInteger( TAG_COLOR1 );
-	 * }
-	 * return MapColor.GOLD.colorValue;
-	 * }
-	 */
+	public static int getKeyColor1( ItemStack stack )
+	{
+		if( stack.hasTag() )
+		{
+			final CompoundNBT tag = stack.getTag();
+			if( tag.contains( TAG_COLOR1 ) )
+				return tag.getInt( TAG_COLOR1 );
+		}
+		return MaterialColor.GOLD.colorValue;
+	}
 
-	/*
-	 * public static void setKeyColor1( ItemStack stack, int color )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag == null )
-	 * tag = new NBTTagCompound();
-	 *
-	 * tag.setInteger( TAG_COLOR1, color );
-	 * stack.setTagCompound( tag );
-	 * }
-	 */
+	public static void setKeyColor1( ItemStack stack, int color )
+	{
+		CompoundNBT tag = stack.getTag();
+		if( tag == null )
+			tag = new CompoundNBT();
 
-	/*
-	 * public static boolean hasKeyColor1( ItemStack stack )
-	 * {
-	 * return stack.hasTagCompound() && stack.getTagCompound().hasKey( TAG_COLOR1 );
-	 * }
-	 */
+		tag.putInt( TAG_COLOR1, color );
+		stack.setTag( tag );
+	}
 
-	/*
-	 * public static int getKeyColor2( ItemStack stack )
-	 * {
-	 * if( stack.hasTagCompound() )
-	 * {
-	 * final NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag.hasKey( TAG_COLOR2 ) )
-	 * return tag.getInteger( TAG_COLOR2 );
-	 * }
-	 * return getKeyColor1( stack );
-	 * }
-	 */
+	public static boolean hasKeyColor1( ItemStack stack )
+	{
+		return stack.hasTag() && stack.getTag().contains( TAG_COLOR1 );
+	}
 
-	/*
-	 * public static void setKeyColor2( ItemStack stack, int fullColor )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag == null )
-	 * tag = new NBTTagCompound();
-	 *
-	 * tag.setInteger( TAG_COLOR2, fullColor );
-	 * stack.setTagCompound( tag );
-	 * }
-	 */
+	public static int getKeyColor2( ItemStack stack )
+	{
+		if( stack.hasTag() )
+		{
+			final CompoundNBT tag = stack.getTag();
+			if( tag.contains( TAG_COLOR2 ) )
+				return tag.getInt( TAG_COLOR2 );
+		}
+		return getKeyColor1( stack );
+	}
 
-	/*
-	 * public static boolean hasKeyColor2( ItemStack stack )
-	 * {
-	 * return stack.hasTagCompound() && stack.getTagCompound().hasKey( TAG_COLOR2 );
-	 * }
-	 */
+	public static void setKeyColor2( ItemStack stack, int fullColor )
+	{
+		CompoundNBT tag = stack.getTag();
+		if( tag == null )
+			tag = new CompoundNBT();
 
-	/*
-	 * public static void clearColors( ItemStack stack )
-	 * {
-	 * if( stack.hasTagCompound() )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * tag.removeTag( TAG_COLOR1 );
-	 * tag.removeTag( TAG_COLOR2 );
-	 * stack.setTagCompound( tag );
-	 * }
-	 * }
-	 */
+		tag.putInt( TAG_COLOR2, fullColor );
+		stack.setTag( tag );
+	}
+
+	public static boolean hasKeyColor2( ItemStack stack )
+	{
+		return stack.hasTag() && stack.getTag().contains( TAG_COLOR2 );
+	}
+
+	public static void clearColors( ItemStack stack )
+	{
+		if( stack.hasTag() )
+		{
+			final CompoundNBT tag = stack.getTag();
+			tag.remove( TAG_COLOR1 );
+			tag.remove( TAG_COLOR2 );
+			stack.setTag( tag );
+		}
+	}
 
 	public static UUID getID( ItemStack stack )
 	{
-		final CompoundNBT tag = stack.getChildTag( TAG_KEYLOCK_ID );
-		if( tag == null )
-			setID( stack, UUID.randomUUID() );
+		final CompoundNBT tag = stack.getOrCreateTag();
+		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+		{
+			final UUID uuid = UUID.randomUUID();
+			setID( stack, uuid );
+			return uuid;
+		}
 
 		return tag.getUniqueId( TAG_KEYLOCK_ID );
 	}
@@ -133,20 +123,15 @@ public abstract class ItemKeyLock extends ItemBetterStorage
 	public void addInformation( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
 	{
 		super.addInformation( stack, worldIn, tooltip, flagIn );
-		if( flagIn.isAdvanced() )
+		if( flagIn.isAdvanced() && stack.hasTag() )
 		{
 			final CompoundNBT tag = stack.getTag();
-			if( tag != null )
-			{
-				if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-					tooltip.add( new TranslationTextComponent( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) ) );
-
-				if( tag.contains( TAG_COLOR1 ) )
-					tooltip.add( new TranslationTextComponent( "Color 1 : #" + Integer.toHexString( tag.getInt( TAG_COLOR1 ) ).toUpperCase() ) );
-				if( tag.contains( TAG_COLOR2 ) )
-					tooltip.add( new TranslationTextComponent( "Color 2 : #" + Integer.toHexString( tag.getInt( TAG_COLOR2 ) ).toUpperCase() ) );
-			}
+			if( tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+				tooltip.add( new TranslationTextComponent( "Keytag : " + tag.getUniqueId( TAG_KEYLOCK_ID ) ) );
+			if( tag.contains( TAG_COLOR1 ) )
+				tooltip.add( new TranslationTextComponent( "Color 1 : #" + Integer.toHexString( tag.getInt( TAG_COLOR1 ) ).toUpperCase() ) );
+			if( tag.contains( TAG_COLOR2 ) )
+				tooltip.add( new TranslationTextComponent( "Color 2 : #" + Integer.toHexString( tag.getInt( TAG_COLOR2 ) ).toUpperCase() ) );
 		}
 	}
-
 }

@@ -1,12 +1,20 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class KeyringCapabilityProvider// implements ICapabilitySerializable< NBTTagCompound >
+public class KeyringCapabilityProvider implements ICapabilitySerializable< CompoundNBT >
 {
 	private final ItemStack		invItem;
 	public KeyringStackHandler	inventory;
-
+	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> inventory );
+	
 	public KeyringCapabilityProvider( ItemStack stack )
 	{
 		invItem = stack;
@@ -24,21 +32,13 @@ public class KeyringCapabilityProvider// implements ICapabilitySerializable< NBT
 			inventory = null;
 	}
 
-	/*
-	 * @Override
-	 * public boolean hasCapability( Capability< ? > capability, EnumFacing facing )
-	 * {
-	 * return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public <T> T getCapability( Capability< T > capability, EnumFacing facing )
-	 * {
-	 * return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)inventory : null;
-	 * }
-	 */
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction side )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
+		return null;
+	}
 
 	protected int getSizeContents()
 	{
@@ -47,53 +47,23 @@ public class KeyringCapabilityProvider// implements ICapabilitySerializable< NBT
 
 	public void markDirty()
 	{
+		CompoundNBT tag = invItem.getOrCreateTag();
 		int count = 0;
 		for( int i = 0; i < inventory.getSlots(); i++ )
 			if( !inventory.getStackInSlot( i ).isEmpty() )
 				count++;
-		// invItem.setItemDamage( (int)Math.ceil( count / 3.0 ) );
+		tag.putInt( "Occupied", count );
 	}
 
-	/*
-	 * @Override
-	 * public NBTTagCompound serializeNBT()
-	 * {
-	 * return inventory.serializeNBT();
-	 * }
-	 */
+	@Override
+	public CompoundNBT serializeNBT()
+	{
+		return inventory.serializeNBT();
+	}
 
-	/*
-	 * @Override
-	 * public void deserializeNBT( NBTTagCompound nbt )
-	 * {
-	 * inventory.deserializeNBT( nbt );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public <T> LazyOptional< T > getCapability( Capability< T > cap, EnumFacing side )
-	 * {
-	 * // TODO Auto-generated method stub
-	 * return null;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public <T> LazyOptional< T > getCapability( Capability< T > cap, Direction side )
-	 * {
-	 * // TODO Auto-generated method stub
-	 * return null;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public NBTTagCompound serializeNBT()
-	 * {
-	 * // TODO Auto-generated method stub
-	 * return null;
-	 * }
-	 */
+	@Override
+	public void deserializeNBT( CompoundNBT nbt )
+	{
+		inventory.deserializeNBT( nbt );
+	}
 }

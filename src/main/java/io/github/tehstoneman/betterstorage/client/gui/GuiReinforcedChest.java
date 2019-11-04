@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;

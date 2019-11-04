@@ -2,6 +2,9 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.lock.IKey;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
+import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
@@ -9,6 +12,11 @@ import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
@@ -20,9 +28,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity
+public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable
 {
-	protected int ticksSinceSync;
+	protected int		ticksSinceSync;
+	private ItemStack	lock	= ItemStack.EMPTY.copy();
 
 	public TileEntityReinforcedChest()
 	{
@@ -69,22 +78,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			return getPos().offset( BlockReinforcedChest.getDirectionToAttached( getBlockState() ) );
 		return pos;
 	}
-
-	/*
-	 * @Override
-	 * public boolean isConnected()
-	 * {
-	 * return getChestType() != EnumConnectedType.SINGLE;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean isMain()
-	 * {
-	 * return getChestType() != EnumConnectedType.SLAVE;
-	 * }
-	 */
 
 	/*
 	 * ==================
@@ -191,5 +184,146 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	public float getLidAngle( float partialTicks )
 	{
 		return prevLidAngle + ( lidAngle - prevLidAngle ) * partialTicks;
+	}
+
+	@Override
+	public ItemStack getLock()
+	{
+		if( isMain() )
+			return lock;
+		else
+			return ( (IKeyLockable)getMainTileEntity() ).getLock();
+	}
+
+	@Override
+	public boolean isLockValid( ItemStack lock )
+	{
+		return lock.isEmpty() || lock.getItem() instanceof ILock;
+	}
+
+	@Override
+	public void setLock( ItemStack lock )
+	{
+		if( isMain() )
+		{
+			if( isLockValid( lock ) )
+			{
+				this.lock = lock;
+				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
+				markDirty();
+			}
+		}
+		else
+			( (TileEntityReinforcedChest)getMainTileEntity() ).setLock( lock );
+	}
+
+	@Override
+	public void applyTrigger()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * ==========================
+	 * TileEntity synchronization
+	 * ==========================
+	 */
+
+	@Override
+	public CompoundNBT getUpdateTag()
+	{
+		final CompoundNBT nbt = super.getUpdateTag();
+
+		if( !lock.isEmpty() )
+			nbt.put( "lock", lock.serializeNBT() );
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
+	{
+		final CompoundNBT nbt = packet.getNbtCompound();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
+
+	@Override
+	public SUpdateTileEntityPacket getUpdatePacket()
+	{
+		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
+	}
+
+	@Override
+	public void handleUpdateTag( CompoundNBT nbt )
+	{
+		super.handleUpdateTag( nbt );
+
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
+
+	@Override
+	public CompoundNBT write( CompoundNBT nbt )
+	{
+		if( !lock.isEmpty() )
+		{
+			final CompoundNBT lockNBT = new CompoundNBT();
+			lock.write( lockNBT );
+			nbt.put( "lock", lockNBT );
+		}
+
+		return super.write( nbt );
+	}
+
+	@Override
+	public void read( CompoundNBT nbt )
+	{
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+
+		super.read( nbt );
+	}
+
+	@Override
+	public void useUnlocked( PlayerEntity player )
+	{}
+
+	@Override
+	public boolean canUse( PlayerEntity player )
+	{
+		return getLock().isEmpty() || getMainTileEntity().getPlayersUsing() > 0;
+	}
+
+	@Override
+	public boolean isLocked()
+	{
+		if( isMain() )
+			return getPlayersUsing() > 0 || !getLock().isEmpty();
+		else
+			return ( (TileEntityReinforcedChest)getMainTileEntity() ).isLocked();
+	}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		final Item item = heldItem.getItem();
+		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 }

@@ -4,14 +4,14 @@ import java.security.InvalidParameterException;
 
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 
-public abstract class TileEntityLockable extends TileEntityConnectable implements ILockable, IHasAttachments
+public abstract class TileEntityLockable extends TileEntityConnectable implements IKeyLockable, IHasAttachments
 {
 	private boolean			powered;
 

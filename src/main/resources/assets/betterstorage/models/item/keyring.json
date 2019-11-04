@@ -1,5 +1,9 @@
 {
 	"parent": "item/generated",
+	"textures":
+	{
+		"layer0": "betterstorage:item/keyring_0"
+	},
 	"display":
 	{
 		"thirdperson_righthand":
@@ -14,5 +18,20 @@
 			"translation": [ 0, 4.0, 0.5 ],
             "scale": [ 0.55, 0.55, 0.55 ]
 		}
-	}
+	},
+	"overrides":
+	[
+		{
+            "predicate": { "full": 0.1 },
+            "model": "betterstorage:item/keyring_1"
+		},
+		{
+            "predicate": { "full": 0.4 },
+            "model": "betterstorage:item/keyring_2"
+		},
+		{
+            "predicate": { "full": 0.7 },
+            "model": "betterstorage:item/keyring_3"
+		}
+	]
 }

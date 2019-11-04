@@ -1,5 +1,5 @@
 {
-	"type": "forge:ore_shaped",
+	"type": "minecraft:crafting_shaped",
 	"group": "betterstorage:keyring",
 	"pattern":
 	[
@@ -9,7 +9,7 @@
 	],
 	"key":
 	{
-		".": { "type": "forge:ore_dict", "ore": "nuggetGold" }
+		".": { "tag": "forge:nuggets/gold" }
 	},
 	"result": { "item": "betterstorage:keyring" }
 }

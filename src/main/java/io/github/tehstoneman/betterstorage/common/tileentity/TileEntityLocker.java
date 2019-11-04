@@ -5,7 +5,7 @@ import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -60,7 +60,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
 		if( isMain() )
-			return new ContainerBetterStorage( windowID, playerInventory, world, pos );
+			return new ContainerLocker( windowID, playerInventory, world, pos );
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
@@ -79,7 +79,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
-				if( entityplayer.openContainer instanceof ContainerBetterStorage )
+				if( entityplayer.openContainer instanceof ContainerLocker )
 					++numPlayersUsing;
 		}
 

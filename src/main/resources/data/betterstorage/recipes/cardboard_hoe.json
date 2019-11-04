@@ -10,7 +10,7 @@
 	"key":
 	{
 		"o": { "item": "betterstorage:cardboard_sheet" },
-		"/": { "item": "minecraft:stick" }
+		"/": { "tag": "forge:rods/wooden" }
 	},
 	"result": { "item": "betterstorage:cardboard_hoe" }
 }

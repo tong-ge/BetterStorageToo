@@ -1,9 +1,26 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
+import java.util.UUID;
+
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.tileentity.IKeyLoackable;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class ItemLock extends ItemKeyLock implements ILock
 {
@@ -13,12 +30,6 @@ public class ItemLock extends ItemKeyLock implements ILock
 		// setMaxDamage( 64 );
 		// setMaxStackSize( 1 );
 	}
-
-	/*@Override
-	public boolean isRepairable()
-	{
-		return true;
-	}*/
 
 	@Override
 	public boolean getIsRepairable( ItemStack stack, ItemStack material )
@@ -32,37 +43,30 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return true;
 	}
 
-	/*
-	 * @Override
-	 * public void onCreated( ItemStack stack, World world, EntityPlayer player )
-	 * {
-	 * if( !world.isRemote )
-	 * ensureHasID( stack );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void onUpdate( ItemStack stack, World world, Entity entity, int slot, boolean isBeingHeld )
-	 * {
-	 * if( !world.isRemote )
-	 * ensureHasID( stack );
-	 * }
-	 */
-
-	/*@Override
-	public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
-			float hitZ )
+	@Override
+	public void onCreated( ItemStack stack, World world, PlayerEntity player )
 	{
-		if( hand == EnumHand.MAIN_HAND )
-		{
-			final ItemStack stack = playerIn.getHeldItem( hand );
-			IBlockState blockState = worldIn.getBlockState( pos );
-			Block block = blockState.getBlock();
+		if( !world.isRemote )
+			ensureHasID( stack );
+	}
 
-			if( block == Blocks.IRON_DOOR )
+	@Override
+	public ActionResultType onItemUse( ItemUseContext context )
+	{
+		final PlayerEntity playerIn = context.getPlayer();
+		final Hand hand = context.getHand();
+		final World worldIn = context.getWorld();
+		final BlockPos pos = context.getPos();
+		final ItemStack stack = context.getItem();
+
+		if( hand == Hand.MAIN_HAND )
+		{
+			final BlockState blockState = worldIn.getBlockState( pos );
+			final Block block = blockState.getBlock();
+
+			/*if( block == Blocks.IRON_DOOR )
 			{
-				if( blockState.getValue( BlockDoor.HALF ) == EnumDoorHalf.UPPER )
+				if( blockState.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
 				{
 					pos = pos.down();
 					blockState = worldIn.getBlockState( pos );
@@ -94,41 +98,39 @@ public class ItemLock extends ItemKeyLock implements ILock
 						return EnumActionResult.SUCCESS;
 					}
 				}
-			}
+			}*/
 
 			final TileEntity tileEntity = worldIn.getTileEntity( pos );
-			if( tileEntity instanceof TileEntityLockable )
+			if( tileEntity instanceof IKeyLockable )
 			{
-				final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
+				final IKeyLockable lockable = (IKeyLockable)tileEntity;
 				if( lockable.isLockValid( stack ) && lockable.getLock().isEmpty() )
 				{
 					lockable.setLock( stack.copy() );
 					if( !playerIn.isCreative() )
 						playerIn.setHeldItem( hand, ItemStack.EMPTY );
-					return EnumActionResult.SUCCESS;
+					return ActionResultType.SUCCESS;
 				}
 			}
 		}
-		return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
-	}*/
+		return super.onItemUse( context );
+	}
 
 	/**
 	 * Gives the lock a random ID if it doesn't have one. <br>
 	 * This is usually only when the lock is taken out of creative.
 	 */
-	/*
-	 * public static void ensureHasID( ItemStack stack )
-	 * {
-	 * NBTTagCompound tag = stack.getTagCompound();
-	 * if( tag == null )
-	 * tag = new NBTTagCompound();
-	 * if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-	 * {
-	 * tag.setUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
-	 * stack.setTagCompound( tag );
-	 * }
-	 * }
-	 */
+	public static void ensureHasID( ItemStack stack )
+	{
+		CompoundNBT tag = stack.getTag();
+		if( tag == null )
+			tag = new CompoundNBT();
+		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
+		{
+			tag.putUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
+			stack.setTag( tag );
+		}
+	}
 
 	// ILock implementation
 
@@ -181,12 +183,17 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return true;
 	}
 
-	/*
-	 * @Override
-	 * public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
-	 * {
-	 * // TODO Auto-generated method stub
-	 * 
-	 * }
-	 */
+	@Override
+	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, EnumLockInteraction interaction )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUnlock( ItemStack lock, ItemStack key, IKeyLoackable lockable, PlayerEntity player, boolean success )
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

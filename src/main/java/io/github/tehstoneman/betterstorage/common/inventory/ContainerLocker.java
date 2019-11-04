@@ -15,7 +15,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBetterStorage extends Container
+public class ContainerLocker extends Container
 {
 	private final IItemHandler			inventoryContainer;
 	private final TileEntityContainer	tileContainer;
@@ -25,7 +25,7 @@ public class ContainerBetterStorage extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerBetterStorage( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ContainerLocker( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.LOCKER, windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );

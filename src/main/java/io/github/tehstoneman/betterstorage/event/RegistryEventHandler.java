@@ -8,11 +8,12 @@ import io.github.tehstoneman.betterstorage.common.block.BlockCrate;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedLocker;
-import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockCrate;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockLocker;
 import io.github.tehstoneman.betterstorage.common.item.ItemBlockReinforcedChest;
@@ -38,6 +39,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -128,7 +130,7 @@ public class RegistryEventHandler
 		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 		{
 			final BlockPos pos = data.readBlockPos();
-			return new ContainerBetterStorage( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
+			return new ContainerLocker( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 		{
@@ -140,5 +142,11 @@ public class RegistryEventHandler
 			final BlockPos pos = data.readBlockPos();
 			return new ContainerReinforcedLocker( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 		} ).setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+		registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
+		{
+			final ItemStack keyring = data.readItemStack();
+			final int protectedIndex = data.readInt();
+			return new ContainerKeyring( windowID, inv, keyring, protectedIndex );
+		} ).setRegistryName( BetterStorageItems.KEYRING.getRegistryName() ) );
 	}
 }

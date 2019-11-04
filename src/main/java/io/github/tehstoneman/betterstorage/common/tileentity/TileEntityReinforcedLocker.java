@@ -1,39 +1,30 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.lock.IKey;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
+import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TileEntityReinforcedLocker extends TileEntityLocker
+public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable
 {
+	private ItemStack	lock	= ItemStack.EMPTY.copy();
+
 	public TileEntityReinforcedLocker()
 	{
 		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER );
 	}
-
-	/*
-	 * @Override
-	 * public boolean canHaveLock()
-	 * {
-	 * return true;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void setAttachmentPosition()
-	 * {
-	 * final double x = mirror ? 13.5 : 2.5;
-	 * final double y = isConnected() ? 0 : 8;
-	 * lockAttachment.setBox( x, y, 0.5, 5, 5, 1 );
-	 * lockAttachment.setScale( 0.375F, 1.5F );
-	 * }
-	 */
 
 	@Override
 	public int getColumns()
@@ -99,12 +90,147 @@ public class TileEntityReinforcedLocker extends TileEntityLocker
 		}
 	}
 
+	@Override
+	public ItemStack getLock()
+	{
+		if( isMain() )
+			return lock;
+		else
+			return ( (IKeyLockable)getMainTileEntity() ).getLock();
+	}
+
+	@Override
+	public boolean isLocked()
+	{
+		if( isMain() )
+			return getPlayersUsing() > 0 || !getLock().isEmpty();
+		else
+			return ( (TileEntityReinforcedChest)getMainTileEntity() ).isLocked();
+	}
+
+	@Override
+	public boolean isLockValid( ItemStack lock )
+	{
+		return lock.isEmpty() || lock.getItem() instanceof ILock;
+	}
+
+	@Override
+	public void setLock( ItemStack lock )
+	{
+		if( isMain() )
+		{
+			if( isLockValid( lock ) )
+			{
+				this.lock = lock;
+				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
+				markDirty();
+			}
+		}
+		else
+			( (TileEntityReinforcedChest)getMainTileEntity() ).setLock( lock );
+	}
+
+	@Override
+	public boolean canUse( PlayerEntity player )
+	{
+		return getLock().isEmpty() || getMainTileEntity().getPlayersUsing() > 0;
+	}
+
+	@Override
+	public void useUnlocked( PlayerEntity player )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void applyTrigger()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		final Item item = heldItem.getItem();
+		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
+	}
+
 	/*
-	 * @Override
-	 * public void setMaterial( EnumReinforced reinforcedMaterial )
-	 * {
-	 * material = reinforcedMaterial;
-	 * markDirty();
-	 * }
+	 * ==========================
+	 * TileEntity synchronization
+	 * ==========================
 	 */
+
+	@Override
+	public CompoundNBT getUpdateTag()
+	{
+		final CompoundNBT nbt = super.getUpdateTag();
+
+		if( !lock.isEmpty() )
+			nbt.put( "lock", lock.serializeNBT() );
+
+		return nbt;
+	}
+
+	@Override
+	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
+	{
+		final CompoundNBT nbt = packet.getNbtCompound();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
+
+	@Override
+	public SUpdateTileEntityPacket getUpdatePacket()
+	{
+		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
+	}
+
+	@Override
+	public void handleUpdateTag( CompoundNBT nbt )
+	{
+		super.handleUpdateTag( nbt );
+
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
+
+	@Override
+	public CompoundNBT write( CompoundNBT nbt )
+	{
+		if( !lock.isEmpty() )
+		{
+			final CompoundNBT lockNBT = new CompoundNBT();
+			lock.write( lockNBT );
+			nbt.put( "lock", lockNBT );
+		}
+
+		return super.write( nbt );
+	}
+
+	@Override
+	public void read( CompoundNBT nbt )
+	{
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+
+		super.read( nbt );
+	}
 }

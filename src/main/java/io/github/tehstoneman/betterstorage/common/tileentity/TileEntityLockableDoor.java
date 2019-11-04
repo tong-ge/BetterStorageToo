@@ -1,17 +1,18 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TileEntityLockableDoor extends TileEntity implements ILockable, IHasAttachments
+public class TileEntityLockableDoor extends TileEntity implements IKeyLockable, IHasAttachments
 {
 
 	private final Attachments	attachments	= new Attachments( this );
@@ -208,6 +209,34 @@ public class TileEntityLockableDoor extends TileEntity implements ILockable, IHa
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void useUnlocked( PlayerEntity player )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean canUse( PlayerEntity player )
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLocked()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/*

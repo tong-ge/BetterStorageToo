@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.attachment;
 
-import io.github.tehstoneman.betterstorage.api.lock.ILockable;
+import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +17,7 @@ public class LockAttachment extends ItemAttachment
 	public LockAttachment( TileEntity tileEntity, int subId )
 	{
 		super( tileEntity, subId );
-		if( !( tileEntity instanceof ILockable ) )
+		if( !( tileEntity instanceof IKeyLockable ) )
 			throw new IllegalArgumentException( "tileEntity must be ILockable." );
 	}
 
