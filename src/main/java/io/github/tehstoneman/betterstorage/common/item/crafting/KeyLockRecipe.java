@@ -12,15 +12,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
 
-public class CopyKeyRecipe extends ShapedRecipe
+public class KeyLockRecipe extends ShapedRecipe
 {
-	public CopyKeyRecipe( ResourceLocation idIn )
+	public KeyLockRecipe( ResourceLocation idIn )
 	{
-		super( idIn, "", 3, 3,
-				NonNullList.from( Ingredient.EMPTY, Ingredient.fromItems( Items.GOLD_NUGGET ), Ingredient.fromItems( Items.GOLD_INGOT ),
-						Ingredient.fromItems( Items.GOLD_NUGGET ), Ingredient.fromItems( Items.GOLD_INGOT ),
-						Ingredient.fromItems( BetterStorageItems.KEY ), Ingredient.fromItems( Items.GOLD_INGOT ) ),
-				new ItemStack( BetterStorageItems.KEY ) );
+		super( idIn, "lock", 3, 3, NonNullList.from( Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.EMPTY,
+				Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.fromItems( BetterStorageItems.KEY ), Ingredient.fromItems( Items.GOLD_INGOT ),
+				Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.fromItems( Items.IRON_INGOT ), Ingredient.fromItems( Items.GOLD_INGOT ) ),
+				new ItemStack( BetterStorageItems.LOCK ) );
 	}
 
 	@Override
@@ -137,9 +136,11 @@ public class CopyKeyRecipe extends ShapedRecipe
 		 */
 	}
 
-	@Override
-	public boolean isDynamic()
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean isDynamic()
+	 * {
+	 * return true;
+	 * }
+	 */
 }

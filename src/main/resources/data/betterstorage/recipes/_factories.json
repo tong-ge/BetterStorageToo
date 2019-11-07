@@ -1,6 +1,6 @@
 {
 	"recipes":
 	{
-		"copy_key_shaped": "io.github.tehstoneman.betterstorage.common.item.crafting.CopyKeyRecipe$Factory"
+		"copy_key_shaped": "io.github.tehstoneman.betterstorage.common.item.crafting.CopyKeyRecipe"
 	}
 }

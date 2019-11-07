@@ -214,7 +214,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			}
 		}
 		else
-			( (TileEntityReinforcedChest)getMainTileEntity() ).setLock( lock );
+			( (IKeyLockable)getMainTileEntity() ).setLock( lock );
 	}
 
 	@Override
@@ -317,7 +317,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		if( isMain() )
 			return getPlayersUsing() > 0 || !getLock().isEmpty();
 		else
-			return ( (TileEntityReinforcedChest)getMainTileEntity() ).isLocked();
+			return ( (IKeyLockable)getMainTileEntity() ).isLocked();
 	}
 
 	@Override

@@ -9,8 +9,8 @@
 	],
 	"key":
 	{
-		"o": { "type": "forge:ore_dict", "ore": "ingotGold" },
-		".": { "type": "forge:ore_dict", "ore": "nuggetGold" },
+		"o": { "tag": "forge:ingots/gold" },
+		".": { "tag": "forge:nuggets/gold" },
 		"k": { "item": "betterstorage:key" }
 	},
 	"result": { "item": "betterstorage:key" }

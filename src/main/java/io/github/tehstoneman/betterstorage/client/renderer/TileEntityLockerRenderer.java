@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.client.renderer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
@@ -138,21 +139,19 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 		if( !itemstack.isEmpty() )
 		{
 			final ItemEntity ItemEntity = new ItemEntity( locker.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-			// final Item item = ItemEntity.getItem().getItem();
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 
-			float openAngle = locker.prevLidAngle + ( locker.lidAngle - locker.prevLidAngle ) * partialTicks;
+			float openAngle = ( (IChestLid)locker ).getLidAngle( partialTicks );
 			openAngle = 1.0F - openAngle;
 			openAngle = 1.0F - openAngle * openAngle * openAngle;
-			openAngle = openAngle * 90;
 
 			final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
 
-			GlStateManager.translated( left ? 15F / 16F : 1F / 16F, 0, 1.0 / 16.0 );
-			GlStateManager.rotated( left ? -openAngle : openAngle, 0, 1, 0 );
-			GlStateManager.translated( left ? -15F / 16F : -1F / 16F, 0, -1.0 / 16.0 );
+			GlStateManager.translated( left ? 0.0 : 1.0, 0.0, 0.1875 );
+			GlStateManager.rotated( left ? openAngle * 90 : -openAngle * 90, 0.0, 1.0, 0.0 );
+			GlStateManager.translated( left ? -0.0 : -1.0, 0.0, -0.1875 );
 
 			GlStateManager.rotated( 180.0F, 0.0F, 0.0F, 1.0F );
 			GlStateManager.translated( left ? -0.8125 : -0.1875, locker.isConnected() ? -0.125 : -0.625, 0.03125 );

@@ -19,7 +19,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable
 {
-	private ItemStack	lock	= ItemStack.EMPTY.copy();
+	private ItemStack lock = ItemStack.EMPTY.copy();
 
 	public TileEntityReinforcedLocker()
 	{
@@ -105,7 +105,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		if( isMain() )
 			return getPlayersUsing() > 0 || !getLock().isEmpty();
 		else
-			return ( (TileEntityReinforcedChest)getMainTileEntity() ).isLocked();
+			return ( (IKeyLockable)getMainTileEntity() ).isLocked();
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			}
 		}
 		else
-			( (TileEntityReinforcedChest)getMainTileEntity() ).setLock( lock );
+			( (IKeyLockable)getMainTileEntity() ).setLock( lock );
 	}
 
 	@Override
@@ -140,21 +140,25 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	public void useUnlocked( PlayerEntity player )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void applyTrigger()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean unlockWith( ItemStack heldItem )
 	{
-		final Item item = heldItem.getItem();
-		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
+		if( isMain() )
+		{
+			final Item item = heldItem.getItem();
+			return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
+		}
+		return ( (IKeyLockable)getMainTileEntity() ).unlockWith( heldItem );
 	}
 
 	/*

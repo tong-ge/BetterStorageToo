@@ -2,7 +2,7 @@
 	"parent": "minecraft:recipes/root",
 	"rewards":
 	{
-		"recipes": [ "betterstorage:lock" ]
+		"recipes": [ "betterstorage:lock_shaped" ]
 	},
 	"criteria":
 	{
@@ -20,7 +20,7 @@
 		"has_the_recipe":
 		{
 			"trigger": "minecraft:recipe_unlocked",
-			"conditions": { "recipe": "betterstorage:lock" }
+			"conditions": { "recipe": "betterstorage:lock_shaped" }
 		}
 	},
 	"requirements":

@@ -30,6 +30,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContainerProvider
 {
@@ -88,25 +90,22 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	@Override
 	public boolean unlock( ItemStack keyring, ItemStack lock, boolean useAbility )
 	{
-		/*
-		 * if( keyring.hasCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ) )
-		 * {
-		 * // Loop through all the keys in the keyring,
-		 * // returns if any of the keys fit in the lock.
-		 *
-		 * final IItemHandler inventory = keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null );
-		 * for( int i = 0; i < inventory.getSlots(); i++ )
-		 * {
-		 * final ItemStack key = inventory.getStackInSlot( i );
-		 * if( !key.isEmpty() )
-		 * {
-		 * final IKey keyType = (IKey)key.getItem();
-		 * if( keyType.unlock( key, lock, false ) )
-		 * return true;
-		 * }
-		 * }
-		 * }
-		 */
+		// Loop through all the keys in the keyring,
+		// returns if any of the keys fit in the lock.
+
+		final IItemHandler inventory = keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
+		if( inventory != null )
+			for( int i = 0; i < inventory.getSlots(); i++ )
+			{
+				final ItemStack key = inventory.getStackInSlot( i );
+				if( !key.isEmpty() )
+				{
+					final IKey keyType = (IKey)key.getItem();
+					if( keyType.unlock( key, lock, false ) )
+						return true;
+				}
+			}
+
 		return false;
 	}
 

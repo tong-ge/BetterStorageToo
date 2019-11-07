@@ -2,7 +2,7 @@
 	"parent": "minecraft:recipes/root",
 	"rewards":
 	{
-		"recipes": [ "betterstorage:copy_key" ]
+		"recipes": [ "betterstorage:copy_key_shaped" ]
 	},
 	"criteria":
 	{
@@ -20,7 +20,7 @@
 		"has_the_recipe":
 		{
 			"trigger": "minecraft:recipe_unlocked",
-			"conditions": { "recipe": "betterstorage:copy_key" }
+			"conditions": { "recipe": "betterstorage:copy_key_shaped" }
 		}
 	},
 	"requirements":
