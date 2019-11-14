@@ -12,7 +12,7 @@ public final class BetterStorageBlocks
 	@ObjectHolder( "locker" )				public static BlockLocker			LOCKER;
 	@ObjectHolder( "reinforced_locker" )	public static BlockReinforcedLocker REINFORCED_LOCKER;
 	@ObjectHolder( "block_flint" )			public static BlockBetterStorage	BLOCK_FLINT;
-	// public static BlockLockableDoor LOCKABLE_DOOR = new BlockLockableDoor();
-	// public static BlockCardboardBox CARDBOARD_BOX = new BlockCardboardBox();
+	@ObjectHolder( "lockable_door" )		public static BlockLockableDoor		LOCKABLE_DOOR;
+	@ObjectHolder( "cardboard_box" )		public static BlockCardboardBox		CARDBOARD_BOX;
 	//@formatter:on
 }

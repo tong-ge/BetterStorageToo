@@ -625,7 +625,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		final CompoundNBT nbt = super.getUpdateTag();
 
 		if( inventory.getSlots() > 0 )
-			nbt.put( "inventory", inventory.serializeNBT() );
+			nbt.put( "Inventory", inventory.serializeNBT() );
 
 		if( hasCustomName() )
 			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
@@ -638,8 +638,8 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	{
 		super.handleUpdateTag( nbt );
 
-		if( nbt.contains( "inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+		if( nbt.contains( "Inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
 			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
@@ -649,7 +649,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	public CompoundNBT write( CompoundNBT nbt )
 	{
 		if( inventory.getSlots() > 0 )
-			nbt.put( "inventory", inventory.serializeNBT() );
+			nbt.put( "Inventory", inventory.serializeNBT() );
 
 		if( hasCustomName() )
 			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
@@ -660,11 +660,15 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	@Override
 	public void read( CompoundNBT nbt )
 	{
-		if( nbt.contains( "inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+		if( nbt.contains( "Inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
 			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+
+		// For backwards compatibility
+		if( nbt.contains( "inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
 
 		super.read( nbt );
 	}

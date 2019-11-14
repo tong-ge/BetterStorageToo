@@ -5,6 +5,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
@@ -14,7 +15,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerLocker extends Container
+public class ContainerCardboardBox extends Container
 {
 	private final IItemHandler			inventoryContainer;
 	private final TileEntityContainer	tileContainer;
@@ -24,7 +25,7 @@ public class ContainerLocker extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerLocker( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ContainerCardboardBox( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.LOCKER, windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
@@ -173,7 +174,7 @@ public class ContainerLocker extends Container
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
-				BetterStorageBlocks.LOCKER );
+				BetterStorageBlocks.CARDBOARD_BOX );
 	}
 
 	/*

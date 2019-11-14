@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardArmor;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardHoe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardPickaxe;
@@ -29,10 +30,10 @@ public final class BetterStorageItems
 	@ObjectHolder( "cardboard_axe" )		public static ItemCardboardAxe CARDBOARD_AXE;
 	@ObjectHolder( "cardboard_hoe" )		public static ItemCardboardHoe CARDBOARD_HOE;
 
-	// public static ItemCardboardArmor CARDBOARD_HELMET = new ItemCardboardArmor( EntityEquipmentSlot.HEAD );
-	// public static ItemCardboardArmor CARDBOARD_CHESTPLATE = new ItemCardboardArmor( EntityEquipmentSlot.CHEST );
-	// public static ItemCardboardArmor CARDBOARD_LEGGINGS = new ItemCardboardArmor( EntityEquipmentSlot.LEGS );
-	// public static ItemCardboardArmor CARDBOARD_BOOTS = new ItemCardboardArmor( EntityEquipmentSlot.FEET );
+	@ObjectHolder( "cardboard_helmet" )		public static ItemCardboardArmor CARDBOARD_HELMET;
+	@ObjectHolder( "cardboard_chestplate" )	public static ItemCardboardArmor CARDBOARD_CHESTPLATE;
+	@ObjectHolder( "cardboard_leggings" )	public static ItemCardboardArmor CARDBOARD_LEGGINGS;
+	@ObjectHolder( "cardboard_boots" )		public static ItemCardboardArmor CARDBOARD_BOOTS;
 
 	// public static ItemBucketSlime SLIME_BUCKET = new ItemBucketSlime();
 

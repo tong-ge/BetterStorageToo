@@ -13,5 +13,6 @@ public final class BetterStorageContainerTypes
 	@ObjectHolder( "locker" )				public static ContainerType< ContainerLocker >				LOCKER;
 	@ObjectHolder( "reinforced_locker" )	public static ContainerType< ContainerReinforcedLocker >	REINFORCED_LOCKER;
 	@ObjectHolder( "keyring" )				public static ContainerType< ContainerKeyring >				KEYRING;
+	@ObjectHolder( "cardboard_box" )		public static ContainerType< ContainerCardboardBox >		CARDBOARD_BOX;
 	//@formatter:on
 }

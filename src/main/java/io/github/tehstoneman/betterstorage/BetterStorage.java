@@ -28,7 +28,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class BetterStorage
 {
 	public static final Logger			LOGGER		= LogManager.getLogger( ModInfo.MOD_ID );
-	public static final ItemGroup		ITEM_GROUP	= new ItemGroup( "betterStorageToo" )
+	public static final ItemGroup		ITEM_GROUP	= new ItemGroup( "better_storage_too" )
 													{
 														@Override
 														@OnlyIn( Dist.CLIENT )

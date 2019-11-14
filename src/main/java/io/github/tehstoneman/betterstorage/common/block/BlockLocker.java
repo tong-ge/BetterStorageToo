@@ -273,14 +273,49 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Nullable
 	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
 	{
+		return this.getContainer( state, worldIn, pos, false );
+	}
+
+	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
+	{
 		final TileEntity tileentity = worldIn.getTileEntity( pos );
 		if( !( tileentity instanceof TileEntityLocker ) )
+			return null;
+		else if( !allowBlockedChest && isBlocked( worldIn, pos ) )
 			return null;
 		else
 		{
 			final TileEntityLocker locker = (TileEntityLocker)tileentity;
-			return locker;
+			final EnumConnectedType chesttype = state.get( TYPE );
+			if( chesttype == EnumConnectedType.SINGLE )
+				return locker;
+			else
+			{
+				final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
+				final BlockState iblockstate = worldIn.getBlockState( blockpos );
+				if( iblockstate.getBlock() == this )
+				{
+					final EnumConnectedType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != EnumConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
+							return null;
+				}
+
+				return locker;
+			}
 		}
+	}
+
+	private static boolean isBlocked( IWorld world, BlockPos pos )
+	{
+		return isBehindSolidBlock( world, pos );
+	}
+
+	private static boolean isBehindSolidBlock( IBlockReader reader, BlockPos worldIn )
+	{
+		final Direction facing = reader.getBlockState( worldIn ).get( FACING );
+		final BlockPos blockpos = worldIn.offset( facing );
+		return reader.getBlockState( blockpos ).isNormalCube( reader, blockpos );
 	}
 
 	/*

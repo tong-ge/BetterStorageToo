@@ -1,21 +1,24 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.inventory.ContainerCardboardBox;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class TileEntityCardboardBox extends TileEntityContainer
 {
-	public TileEntityCardboardBox( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityCardboardBox()
 	{
-		super( tileEntityTypeIn );
-		// TODO Auto-generated constructor stub
+		super( BetterStorageTileEntityTypes.CARDBOARD_BOX );
 	}
 
-	public int		uses		= 1;
+	public int		uses		= ItemBlockCardboardBox.getMaxUses();
 	public boolean	destroyed	= false;
 	public int		color		= -1;
 
@@ -40,13 +43,11 @@ public class TileEntityCardboardBox extends TileEntityContainer
 
 	// TileEntityContainer stuff
 
-	/*
-	 * @Override
-	 * public ITextComponent getName()
-	 * {
-	 * return customName != null ? customName : new TextComponentTranslation( ModInfo.containerCardboardBox );
-	 * }
-	 */
+	@Override
+	public ITextComponent getName()
+	{
+		return customName != null ? customName : new TranslationTextComponent( ModInfo.CONTAINER_CARDBOARD_BOX_NAME );
+	}
 
 	/*
 	 * @Override
@@ -84,7 +85,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	 * {
 	 * if( !canPickUp() || destroyed )
 	 * return;
-	 * 
+	 *
 	 * final boolean empty = isEmpty( inventory );
 	 * if( !empty )
 	 * {
@@ -97,20 +98,20 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	 * return;
 	 * }
 	 * }
-	 * 
+	 *
 	 * // Don't drop an empty cardboard box in creative.
 	 * if( !empty || !brokenInCreative )
 	 * {
 	 * final ItemStack stack = new ItemStack( BetterStorageBlocks.CARDBOARD_BOX );
 	 * final NBTTagCompound compound = new NBTTagCompound();
-	 * 
+	 *
 	 * compound.setInt( "uses", uses );
 	 * if( color >= 0 )
 	 * compound.setInt( "color", color );
-	 * 
+	 *
 	 * if( !empty )
 	 * compound.setTag( "Inventory", inventory.serializeNBT() );
-	 * 
+	 *
 	 * // stack.setTagCompound( compound );
 	 * final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
 	 * world.spawnEntity( entityItem );
@@ -118,95 +119,81 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	 * }
 	 */
 
-	// Tile entity synchronization
-
-	/*
-	 * @Override
-	 * public NBTTagCompound getUpdateTag()
-	 * {
-	 * final NBTTagCompound compound = super.getUpdateTag();
-	 * compound.setInt( "uses", uses );
-	 * if( color >= 0 )
-	 * compound.setInt( "color", color );
-	 * return compound;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public SPacketUpdateTileEntity getUpdatePacket()
-	 * {
-	 * final NBTTagCompound compound = getUpdateTag();
-	 * return new SPacketUpdateTileEntity( pos, 0, compound );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
-	 * {
-	 * final NBTTagCompound compound = packet.getNbtCompound();
-	 * if( compound.hasKey( "uses" ) )
-	 * uses = compound.getInt( "uses" );
-	 * if( compound.hasKey( "color" ) )
-	 * color = compound.getInt( "color" );
-	 * // worldObj.notifyBlockUpdate( pos, worldObj.getBlockState( pos ), worldObj.getBlockState( pos ), 3 );
-	 * }
-	 */
-
-	// Reading from / writing to NBT
-
-	/*
-	 * @Override
-	 * public void readFromNBT( NBTTagCompound compound )
-	 * {
-	 * super.readFromNBT( compound );
-	 * uses = compound.hasKey( "uses" ) ? compound.getInt( "uses" ) : ItemBlockCardboardBox.getUses();
-	 * if( compound.hasKey( "color" ) )
-	 * color = compound.getInt( "color" );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public NBTTagCompound writeToNBT( NBTTagCompound compound )
-	 * {
-	 * super.writeToNBT( compound );
-	 * if( ItemBlockCardboardBox.getUses() > 0 )
-	 * compound.setInt( "uses", uses );
-	 * if( color >= 0 )
-	 * compound.setInt( "color", color );
-	 * return compound;
-	 * }
-	 */
-
 	public int getColor()
 	{
 		if( color < 0 )
-			return 0x705030;
+			return 0xA08060;
 		return color;
 	}
 
 	@Override
-	public ITextComponent getName()
+	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Container createMenu( int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_ )
-	{
-		// TODO Auto-generated method stub
-		return null;
+		return new ContainerCardboardBox( windowID, playerInventory, world, pos );
 	}
 
 	/*
-	 * @Override
-	 * public void tick()
-	 * {
-	 * // TODO Auto-generated method stub
-	 * 
-	 * }
+	 * ==========================
+	 * TileEntity synchronization
+	 * ==========================
 	 */
+
+	@Override
+	public CompoundNBT getUpdateTag()
+	{
+		final CompoundNBT nbt = super.getUpdateTag();
+
+		if( ItemBlockCardboardBox.getMaxUses() > 0 )
+			nbt.putInt( "Uses", uses );
+		if( color >= 0 )
+			nbt.putInt( "Color", color );
+
+		return nbt;
+	}
+
+	@Override
+	public void handleUpdateTag( CompoundNBT nbt )
+	{
+		super.handleUpdateTag( nbt );
+
+		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+	}
+
+	@Override
+	public CompoundNBT write( CompoundNBT nbt )
+	{
+		if( ItemBlockCardboardBox.getMaxUses() > 0 )
+			nbt.putInt( "Uses", uses );
+		if( color >= 0 )
+			nbt.putInt( "Color", color );
+
+		return super.write( nbt );
+	}
+
+	@Override
+	public void read( CompoundNBT nbt )
+	{
+		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+
+		super.read( nbt );
+	}
+
+	public boolean isEmpty()
+	{
+		return inventory.isEmpty();
+	}
+
+	public void setUses( int uses )
+	{
+		this.uses = uses;
+		markDirty();
+	}
+
+	public void setColor( int color )
+	{
+		this.color = color;
+		markDirty();
+	}
 }

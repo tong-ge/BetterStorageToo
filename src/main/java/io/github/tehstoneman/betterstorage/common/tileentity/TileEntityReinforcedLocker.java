@@ -35,7 +35,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	protected String getConnectableName()
 	{
-		return ModInfo.containerReinforcedLocker;
+		return ModInfo.CONTAINER_REINFORCED_LOCKER_NAME;
 	}
 
 	@Override

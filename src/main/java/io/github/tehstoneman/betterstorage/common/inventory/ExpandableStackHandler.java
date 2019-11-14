@@ -78,4 +78,12 @@ public class ExpandableStackHandler extends ItemStackHandler
 		columns = nbt.contains( "Columns" ) ? columns = nbt.getInt( "Columns" ) : 9;
 		rows = nbt.contains( "Rows" ) ? nbt.getInt( "Rows" ) : stacks.size() / 9;
 	}
+
+	public boolean isEmpty()
+	{
+		for( final ItemStack itemStack : stacks )
+			if( !itemStack.isEmpty() )
+				return false;
+		return true;
+	}
 }

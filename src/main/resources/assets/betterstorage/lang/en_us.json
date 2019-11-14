@@ -6,6 +6,7 @@
 	"block.betterstorage.locker":"Locker",
 	"block.betterstorage.reinforced_chest":"Reinforced Chest",
 	"block.betterstorage.reinforced_locker":"Reinforced Locker",
+	"container.betterstorage.cardboard_box":"Cardboard Box",
 	"container.betterstorage.crate":"Storage Crate",
 	"container.betterstorage.crate.capacity":"%s%% Capacity",
 	"container.betterstorage.keyring":"Keyring",
@@ -29,5 +30,10 @@
 	"item.betterstorage.keyring":"Keyring",
 	"item.betterstorage.lock":"Lock",
 	"item.betterstorage.master_key":"Master Key",
-	"itemGroup.betterStorageToo":"Better Storage Too"
+	"itemGroup.better_storage_too":"Better Storage Too",
+	"tooltip.betterstorage.cardboard_box.contains_items":"Contains items.",
+	"tooltip.betterstorage.cardboard_box.plus_more":"... Plus %s more.",
+	"tooltip.betterstorage.cardboard_box.use_hint":"One-time use portable storage.",
+	"tooltip.betterstorage.cardboard_box.use_hint.reusable":"Reusable portable storage.",
+	"tooltip.betterstorage.cardboard_box.uses":"Remaining uses: %s"
 }

@@ -65,7 +65,7 @@ public class ItemCardboardSword extends SwordItem implements ICardboardItem
 			final CompoundNBT compound = itemstack.getTag();
 			return compound.getInt( "color" );
 		}
-		return 0x705030;
+		return 0xA08060;
 	}
 
 	@Override

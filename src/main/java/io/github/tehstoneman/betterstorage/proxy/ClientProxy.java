@@ -1,13 +1,15 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
 import io.github.tehstoneman.betterstorage.api.IProxy;
-import io.github.tehstoneman.betterstorage.client.gui.GuiLocker;
+import io.github.tehstoneman.betterstorage.client.gui.GuiCardboardBox;
 import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.client.gui.GuiKeyring;
+import io.github.tehstoneman.betterstorage.client.gui.GuiLocker;
 import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedChest;
 import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedLocker;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
@@ -15,8 +17,18 @@ import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.DirectionalPlaceContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -47,14 +59,43 @@ public class ClientProxy implements IProxy
 			ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_CHEST, GuiReinforcedChest::new );
 			ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_LOCKER, GuiReinforcedLocker::new );
 			ScreenManager.registerFactory( BetterStorageContainerTypes.KEYRING, GuiKeyring::new );
+			ScreenManager.registerFactory( BetterStorageContainerTypes.CARDBOARD_BOX, GuiCardboardBox::new );
 		} );
 
 		DeferredWorkQueue.runLater( () ->
 		{
 			Minecraft.getInstance().getItemColors().register( new KeyColor(), BetterStorageItems.KEY, BetterStorageItems.LOCK );
 			Minecraft.getInstance().getItemColors().register( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE,
-					BetterStorageItems.CARDBOARD_HOE, BetterStorageItems.CARDBOARD_PICKAXE, BetterStorageItems.CARDBOARD_SHOVEL,
-					BetterStorageItems.CARDBOARD_SWORD );
+					BetterStorageItems.CARDBOARD_BOOTS, BetterStorageItems.CARDBOARD_CHESTPLATE, BetterStorageItems.CARDBOARD_HELMET,
+					BetterStorageItems.CARDBOARD_HOE, BetterStorageItems.CARDBOARD_LEGGINGS, BetterStorageItems.CARDBOARD_PICKAXE,
+					BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD, BetterStorageBlocks.CARDBOARD_BOX );
+			Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX );
+		} );
+
+		DeferredWorkQueue.runLater( () ->
+		{
+			DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX, new OptionalDispenseBehavior()
+			{
+				/**
+				 * Dispense the specified stack, play the dispense sound and spawn particles.
+				 */
+				@Override
+				protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
+				{
+					successful = false;
+					final Item item = stack.getItem();
+					if( item instanceof BlockItem )
+					{
+						final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
+						final BlockPos blockpos = source.getBlockPos().offset( direction );
+						final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
+						successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack,
+								direction1 ) ) == ActionResultType.SUCCESS;
+					}
+
+					return stack;
+				}
+			} );
 		} );
 	}
 

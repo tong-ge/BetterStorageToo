@@ -37,20 +37,6 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
-	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
-		if( !( tileentity instanceof TileEntityReinforcedLocker ) )
-			return null;
-		else
-		{
-			final TileEntityReinforcedLocker locker = (TileEntityReinforcedLocker)tileentity;
-			return locker;
-		}
-	}
-
-	@Override
 	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( hit.getFace() == state.get( FACING ) )
