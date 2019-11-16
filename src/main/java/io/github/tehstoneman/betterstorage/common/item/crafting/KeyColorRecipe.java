@@ -1,78 +1,113 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-public class KeyColorRecipe// extends ShapelessOreRecipe
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
+
+public class KeyColorRecipe extends SpecialRecipe
 {
-	/*
-	 * public KeyColorRecipe( @Nullable final ResourceLocation group, final NonNullList< Ingredient > input, final ItemStack result )
-	 * {
-	 * super( group, result, result );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public ItemStack getCraftingResult( InventoryCrafting inv )
-	 * {
-	 * final ItemStack outputStack = super.getCraftingResult( inv );
-	 * 
-	 * if( !outputStack.isEmpty() )
-	 * {
-	 * final NBTTagCompound tagCompound = outputStack.hasTagCompound() ? outputStack.getTagCompound() : new NBTTagCompound();
-	 * 
-	 * for( int i = 0; i < inv.getSizeInventory(); ++i )
-	 * {
-	 * final ItemStack ingredientStack = inv.getStackInSlot( i );
-	 * 
-	 * if( !ingredientStack.isEmpty() )
-	 * {
-	 * ItemKeyLock.clearColors( ingredientStack );
-	 * if( ingredientStack.getItem() == outputStack.getItem() )
-	 * if( ingredientStack.hasTagCompound() )
-	 * tagCompound.merge( ingredientStack.getTagCompound() );
-	 * 
-	 * if( DyeUtils.isDye( ingredientStack ) )
-	 * if( !tagCompound.hasKey( ItemKeyLock.TAG_COLOR1 ) )
-	 * tagCompound.setInteger( ItemKeyLock.TAG_COLOR1, DyeUtils.getDyeColor( ingredientStack ).getColorValue() );
-	 * else
-	 * if( !tagCompound.hasKey( ItemKeyLock.TAG_COLOR2 ) )
-	 * tagCompound.setInteger( ItemKeyLock.TAG_COLOR2, DyeUtils.getDyeColor( ingredientStack ).getColorValue() );
-	 * 
-	 * }
-	 * }
-	 * 
-	 * outputStack.setTagCompound( tagCompound );
-	 * }
-	 * 
-	 * return outputStack;
-	 * }
-	 */
-
-	public static class Factory// implements IRecipeFactory
+	public KeyColorRecipe( ResourceLocation idIn )
 	{
-		/*
-		 * @Override
-		 * public IRecipe parse( JsonContext context, JsonObject json )
-		 * {
-		 * final String group = JsonUtils.getString( json, "group", "" );
-		 * final NonNullList< Ingredient > ingredients = parseShapeless( context, json );
-		 * final ItemStack result = CraftingHelper.getItemStack( JsonUtils.getJsonObject( json, "result" ), context );
-		 * 
-		 * return new KeyColorRecipe( group.isEmpty() ? null : new ResourceLocation( group ), ingredients, result );
-		 * }
-		 */
+		super( idIn );
+	}
 
-		/*
-		 * public static NonNullList< Ingredient > parseShapeless( final JsonContext context, final JsonObject json )
-		 * {
-		 * final NonNullList< Ingredient > ingredients = NonNullList.create();
-		 * for( final JsonElement element : JsonUtils.getJsonArray( json, "ingredients" ) )
-		 * ingredients.add( CraftingHelper.getIngredient( element, context ) );
-		 * 
-		 * if( ingredients.isEmpty() )
-		 * throw new JsonParseException( "No ingredients for shapeless recipe" );
-		 * 
-		 * return ingredients;
-		 * }
-		 */
+	@Override
+	public boolean matches( CraftingInventory inv, World worldIn )
+	{
+		ItemStack resultStack = ItemStack.EMPTY;
+		final List< ItemStack > dyeList = Lists.newArrayList();
+
+		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		{
+			final ItemStack itemStack = inv.getStackInSlot( i );
+			if( !itemStack.isEmpty() )
+				if( itemStack.getItem() instanceof ItemKeyLock )
+				{
+					if( !resultStack.isEmpty() )
+						return false;
+
+					resultStack = itemStack;
+				}
+				else
+				{
+					if( !itemStack.getItem().isIn( Tags.Items.DYES ) )
+						return false;
+
+					dyeList.add( itemStack );
+				}
+		}
+
+		return !resultStack.isEmpty() && !dyeList.isEmpty() && dyeList.size() <= 2;
+	}
+
+	@Override
+	public ItemStack getCraftingResult( CraftingInventory inv )
+	{
+		ItemStack resultStack = ItemStack.EMPTY;
+
+		final CompoundNBT tagCompound = new CompoundNBT();
+		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		{
+			final ItemStack ingredientStack = inv.getStackInSlot( i );
+
+			if( !ingredientStack.isEmpty() )
+			{
+				final Item item = ingredientStack.getItem();
+				if( item instanceof ItemKeyLock )
+				{
+					if( !resultStack.isEmpty() )
+						return ItemStack.EMPTY;
+
+					ItemKeyLock.clearColors( ingredientStack );
+
+					resultStack = ingredientStack.copy();
+					if( ingredientStack.hasTag() )
+						tagCompound.merge( ingredientStack.getTag() );
+				}
+				else if( item.isIn( Tags.Items.DYES ) )
+				{
+					final DyeColor dyeColor = DyeColor.getColor( ingredientStack );
+					if( !tagCompound.contains( ItemKeyLock.TAG_COLOR1 ) )
+						tagCompound.putInt( ItemKeyLock.TAG_COLOR1, dyeColor.getFireworkColor() );
+					else if( !tagCompound.contains( ItemKeyLock.TAG_COLOR2 ) )
+						tagCompound.putInt( ItemKeyLock.TAG_COLOR2, dyeColor.getFireworkColor() );
+				}
+				else
+					return ItemStack.EMPTY;
+			}
+		}
+
+		resultStack.setTag( tagCompound );
+		return resultStack;
+	}
+
+	@Override
+	public boolean canFit( int width, int height )
+	{
+		return width * height >= 2;
+	}
+
+	@Override
+	public IRecipeSerializer< ? > getSerializer()
+	{
+		return BetterStorageRecipes.COLOR_KEY;
+	}
+
+	@Override
+	public boolean isDynamic()
+	{
+		return true;
 	}
 }

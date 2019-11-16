@@ -1,111 +1,116 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
-public class CardboardColorRecipe// extends IForgeRegistryEntry.Impl< IRecipe > implements IRecipe
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import io.github.tehstoneman.betterstorage.api.IDyeableItem;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
+
+public class CardboardColorRecipe extends SpecialRecipe
 {
-	/*
-	 * @Override
-	 * public boolean matches( InventoryCrafting inv, World worldIn )
-	 * {
-	 * ItemStack itemstack = ItemStack.EMPTY;
-	 * final List< ItemStack > list = Lists.<ItemStack> newArrayList();
-	 * 
-	 * for( int i = 0; i < inv.getSizeInventory(); ++i )
-	 * {
-	 * final ItemStack itemstack1 = inv.getStackInSlot( i );
-	 * 
-	 * if( !itemstack1.isEmpty() )
-	 * if( itemstack1.getItem() instanceof IDyeableItem )
-	 * {
-	 * if( !itemstack.isEmpty() )
-	 * return false;
-	 * 
-	 * itemstack = itemstack1;
-	 * }
-	 * else
-	 * {
-	 * if( !DyeUtils.isDye( itemstack1 ) )
-	 * return false;
-	 * 
-	 * list.add( itemstack1 );
-	 * }
-	 * }
-	 * 
-	 * return !itemstack.isEmpty() && !list.isEmpty();
-	 * }
-	 */
+
+	public CardboardColorRecipe( ResourceLocation idIn )
+	{
+		super( idIn );
+	}
+
+	@Override
+	public boolean matches( CraftingInventory inv, World worldIn )
+	{
+		ItemStack resultStack = ItemStack.EMPTY;
+		final List< ItemStack > dyeList = Lists.newArrayList();
+
+		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		{
+			final ItemStack itemstack = inv.getStackInSlot( i );
+
+			if( !itemstack.isEmpty() )
+				if( itemstack.getItem() instanceof IDyeableItem )
+				{
+					if( !resultStack.isEmpty() )
+						return false;
+
+					resultStack = itemstack;
+				}
+				else
+				{
+					if( !itemstack.getItem().isIn( Tags.Items.DYES ) )
+						return false;
+
+					dyeList.add( itemstack );
+				}
+		}
+
+		return !resultStack.isEmpty() && !dyeList.isEmpty();
+	}
+
+	@Override
+	public ItemStack getCraftingResult( CraftingInventory inv )
+	{
+		ItemStack resultStack = ItemStack.EMPTY;
+		final List< DyeColor > dyeList = Lists.newArrayList();
+
+		final int[] aint = new int[3];
+		final int h = 0;
+		final int j = 0;
+		IDyeableItem itemdyable = null;
+
+		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		{
+			final ItemStack ingredientStack = inv.getStackInSlot( i );
+
+			if( !ingredientStack.isEmpty() )
+			{
+				final Item item = ingredientStack.getItem();
+				if( item instanceof IDyeableItem )
+				{
+					if( !resultStack.isEmpty() )
+						return ItemStack.EMPTY;
+
+					itemdyable = (IDyeableItem)ingredientStack.getItem();
+
+					resultStack = ingredientStack.copy();
+				}
+				else if( item.isIn( Tags.Items.DYES ) )
+					dyeList.add( DyeColor.getColor( ingredientStack ) );
+				else
+					return ItemStack.EMPTY;
+			}
+		}
+
+		if( !resultStack.isEmpty() && !dyeList.isEmpty() )
+			return IDyeableItem.dyeItem( resultStack, dyeList );
+		else
+			return ItemStack.EMPTY;
+	}
+
+	@Override
+	public boolean canFit( int width, int height )
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IRecipeSerializer< ? > getSerializer()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/*
 	 * @Override
 	 * public ItemStack getCraftingResult( InventoryCrafting inv )
 	 * {
-	 * ItemStack itemstack = ItemStack.EMPTY;
-	 * final int[] aint = new int[3];
-	 * int i = 0;
-	 * int j = 0;
-	 * IDyeableItem itemdyable = null;
-	 * 
-	 * for( int k = 0; k < inv.getSizeInventory(); ++k )
-	 * {
-	 * final ItemStack itemstack1 = inv.getStackInSlot( k );
-	 * 
-	 * if( !itemstack1.isEmpty() )
-	 * if( itemstack1.getItem() instanceof IDyeableItem )
-	 * {
-	 * itemdyable = (IDyeableItem)itemstack1.getItem();
-	 * 
-	 * if( !itemstack.isEmpty() )
-	 * return ItemStack.EMPTY;
-	 * 
-	 * itemstack = itemstack1.copy();
-	 * itemstack.setCount( 1 );
-	 * 
-	 * if( itemdyable.hasColor( itemstack1 ) )
-	 * {
-	 * final int l = itemdyable.getColor( itemstack );
-	 * final float f = ( l >> 16 & 255 ) / 255.0F;
-	 * final float f1 = ( l >> 8 & 255 ) / 255.0F;
-	 * final float f2 = ( l & 255 ) / 255.0F;
-	 * i = (int)( i + Math.max( f, Math.max( f1, f2 ) ) * 255.0F );
-	 * aint[0] = (int)( aint[0] + f * 255.0F );
-	 * aint[1] = (int)( aint[1] + f1 * 255.0F );
-	 * aint[2] = (int)( aint[2] + f2 * 255.0F );
-	 * ++j;
-	 * }
-	 * }
-	 * else
-	 * {
-	 * if( !DyeUtils.isDye( itemstack1 ) )
-	 * return ItemStack.EMPTY;
-	 * 
-	 * final float[] afloat = EntitySheep.getDyeRgb( DyeUtils.getDyeColor( itemstack1 ) );
-	 * final int l1 = (int)( afloat[0] * 255.0F );
-	 * final int i2 = (int)( afloat[1] * 255.0F );
-	 * final int j2 = (int)( afloat[2] * 255.0F );
-	 * i += Math.max( l1, Math.max( i2, j2 ) );
-	 * aint[0] += l1;
-	 * aint[1] += i2;
-	 * aint[2] += j2;
-	 * ++j;
-	 * }
-	 * }
-	 * 
-	 * if( itemdyable == null )
-	 * return ItemStack.EMPTY;
-	 * else
-	 * {
-	 * int i1 = aint[0] / j;
-	 * int j1 = aint[1] / j;
-	 * int k1 = aint[2] / j;
-	 * final float f3 = (float)i / (float)j;
-	 * final float f4 = Math.max( i1, Math.max( j1, k1 ) );
-	 * i1 = (int)( i1 * f3 / f4 );
-	 * j1 = (int)( j1 * f3 / f4 );
-	 * k1 = (int)( k1 * f3 / f4 );
-	 * int lvt_12_3_ = ( i1 << 8 ) + j1;
-	 * lvt_12_3_ = ( lvt_12_3_ << 8 ) + k1;
-	 * itemdyable.setColor( itemstack, lvt_12_3_ );
-	 * return itemstack;
-	 * }
 	 * }
 	 */
 
@@ -122,13 +127,13 @@ public class CardboardColorRecipe// extends IForgeRegistryEntry.Impl< IRecipe > 
 	 * public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
 	 * {
 	 * final NonNullList< ItemStack > nonnulllist = NonNullList.<ItemStack> withSize( inv.getSizeInventory(), ItemStack.EMPTY );
-	 * 
+	 *
 	 * for( int i = 0; i < nonnulllist.size(); ++i )
 	 * {
 	 * final ItemStack itemstack = inv.getStackInSlot( i );
 	 * nonnulllist.set( i, net.minecraftforge.common.ForgeHooks.getContainerItem( itemstack ) );
 	 * }
-	 * 
+	 *
 	 * return nonnulllist;
 	 * }
 	 */

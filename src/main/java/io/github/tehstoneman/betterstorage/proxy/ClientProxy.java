@@ -71,32 +71,6 @@ public class ClientProxy implements IProxy
 					BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD, BetterStorageBlocks.CARDBOARD_BOX );
 			Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX );
 		} );
-
-		DeferredWorkQueue.runLater( () ->
-		{
-			DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX, new OptionalDispenseBehavior()
-			{
-				/**
-				 * Dispense the specified stack, play the dispense sound and spawn particles.
-				 */
-				@Override
-				protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
-				{
-					successful = false;
-					final Item item = stack.getItem();
-					if( item instanceof BlockItem )
-					{
-						final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
-						final BlockPos blockpos = source.getBlockPos().offset( direction );
-						final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
-						successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack,
-								direction1 ) ) == ActionResultType.SUCCESS;
-					}
-
-					return stack;
-				}
-			} );
-		} );
 	}
 
 	@Override

@@ -4,21 +4,23 @@ import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.Tags;
 
 public class KeyLockRecipe extends ShapedRecipe
 {
 	public KeyLockRecipe( ResourceLocation idIn )
 	{
-		super( idIn, "lock", 3, 3, NonNullList.from( Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.EMPTY,
-				Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.fromItems( BetterStorageItems.KEY ), Ingredient.fromItems( Items.GOLD_INGOT ),
-				Ingredient.fromItems( Items.GOLD_INGOT ), Ingredient.fromItems( Items.IRON_INGOT ), Ingredient.fromItems( Items.GOLD_INGOT ) ),
+		super( idIn, "lock", 3, 3,
+				NonNullList.from( Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.EMPTY,
+						Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.fromItems( BetterStorageItems.KEY ),
+						Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.fromTag( Tags.Items.INGOTS_GOLD ),
+						Ingredient.fromTag( Tags.Items.INGOTS_IRON ), Ingredient.fromTag( Tags.Items.INGOTS_GOLD ) ),
 				new ItemStack( BetterStorageItems.LOCK ) );
 	}
 
