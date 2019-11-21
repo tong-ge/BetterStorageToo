@@ -28,7 +28,7 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 		xSize = Math.max( 14 + columns * 18, 176 );
 		ySize = 114 + rows * 18;
 
-		offsetX = Math.max( ( 176 - xSize ) / 2, 0 );
+		offsetX = Math.max( ( xSize - 176  ) / 2, 0 );
 		offsetY = 17 + rows * 18;
 	}
 
@@ -51,7 +51,7 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
 		font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
-		font.drawString( playerInventory.getDisplayName().getFormattedText(), 8 + offsetX, offsetY + 2, 0x404040 );
+		font.drawString( playerInventory.getDisplayName().getFormattedText(), offsetX + 8, offsetY + 2, 0x404040 );
 	}
 
 	@Override

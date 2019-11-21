@@ -5,6 +5,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.Block;
@@ -13,6 +16,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.CatEntity;
@@ -38,12 +43,18 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BlockReinforcedChest extends BlockConnectableContainer implements IWaterLoggable
 {
@@ -247,6 +258,68 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
 	}
 
+	@Override
+	public boolean hasComparatorInputOverride( BlockState state )
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
+	{
+		return calcRedstoneFromInventory(
+				( (TileEntityReinforcedChest)worldIn.getTileEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
+	}
+
+	public static int calcRedstoneFromInventory( @Nullable LazyOptional< IItemHandler > lazyOptional )
+	{
+		if( !lazyOptional.isPresent() )
+			return 0;
+		else
+		{
+			final IItemHandler inventory = lazyOptional.orElseGet( null );
+			int i = 0;
+			float f = 0.0F;
+
+			for( int j = 0; j < inventory.getSlots(); ++j )
+			{
+				final ItemStack itemstack = inventory.getStackInSlot( j );
+				if( !itemstack.isEmpty() )
+				{
+					f += (float)itemstack.getCount() / itemstack.getMaxStackSize();
+					++i;
+				}
+			}
+
+			f = f / inventory.getSlots();
+			return MathHelper.floor( f * 14.0F ) + ( i > 0 ? 1 : 0 );
+		}
+	}
+
+	@Override
+	public boolean canProvidePower( BlockState state )
+	{
+		return true;
+	}
+
+	@Override
+	public int getWeakPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	{
+		final TileEntity tileEntity = blockAccess.getTileEntity( pos );
+		if( tileEntity instanceof TileEntityReinforcedChest )
+		{
+			final TileEntityReinforcedChest chest = (TileEntityReinforcedChest)tileEntity;
+			return chest.isPowered() ? MathHelper.clamp( chest.getPlayersUsing(), 0, 15 ) : 0;
+		}
+		return 0;
+	}
+
+	@Override
+	public int getStrongPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	{
+		return side == Direction.UP ? blockState.getWeakPower( blockAccess, pos, side ) : 0;
+	}
+
 	/*
 	 * ===========
 	 * Interaction
@@ -264,7 +337,11 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 			if( tileChest != null && tileChest.isLocked() )
 			{
 				if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
+				{
+					final ItemStack lock = tileChest.getLock();
+					( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, EnumLockInteraction.OPEN );
 					return false;
+				}
 				if( player.isSneaking() )
 				{
 					worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
@@ -382,5 +459,18 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	public IFluidState getFluidState( BlockState blockState )
 	{
 		return blockState.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( blockState );
+
+	}
+
+	@Override
+	public float getExplosionResistance( BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion )
+	{
+		final TileEntityReinforcedChest chest = getChestAt( (World)world, pos );
+		if( chest != null && chest.isLocked() )
+		{
+			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, chest.getLock() ) + 1;
+			return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
+		}
+		return super.getExplosionResistance( state, world, pos, exploder, explosion );
 	}
 }

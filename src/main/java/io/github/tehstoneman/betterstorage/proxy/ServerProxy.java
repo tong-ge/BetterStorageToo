@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import io.github.tehstoneman.betterstorage.api.IProxy;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;

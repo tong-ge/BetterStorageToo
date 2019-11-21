@@ -5,12 +5,15 @@ import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import io.github.tehstoneman.betterstorage.api.IProxy;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
 import io.github.tehstoneman.betterstorage.event.RegistryEventHandler;
 import io.github.tehstoneman.betterstorage.network.ModNetwork;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
+import io.github.tehstoneman.betterstorage.proxy.IProxy;
 import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -54,12 +57,13 @@ public class BetterStorage
 		// FMLJavaModLoadingContext.get().getModEventBus().addListener( ClientEvents::clientStartup );
 
 		// MinecraftForge.EVENT_BUS.register( new ClientEventHandler() );
-		MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
-		// MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
+		//MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
+		//MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
 	}
 
 	public void setup( FMLCommonSetupEvent event )
 	{
+		ITEM_GROUP.setRelevantEnchantmentTypes( EnchantmentKey.KEY, EnchantmentLock.LOCK );
 		PROXY.setup( event );
 	}
 

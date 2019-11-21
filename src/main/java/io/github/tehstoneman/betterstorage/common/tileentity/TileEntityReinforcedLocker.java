@@ -4,8 +4,11 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import net.minecraft.block.Block;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -19,7 +22,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable
 {
-	private ItemStack lock = ItemStack.EMPTY.copy();
+	private boolean		powered;
+	private ItemStack	lock	= ItemStack.EMPTY.copy();
 
 	public TileEntityReinforcedLocker()
 	{
@@ -123,6 +127,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			{
 				this.lock = lock;
 				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
+				setPowered( EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, lock ) > 0 );
 				markDirty();
 			}
 		}
@@ -138,17 +143,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 
 	@Override
 	public void useUnlocked( PlayerEntity player )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void applyTrigger()
-	{
-		// TODO Auto-generated method stub
-
-	}
+	{}
 
 	@Override
 	public boolean unlockWith( ItemStack heldItem )
@@ -159,6 +154,84 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 		}
 		return ( (IKeyLockable)getMainTileEntity() ).unlockWith( heldItem );
+	}
+
+	@Override
+	public void applyTrigger()
+	{
+		setPowered( true );
+	}
+
+	// Trigger enchantment related
+
+	/** Returns if the chest is emitting redstone. */
+	public boolean isPowered()
+	{
+		if( isMain() )
+			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
+		// return powered;
+		return ( (TileEntityReinforcedChest)getMainTileEntity() ).isPowered();
+	}
+
+	/*
+	 * @Override
+	 * public void closeInventory( PlayerEntity player )
+	 * {
+	 * super.closeInventory( player );
+	 * if( isPowered() )
+	 * setPowered( numPlayersUsing > 0 );
+	 * }
+	 */
+
+	/**
+	 * Sets if the chest is emitting redstone.
+	 * Updates all nearby blocks to make sure they notice it.
+	 */
+	public void setPowered( boolean powered )
+	{
+		if( !isMain() )
+		{
+			( (TileEntityReinforcedLocker)getMainTileEntity() ).setPowered( powered );
+			return;
+		}
+
+		this.powered = powered;
+
+		final Block block = getBlockState().getBlock();
+		// Schedule a block update to turn the redstone signal back off.
+		// if( powered ) getWorld().scheduleBlockUpdate( pos, block, 10, 1 );
+
+		// Notify nearby blocks
+		getWorld().notifyNeighborsOfStateChange( pos, block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 0 ), block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( -1, 0, 0 ), block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 1, 0 ), block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, -1, 0 ), block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, 1 ), block );
+		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, -1 ), block );
+
+		// Notify nearby blocks of adjacent chest
+		if( isConnected() )
+			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
+
+		/*
+		 * if( isConnected() && getConnected() == EnumFacing.EAST )
+		 * {
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 2, 0, 0 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 1, 0 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, -1, 0 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 1 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, -1 ), block );
+		 * }
+		 * if( isConnected() && getConnected() == EnumFacing.SOUTH )
+		 * {
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, 2 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 1 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( -1, 0, 1 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 1, 1 ), block );
+		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, -1, 1 ), block );
+		 * }
+		 */
 	}
 
 	/*

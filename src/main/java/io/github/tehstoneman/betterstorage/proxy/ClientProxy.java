@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import io.github.tehstoneman.betterstorage.api.IProxy;
 import io.github.tehstoneman.betterstorage.client.gui.GuiCardboardBox;
 import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.client.gui.GuiKeyring;

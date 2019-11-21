@@ -3,8 +3,8 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import java.security.InvalidParameterException;
 
 import io.github.tehstoneman.betterstorage.api.EnumReinforced;
-import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
+import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.attachment.Attachments;
 import io.github.tehstoneman.betterstorage.attachment.IHasAttachments;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;

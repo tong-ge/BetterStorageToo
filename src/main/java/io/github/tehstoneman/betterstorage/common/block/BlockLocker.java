@@ -35,13 +35,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BlockLocker extends BlockConnectableContainer implements IWaterLoggable
 {
@@ -237,6 +241,44 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	public BlockState mirror( BlockState state, Mirror mirrorIn )
 	{
 		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride( BlockState state )
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
+	{
+		return calcRedstoneFromInventory(
+				( (TileEntityLocker)worldIn.getTileEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
+	}
+
+	public static int calcRedstoneFromInventory( @Nullable LazyOptional< IItemHandler > lazyOptional )
+	{
+		if( !lazyOptional.isPresent() )
+			return 0;
+		else
+		{
+			final IItemHandler inventory = lazyOptional.orElseGet( null );
+			int i = 0;
+			float f = 0.0F;
+
+			for( int j = 0; j < inventory.getSlots(); ++j )
+			{
+				final ItemStack itemstack = inventory.getStackInSlot( j );
+				if( !itemstack.isEmpty() )
+				{
+					f += (float)itemstack.getCount() / itemstack.getMaxStackSize();
+					++i;
+				}
+			}
+
+			f = f / inventory.getSlots();
+			return MathHelper.floor( f * 14.0F ) + ( i > 0 ? 1 : 0 );
+		}
 	}
 
 	/*

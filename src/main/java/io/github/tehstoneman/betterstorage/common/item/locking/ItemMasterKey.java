@@ -40,4 +40,10 @@ public class ItemMasterKey extends ItemKey
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isEnchantable( ItemStack stack )
+	{
+		return false;
+	}
 }

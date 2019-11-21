@@ -2,13 +2,18 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.util.UUID;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -57,6 +62,12 @@ public class ItemKey extends ItemKeyLock implements IKey
 	public int getItemEnchantability()
 	{
 		return 20;
+	}
+
+	@Override
+	public boolean isEnchantable( ItemStack stack )
+	{
+		return true;
 	}
 
 	@Override
@@ -130,38 +141,32 @@ public class ItemKey extends ItemKeyLock implements IKey
 		if( lockId.equals( keyId ) )
 			return true;
 
-		// final int lockSecurity = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.security );
-		// final int unlocking = BetterStorageEnchantment.getLevel( key, EnchantmentBetterStorage.unlocking );
-		// final int lockpicking = BetterStorageEnchantment.getLevel( key, EnchantmentBetterStorage.lockpicking );
-		// final int morphing = BetterStorageEnchantment.getLevel( key, EnchantmentBetterStorage.morphing );
+		final int lockSecurity = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SECURITY, lock );
+		final int unlocking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.UNLOCKING, key );
+		final int lockpicking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.LOCKPICKING, key );
+		final int morphing = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.MORPHING, key );
 
-		// final int effectiveUnlocking = Math.max( 0, unlocking - lockSecurity );
-		// final int effectiveLockpicking = Math.max( 0, lockpicking - lockSecurity );
-		// final int effectiveMorphing = Math.max( 0, morphing - lockSecurity );
+		final int effectiveUnlocking = Math.max( 0, unlocking - lockSecurity );
+		final int effectiveLockpicking = Math.max( 0, lockpicking - lockSecurity );
+		final int effectiveMorphing = Math.max( 0, morphing - lockSecurity );
 
-		/*
-		 * if( effectiveUnlocking > 0 )
-		 * {
-		 * final int roll = BetterStorage.random.nextInt( 5 );
-		 * if( effectiveUnlocking > roll )
-		 * return true;
-		 * }
-		 */
-		/*
-		 * if( effectiveLockpicking > 0 )
-		 * {
-		 * BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.lockpicking, 1 );
-		 * return true;
-		 * }
-		 */
-		/*
-		 * if( effectiveMorphing > 0 )
-		 * {
-		 * setID( key, lockId );
-		 * BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.morphing, morphing );
-		 * return true;
-		 * }
-		 */
+		if( effectiveUnlocking > 0 )
+		{
+			final int roll = BetterStorage.RANDOM.nextInt( 5 );
+			if( effectiveUnlocking > roll )
+				return true;
+		}
+		if( effectiveLockpicking > 0 )
+		{
+			BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.LOCKPICKING, 1 );
+			return true;
+		}
+		if( effectiveMorphing > 0 )
+		{
+			setID( key, lockId );
+			BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.MORPHING, morphing );
+			return true;
+		}
 
 		return false;
 	}
@@ -169,6 +174,6 @@ public class ItemKey extends ItemKeyLock implements IKey
 	@Override
 	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
-		return true;
+		return enchantment instanceof EnchantmentKey;
 	}
 }

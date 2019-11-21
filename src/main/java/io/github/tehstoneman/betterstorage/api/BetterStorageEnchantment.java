@@ -3,10 +3,14 @@ package io.github.tehstoneman.betterstorage.api;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 
 public final class BetterStorageEnchantment
 {
@@ -51,31 +55,19 @@ public final class BetterStorageEnchantment
 	/** Helper method to decrease the level of an enchantment on the item. */
 	public static void decEnchantment( ItemStack stack, Enchantment ench, int level )
 	{
-		/*
-		 * if( stack.getTagCompound() == null )
-		 * return;
-		 * 
-		 * if( !stack.getTagCompound().hasKey( "ench", 9 ) )
-		 * return;
-		 * 
-		 * final NBTTagList list = stack.getTagCompound().getTagList( "ench", 10 );
-		 * final int enchID = Enchantment.getEnchantmentID( ench );
-		 * int count = -1;
-		 * for( int i = 0; i < list.tagCount(); i++ )
-		 * if( list.getCompoundTagAt( i ).getShort( "id" ) == enchID )
-		 * count = i;
-		 * if( count >= 0 )
-		 * {
-		 * final int newLevel = list.getCompoundTagAt( count ).getShort( "lvl" ) - level;
-		 * if( newLevel <= 0 )
-		 * {
-		 * list.removeTag( count );
-		 * if( list.hasNoTags() )
-		 * stack.getTagCompound().removeTag( "ench" );
-		 * }
-		 * else
-		 * list.getCompoundTagAt( count ).setShort( "lvl", (byte)level );
-		 * }
-		 */
+		if(stack.isEmpty())return;
+		
+		Map< Enchantment, Integer > list = EnchantmentHelper.getEnchantments( stack );
+		
+		int newLevel = list.getOrDefault( ench, 0 ) - level;
+
+		if(newLevel<=0)
+		{
+			list.remove( ench );
+		}
+		else
+			list.put( ench, newLevel );
+
+		EnchantmentHelper.setEnchantments( list, stack );
 	}
 }

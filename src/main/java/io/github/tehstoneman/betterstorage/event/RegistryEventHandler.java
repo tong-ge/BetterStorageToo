@@ -10,6 +10,8 @@ import io.github.tehstoneman.betterstorage.common.block.BlockLockableDoor;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCardboardBox;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
@@ -42,6 +44,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantment.Rarity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -162,5 +166,20 @@ public class RegistryEventHandler
 			final int protectedIndex = data.readInt();
 			return new ContainerKeyring( windowID, inv, keyring, protectedIndex );
 		} ).setRegistryName( BetterStorageItems.KEYRING.getRegistryName() ) );
+	}
+
+	@SubscribeEvent
+	public static void onEnchantmentRegistry( final RegistryEvent.Register< Enchantment > event )
+	{
+		final IForgeRegistry< Enchantment > registry = event.getRegistry();
+
+		registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 10, 30, 0 ).setRegistryName( "unlocking" ) );
+		registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 8, 30, 0 ).setRegistryName( "lockpicking" ) );
+		registry.register( new EnchantmentKey( Rarity.COMMON, 5, 10, 12, 30, 0 ).setRegistryName( "morphing" ) );
+
+		registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "persistance" ) );
+		registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "security" ) );
+		registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "shock" ) );
+		registry.register( new EnchantmentLock( Rarity.COMMON, 1, 1, 8, 30, 0 ).setRegistryName( "trigger" ) );
 	}
 }

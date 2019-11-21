@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.api;
+package io.github.tehstoneman.betterstorage.proxy;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.world.World;

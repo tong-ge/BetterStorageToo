@@ -2,15 +2,14 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.util.UUID;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
-import io.github.tehstoneman.betterstorage.api.tileentity.IKeyLoackable;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockable;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -18,7 +17,10 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -140,60 +142,37 @@ public class ItemLock extends ItemKeyLock implements ILock
 		return "normal";
 	}
 
-	/*
-	 * @Override
-	 * public void onUnlock( ItemStack lock, ItemStack key, ILockable lockable, EntityPlayer player, boolean success )
-	 * {
-	 * if( success )
-	 * return;
-	 * // Power is 2 when a key was used to open the lock, 1 otherwise.
-	 * final EnumLockInteraction interaction = key != null ? EnumLockInteraction.PICK : EnumLockInteraction.OPEN;
-	 * applyEffects( lock, lockable, player, interaction );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void applyEffects( ItemStack lock, ILockable lockable, EntityPlayer player, EnumLockInteraction interaction )
-	 * {
-	 * final int shock = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.shock );
-	 * final int trigger = BetterStorageEnchantment.getLevel( lock, EnchantmentBetterStorage.trigger );
-	 *
-	 * if( shock > 0 )
-	 * {
-	 * final boolean open = interaction == EnumLockInteraction.OPEN;
-	 * final boolean pick = interaction == EnumLockInteraction.PICK;
-	 * int damage = shock;
-	 * if( pick )
-	 * damage *= 3;
-	 * player.attackEntityFrom( DamageSource.MAGIC, damage );
-	 * if( shock >= 3 && !open )
-	 * player.setFire( 3 );
-	 * }
-	 *
-	 * if( trigger > 0 )
-	 * lockable.applyTrigger();
-	 *
-	 * }
-	 */
-
 	@Override
-	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
+	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, PlayerEntity player, boolean success )
 	{
-		return true;
+		if( success )
+			return;
+		// Power is 2 when a key was used to open the lock, 1 otherwise.
+		applyEffects( lock, lockable, player, key.isEmpty() ? EnumLockInteraction.OPEN : EnumLockInteraction.PICK );
 	}
 
 	@Override
 	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, EnumLockInteraction interaction )
 	{
-		// TODO Auto-generated method stub
-		
+		final int shock = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SHOCK, lock );
+
+		if( shock > 0 )
+		{
+			int damage = shock;
+			if( interaction == EnumLockInteraction.PICK )
+				damage *= 3;
+			player.attackEntityFrom( DamageSource.MAGIC, damage );
+			final World world = player.getEntityWorld();
+			world.playSound( (PlayerEntity)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 0.5f,
+					world.rand.nextFloat() * 0.1F + 0.9F );
+			if( shock >= 3 && interaction != EnumLockInteraction.OPEN )
+				player.setFire( 3 );
+		}
 	}
 
 	@Override
-	public void onUnlock( ItemStack lock, ItemStack key, IKeyLoackable lockable, PlayerEntity player, boolean success )
+	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
-		// TODO Auto-generated method stub
-		
+		return true;
 	}
 }
