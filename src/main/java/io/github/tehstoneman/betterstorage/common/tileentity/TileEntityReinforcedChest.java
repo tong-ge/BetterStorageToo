@@ -30,6 +30,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable
 {
@@ -40,6 +43,14 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	public TileEntityReinforcedChest()
 	{
 		super( BetterStorageTileEntityTypes.REINFORCED_CHEST );
+	}
+
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
+			return LazyOptional.empty();
+		return super.getCapability( capability, facing );
 	}
 
 	@Override

@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Changelog file
 - Storage bins
 
 ### Changed
@@ -14,10 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [4.0.0] - 2017-06-20
+## [4.0.0] - 2019-11-23
 ### Added
+- Changelog file
 
 ### Changed
+- Updated for Minecraft 1.14.4
+- New models for reinforced lockers
+- New recipes for lockers
+- Changed how cardboard boxes work to match shulker box
 
 ### Removed
 

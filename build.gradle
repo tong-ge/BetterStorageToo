@@ -16,16 +16,16 @@ apply plugin: 'maven-publish'
 
 archivesBaseName = "BetterStorageToo"
 group = "io.github.thestoneman.betterstorage"
-version = "1.14.4-4.0.0.0-beta3"
+version = "1.14.4-4.0.0.0"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 sourceSets
 {
-	api
+	/*api
 	{
 		java { srcDir 'src/api/java' }
-	}
+	}*/
 	main
 	{
 		java
@@ -34,10 +34,15 @@ sourceSets
 			resources
 			{
 				include '**/**'
-				// exclude '**/**.blend'
+				exclude '**/**.lang'
+				exclude '**/**.blend*'
+				exclude '**/**.obj'
+				exclude '**/**.mtl'
+				exclude '**/**.model'
+				exclude '**/**.xcf'
 			}
-			compileClasspath += sourceSets.api.output
-			runtimeClasspath += sourceSets.api.output
+			//compileClasspath += sourceSets.api.output
+			//runtimeClasspath += sourceSets.api.output
 		}
 	}
 }
@@ -161,21 +166,19 @@ task apiJar(type: Jar, dependsOn: classes) {
     classifier = 'api'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+/*task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
     classifier = 'sources'
-}
+}*/
 
-task deobfJar(type: Jar) {
+/*task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
-}
+}*/
 
 artifacts
 {
-    //archives sourcesJar
     archives apiJar
-    //archives deobfJar
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
