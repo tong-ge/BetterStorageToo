@@ -2,16 +2,15 @@ package io.github.tehstoneman.betterstorage.event;
 
 import java.util.Set;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -27,6 +26,8 @@ public class BetterStorageEventHandler
 	public static void onPlayerBreakSpeed( PlayerEvent.BreakSpeed event )
 	{
 		final BlockState blockState = event.getState();
+		final BlockPos pos = event.getPos();
+
 		if( blockState.hasTileEntity() )
 		{
 			final PlayerEntity player = event.getPlayer();
@@ -46,7 +47,7 @@ public class BetterStorageEventHandler
 					{
 						final int level = Math.max( tool.getHarvestLevel( ToolType.AXE, player, blockState ),
 								tool.getHarvestLevel( ToolType.PICKAXE, player, blockState ) );
-						if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, lockable.getLock() ))
+						if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, lockable.getLock() ) )
 							speed *= 0.1f;
 					}
 					event.setNewSpeed( speed );

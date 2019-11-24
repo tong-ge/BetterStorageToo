@@ -37,6 +37,7 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
@@ -126,6 +127,8 @@ public class RegistryEventHandler
 				.setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
 		registry.register( TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER ).build( null )
 				.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+		registry.register( TileEntityType.Builder.create( TileEntityLockableDoor::new, BetterStorageBlocks.LOCKABLE_DOOR ).build( null )
+				.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.getRegistryName() ) );
 		registry.register( TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX ).build( null )
 				.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getRegistryName() ) );
 	}

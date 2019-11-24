@@ -54,26 +54,17 @@ public class BetterStorage
 
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
-		// FMLJavaModLoadingContext.get().getModEventBus().addListener( ClientEvents::clientStartup );
-
-		// MinecraftForge.EVENT_BUS.register( new ClientEventHandler() );
-		//MinecraftForge.EVENT_BUS.register( new RegistryEventHandler() );
-		//MinecraftForge.EVENT_BUS.register( new BetterStorageEventHandler() );
 	}
 
 	public void setup( FMLCommonSetupEvent event )
 	{
-		ITEM_GROUP.setRelevantEnchantmentTypes( EnchantmentKey.KEY, EnchantmentLock.LOCK );
 		PROXY.setup( event );
+		ITEM_GROUP.setRelevantEnchantmentTypes( EnchantmentKey.KEY, EnchantmentLock.LOCK );
 	}
 
 	/*
 	 * public void preInit( FMLPreInitializationEvent event )
 	 * {
-	 * // Register network messages
-	 * final int messageID = 0;
-	 * simpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( ModInfo.modId );
-	 *
 	 * config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
 	 * config.syncFromFile();
 	 *
@@ -83,33 +74,8 @@ public class BetterStorage
 	 * // Initialize API
 	 * BetterStorageAPI.materials = new MaterialRegistry();
 	 *
-	 * proxy.preInit();
-	 *
-	 * EnchantmentBetterStorage.initialize();
-	 *
 	 * // BetterStorageEntities.register();
 	 * // DungeonLoot.add();
-	 *
-	 * }
-	 */
-
-	/*
-	 * @EventHandler
-	 * public void init( FMLInitializationEvent event )
-	 * {
-	 * // Recipes.add();
-	 *
-	 * proxy.initialize();
-	 * }
-	 */
-
-	/*
-	 * @EventHandler
-	 * public void postInit( FMLPostInitializationEvent event )
-	 * {
-	 * // Addon.postInitializeAll();
-	 *
-	 * proxy.postInit();
 	 * }
 	 */
 }

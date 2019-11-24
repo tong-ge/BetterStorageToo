@@ -5,9 +5,13 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -58,15 +63,15 @@ public class ItemLock extends ItemKeyLock implements ILock
 		final PlayerEntity playerIn = context.getPlayer();
 		final Hand hand = context.getHand();
 		final World worldIn = context.getWorld();
-		final BlockPos pos = context.getPos();
+		BlockPos pos = context.getPos();
 		final ItemStack stack = context.getItem();
 
 		if( hand == Hand.MAIN_HAND )
 		{
-			final BlockState blockState = worldIn.getBlockState( pos );
-			final Block block = blockState.getBlock();
+			BlockState blockState = worldIn.getBlockState( pos );
+			Block block = blockState.getBlock();
 
-			/*if( block == Blocks.IRON_DOOR )
+			if( block == Blocks.IRON_DOOR )
 			{
 				if( blockState.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
 				{
@@ -77,15 +82,15 @@ public class ItemLock extends ItemKeyLock implements ILock
 
 				//@formatter:off
 				worldIn.setBlockState( pos, BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
-						.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
-						.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
-						.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
-						.withProperty( BlockDoor.HALF, EnumDoorHalf.LOWER ) );
+						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
+						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
+						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
+						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
 				worldIn.setBlockState( pos.up(), BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
-						.withProperty( BlockDoor.FACING, blockState.getValue( BlockDoor.FACING ) )
-						.withProperty( BlockDoor.OPEN, blockState.getValue( BlockDoor.OPEN ) )
-						.withProperty( BlockDoor.HINGE, blockState.getValue( BlockDoor.HINGE ) )
-						.withProperty( BlockDoor.HALF, EnumDoorHalf.UPPER ) );
+						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
+						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
+						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
+						.with( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
 				//@formatter:on
 
 				final TileEntity tileEntity = worldIn.getTileEntity( pos );
@@ -97,10 +102,10 @@ public class ItemLock extends ItemKeyLock implements ILock
 						lockable.setLock( stack.copy() );
 						if( !playerIn.isCreative() )
 							playerIn.setHeldItem( hand, ItemStack.EMPTY );
-						return EnumActionResult.SUCCESS;
+						return ActionResultType.SUCCESS;
 					}
 				}
-			}*/
+			}
 
 			final TileEntity tileEntity = worldIn.getTileEntity( pos );
 			if( tileEntity instanceof IKeyLockable )

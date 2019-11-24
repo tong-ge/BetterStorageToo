@@ -13,5 +13,6 @@ public final class BetterStorageTileEntityTypes
 	@ObjectHolder( "reinforced_chest" )		public static TileEntityType< TileEntityReinforcedChest >	REINFORCED_CHEST;
 	@ObjectHolder( "locker" )				public static TileEntityType< TileEntityLocker >			LOCKER;
 	@ObjectHolder( "reinforced_locker" )	public static TileEntityType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
+	@ObjectHolder( "lockable_door" )		public static TileEntityType< TileEntityLockableDoor >		LOCKABLE_DOOR;
 	//@formatter:on
 }

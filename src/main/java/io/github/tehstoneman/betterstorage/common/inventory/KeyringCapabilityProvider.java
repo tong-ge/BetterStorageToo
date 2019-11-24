@@ -37,7 +37,7 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< Compo
 	{
 		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, inventoryHandler );
-		return null;
+		return LazyOptional.empty();
 	}
 
 	protected int getSizeContents()

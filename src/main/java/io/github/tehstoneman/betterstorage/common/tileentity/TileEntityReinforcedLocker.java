@@ -169,7 +169,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	{
 		if( isMain() )
 			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
-		// return powered;
 		return ( (TileEntityReinforcedChest)getMainTileEntity() ).isPowered();
 	}
 

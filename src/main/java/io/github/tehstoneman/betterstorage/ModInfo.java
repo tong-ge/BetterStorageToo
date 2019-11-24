@@ -11,14 +11,12 @@ public final class ModInfo
 	public static final String	CONTAINER_LOCKER_NAME				= "container." + MOD_ID + ".locker";
 	public static final String	CONTAINER_REINFORCED_CHEST_NAME		= "container." + MOD_ID + ".reinforced_chest";
 	public static final String	CONTAINER_REINFORCED_LOCKER_NAME	= "container." + MOD_ID + ".reinforced_locker";
-	public static final String	containerArmorStand					= "container." + MOD_ID + ".armorStand";
 	public static final String	CONTAINER_CARDBOARD_BOX_NAME		= "container." + MOD_ID + ".cardboard_box";
-	public static final String	containerCraftingStation			= "container." + MOD_ID + ".crafting_station";
 	public static final String	containerPresent					= "container." + MOD_ID + ".present";
 
 	public static final String	CONTAINER_KEYRING_NAME				= "container." + MOD_ID + ".keyring";
 
-	public static final String	lockableDoor						= MOD_ID + ".lockableDoor";
+	public static final String	LOCKABLE_DOOR						= MOD_ID + ".lockableDoor";
 
 	public static String modAsset( String name )
 	{

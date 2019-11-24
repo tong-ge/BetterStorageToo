@@ -1,75 +1,85 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-//@SideOnly( Side.CLIENT )
-public class TileEntityLockableDoorRenderer// extends TileEntitySpecialRenderer< TileEntityLockableDoor >
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.state.properties.DoorHingeSide;
+import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.util.Direction;
+
+public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEntityLockableDoor >
 {
-	/*
-	 * @Override
-	 * public void render( TileEntityLockableDoor door, double x, double y, double z, float partialTicks, int destroyStage, float alpha )
-	 * {
-	 * GlStateManager.pushAttrib();
-	 * GlStateManager.pushMatrix();
-	 * 
-	 * GlStateManager.translate( x, y, z );
-	 * GlStateManager.disableRescaleNormal();
-	 * 
-	 * final BlockPos pos = door.getPos();
-	 * final IBlockAccess world = MinecraftForgeClient.getRegionRenderCache( door.getWorld(), pos );
-	 * IBlockState blockState = world.getBlockState( pos );
-	 * IBlockState upperState = world.getBlockState( pos.up() );
-	 * if( upperState.getBlock() == BetterStorageBlocks.LOCKABLE_DOOR )
-	 * blockState = blockState.withProperty( BlockDoor.HINGE, upperState.getValue( BlockDoor.HINGE ) );
-	 * 
-	 * GlStateManager.translate( 0.5, 0.0, 0.5 );
-	 * final EnumFacing facing = blockState.getValue( BlockHorizontal.FACING );
-	 * GlStateManager.rotate( 180 - facing.getHorizontalAngle(), 0, 1, 0 );
-	 * GlStateManager.translate( -0.5, 0.0, -0.5 );
-	 * 
-	 * renderItem( door, partialTicks, destroyStage, blockState );
-	 * 
-	 * GlStateManager.popMatrix();
-	 * GlStateManager.popAttrib();
-	 * }
-	 */
+	@Override
+	public void render( TileEntityLockableDoor tileEntityDoor, double x, double y, double z, float partialTicks, int destroyStage )
+	{
+		final BlockState iblockstate = tileEntityDoor.hasWorld() ? tileEntityDoor.getBlockState()
+				: BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState().with( DoorBlock.FACING, Direction.SOUTH );
+		final DoubleBlockHalf lockertype = iblockstate.has( DoorBlock.HALF ) ? iblockstate.get( DoorBlock.HALF ) : DoubleBlockHalf.LOWER;
+
+		if( lockertype == DoubleBlockHalf.UPPER )
+			return;
+
+		GlStateManager.enableDepthTest();
+		GlStateManager.depthFunc( 515 );
+		GlStateManager.depthMask( true );
+
+		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+
+		GlStateManager.pushMatrix();
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.translatef( (float)x + 0.5f, (float)y + 1.0f, (float)z + 0.5f );
+
+		final float f = iblockstate.get( BlockLocker.FACING ).getHorizontalAngle();
+		if( Math.abs( f ) > 1.0E-5D )
+			GlStateManager.rotatef( -f, 0.0F, 1.0F, 0.0F );
+
+		renderItem( tileEntityDoor, partialTicks, destroyStage, iblockstate );
+
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.popMatrix();
+		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
-	/*
-	 * private void renderItem( TileEntityLockableDoor door, float partialTicks, int destroyStage, IBlockState state )
-	 * {
-	 * final ItemStack itemstack = door.getLock();
-	 * 
-	 * if( itemstack != null )
-	 * {
-	 * final EntityItem entityitem = new EntityItem( door.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-	 * final Item item = entityitem.getItem().getItem();
-	 * GlStateManager.pushMatrix();
-	 * GlStateManager.disableLighting();
-	 * GlStateManager.rotatef( 180.0F, 0.0F, 1.0F, 0.0F );
-	 * 
-	 * final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
-	 * final boolean left = state.getValue( BlockDoor.HINGE ) == EnumHingePosition.LEFT;
-	 * boolean open = state.getValue( BlockDoor.OPEN );
-	 * float openAngle = open ? 90 : 0;
-	 * 
-	 * GlStateManager.translate( left ? -1.5 / 16 : -14.5 / 16, 0, -14.5 / 16 );
-	 * GlStateManager.rotatef( left ? openAngle : -openAngle, 0, 1, 0 );
-	 * GlStateManager.translate( left ? 1.5 / 16 : 14.5 / 16, 0, 14.5 / 16 );
-	 * 
-	 * final double x = left ? -12.5 / 16.0 : -3.5 / 16.0;
-	 * final double y = 14.0 / 16.0;
-	 * final double z = -14.5 / 16.0;
-	 * GlStateManager.translate( x, y, z );
-	 * GlStateManager.scale( 0.5, 0.5, 4.0 );
-	 * 
-	 * GlStateManager.pushAttrib();
-	 * RenderHelper.enableStandardItemLighting();
-	 * itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
-	 * RenderHelper.disableStandardItemLighting();
-	 * GlStateManager.popAttrib();
-	 * 
-	 * GlStateManager.enableLighting();
-	 * GlStateManager.popMatrix();
-	 * }
-	 * }
-	 */
+	private void renderItem( TileEntityLockableDoor tileEntityDoor, float partialTicks, int destroyStage, BlockState state )
+	{
+		final ItemStack itemstack = tileEntityDoor.getLock();
+
+		if( !itemstack.isEmpty() )
+		{
+			final ItemEntity ItemEntity = new ItemEntity( tileEntityDoor.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			GlStateManager.pushMatrix();
+			GlStateManager.disableLighting();
+
+			final float openAngle = state.get( DoorBlock.OPEN ) ? 1.0f : 0.0f;
+
+			final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
+			final boolean open = state.get( DoorBlock.OPEN );
+
+			if( open )
+				GlStateManager.rotated( left ? 90 : -90, 0.0, 1.0, 0.0 );
+			GlStateManager.translated( left ? -0.25 : 0.25, -0.0625, open ? 0.280875 : -0.531625 );
+
+			GlStateManager.scaled( 0.5, 0.5, 0.5 );
+
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			RenderHelper.disableStandardItemLighting();
+
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+		}
+	}
 }
