@@ -102,7 +102,8 @@ public class KeyColorRecipe extends SpecialRecipe
 	@Override
 	public IRecipeSerializer< ? > getSerializer()
 	{
-		return BetterStorageRecipes.COLOR_KEY;
+		//return BetterStorageRecipes.COLOR_KEY;
+		return null;
 	}
 
 	@Override

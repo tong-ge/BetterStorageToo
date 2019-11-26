@@ -12,11 +12,11 @@ apply plugin: 'net.minecraftforge.gradle'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven-publish'
 
 archivesBaseName = "BetterStorageToo"
 group = "io.github.thestoneman.betterstorage"
-version = "1.14.4-4.0.0.0"
+version = "1.14.4-4.0.0.1"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -160,11 +160,11 @@ dependencies
 	//runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
 }
 
-task apiJar(type: Jar, dependsOn: classes) {
+/*task apiJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.output
     include 'io/gethub/tehstoneman/betterstorage/api/**'
     classifier = 'api'
-}
+}*/
 
 /*task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
@@ -176,10 +176,10 @@ task apiJar(type: Jar, dependsOn: classes) {
     classifier = 'deobf'
 }*/
 
-artifacts
+/*artifacts
 {
     archives apiJar
-}
+}*/
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar
