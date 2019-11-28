@@ -1,33 +1,46 @@
 package io.github.tehstoneman.betterstorage.common.item.crafting;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
 
-public class KeyLockRecipe extends ShapedRecipe
+public class KeyLockRecipe extends SpecialRecipe//ShapedRecipe
 {
 	public KeyLockRecipe( ResourceLocation idIn )
 	{
-		super( idIn, "lock", 3, 3,
+		super( idIn );
+		/*super( idIn, "lock", 3, 3,
 				NonNullList.from( Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.EMPTY,
 						Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.fromItems( BetterStorageItems.KEY ),
 						Ingredient.fromTag( Tags.Items.INGOTS_GOLD ), Ingredient.fromTag( Tags.Items.INGOTS_GOLD ),
 						Ingredient.fromTag( Tags.Items.INGOTS_IRON ), Ingredient.fromTag( Tags.Items.INGOTS_GOLD ) ),
-				new ItemStack( BetterStorageItems.LOCK ) );
+				new ItemStack( BetterStorageItems.LOCK ) );*/
+	}
+
+	@Override
+	public boolean matches( CraftingInventory inv, World worldIn )
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public ItemStack getCraftingResult( CraftingInventory inv )
 	{
-		final ItemStack outputStack = super.getCraftingResult( inv );
+		final ItemStack outputStack = ItemStack.EMPTY;
+		//final ItemStack outputStack = super.getCraftingResult( inv );
 
 		if( !outputStack.isEmpty() )
 		{
@@ -66,8 +79,8 @@ public class KeyLockRecipe extends ShapedRecipe
 		return ret;
 	}
 
-	public static class Factory// implements IRecipeFactory
-	{
+	//public static class Factory// implements IRecipeFactory
+	//{
 		/*
 		 * @Override
 		 * public IRecipe parse( JsonContext context, JsonObject json )
@@ -136,13 +149,24 @@ public class KeyLockRecipe extends ShapedRecipe
 		 * return primer;
 		 * }
 		 */
+	//}
+
+	@Override
+	public boolean canFit( int width, int height )
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	/*
-	 * @Override
-	 * public boolean isDynamic()
-	 * {
-	 * return true;
-	 * }
-	 */
+	@Override
+	public IRecipeSerializer< ? > getSerializer()
+	{
+		return BetterStorageRecipes.LOCK;
+	}
+
+	  @Override
+	  public boolean isDynamic()
+	  {
+	  return true;
+	  }
 }

@@ -78,30 +78,33 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 																													// TextFormatting.ITALIC +
 				}
 			}
-			final ItemStackHandler contents = new ItemStackHandler( 9 );
-			contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );
-
-			final int limit = 4;// flagIn.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
-			int count = 0;
-			int more = 0;
-
-			for( int i = 0; i < contents.getSlots(); i++ )
+			if( stack.hasTag() && stack.getTag().contains( "Inventory" ) )
 			{
-				final ItemStack contentStack = contents.getStackInSlot( i );
-				if( !contentStack.isEmpty() )
-					if( count < limit )
-					{
-						count++;
-						final ITextComponent text = contentStack.getDisplayName().deepCopy();
-						text.appendText( " x" ).appendText( String.valueOf( contentStack.getCount() ) );
-						tooltip.add( text );
-					}
-					else
-						more++;
+				final ItemStackHandler contents = new ItemStackHandler( 9 );
+				contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );
+
+				final int limit = 4;// flagIn.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
+				int count = 0;
+				int more = 0;
+
+				for( int i = 0; i < contents.getSlots(); i++ )
+				{
+					final ItemStack contentStack = contents.getStackInSlot( i );
+					if( !contentStack.isEmpty() )
+						if( count < limit )
+						{
+							count++;
+							final ITextComponent text = contentStack.getDisplayName().deepCopy();
+							text.appendText( " x" ).appendText( String.valueOf( contentStack.getCount() ) );
+							tooltip.add( text );
+						}
+						else
+							more++;
+				}
+				if( more > 0 )
+					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
+							.applyTextStyle( TextFormatting.ITALIC ) );
 			}
-			if( more > 0 )
-				tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
-						.applyTextStyle( TextFormatting.ITALIC ) );
 		}
 	}
 

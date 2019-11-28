@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.IDyeableItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;
@@ -96,61 +97,18 @@ public class CardboardColorRecipe extends SpecialRecipe
 	@Override
 	public boolean canFit( int width, int height )
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return width * height >= 2;
 	}
 
 	@Override
 	public IRecipeSerializer< ? > getSerializer()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return BetterStorageRecipes.COLOR_CARDBOARD;
 	}
 
-	/*
-	 * @Override
-	 * public ItemStack getCraftingResult( InventoryCrafting inv )
-	 * {
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public ItemStack getRecipeOutput()
-	 * {
-	 * return ItemStack.EMPTY;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public NonNullList< ItemStack > getRemainingItems( InventoryCrafting inv )
-	 * {
-	 * final NonNullList< ItemStack > nonnulllist = NonNullList.<ItemStack> withSize( inv.getSizeInventory(), ItemStack.EMPTY );
-	 *
-	 * for( int i = 0; i < nonnulllist.size(); ++i )
-	 * {
-	 * final ItemStack itemstack = inv.getStackInSlot( i );
-	 * nonnulllist.set( i, net.minecraftforge.common.ForgeHooks.getContainerItem( itemstack ) );
-	 * }
-	 *
-	 * return nonnulllist;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean isDynamic()
-	 * {
-	 * return true;
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public boolean canFit( int width, int height )
-	 * {
-	 * return width * height >= 2;
-	 * }
-	 */
+	@Override
+	public boolean isDynamic()
+	{
+		return true;
+	}
 }

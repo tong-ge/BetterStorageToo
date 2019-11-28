@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;
@@ -102,8 +103,7 @@ public class KeyColorRecipe extends SpecialRecipe
 	@Override
 	public IRecipeSerializer< ? > getSerializer()
 	{
-		//return BetterStorageRecipes.COLOR_KEY;
-		return null;
+		return BetterStorageRecipes.COLOR_KEY;
 	}
 
 	@Override

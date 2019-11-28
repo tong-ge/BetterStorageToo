@@ -3,7 +3,7 @@ loaderVersion="[28,)"
 issueTrackerURL="https://github.com/TehStoneMan/BetterStorageToo/issues"
 [[mods]]
 modId="betterstorage"
-version="1.14.4-4.0.0.1"
+version="${version}"
 displayName="BetterStorageToo"
 updateJSONURL="http://tehstoneman.github.io/betterstorage.json"
 displayURL="http://minecraft.curseforge.com/projects/betterstoragetoo"

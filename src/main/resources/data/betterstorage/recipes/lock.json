@@ -1,16 +1,17 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "betterstorage:copy_key_shaped",
 	"group": "betterstorage:lock",
 	"pattern":
 	[
 		" g ",
-		"g g",
+		"gkg",
 		"gig"
 	],
 	"mirrored": false,
 	"key":
 	{
 		"g": { "tag": "forge:ingots/gold" },
+		"k": { "item": "betterstorage:key" },
 		"i": { "tag": "forge:ingots/iron" }
 	},
 	"result": { "item": "betterstorage:lock" }

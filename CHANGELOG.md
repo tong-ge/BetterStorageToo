@@ -9,11 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Storage bins
 
 ### Changed
-- Update to Minecraft 1.14.3
 
 ### Removed
 
-## [4.0.0] - 2019-11-23
+## [4.0.0.2] - 2019-11-28
+### Added
+- Fixed versions of recipes that were previously causing errors on joining multiplayer servers
+
+### Changed
+- Fixed tooltip error when looking at cardboard box item with no inventory
+
+## [4.0.0.1] - 2019-11-25
+### Changed
+- Fix for server with opening keyings
+
+### Removed
+- [Temporary] Some recipes related to errors on joining multiplayer servers
+
+## [4.0.0.0] - 2019-11-23
 ### Added
 - Changelog file
 
@@ -22,8 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New models for reinforced lockers
 - New recipes for lockers
 - Changed how cardboard boxes work to match shulker box
-
-### Removed
 
 ## [3.0.0.2] - 2018-10-03
 ### Changed

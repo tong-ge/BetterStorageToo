@@ -72,7 +72,6 @@ public class EnchantmentKey extends Enchantment
 	@Override
 	public boolean canApplyAtEnchantingTable( ItemStack stack )
 	{
-		BetterStorage.LOGGER.info( "canApplyAtEnchantingTable ==== {} ====", stack );
 		if( stack.getItem() instanceof IKey )
 		{
 			final IKey key = (IKey)stack.getItem();
@@ -84,7 +83,6 @@ public class EnchantmentKey extends Enchantment
 	@Override
 	public boolean isTreasureEnchantment()
 	{
-		BetterStorage.LOGGER.info( "isTreasureEnchantment ==== {} ====", super.isTreasureEnchantment() );
 		return super.isTreasureEnchantment();
 	}
 }

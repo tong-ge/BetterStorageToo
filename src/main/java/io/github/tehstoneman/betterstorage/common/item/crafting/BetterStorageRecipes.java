@@ -13,10 +13,10 @@ import net.minecraftforge.registries.ObjectHolder;
 public final class BetterStorageRecipes
 {
 	//@formatter:off
-	//@ObjectHolder( "copy_key_shaped" )			public static IRecipeSerializer< CopyKeyRecipe >		COPY_KEY;
-	//@ObjectHolder( "lock_shaped" )				public static IRecipeSerializer< KeyLockRecipe >		LOCK;
-	//@ObjectHolder( "color_key_special" )		public static IRecipeSerializer< KeyColorRecipe >		COLOR_KEY;
-	//@ObjectHolder( "color_cardboard_special" )	public static IRecipeSerializer< CardboardColorRecipe >	COLOR_CARDBOARD;
+	@ObjectHolder( "copy_key_shaped" )			public static IRecipeSerializer< CopyKeyRecipe >		COPY_KEY;
+	@ObjectHolder( "lock_shaped" )				public static IRecipeSerializer< KeyLockRecipe >		LOCK;
+	@ObjectHolder( "color_key_special" )		public static IRecipeSerializer< KeyColorRecipe >		COLOR_KEY;
+	@ObjectHolder( "color_cardboard_special" )	public static IRecipeSerializer< CardboardColorRecipe >	COLOR_CARDBOARD;
 	//@formatter:on
 
 	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
@@ -27,10 +27,10 @@ public final class BetterStorageRecipes
 		{
 			final IForgeRegistry< IRecipeSerializer< ? > > registry = event.getRegistry();
 
-			//registry.register( new SpecialRecipeSerializer<>( CopyKeyRecipe::new ).setRegistryName( "copy_key_shaped" ) );
-			//registry.register( new SpecialRecipeSerializer<>( KeyLockRecipe::new ).setRegistryName( "lock_shaped" ) );
-			//registry.register( new SpecialRecipeSerializer<>( KeyColorRecipe::new ).setRegistryName( "color_key_special" ) );
-			//registry.register( new SpecialRecipeSerializer<>( CardboardColorRecipe::new ).setRegistryName( "color_cardboard_special" ) );
+			registry.register( new CopyKeyRecipe.Serializer().setRegistryName( "copy_key_shaped" ) );
+			registry.register( new SpecialRecipeSerializer<>( KeyLockRecipe::new ).setRegistryName( "lock_shaped" ) );
+			registry.register( new SpecialRecipeSerializer<>( KeyColorRecipe::new ).setRegistryName( "color_key_special" ) );
+			registry.register( new SpecialRecipeSerializer<>( CardboardColorRecipe::new ).setRegistryName( "color_cardboard_special" ) );
 		}
 	}
 
