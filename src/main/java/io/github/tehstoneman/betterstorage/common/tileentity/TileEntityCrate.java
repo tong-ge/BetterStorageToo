@@ -17,6 +17,7 @@ import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.inventory.Region;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.UpdateCrateMessage;
 import io.github.tehstoneman.betterstorage.utils.BlockUtils;
 import net.minecraft.block.BlockState;
@@ -74,6 +75,8 @@ public class TileEntityCrate extends TileEntityContainer
 	{
 		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY )
 		{
+			if( facing != null && !BetterStorageConfig.COMMON.crateAllowAutomation.get() )
+				return LazyOptional.empty();
 			final LazyOptional< IItemHandler > crateHandler = LazyOptional.of( () -> getCrateStackHandler() );
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty( capability, crateHandler );
 		}

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -216,6 +217,6 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	@Override
 	public PushReaction getPushReaction( BlockState state )
 	{
-		return PushReaction.DESTROY;
+		return BetterStorageConfig.COMMON.cardboardBoxPistonBreakable.get() ? PushReaction.DESTROY : PushReaction.BLOCK;
 	}
 }

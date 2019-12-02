@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -49,13 +50,11 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return customName != null ? customName : new TranslationTextComponent( ModInfo.CONTAINER_CARDBOARD_BOX_NAME );
 	}
 
-	/*
-	 * @Override
-	 * public int getRows()
-	 * {
-	 * return ItemBlockCardboardBox.getRows();
-	 * }
-	 */
+	@Override
+	public int getRows()
+	{
+		return BetterStorageConfig.COMMON.cardboardBoxRows.get();
+	}
 
 	/*
 	 * @Override

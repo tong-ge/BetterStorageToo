@@ -77,9 +77,6 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		final TileEntityConnectable connectable = getConnectedTileEntity();
 		if( connectable != null )
 			return connectable;
-		if( BetterStorageConfig.COMMON.enableWarningMessages.get() )
-			BetterStorage.LOGGER.warn( "getConnectedTileEntity() returned null in getMainTileEntity(). " + "Location: {},{},{}", pos.getX(),
-					pos.getY(), pos.getZ() );
 		return this;
 	}
 

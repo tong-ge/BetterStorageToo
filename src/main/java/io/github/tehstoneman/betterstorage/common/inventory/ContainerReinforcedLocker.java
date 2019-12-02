@@ -53,8 +53,8 @@ public class ContainerReinforcedLocker extends Container
 			addSlot( new SlotItemHandler( inventoryContainer, i, x, y ) );
 		}
 
-		final int offsetX = ( columns - 9 ) / 2 * 18;
-		final int offsetY = 17 + rows * 18;
+		final int offsetX = ( columns * 18 - 162 ) / 2;
+		final int offsetY = rows * 18 + 18;
 
 		for( int i = 0; i < 27; i++ )
 		{

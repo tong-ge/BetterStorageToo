@@ -2,9 +2,7 @@ package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,10 +11,9 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChest >
 {
-	private final int	columns;
-	private final int	rows;
-	private final int	offsetX;
-	private final int	offsetY;
+	private final int	columns, rows;
+	private final int	x1, x2, x3, x4;
+	private final int	y1;
 
 	public GuiReinforcedChest( ContainerReinforcedChest container, PlayerInventory playerInventory, ITextComponent title )
 	{
@@ -28,8 +25,14 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 		xSize = Math.max( 14 + columns * 18, 176 );
 		ySize = 114 + rows * 18;
 
-		offsetX = Math.max( ( xSize - 176  ) / 2, 0 );
-		offsetY = 17 + rows * 18;
+		// Calculate horizontal texture slices
+		x1 = columns * 18 + 7;
+		x2 = ( xSize - 176 ) / 2;
+		x3 = xSize - x2;
+		x4 = 248 - x2;
+
+		// Calculate vertical texture slices
+		y1 = rows * 18 + 17;
 	}
 
 	protected ResourceLocation getResource()
@@ -51,7 +54,7 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
 	{
 		font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
-		font.drawString( playerInventory.getDisplayName().getFormattedText(), offsetX + 8, offsetY + 2, 0x404040 );
+		font.drawString( playerInventory.getDisplayName().getFormattedText(), x2 + 8, y1 + 2, 0x404040 );
 	}
 
 	@Override
@@ -60,7 +63,15 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 		minecraft.getTextureManager().bindTexture( getResource() );
 		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 
-		blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
-		blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
+		//@formatter:off
+		// Chest inventory
+		blit( guiLeft,      guiTop,   0, 0, x1, y1 );
+		blit( guiLeft + x1, guiTop, 241, 0,  7, y1 );
+
+		// Player inventory
+		blit( guiLeft,      guiTop + y1,  0, 125,  x2, 17 );
+		blit( guiLeft + x2, guiTop + y1, 36, 125, 176, 97 );
+		blit( guiLeft + x3, guiTop + y1, x4, 125,  x2, 17 );
+		//@formatter:on
 	}
 }

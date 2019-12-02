@@ -5,6 +5,7 @@ import java.util.Set;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,21 +38,24 @@ public class BetterStorageEventHandler
 			{
 				final IKeyLockable lockable = (IKeyLockable)tileEntity;
 				if( lockable != null && lockable.isLocked() )
-				{
-					final ItemStack tool = player.getHeldItemMainhand();
-					final Set< ToolType > toolTypes = tool.getToolTypes();
-					float speed = event.getOriginalSpeed() * 0.2f;
-					if( !( toolTypes.contains( ToolType.AXE ) || toolTypes.contains( ToolType.PICKAXE ) ) )
-						speed *= 0.1f;
-					else
+					if( BetterStorageConfig.COMMON.lockBreakable.get() )
 					{
-						final int level = Math.max( tool.getHarvestLevel( ToolType.AXE, player, blockState ),
-								tool.getHarvestLevel( ToolType.PICKAXE, player, blockState ) );
-						if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, lockable.getLock() ) )
+						final ItemStack tool = player.getHeldItemMainhand();
+						final Set< ToolType > toolTypes = tool.getToolTypes();
+						float speed = event.getOriginalSpeed() * 0.2f;
+						if( !( toolTypes.contains( ToolType.AXE ) || toolTypes.contains( ToolType.PICKAXE ) ) )
 							speed *= 0.1f;
+						else
+						{
+							final int level = Math.max( tool.getHarvestLevel( ToolType.AXE, player, blockState ),
+									tool.getHarvestLevel( ToolType.PICKAXE, player, blockState ) );
+							if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, lockable.getLock() ) )
+								speed *= 0.1f;
+						}
+						event.setNewSpeed( speed );
 					}
-					event.setNewSpeed( speed );
-				}
+					else if( event.isCancelable() )
+						event.setCanceled( true );
 			}
 		}
 	}

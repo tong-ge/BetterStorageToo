@@ -1,51 +1,13 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DirectionalPlaceContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class ServerProxy implements IProxy
 {
 	@Override
 	public void setup( FMLCommonSetupEvent event )
-	{
-		DeferredWorkQueue.runLater( () ->
-		{
-			DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX, new OptionalDispenseBehavior()
-			{
-				/**
-				 * Dispense the specified stack, play the dispense sound and spawn particles.
-				 */
-				@Override
-				protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
-				{
-					successful = false;
-					final Item item = stack.getItem();
-					if( item instanceof BlockItem )
-					{
-						final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
-						final BlockPos blockpos = source.getBlockPos().offset( direction );
-						final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
-						successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack,
-								direction1 ) ) == ActionResultType.SUCCESS;
-					}
-
-					return stack;
-				}
-			} );
-		} );
-	}
+	{}
 
 	@Override
 	public World getClientWorld()

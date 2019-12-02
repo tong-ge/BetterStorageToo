@@ -18,6 +18,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableD
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;

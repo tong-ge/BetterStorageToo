@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.common.item.BlockItemBetterStorage;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -78,7 +79,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 																													// TextFormatting.ITALIC +
 				}
 			}
-			if( stack.hasTag() && stack.getTag().contains( "Inventory" ) )
+			if( BetterStorageConfig.COMMON.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
 			{
 				final ItemStackHandler contents = new ItemStackHandler( 9 );
 				contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );
@@ -129,8 +130,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 	/** Returns how many times cardboard boxes can be reused. */
 	public static int getMaxUses()
 	{
-		return 4;
-		// return BetterStorage.config.cardboardBoxUses;
+		return BetterStorageConfig.COMMON.cardboardBoxUses.get();
 	}
 
 	// Cardboard items

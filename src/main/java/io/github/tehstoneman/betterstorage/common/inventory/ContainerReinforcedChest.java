@@ -5,7 +5,6 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
@@ -54,8 +53,8 @@ public class ContainerReinforcedChest extends Container
 			addSlot( new SlotItemHandler( inventoryContainer, i, x, y ) );
 		}
 
-		final int offsetX = ( columns - 9 ) / 2 * 18;
-		final int offsetY = 17 + rows * 18;
+		final int offsetX = ( columns * 18 - 162 ) / 2;
+		final int offsetY = rows * 18 + 18;
 
 		for( int i = 0; i < 27; i++ )
 		{
