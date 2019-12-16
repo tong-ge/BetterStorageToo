@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import net.minecraft.enchantment.Enchantment;
@@ -68,7 +67,7 @@ public class EnchantmentLock extends Enchantment
 		return stack.getItem() instanceof ILock ? true : super.canApply( stack );
 	}
 
-	/*@Override
+	@Override
 	public boolean canApplyAtEnchantingTable( ItemStack stack )
 	{
 		if( stack.getItem() instanceof ILock )
@@ -77,5 +76,5 @@ public class EnchantmentLock extends Enchantment
 			return lock.canApplyEnchantment( stack, this );
 		}
 		return stack.getItem() instanceof ILock;
-	}*/
+	}
 }

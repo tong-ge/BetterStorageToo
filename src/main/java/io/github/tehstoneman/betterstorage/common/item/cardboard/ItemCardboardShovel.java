@@ -17,31 +17,6 @@ public class ItemCardboardShovel extends ShovelItem implements ICardboardItem
 		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().group( ItemGroup.TOOLS ) );
 	}
 
-	/*
-	 * public ItemCardboardShovel()
-	 * {
-	 * super( ItemCardboardSheet.toolMaterial );
-	 * this.name = "cardboard_shovel";
-	 * }
-	 */
-
-	/*
-	 * public void register()
-	 * {
-	 * setUnlocalizedName( ModInfo.modId + "." + name );
-	 * setRegistryName( name );
-	 * //GameRegistry.register( this );
-	 * }
-	 */
-
-	/*
-	 * @SideOnly( Side.CLIENT )
-	 * public void registerItemModels()
-	 * {
-	 * ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
-	 * }
-	 */
-
 	// Makes sure cardboard tools don't get destroyed,
 	// and are ineffective when durability is at 0.
 	/*

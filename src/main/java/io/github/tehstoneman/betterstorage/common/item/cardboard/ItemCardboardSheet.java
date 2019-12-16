@@ -7,12 +7,6 @@ import net.minecraft.item.ItemStack;
 
 public class ItemCardboardSheet extends ItemBetterStorage
 {
-	/*
-	 * public static final ToolMaterial toolMaterial = EnumHelper.addToolMaterial( "CARDBOARD", 0, 64, 2.0F, -0.5F, 0 );
-	 * public static final ArmorMaterial armorMaterial = EnumHelper.addArmorMaterial( "CARDBOARD", ModInfo.modId + ":cardboard", 5,
-	 * new int[] { 1, 2, 2, 1 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F );
-	 */
-
 	public ItemCardboardSheet()
 	{
 		super( "cardboard_sheet", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );

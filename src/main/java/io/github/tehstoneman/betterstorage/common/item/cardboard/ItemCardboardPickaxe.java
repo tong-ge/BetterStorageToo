@@ -16,31 +16,6 @@ public class ItemCardboardPickaxe extends PickaxeItem implements ICardboardItem
 		super( ItemTier.WOOD, 1, -2.8F, new Item.Properties().group( ItemGroup.TOOLS ) );
 	}
 
-	/*
-	 * public ItemCardboardPickaxe()
-	 * {
-	 * super( ItemCardboardSheet.toolMaterial );
-	 * this.name = "cardboard_pickaxe";
-	 * }
-	 */
-
-	/*
-	 * public void register()
-	 * {
-	 * setUnlocalizedName( ModInfo.modId + "." + name );
-	 * setRegistryName( name );
-	 * //GameRegistry.register( this );
-	 * }
-	 */
-
-	/*
-	 * @SideOnly( Side.CLIENT )
-	 * public void registerItemModels()
-	 * {
-	 * ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
-	 * }
-	 */
-
 	// Makes sure cardboard tools don't get destroyed,
 	// and are ineffective when durability is at 0.
 	/*

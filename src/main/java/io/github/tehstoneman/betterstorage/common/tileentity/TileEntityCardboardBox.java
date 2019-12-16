@@ -23,25 +23,6 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public boolean	destroyed	= false;
 	public int		color		= -1;
 
-	/*
-	 * protected boolean canPickUp()
-	 * {
-	 * return uses >= 0 || ItemBlockCardboardBox.getUses() == 0;
-	 * }
-	 */
-
-	protected void onItemDropped( ItemStack stack )
-	{
-		/*
-		 * if( ItemBlockCardboardBox.getUses() > 0 )
-		 * StackUtils.set( stack, uses, "uses" );
-		 */
-		/*
-		 * if( getCustomTitle() != null )
-		 * stack.setDisplayName( getCustomTitle() );
-		 */
-	}
-
 	// TileEntityContainer stuff
 
 	@Override
@@ -55,68 +36,6 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	{
 		return BetterStorageConfig.COMMON.cardboardBoxRows.get();
 	}
-
-	/*
-	 * @Override
-	 * public void onBlockPlaced( EntityLivingBase player, ItemStack stack )
-	 * {
-	 * super.onBlockPlaced( player, stack );
-	 * uses = ItemBlockCardboardBox.getUses();
-	 *
-	 * // If the cardboard box item has items, set the container contents to them.
-	 * if( stack.hasTagCompound() )
-	 * {
-	 * final NBTTagCompound compound = stack.getTagCompound();
-	 * if( compound.hasKey( "Inventory" ) )
-	 * inventory.deserializeNBT( compound.getCompoundTag( "Inventory" ) );
-	 * if( uses > 0 && compound.hasKey( "uses" ) )
-	 * uses = Math.min( uses, compound.getInteger( "uses" ) );
-	 * if( compound.hasKey( "color" ) )
-	 * color = compound.getInteger( "color" );
-	 * }
-	 * markDirty();
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * public void onBlockDestroyed()
-	 * {
-	 * if( !canPickUp() || destroyed )
-	 * return;
-	 *
-	 * final boolean empty = isEmpty( inventory );
-	 * if( !empty )
-	 * {
-	 * if( uses >= 0 )
-	 * uses--;
-	 * if( !canPickUp() )
-	 * {
-	 * destroyed = true;
-	 * dropContents();
-	 * return;
-	 * }
-	 * }
-	 *
-	 * // Don't drop an empty cardboard box in creative.
-	 * if( !empty || !brokenInCreative )
-	 * {
-	 * final ItemStack stack = new ItemStack( BetterStorageBlocks.CARDBOARD_BOX );
-	 * final NBTTagCompound compound = new NBTTagCompound();
-	 *
-	 * compound.setInt( "uses", uses );
-	 * if( color >= 0 )
-	 * compound.setInt( "color", color );
-	 *
-	 * if( !empty )
-	 * compound.setTag( "Inventory", inventory.serializeNBT() );
-	 *
-	 * // stack.setTagCompound( compound );
-	 * final EntityItem entityItem = new EntityItem( world, pos.getX(), pos.getY(), pos.getZ(), stack );
-	 * world.spawnEntity( entityItem );
-	 * }
-	 * }
-	 */
 
 	public int getColor()
 	{

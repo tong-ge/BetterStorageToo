@@ -78,14 +78,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	 * =====================
 	 */
 
-	/*
-	 * public EnumConnectedType getChestType()
-	 * {
-	 * final IBlockState blockState = hasWorld() ? getBlockState() : BetterStorageBlocks.REINFORCED_CHEST.getDefaultState();
-	 * return blockState.has( BlockLockable.TYPE ) ? blockState.get( BlockLockable.TYPE ) : EnumConnectedType.SINGLE;
-	 * }
-	 */
-
 	@Override
 	public BlockPos getConnected()
 	{
@@ -157,21 +149,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 				lidAngle = 0.0F;
 		}
 	}
-
-	/*
-	 * @Override
-	 * public void setAttachmentPosition()
-	 * {
-	 * // final double x = !isConnected() ? 8 : getOrientation() == EnumFacing.WEST || getOrientation() == EnumFacing.SOUTH ? 0 : 16;
-	 * // lockAttachment.setBox( x, 6.5, 0.5, 7, 7, 1 );
-	 * }
-	 */
-
-	/*
-	 * =========
-	 * ITickable
-	 * =========
-	 */
 
 	/*
 	 * =========
@@ -246,19 +223,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	{
 		if( isMain() )
 			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
-		// return powered;
 		return ( (TileEntityReinforcedChest)getMainTileEntity() ).isPowered();
 	}
-
-	/*
-	 * @Override
-	 * public void closeInventory( PlayerEntity player )
-	 * {
-	 * super.closeInventory( player );
-	 * if( isPowered() )
-	 * setPowered( numPlayersUsing > 0 );
-	 * }
-	 */
 
 	/**
 	 * Sets if the chest is emitting redstone.
@@ -275,40 +241,13 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		this.powered = powered;
 
 		final Block block = getBlockState().getBlock();
-		// Schedule a block update to turn the redstone signal back off.
-		// if( powered ) getWorld().scheduleBlockUpdate( pos, block, 10, 1 );
 
 		// Notify nearby blocks
 		getWorld().notifyNeighborsOfStateChange( pos, block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 0 ), block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( -1, 0, 0 ), block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 1, 0 ), block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, -1, 0 ), block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, 1 ), block );
-		// this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, -1 ), block );
 
 		// Notify nearby blocks of adjacent chest
 		if( isConnected() )
 			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
-
-		/*
-		 * if( isConnected() && getConnected() == EnumFacing.EAST )
-		 * {
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 2, 0, 0 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 1, 0 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, -1, 0 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 1 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, -1 ), block );
-		 * }
-		 * if( isConnected() && getConnected() == EnumFacing.SOUTH )
-		 * {
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 0, 2 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 1, 0, 1 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( -1, 0, 1 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, 1, 1 ), block );
-		 * this.getWorld().notifyNeighborsOfStateChange( pos.add( 0, -1, 1 ), block );
-		 * }
-		 */
 	}
 
 	/*

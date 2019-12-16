@@ -15,32 +15,6 @@ public class ItemCardboardAxe extends AxeItem implements ICardboardItem
 		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().group( ItemGroup.TOOLS ) );
 	}
 
-	/*
-	 * public ItemCardboardAxe()
-	 * {
-	 * super( ToolMaterial.WOOD );
-	 * //super( ItemCardboardSheet.toolMaterial );
-	 * this.name = "cardboard_axe";
-	 * }
-	 */
-
-	/*
-	 * public void register()
-	 * {
-	 * setUnlocalizedName( ModInfo.modId + "." + name );
-	 * setRegistryName( name );
-	 * GameRegistry.register( this );
-	 * }
-	 */
-
-	/*
-	 * @SideOnly( Side.CLIENT )
-	 * public void registerItemModels()
-	 * {
-	 * ModelLoader.setCustomModelResourceLocation( this, 0, new ModelResourceLocation( getRegistryName(), "inventory" ) );
-	 * }
-	 */
-
 	// Makes sure cardboard tools don't get destroyed,
 	// and are ineffective when durability is at 0.
 	/*

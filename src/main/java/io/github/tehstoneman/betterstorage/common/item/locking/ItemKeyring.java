@@ -58,27 +58,6 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 		return new ActionResult( ActionResultType.SUCCESS, stack );
 	}
 
-	/*
-	 * @Override
-	 * public EnumActionResult onItemUse( EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
-	 * float hitZ )
-	 * {
-	 * if( hand == EnumHand.MAIN_HAND )
-	 * {
-	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
-	 * if( tileEntity instanceof TileEntityLockable )
-	 * {
-	 * final TileEntityLockable lockable = (TileEntityLockable)tileEntity;
-	 * if( unlock( playerIn.getHeldItem( hand ), lockable.getLock(), false ) )
-	 * lockable.useUnlocked( playerIn );
-	 * else
-	 * ( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, EnumLockInteraction.PICK );
-	 * }
-	 * }
-	 * return super.onItemUse( playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ );
-	 * }
-	 */
-
 	// IKey implementation
 
 	@Override

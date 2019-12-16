@@ -165,18 +165,6 @@ public class TileEntityCrate extends TileEntityContainer
 						for( final ItemStack stack : overflow )
 							if( !stack.isEmpty() )
 								newHandler.addItems( stack );
-
-					/*
-					 * // Add all crates above the base crate.
-					 * while( true )
-					 * {
-					 * newCrate = (TileEntityCrate)getWorld().getTileEntity( newCrate.getPos().up() );
-					 * if( newCrate == null )
-					 * break;
-					 * newHandler.addCrate( newCrate );
-					 * numCrates++;
-					 * }
-					 */
 				}
 				notifyRegionUpdate( newHandler.getRegion(), newHandler.getPileID() );
 			}
@@ -276,15 +264,6 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	// Comparator related
-
-	@Override
-	public int getComparatorSignalStrength()
-	{
-		if( getWorld().isRemote )
-			return 0;
-		final CrateStackHandler handler = getCrateStackHandler();
-		return handler.getOccupiedSlots() > 0 ? 1 + handler.getOccupiedSlots() * 14 / handler.getCapacity() : 0;
-	}
 
 	@Override
 	public void markDirty()
@@ -407,13 +386,6 @@ public class TileEntityCrate extends TileEntityContainer
 			region.expandToContain( crate );
 		if( region.width() > MAX_PER_SIDE || region.height() > MAX_PER_SIDE || region.depth() > MAX_PER_SIDE )
 			return false;
-
-		// Rule 4 - New region must only contain crates
-		/*
-		 * for( final BlockPos blockPos : BlockUtils.getAllInBox( region.posMin, region.posMax ) )
-		 * if( getCrateAt( world, blockPos ) == null )
-		 * return false;
-		 */
 
 		// All rules passed - Add crate to pile
 		for( final BlockPos blockPos : BlockUtils.getAllInBox( region.posMin, region.posMax ) )
