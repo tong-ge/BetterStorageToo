@@ -1,6 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.enchantment;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantment.Rarity;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder( ModInfo.MOD_ID )
@@ -17,40 +23,22 @@ public class EnchantmentBetterStorage
 	@ObjectHolder( "trigger" )		public static EnchantmentLock	TRIGGER;
 	//@formatter:on
 
-	public static void initialize()
+	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
+	private static class Register
 	{
-		// Add key enchantments
-		/*
-		 * if( BetterStorage.config.keyEnabled )
-		 * {
-		 * if( BetterStorage.config.enchUnlockingEnabled )
-		 * GameRegistry.register( unlocking, new BetterStorageResource( "unlocking" ) );
-		 * if( BetterStorage.config.enchLockpickingEnabled )
-		 * GameRegistry.register( lockpicking, new BetterStorageResource( "lockpicking" ) );
-		 * if( BetterStorage.config.enchMorphingEnabled )
-		 * GameRegistry.register( morphing, new BetterStorageResource( "morphing" ) );
-		 *
-		 * if( BetterStorage.config.enchLockpickingEnabled && BetterStorage.config.enchMorphingEnabled )
-		 * {
-		 * lockpicking.setIncompatible( morphing );
-		 * morphing.setIncompatible( lockpicking );
-		 * }
-		 * }
-		 */
+		@SubscribeEvent
+		public static void onEnchantmentRegistry( final RegistryEvent.Register< Enchantment > event )
+		{
+			final IForgeRegistry< Enchantment > registry = event.getRegistry();
 
-		// Add lock enchantments
-		/*
-		 * if( BetterStorage.config.lockEnabled )
-		 * {
-		 * if( BetterStorage.config.enchPersistanceEnabled )
-		 * GameRegistry.register( persistance, new BetterStorageResource( "persistance" ) );
-		 * if( BetterStorage.config.enchSecurityEnabled )
-		 * GameRegistry.register( security, new BetterStorageResource( "security" ) );
-		 * if( BetterStorage.config.enchShockEnabled )
-		 * GameRegistry.register( shock, new BetterStorageResource( "shock" ) );
-		 * if( BetterStorage.config.enchTriggerEnabled )
-		 * GameRegistry.register( trigger, new BetterStorageResource( "trigger" ) );
-		 * }
-		 */
+			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 10, 30, 0 ).setRegistryName( "unlocking" ) );
+			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 8, 30, 0 ).setRegistryName( "lockpicking" ) );
+			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 10, 12, 30, 0 ).setRegistryName( "morphing" ) );
+
+			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "persistance" ) );
+			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "security" ) );
+			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "shock" ) );
+			registry.register( new EnchantmentLock( Rarity.COMMON, 1, 1, 8, 30, 0 ).setRegistryName( "trigger" ) );
+		}
 	}
 }

@@ -6,12 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
-import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItemGroup;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import io.github.tehstoneman.betterstorage.event.BetterStorageEventHandler;
-import io.github.tehstoneman.betterstorage.event.RegistryEventHandler;
 import io.github.tehstoneman.betterstorage.network.ModNetwork;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
 import io.github.tehstoneman.betterstorage.proxy.IProxy;
@@ -27,9 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -94,17 +87,8 @@ public class BetterStorage
 	/*
 	 * public void preInit( FMLPreInitializationEvent event )
 	 * {
-	 * config = new BetterStorageConfig( event.getSuggestedConfigurationFile() );
-	 * config.syncFromFile();
-	 *
 	 * // Addon.initialize();
 	 * // Addon.setupConfigsAll();
-	 *
-	 * // Initialize API
-	 * BetterStorageAPI.materials = new MaterialRegistry();
-	 *
-	 * // BetterStorageEntities.register();
-	 * // DungeonLoot.add();
 	 * }
 	 */
 }

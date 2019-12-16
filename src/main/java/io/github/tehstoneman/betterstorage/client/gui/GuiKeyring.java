@@ -10,15 +10,9 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiKeyring extends ContainerScreen< ContainerKeyring >
 {
-	public final ContainerKeyring	container;
-	private final int				ySize;
-
 	public GuiKeyring( ContainerKeyring container, PlayerInventory playerInventory, ITextComponent title )
 	{
 		super( container, playerInventory, title );
-
-		this.container = container;
-
 		ySize = 131;
 	}
 

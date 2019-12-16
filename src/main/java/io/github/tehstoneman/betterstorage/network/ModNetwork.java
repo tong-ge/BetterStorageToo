@@ -14,11 +14,12 @@ public class ModNetwork
 	{
 		final SimpleChannel channel = NetworkRegistry.ChannelBuilder.named( CHANEL_NAME ).clientAcceptedVersions( version -> true )
 				.serverAcceptedVersions( version -> true ).networkProtocolVersion( () -> NETWORK_VERSION ).simpleChannel();
-		
+
 		int index = 1;
 
-		channel.messageBuilder( UpdateCrateMessage.class, index++ ).decoder( UpdateCrateMessage::decode )
-				.encoder( UpdateCrateMessage::encode ).consumer( UpdateCrateMessage::handle ).add();
+		channel.messageBuilder( UpdateCrateMessage.class, index++ ).decoder( UpdateCrateMessage::decode ).encoder( UpdateCrateMessage::encode )
+				.consumer( UpdateCrateMessage::handle ).add();
 
 		return channel;
-	}}
+	}
+}

@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
+import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardArmor;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardHoe;
@@ -12,6 +15,13 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder( ModInfo.MOD_ID )
@@ -40,4 +50,44 @@ public final class BetterStorageItems
 	// public static ItemDrinkingHelmet drinkingHelmet;
 	// public static ItemPresentBook PRESENT_BOOK;
 	//@formatter:on
+
+	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
+	private static class Register
+	{
+		@SubscribeEvent
+		public static void onItemsRegistry( final RegistryEvent.Register< Item > event )
+		{
+			final IForgeRegistry< Item > registry = event.getRegistry();
+
+			registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
+			registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
+			registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+			registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+
+			registry.register( new ItemKey().setRegistryName( "key" ) );
+			registry.register( new ItemKeyring().setRegistryName( "keyring" ) );
+			registry.register( new ItemMasterKey().setRegistryName( "master_key" ) );
+			registry.register( new ItemLock().setRegistryName( "lock" ) );
+
+			registry.register( new ItemCardboardSheet().setRegistryName( ModInfo.MOD_ID, "cardboard_sheet" ) );
+
+			registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX ).setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
+
+			registry.register( new ItemCardboardSword().setRegistryName( ModInfo.MOD_ID, "cardboard_sword" ) );
+			registry.register( new ItemCardboardShovel().setRegistryName( ModInfo.MOD_ID, "cardboard_shovel" ) );
+			registry.register( new ItemCardboardPickaxe().setRegistryName( ModInfo.MOD_ID, "cardboard_pickaxe" ) );
+			registry.register( new ItemCardboardAxe().setRegistryName( ModInfo.MOD_ID, "cardboard_axe" ) );
+			registry.register( new ItemCardboardHoe().setRegistryName( ModInfo.MOD_ID, "cardboard_hoe" ) );
+
+			registry.register( new ItemCardboardArmor( EquipmentSlotType.HEAD ).setRegistryName( "cardboard_helmet" ) );
+			registry.register( new ItemCardboardArmor( EquipmentSlotType.CHEST ).setRegistryName( "cardboard_chestplate" ) );
+			registry.register( new ItemCardboardArmor( EquipmentSlotType.LEGS ).setRegistryName( "cardboard_leggings" ) );
+			registry.register( new ItemCardboardArmor( EquipmentSlotType.FEET ).setRegistryName( "cardboard_boots" ) );
+
+			registry.register( new BlockItem( BetterStorageBlocks.BLOCK_FLINT, new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
+					.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getRegistryName() ) );
+		}
+	}
 }
