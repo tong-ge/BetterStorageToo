@@ -3,25 +3,63 @@ package io.github.tehstoneman.betterstorage.api;
 import java.util.List;
 
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Interface used to describe an item that can be dyed.
+ * 
+ * @author TehStoneMan
+ *
+ */
 public interface IDyeableItem
 {
-	/** Returns if the item can be dyed. */
-	boolean canDye( ItemStack stack );
+	/**
+	 * Returns if the {@link ItemStack} can be dyed.
+	 *
+	 * @param itemStack
+	 *            The {@link ItemStack} to check.
+	 * @return True if this {@link ItemStack} can be dyed.
+	 */
+	boolean canDye( ItemStack itemStack );
 
-	/** Set the color of the object. */
-	public int getColor( ItemStack stack );
+	/**
+	 * Get the color of the {@link ItemStack}.
+	 *
+	 * @param itemStack
+	 *            The {@link ItemStack} to get the color for.
+	 * @return The color expressed as an int.
+	 */
+	public int getColor( ItemStack itemStack );
 
-	/** Returns color of the item. */
-	boolean hasColor( ItemStack itemstack1 );
+	/**
+	 * Check if the {@link ItemStack} has a color.
+	 *
+	 * @param itemStack
+	 *            The {@link ItemStack} to check
+	 * @return True of the {@link ItemStack} has a color applied.
+	 */
+	boolean hasColor( ItemStack itemStack );
 
-	/** Set the color of the item. */
-	void setColor( ItemStack itemstack, int colorRGB );
+	/**
+	 * Set the color of an {@link ItemStack}.
+	 *
+	 * @param itemStack
+	 *            The {@link ItemStack} to apply the color to.
+	 * @param colorRGB
+	 *            The color to apply expressed as an int.
+	 */
+	void setColor( ItemStack itemStack, int colorRGB );
 
+	/**
+	 * Dyes the {@link ItemStack} with the given list of dyes.
+	 * 
+	 * @param itemStack
+	 *            The {@link ItemStack} to dye.
+	 * @param dyeList
+	 *            A list of {@link DyeColor}s to apply.
+	 * @return an {@link ItemStack} with the applied dyes.
+	 */
 	static ItemStack dyeItem( ItemStack itemStack, List< DyeColor > dyeList )
 	{
 		ItemStack restuleStacktack = ItemStack.EMPTY;

@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
@@ -121,7 +121,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
 	{
-		if( state.get( TYPE ) == EnumConnectedType.SINGLE )
+		if( state.get( TYPE ) == ConnectedType.SINGLE )
 			return SHAPE_SINGLE;
 		switch( getDirectionToAttached( state ) )
 		{
@@ -140,7 +140,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public BlockState getStateForPlacement( BlockItemUseContext context )
 	{
-		EnumConnectedType connectedType = EnumConnectedType.SINGLE;
+		ConnectedType connectedType = ConnectedType.SINGLE;
 		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
 		final boolean sneaking = context.isPlacerSneaking();
@@ -152,15 +152,15 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 			if( direction2 != null && direction2.getAxis() != direction1.getAxis() )
 			{
 				direction = direction2;
-				connectedType = direction2.rotateYCCW() == direction1.getOpposite() ? EnumConnectedType.MASTER : EnumConnectedType.SLAVE;
+				connectedType = direction2.rotateYCCW() == direction1.getOpposite() ? ConnectedType.MASTER : ConnectedType.SLAVE;
 			}
 		}
 
-		if( connectedType == EnumConnectedType.SINGLE && !sneaking )
+		if( connectedType == ConnectedType.SINGLE && !sneaking )
 			if( direction == getDirectionToAttach( context, direction.rotateY() ) )
-				connectedType = EnumConnectedType.SLAVE;
+				connectedType = ConnectedType.SLAVE;
 			else if( direction == getDirectionToAttach( context, direction.rotateYCCW() ) )
-				connectedType = EnumConnectedType.MASTER;
+				connectedType = ConnectedType.MASTER;
 
 		return getDefaultState().with( FACING, direction ).with( TYPE, connectedType ).with( WATERLOGGED,
 				Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
@@ -175,14 +175,14 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 
 		if( facingState.getBlock() == this && facing.getAxis().isHorizontal() )
 		{
-			final EnumConnectedType lockerType = facingState.get( TYPE );
+			final ConnectedType lockerType = facingState.get( TYPE );
 
-			if( stateIn.get( TYPE ) == EnumConnectedType.SINGLE && lockerType != EnumConnectedType.SINGLE
+			if( stateIn.get( TYPE ) == ConnectedType.SINGLE && lockerType != ConnectedType.SINGLE
 					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 				return stateIn.with( TYPE, lockerType.opposite() );
 		}
 		else if( getDirectionToAttached( stateIn ) == facing )
-			return stateIn.with( TYPE, EnumConnectedType.SINGLE );
+			return stateIn.with( TYPE, ConnectedType.SINGLE );
 
 		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
@@ -198,7 +198,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	private Direction getDirectionToAttach( BlockItemUseContext context, Direction facing )
 	{
 		final BlockState blockState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return blockState.getBlock() == this && blockState.get( TYPE ) == EnumConnectedType.SINGLE ? blockState.get( FACING ) : null;
+		return blockState.getBlock() == this && blockState.get( TYPE ) == ConnectedType.SINGLE ? blockState.get( FACING ) : null;
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	public static Direction getDirectionToAttached( BlockState state )
 	{
 		final Direction direction = state.get( FACING );
-		return state.get( TYPE ) == EnumConnectedType.SLAVE ? direction.rotateY() : direction.rotateYCCW();
+		return state.get( TYPE ) == ConnectedType.SLAVE ? direction.rotateY() : direction.rotateYCCW();
 	}
 
 	@Override
@@ -339,7 +339,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
 				{
 					final ItemStack lock = tileChest.getLock();
-					( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, EnumLockInteraction.OPEN );
+					( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
 					return false;
 				}
 				if( player.isSneaking() )
@@ -406,8 +406,8 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		else
 		{
 			final TileEntityReinforcedChest ilockablecontainer = (TileEntityReinforcedChest)tileentity;
-			final EnumConnectedType chesttype = state.get( TYPE );
-			if( chesttype == EnumConnectedType.SINGLE )
+			final ConnectedType chesttype = state.get( TYPE );
+			if( chesttype == ConnectedType.SINGLE )
 				return ilockablecontainer;
 			else
 			{
@@ -415,8 +415,8 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				final BlockState iblockstate = worldIn.getBlockState( blockpos );
 				if( iblockstate.getBlock() == this )
 				{
-					final EnumConnectedType chesttype1 = iblockstate.get( TYPE );
-					if( chesttype1 != EnumConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+					final ConnectedType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
 						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
 							return null;
 				}

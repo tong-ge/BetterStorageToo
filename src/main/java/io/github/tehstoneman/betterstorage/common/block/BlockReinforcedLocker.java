@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.common.block;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
@@ -59,7 +59,7 @@ public class BlockReinforcedLocker extends BlockLocker
 					if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
 					{
 						final ItemStack lock = tileChest.getLock();
-						( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, EnumLockInteraction.OPEN );
+						( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
 						return false;
 					}
 					if( player.isSneaking() )

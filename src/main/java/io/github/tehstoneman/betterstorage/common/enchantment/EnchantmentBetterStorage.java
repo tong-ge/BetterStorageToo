@@ -1,8 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.enchantment;
 
+import java.util.Map;
+
 import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantment.Rarity;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +26,35 @@ public class EnchantmentBetterStorage
 	@ObjectHolder( "shock" )		public static EnchantmentLock	SHOCK;
 	@ObjectHolder( "trigger" )		public static EnchantmentLock	TRIGGER;
 	//@formatter:on
+
+	/** Helper method to get the level of that enchantment on the item. */
+	public static int getLevel( ItemStack stack, Enchantment enchantment )
+	{
+		if( stack.isEnchanted() )
+		{
+			final Map< Enchantment, Integer > enchantments = EnchantmentHelper.getEnchantments( stack );
+			return enchantments.getOrDefault( enchantment, 0 );
+		}
+		return 0;
+	}
+
+	/** Helper method to decrease the level of an enchantment on the item. */
+	public static void decEnchantment( ItemStack stack, Enchantment ench, int level )
+	{
+		if( stack.isEmpty() )
+			return;
+
+		final Map< Enchantment, Integer > list = EnchantmentHelper.getEnchantments( stack );
+
+		final int newLevel = list.getOrDefault( ench, 0 ) - level;
+
+		if( newLevel <= 0 )
+			list.remove( ench );
+		else
+			list.put( ench, newLevel );
+
+		EnchantmentHelper.setEnchantments( list, stack );
+	}
 
 	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
 	private static class Register

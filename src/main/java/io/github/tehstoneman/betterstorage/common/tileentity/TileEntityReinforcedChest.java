@@ -1,10 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
-import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
@@ -158,11 +157,11 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	protected void playSound( SoundEvent soundIn )
 	{
-		final EnumConnectedType chesttype = getBlockState().get( BlockConnectableContainer.TYPE );
+		final ConnectedType chesttype = getBlockState().get( BlockConnectableContainer.TYPE );
 		double x = pos.getX() + 0.5D;
 		final double y = pos.getY() + 0.5D;
 		double z = pos.getZ() + 0.5D;
-		if( chesttype != EnumConnectedType.SINGLE )
+		if( chesttype != ConnectedType.SINGLE )
 		{
 			final Direction enumfacing = BlockReinforcedChest.getDirectionToAttached( getBlockState() );
 			x += enumfacing.getXOffset() * 0.5D;
@@ -178,6 +177,12 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		return prevLidAngle + ( lidAngle - prevLidAngle ) * partialTicks;
 	}
 
+	/*
+	 * ============
+	 * IKeyLockable
+	 * ============
+	 */
+
 	@Override
 	public ItemStack getLock()
 	{
@@ -188,17 +193,11 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public boolean isLockValid( ItemStack lock )
-	{
-		return lock.isEmpty() || lock.getItem() instanceof ILock;
-	}
-
-	@Override
 	public void setLock( ItemStack lock )
 	{
 		if( isMain() )
 		{
-			if( isLockValid( lock ) )
+			if( lock.isEmpty() || isLockValid( lock ) )
 			{
 				this.lock = lock;
 				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
@@ -211,9 +210,22 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
+	public boolean canUse( PlayerEntity player )
+	{
+		return !isLocked() || getMainTileEntity().getPlayersUsing() > 0;
+	}
+
+	@Override
 	public void applyTrigger()
 	{
 		setPowered( true );
+	}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		final Item item = heldItem.getItem();
+		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 
 	// Trigger enchantment related
@@ -325,31 +337,5 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			lock = ItemStack.EMPTY;
 
 		super.read( nbt );
-	}
-
-	@Override
-	public void useUnlocked( PlayerEntity player )
-	{}
-
-	@Override
-	public boolean canUse( PlayerEntity player )
-	{
-		return getLock().isEmpty() || getMainTileEntity().getPlayersUsing() > 0;
-	}
-
-	@Override
-	public boolean isLocked()
-	{
-		if( isMain() )
-			return getPlayersUsing() > 0 || !getLock().isEmpty();
-		else
-			return ( (IKeyLockable)getMainTileEntity() ).isLocked();
-	}
-
-	@Override
-	public boolean unlockWith( ItemStack heldItem )
-	{
-		final Item item = heldItem.getItem();
-		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 }

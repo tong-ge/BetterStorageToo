@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
-import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.BlockState;
@@ -49,83 +48,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		return world.getTileEntity( pos.down() );
 	}
 
-	@Override
-	public boolean isLockValid( ItemStack lock )
-	{
-		return lock.isEmpty() || lock.getItem() instanceof ILock;
-	}
-
-	@Override
-	public void setLock( ItemStack lock )
-	{
-		// Turn it back into a normal iron door
-		if( lock.isEmpty() )
-		{
-			this.lock = ItemStack.EMPTY;
-			final BlockState blockState = world.getBlockState( pos );
-
-			//@formatter:off
-				world.setBlockState( pos, Blocks.IRON_DOOR.getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
-				world.setBlockState( pos.up(), Blocks.IRON_DOOR.getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
-				//@formatter:on
-
-			world.notifyBlockUpdate( pos, blockState, blockState, 3 );
-		}
-		else
-			setLockWithUpdate( lock );
-
-	}
-
-	public void setLockWithUpdate( ItemStack lock )
-	{
-		this.lock = lock;
-		final BlockState blockState = world.getBlockState( pos );
-		world.notifyBlockUpdate( pos, blockState, blockState, 3 );
-		markDirty();
-	}
-
-	@Override
-	public void applyTrigger()
-	{}
-
 	public boolean isPowered()
 	{
 		if( isMain() )
 			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
 		return ( (TileEntityLockableDoor)getMain() ).isPowered();
-	}
-
-	@Override
-	public void useUnlocked( PlayerEntity player )
-	{}
-
-	@Override
-	public boolean canUse( PlayerEntity player )
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isLocked()
-	{
-		if( isMain() )
-			return !lock.isEmpty();
-		return ( (TileEntityLockableDoor)getMain() ).isLocked();
-	}
-
-	@Override
-	public boolean unlockWith( ItemStack heldItem )
-	{
-		final Item item = heldItem.getItem();
-		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 
 	// TileEntity synchronization
@@ -197,11 +124,71 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		super.read( nbt );
 	}
 
+	/*
+	 * ============
+	 * IKeyLockable
+	 * ============
+	 */
+
 	@Override
 	public ItemStack getLock()
 	{
 		if( isMain() )
 			return lock;
 		return ( (TileEntityLockableDoor)getMain() ).getLock();
+	}
+
+	@Override
+	public void setLock( ItemStack lock )
+	{
+		// Turn it back into a normal iron door
+		if( lock.isEmpty() )
+		{
+			this.lock = ItemStack.EMPTY;
+			final BlockState blockState = world.getBlockState( pos );
+
+			//@formatter:off
+				world.setBlockState( pos, Blocks.IRON_DOOR.getDefaultState()
+						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
+						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
+						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
+						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
+				world.setBlockState( pos.up(), Blocks.IRON_DOOR.getDefaultState()
+						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
+						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
+						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
+						.with( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
+				//@formatter:on
+
+			world.notifyBlockUpdate( pos, blockState, blockState, 3 );
+		}
+		else if( isLockValid( lock ) )
+			setLockWithUpdate( lock );
+
+	}
+
+	public void setLockWithUpdate( ItemStack lock )
+	{
+		this.lock = lock;
+		final BlockState blockState = world.getBlockState( pos );
+		world.notifyBlockUpdate( pos, blockState, blockState, 3 );
+		markDirty();
+	}
+
+	@Override
+	public boolean canUse( PlayerEntity player )
+	{
+		return false;
+	}
+
+	@Override
+	public void applyTrigger()
+	{}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		final Item item = heldItem.getItem();
+		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 }

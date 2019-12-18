@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
@@ -110,11 +110,11 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 
 	protected void playSound( SoundEvent soundIn )
 	{
-		final EnumConnectedType chesttype = getBlockState().get( BlockConnectableContainer.TYPE );
+		final ConnectedType chesttype = getBlockState().get( BlockConnectableContainer.TYPE );
 		double x = pos.getX() + 0.5D;
 		final double y = pos.getY() + 0.5D;
 		double z = pos.getZ() + 0.5D;
-		if( chesttype != EnumConnectedType.SINGLE )
+		if( chesttype != ConnectedType.SINGLE )
 		{
 			final Direction enumfacing = BlockLocker.getDirectionToAttached( getBlockState() );
 			x += enumfacing.getXOffset() * 0.5D;

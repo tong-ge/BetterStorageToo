@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.client.renderer;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
@@ -41,11 +41,11 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 
 		final BlockState iblockstate = tileEntityChest.hasWorld() ? tileEntityChest.getBlockState()
 				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockReinforcedChest.FACING, Direction.SOUTH );
-		final EnumConnectedType chesttype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
-				: EnumConnectedType.SINGLE;
-		if( chesttype != EnumConnectedType.SLAVE )
+		final ConnectedType chesttype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
+				: ConnectedType.SINGLE;
+		if( chesttype != ConnectedType.SLAVE )
 		{
-			final boolean flag = chesttype != EnumConnectedType.SINGLE;
+			final boolean flag = chesttype != ConnectedType.SINGLE;
 			final ChestModel modelchest = getChestModel( tileEntityChest, destroyStage, flag );
 
 			if( destroyStage >= 0 )

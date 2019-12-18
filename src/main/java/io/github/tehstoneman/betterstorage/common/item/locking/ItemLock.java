@@ -2,11 +2,12 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.util.UUID;
 
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -139,13 +140,11 @@ public class ItemLock extends ItemKeyLock implements ILock
 		}
 	}
 
-	// ILock implementation
-
-	@Override
-	public String getLockType()
-	{
-		return "normal";
-	}
+	/*
+	 * =====
+	 * ILock
+	 * =====
+	 */
 
 	@Override
 	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, PlayerEntity player, boolean success )
@@ -153,31 +152,31 @@ public class ItemLock extends ItemKeyLock implements ILock
 		if( success )
 			return;
 		// Power is 2 when a key was used to open the lock, 1 otherwise.
-		applyEffects( lock, lockable, player, key.isEmpty() ? EnumLockInteraction.OPEN : EnumLockInteraction.PICK );
+		applyEffects( lock, lockable, player, key.isEmpty() ? LockInteraction.OPEN : LockInteraction.PICK );
 	}
 
 	@Override
-	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, EnumLockInteraction interaction )
+	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, LockInteraction interaction )
 	{
 		final int shock = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SHOCK, lock );
 
 		if( shock > 0 )
 		{
 			int damage = shock;
-			if( interaction == EnumLockInteraction.PICK )
+			if( interaction == LockInteraction.PICK )
 				damage *= 3;
 			player.attackEntityFrom( DamageSource.MAGIC, damage );
 			final World world = player.getEntityWorld();
 			world.playSound( (PlayerEntity)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 0.5f,
 					world.rand.nextFloat() * 0.1F + 0.9F );
-			if( shock >= 3 && interaction != EnumLockInteraction.OPEN )
+			if( shock >= 3 && interaction != LockInteraction.OPEN )
 				player.setFire( 3 );
 		}
 	}
 
 	@Override
-	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
+	public boolean canApplyEnchantment( ItemStack lock, Enchantment enchantment )
 	{
-		return true;
+		return enchantment instanceof EnchantmentLock;
 	}
 }

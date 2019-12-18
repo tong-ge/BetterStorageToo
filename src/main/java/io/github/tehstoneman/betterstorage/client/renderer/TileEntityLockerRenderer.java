@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLocker;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
@@ -50,13 +50,13 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 		final BlockState iblockstate = tileEntityLocker.hasWorld() ? tileEntityLocker.getBlockState()
 				: BetterStorageBlocks.LOCKER.getDefaultState().with( BlockLocker.FACING, Direction.SOUTH );
-		final EnumConnectedType lockertype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
-				: EnumConnectedType.SINGLE;
+		final ConnectedType lockertype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
+				: ConnectedType.SINGLE;
 		final DoorHingeSide hingeSide = iblockstate.has( BlockStateProperties.DOOR_HINGE ) ? iblockstate.get( BlockStateProperties.DOOR_HINGE )
 				: DoorHingeSide.LEFT;
-		if( lockertype != EnumConnectedType.SLAVE )
+		if( lockertype != ConnectedType.SLAVE )
 		{
-			final boolean flag = lockertype != EnumConnectedType.SINGLE;
+			final boolean flag = lockertype != ConnectedType.SINGLE;
 			final ModelLocker modelchest = getLockerModel( tileEntityLocker, destroyStage, flag );
 
 			if( destroyStage >= 0 )

@@ -58,13 +58,11 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 		return new ActionResult( ActionResultType.SUCCESS, stack );
 	}
 
-	// IKey implementation
-
-	@Override
-	public boolean isNormalKey()
-	{
-		return false;
-	}
+	/*
+	 * ====
+	 * IKey
+	 * ====
+	 */
 
 	@Override
 	public boolean unlock( ItemStack keyring, ItemStack lock, boolean useAbility )

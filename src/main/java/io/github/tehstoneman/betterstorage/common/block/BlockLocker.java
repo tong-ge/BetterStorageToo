@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import net.minecraft.block.Block;
@@ -130,20 +130,20 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Override
 	public BlockState getStateForPlacement( BlockItemUseContext context )
 	{
-		EnumConnectedType connectedType = EnumConnectedType.SINGLE;
+		ConnectedType connectedType = ConnectedType.SINGLE;
 		final Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
 		final boolean sneaking = context.isPlacerSneaking();
 		DoorHingeSide hingeSide = getHingeSide( context );
-		if( connectedType == EnumConnectedType.SINGLE && !sneaking )
+		if( connectedType == ConnectedType.SINGLE && !sneaking )
 			if( direction == getDirectionToAttach( context, Direction.DOWN ) )
 			{
-				connectedType = EnumConnectedType.SLAVE;
+				connectedType = ConnectedType.SLAVE;
 				hingeSide = context.getWorld().getBlockState( context.getPos().offset( Direction.DOWN ) ).get( HINGE );
 			}
 			else if( direction == getDirectionToAttach( context, Direction.UP ) )
 			{
-				connectedType = EnumConnectedType.MASTER;
+				connectedType = ConnectedType.MASTER;
 				hingeSide = context.getWorld().getBlockState( context.getPos().offset( Direction.UP ) ).get( HINGE );
 			}
 
@@ -160,14 +160,14 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 
 		if( facingState.getBlock() == this && facing.getAxis().isVertical() )
 		{
-			final EnumConnectedType lockerType = facingState.get( TYPE );
+			final ConnectedType lockerType = facingState.get( TYPE );
 
-			if( stateIn.get( TYPE ) == EnumConnectedType.SINGLE && lockerType != EnumConnectedType.SINGLE
+			if( stateIn.get( TYPE ) == ConnectedType.SINGLE && lockerType != ConnectedType.SINGLE
 					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 				return stateIn.with( TYPE, lockerType.opposite() );
 		}
 		else if( getDirectionToAttached( stateIn ) == facing )
-			return stateIn.with( TYPE, EnumConnectedType.SINGLE );
+			return stateIn.with( TYPE, ConnectedType.SINGLE );
 
 		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
@@ -190,12 +190,12 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	{
 		final BlockState blockState = context.getWorld().getBlockState( context.getPos() );
 		final BlockState faceState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return faceState.getBlock() == this && faceState.get( TYPE ) == EnumConnectedType.SINGLE ? faceState.get( FACING ) : null;
+		return faceState.getBlock() == this && faceState.get( TYPE ) == ConnectedType.SINGLE ? faceState.get( FACING ) : null;
 	}
 
 	public static Direction getDirectionToAttached( BlockState state )
 	{
-		return state.get( TYPE ) == EnumConnectedType.SLAVE ? Direction.DOWN : Direction.UP;
+		return state.get( TYPE ) == ConnectedType.SLAVE ? Direction.DOWN : Direction.UP;
 	}
 
 	@Override
@@ -328,8 +328,8 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		else
 		{
 			final TileEntityLocker locker = (TileEntityLocker)tileentity;
-			final EnumConnectedType chesttype = state.get( TYPE );
-			if( chesttype == EnumConnectedType.SINGLE )
+			final ConnectedType chesttype = state.get( TYPE );
+			if( chesttype == ConnectedType.SINGLE )
 				return locker;
 			else
 			{
@@ -337,8 +337,8 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 				final BlockState iblockstate = worldIn.getBlockState( blockpos );
 				if( iblockstate.getBlock() == this )
 				{
-					final EnumConnectedType chesttype1 = iblockstate.get( TYPE );
-					if( chesttype1 != EnumConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+					final ConnectedType chesttype1 = iblockstate.get( TYPE );
+					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
 						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
 							return null;
 				}

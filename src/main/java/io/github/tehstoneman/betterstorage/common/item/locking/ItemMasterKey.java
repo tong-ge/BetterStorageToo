@@ -22,7 +22,12 @@ public class ItemMasterKey extends ItemKey
 		return true;
 	}
 
-	// IKey implementation
+	/*
+	 * ====
+	 * IKey
+	 * ====
+	 */
+
 	@Override
 	public boolean unlock( ItemStack key, ItemStack lock, boolean useAbility )
 	{
@@ -33,12 +38,6 @@ public class ItemMasterKey extends ItemKey
 	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
 	{
 		return false;
-	}
-
-	@Override
-	public boolean isNormalKey()
-	{
-		return true;
 	}
 
 	@Override

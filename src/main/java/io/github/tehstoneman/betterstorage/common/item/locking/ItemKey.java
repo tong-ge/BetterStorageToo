@@ -3,8 +3,7 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.api.BetterStorageEnchantment;
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
@@ -107,23 +106,20 @@ public class ItemKey extends ItemKeyLock implements IKey
 						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
 						lockable.setLock( ItemStack.EMPTY );
 					}
-					else
-						lockable.useUnlocked( playerIn );
 					return ActionResultType.SUCCESS;
 				}
 				else
-					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, EnumLockInteraction.PICK );
+					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, LockInteraction.PICK );
 			}
 		}
 		return super.onItemUse( context );
 	}
 
-	// IKey implementation
-	@Override
-	public boolean isNormalKey()
-	{
-		return true;
-	}
+	/*
+	 * ====
+	 * IKey
+	 * ====
+	 */
 
 	@Override
 	public boolean unlock( ItemStack key, ItemStack lock, boolean useAbility )
@@ -158,13 +154,13 @@ public class ItemKey extends ItemKeyLock implements IKey
 		}
 		if( effectiveLockpicking > 0 )
 		{
-			BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.LOCKPICKING, 1 );
+			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.LOCKPICKING, 1 );
 			return true;
 		}
 		if( effectiveMorphing > 0 )
 		{
 			setID( key, lockId );
-			BetterStorageEnchantment.decEnchantment( key, EnchantmentBetterStorage.MORPHING, morphing );
+			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.MORPHING, morphing );
 			return true;
 		}
 

@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
-import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
@@ -94,6 +93,12 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		}
 	}
 
+	/*
+	 * ============
+	 * IKeyLockable
+	 * ============
+	 */
+
 	@Override
 	public ItemStack getLock()
 	{
@@ -104,26 +109,11 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	}
 
 	@Override
-	public boolean isLocked()
-	{
-		if( isMain() )
-			return getPlayersUsing() > 0 || !getLock().isEmpty();
-		else
-			return ( (IKeyLockable)getMainTileEntity() ).isLocked();
-	}
-
-	@Override
-	public boolean isLockValid( ItemStack lock )
-	{
-		return lock.isEmpty() || lock.getItem() instanceof ILock;
-	}
-
-	@Override
 	public void setLock( ItemStack lock )
 	{
 		if( isMain() )
 		{
-			if( isLockValid( lock ) )
+			if( lock.isEmpty() || isLockValid( lock ) )
 			{
 				this.lock = lock;
 				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
@@ -138,28 +128,20 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public boolean canUse( PlayerEntity player )
 	{
-		return getLock().isEmpty() || getMainTileEntity().getPlayersUsing() > 0;
-	}
-
-	@Override
-	public void useUnlocked( PlayerEntity player )
-	{}
-
-	@Override
-	public boolean unlockWith( ItemStack heldItem )
-	{
-		if( isMain() )
-		{
-			final Item item = heldItem.getItem();
-			return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
-		}
-		return ( (IKeyLockable)getMainTileEntity() ).unlockWith( heldItem );
+		return !isLocked() || getMainTileEntity().getPlayersUsing() > 0;
 	}
 
 	@Override
 	public void applyTrigger()
 	{
 		setPowered( true );
+	}
+
+	@Override
+	public boolean unlockWith( ItemStack heldItem )
+	{
+		final Item item = heldItem.getItem();
+		return item instanceof IKey ? ( (IKey)item ).unlock( heldItem, getLock(), false ) : false;
 	}
 
 	// Trigger enchantment related

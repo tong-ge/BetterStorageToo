@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.api.EnumConnectedType;
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import net.minecraft.block.Block;
@@ -106,7 +106,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 			{
 				final TileEntityCrate facingCrate = TileEntityCrate.getCrateAt( world, facingPos );
 				state = state.with( FACING_TO_PROPERTY_MAP.get( facing ), tileCrate.tryAddCrate( facingCrate ) ).with( TYPE,
-						tileCrate.getNumCrates() > 1 ? EnumConnectedType.PILE : EnumConnectedType.SINGLE );
+						tileCrate.getNumCrates() > 1 ? ConnectedType.PILE : ConnectedType.SINGLE );
 			}
 			//tileCrate.updateConnections();
 		}

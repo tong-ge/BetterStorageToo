@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.lock.EnumLockInteraction;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
@@ -89,7 +89,7 @@ public class BlockLockableDoor extends Block
 				if( !tileDoor.unlockWith( player.getHeldItem( handIn ) ) )
 				{
 					final ItemStack lock = tileDoor.getLock();
-					( (ILock)lock.getItem() ).applyEffects( lock, tileDoor, player, EnumLockInteraction.OPEN );
+					( (ILock)lock.getItem() ).applyEffects( lock, tileDoor, player, LockInteraction.OPEN );
 					return false;
 				}
 				if( player.isSneaking() )
