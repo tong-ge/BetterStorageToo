@@ -7,23 +7,55 @@ import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class TileEntityCardboardBox extends TileEntityContainer
 {
+	public int		uses		= ItemBlockCardboardBox.getMaxUses();
+	public boolean	destroyed	= false;
+	public int		color		= -1;
+
 	public TileEntityCardboardBox()
 	{
 		super( BetterStorageTileEntityTypes.CARDBOARD_BOX );
 	}
 
-	public int		uses		= ItemBlockCardboardBox.getMaxUses();
-	public boolean	destroyed	= false;
-	public int		color		= -1;
+	public boolean isEmpty()
+	{
+		return inventory.isEmpty();
+	}
 
-	// TileEntityContainer stuff
+	public int getUses()
+	{
+		return uses;
+	}
+
+	public void setUses( int uses )
+	{
+		this.uses = uses;
+		markDirty();
+	}
+
+	public int getColor()
+	{
+		if( color < 0 )
+			return 0xA08060;
+		return color;
+	}
+
+	public void setColor( int color )
+	{
+		this.color = color;
+		markDirty();
+	}
+
+	/*
+	 * ===================
+	 * TileEntityContainer
+	 * ===================
+	 */
 
 	@Override
 	public ITextComponent getName()
@@ -35,13 +67,6 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public int getRows()
 	{
 		return BetterStorageConfig.COMMON.cardboardBoxRows.get();
-	}
-
-	public int getColor()
-	{
-		if( color < 0 )
-			return 0xA08060;
-		return color;
 	}
 
 	@Override
@@ -96,22 +121,5 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
 
 		super.read( nbt );
-	}
-
-	public boolean isEmpty()
-	{
-		return inventory.isEmpty();
-	}
-
-	public void setUses( int uses )
-	{
-		this.uses = uses;
-		markDirty();
-	}
-
-	public void setColor( int color )
-	{
-		this.color = color;
-		markDirty();
 	}
 }

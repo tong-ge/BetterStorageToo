@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.item.ShovelItem;
@@ -14,7 +13,7 @@ public class ItemCardboardShovel extends ShovelItem implements ICardboardItem
 
 	public ItemCardboardShovel()
 	{
-		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().group( ItemGroup.TOOLS ) );
+		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

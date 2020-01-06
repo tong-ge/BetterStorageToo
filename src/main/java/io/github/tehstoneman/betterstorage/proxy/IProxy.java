@@ -7,6 +7,4 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public interface IProxy
 {
 	public void setup( FMLCommonSetupEvent event );
-
-	public World getClientWorld();
 }

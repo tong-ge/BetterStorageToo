@@ -8,10 +8,4 @@ public class ServerProxy implements IProxy
 	@Override
 	public void setup( FMLCommonSetupEvent event )
 	{}
-
-	@Override
-	public World getClientWorld()
-	{
-		throw new IllegalStateException( "Can only be run on client." );
-	}
 }

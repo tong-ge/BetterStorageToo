@@ -1,12 +1,12 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -16,7 +16,7 @@ public class ItemCardboardArmor extends DyeableArmorItem implements ICardboardIt
 
 	public ItemCardboardArmor( EquipmentSlotType armorSlot )
 	{
-		super( BetterStorageArmorMaterial.CARDBOARD, armorSlot, new Item.Properties().group( ItemGroup.COMBAT ) );
+		super( BetterStorageArmorMaterial.CARDBOARD, armorSlot, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Cardboard items

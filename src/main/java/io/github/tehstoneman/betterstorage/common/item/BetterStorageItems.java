@@ -88,6 +88,8 @@ public final class BetterStorageItems
 
 			registry.register( new BlockItem( BetterStorageBlocks.BLOCK_FLINT, new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
 					.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getRegistryName() ) );
+			registry.register( new BlockItem( BetterStorageBlocks.GLASS_TANK, new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
+					.setRegistryName( BetterStorageBlocks.GLASS_TANK.getRegistryName() ) );
 		}
 	}
 }

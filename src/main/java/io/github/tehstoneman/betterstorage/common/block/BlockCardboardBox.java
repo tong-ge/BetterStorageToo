@@ -45,14 +45,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class BlockCardboardBox extends BlockContainerBetterStorage implements IWaterLoggable
 {
 	public static final BooleanProperty		WATERLOGGED	= BlockStateProperties.WATERLOGGED;
-	protected static final VoxelShape		SHAPE_BOX	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
-	public static final ResourceLocation	CONTENTS	= new ResourceLocation( "contents" );
 
-	private static Properties				properties	= Properties.create( Material.WOOL ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH );
+	protected static final VoxelShape		SHAPE_BOX	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 
 	public BlockCardboardBox()
 	{
-		super( properties );
+		super( Properties.create( Material.WOOL ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH ) );
 
 		setDefaultState( stateContainer.getBaseState().with( WATERLOGGED, Boolean.valueOf( false ) ) );
 	}
@@ -64,27 +62,16 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 		builder.add( WATERLOGGED );
 	}
 
-	@Override
-	public BlockState getStateForPlacement( BlockItemUseContext context )
-	{
-		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		return getDefaultState().with( WATERLOGGED, Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
-	}
+	/*
+	 * ======================
+	 * TileEntity / Rendering
+	 * ======================
+	 */
 
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
-			BlockPos facingPos )
+	public TileEntity createTileEntity( BlockState state, IBlockReader world )
 	{
-		if( stateIn.get( WATERLOGGED ) )
-			worldIn.getPendingFluidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickRate( worldIn ) );
-
-		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
-	}
-
-	@Override
-	public IFluidState getFluidState( BlockState state )
-	{
-		return state.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( state );
+		return new TileEntityCardboardBox();
 	}
 
 	@Override
@@ -94,9 +81,22 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	}
 
 	@Override
-	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	public IFluidState getFluidState( BlockState state )
 	{
-		return new TileEntityCardboardBox();
+		return state.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( state );
+	}
+
+	/*
+	 * =========
+	 * Placement
+	 * =========
+	 */
+
+	@Override
+	public BlockState getStateForPlacement( BlockItemUseContext context )
+	{
+		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
+		return getDefaultState().with( WATERLOGGED, Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
 	}
 
 	@Override
@@ -128,6 +128,16 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	}
 
 	@Override
+	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+			BlockPos facingPos )
+	{
+		if( stateIn.get( WATERLOGGED ) )
+			worldIn.getPendingFluidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickRate( worldIn ) );
+
+		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+	}
+
+	@Override
 	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
@@ -143,6 +153,26 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 		}
 		super.onReplaced( state, worldIn, pos, newState, isMoving );
+	}
+
+	/*
+	 * ===========
+	 * Interaction
+	 * ===========
+	 */
+
+	@Override
+	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	{
+		if( worldIn.isRemote )
+			return true;
+		else
+		{
+			final INamedContainerProvider box = getContainer( state, worldIn, pos );
+			if( box != null )
+				NetworkHooks.openGui( (ServerPlayerEntity)player, box, pos );
+			return true;
+		}
 	}
 
 	@Override
@@ -188,20 +218,6 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 		}
 
 		return super.getDrops( state, builder );
-	}
-
-	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
-	{
-		if( worldIn.isRemote )
-			return true;
-		else
-		{
-			final INamedContainerProvider box = getContainer( state, worldIn, pos );
-			if( box != null )
-				NetworkHooks.openGui( (ServerPlayerEntity)player, box, pos );
-			return true;
-		}
 	}
 
 	@Override

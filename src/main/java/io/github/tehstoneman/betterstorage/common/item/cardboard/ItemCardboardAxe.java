@@ -1,9 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +12,7 @@ public class ItemCardboardAxe extends AxeItem implements ICardboardItem
 {
 	public ItemCardboardAxe()
 	{
-		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().group( ItemGroup.TOOLS ) );
+		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

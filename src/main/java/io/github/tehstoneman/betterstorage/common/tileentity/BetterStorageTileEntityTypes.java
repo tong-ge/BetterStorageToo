@@ -19,6 +19,7 @@ public final class BetterStorageTileEntityTypes
 	@ObjectHolder( "locker" )				public static TileEntityType< TileEntityLocker >			LOCKER;
 	@ObjectHolder( "reinforced_locker" )	public static TileEntityType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
 	@ObjectHolder( "lockable_door" )		public static TileEntityType< TileEntityLockableDoor >		LOCKABLE_DOOR;
+	@ObjectHolder( "glass_tank" )			public static TileEntityType< TileEntityTank > 				GLASS_TANK;
 	//@formatter:on
 
 	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
@@ -41,6 +42,8 @@ public final class BetterStorageTileEntityTypes
 					.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.getRegistryName() ) );
 			registry.register( TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX ).build( null )
 					.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK ).build( null )
+					.setRegistryName( BetterStorageBlocks.GLASS_TANK.getRegistryName() ) );
 		}
 	}
 }

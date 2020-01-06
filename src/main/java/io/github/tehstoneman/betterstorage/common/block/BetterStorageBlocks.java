@@ -19,11 +19,12 @@ public final class BetterStorageBlocks
 	@ObjectHolder( "reinforced_chest" )		public static BlockReinforcedChest	REINFORCED_CHEST;
 	@ObjectHolder( "locker" )				public static BlockLocker			LOCKER;
 	@ObjectHolder( "reinforced_locker" )	public static BlockReinforcedLocker REINFORCED_LOCKER;
-	@ObjectHolder( "block_flint" )			public static BlockBetterStorage	BLOCK_FLINT;
+	@ObjectHolder( "block_flint" )			public static Block					BLOCK_FLINT;
 	@ObjectHolder( "lockable_door" )		public static BlockLockableDoor		LOCKABLE_DOOR;
 	@ObjectHolder( "cardboard_box" )		public static BlockCardboardBox		CARDBOARD_BOX;
+	@ObjectHolder( "glass_tank" )			public static BlockTank				GLASS_TANK;
 	//@formatter:on
-	
+
 	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
 	private static class Register
 	{
@@ -38,8 +39,9 @@ public final class BetterStorageBlocks
 			registry.register( new BlockReinforcedLocker().setRegistryName( ModInfo.MOD_ID, "reinforced_locker" ) );
 			registry.register( new BlockLockableDoor().setRegistryName( ModInfo.MOD_ID, "lockable_door" ) );
 			registry.register( new BlockCardboardBox().setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
-			registry.register( new BlockBetterStorage( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance( 5.0F, 6.0F ) )
+			registry.register( new Block( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance( 5.0F, 6.0F ) )
 					.setRegistryName( ModInfo.MOD_ID, "block_flint" ) );
+			registry.register( new BlockTank().setRegistryName( ModInfo.MOD_ID, "glass_tank" ) );
 		}
 	}
 }

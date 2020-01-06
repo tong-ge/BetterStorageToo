@@ -35,8 +35,6 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 
 	protected int								numPlayersUsing;
 
-	protected boolean							brokenInCreative	= false;
-
 	public int									ticksExisted		= 0;
 	public float								lidAngle			= 0;
 	public float								prevLidAngle		= 0;
@@ -57,6 +55,12 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		else
 			inventory = null;
 	}
+
+	/*
+	 * ============
+	 * Capabilities
+	 * ============
+	 */
 
 	@Nullable
 	@Override

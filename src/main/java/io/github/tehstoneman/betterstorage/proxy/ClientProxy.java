@@ -9,6 +9,7 @@ import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedLocker;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityTankRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
@@ -18,6 +19,7 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableD
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.world.World;
@@ -38,6 +40,7 @@ public class ClientProxy implements IProxy
 			ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedLocker.class, new TileEntityLockerRenderer() );
 			ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReinforcedChest.class, new TileEntityReinforcedChestRenderer() );
 			ClientRegistry.bindTileEntitySpecialRenderer( TileEntityLockableDoor.class, new TileEntityLockableDoorRenderer() );
+			ClientRegistry.bindTileEntitySpecialRenderer( TileEntityTank.class, new TileEntityTankRenderer() );
 		} );
 
 		DeferredWorkQueue.runLater( () ->
@@ -59,11 +62,5 @@ public class ClientProxy implements IProxy
 					BetterStorageItems.CARDBOARD_SHOVEL, BetterStorageItems.CARDBOARD_SWORD, BetterStorageBlocks.CARDBOARD_BOX );
 			Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX );
 		} );
-	}
-
-	@Override
-	public World getClientWorld()
-	{
-		return Minecraft.getInstance().world;
 	}
 }

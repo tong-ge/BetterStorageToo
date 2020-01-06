@@ -21,8 +21,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber( modid = ModInfo.MOD_ID )
 public class BetterStorageEventHandler
 {
-	private boolean preventSlimeBucketUse;
-
 	@SubscribeEvent
 	public static void onPlayerBreakSpeed( PlayerEvent.BreakSpeed event )
 	{

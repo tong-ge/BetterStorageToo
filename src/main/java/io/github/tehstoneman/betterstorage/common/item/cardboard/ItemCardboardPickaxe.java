@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ICardboardItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.item.PickaxeItem;
@@ -13,7 +12,7 @@ public class ItemCardboardPickaxe extends PickaxeItem implements ICardboardItem
 {
 	public ItemCardboardPickaxe()
 	{
-		super( ItemTier.WOOD, 1, -2.8F, new Item.Properties().group( ItemGroup.TOOLS ) );
+		super( ItemTier.WOOD, 1, -2.8F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,
