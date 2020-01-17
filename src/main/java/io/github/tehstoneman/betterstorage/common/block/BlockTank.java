@@ -107,7 +107,6 @@ public class BlockTank extends BlockContainerBetterStorage
 		{
 			final IFluidHandlerItem handler = capability.orElse( null );
 			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getFace() );
-			BetterStorage.LOGGER.info( "Tank ==== {} ====", success );
 			return success;
 		}
 		return super.onBlockActivated( state, world, pos, player, hand, hit );
