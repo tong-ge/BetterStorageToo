@@ -26,6 +26,7 @@ public class BetterStorageConfig
 		public ForgeConfigSpec.BooleanValue	cardboardBoxDispenserPlaceable;
 
 		public ForgeConfigSpec.BooleanValue	lockBreakable;
+		public ForgeConfigSpec.IntValue tankBuckets;
 
 		public Common( ForgeConfigSpec.Builder builder )
 		{
@@ -70,6 +71,10 @@ public class BetterStorageConfig
 					.comment( "Allow locked blocks to be breakable." )
 					.translation( "config.betterstorage.general.lockBreakable" )
 					.define( "lockBreakable", true );
+			tankBuckets = builder
+					.comment( "Number of buckets that one tank can hold." )
+					.translation( "config.betterstorage.general.tankBuckets" )
+					.defineInRange( "tankBuckets", 16, 1, Integer.MAX_VALUE );
 			//@formatter:on
 			builder.pop();
 		}

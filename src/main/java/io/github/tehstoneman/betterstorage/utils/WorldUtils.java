@@ -170,7 +170,13 @@ public final class WorldUtils
 	 * }
 	 */
 
-	/** This will perform a {@link World#notifyBlockOfNeighborChange()} on every adjacent block including the block at x|y|z. */
+	/** This will perform a World.notifyNeighborsOfStateChange() on every adjacent block including the block at x|y|z.
+	 * 
+	 * @param world The world
+	 * @param x X position
+	 * @param y Y position
+	 * @param z Z position
+	 */
 
 	public static void notifyBlocksAround( World world, int x, int y, int z )
 	{

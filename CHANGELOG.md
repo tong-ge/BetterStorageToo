@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [4.1.0.0] - 2020-01-26
+### Added
+- Glass fluid tanks
+- Finalized API
+
 ## [4.0.0.2] - 2019-11-28
 ### Added
 - Fixed versions of recipes that were previously causing errors on joining multiplayer servers

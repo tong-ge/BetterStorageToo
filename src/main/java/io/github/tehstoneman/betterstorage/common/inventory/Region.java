@@ -74,13 +74,13 @@ public class Region
 	}
 
 	/**
-	 * Sets the area of this region<b>
+	 * Sets the area of this region<p>
 	 * Automatically adjusts min and max values
 	 *
 	 * @param posMin
-	 *            A {@link Blockpos) that represents minimum corner
+	 *            A {@link BlockPos} that represents minimum corner
 	 * @param posMax
-	 *            A {@link Blockpos) that represents maximum corner
+	 *            A {@link BlockPos} that represents maximum corner
 	 */
 	public void set( BlockPos posMin, BlockPos posMax )
 	{
@@ -98,9 +98,9 @@ public class Region
 	 * Expand the region by the given size
 	 *
 	 * @param posMin
-	 *            A {@link Blockpos) that represents minimum size
+	 *            A {@link BlockPos} that represents minimum size
 	 * @param posMax
-	 *            A {@link Blockpos) that represents maximum size
+	 *            A {@link BlockPos} that represents maximum size
 	 */
 	public void expand( BlockPos posMin, BlockPos posMax )
 	{
@@ -203,7 +203,7 @@ public class Region
 	 *
 	 * @param world
 	 *            The {@link World} to test in
-	 * @param block
+	 * @param tileEntity
 	 *            The {@link TileEntity} to test for
 	 * @return True if the region only contains the given {@link TileEntity}
 	 */
@@ -219,9 +219,9 @@ public class Region
 	 * Contract the region by the given size
 	 *
 	 * @param posMin
-	 *            A {@link Blockpos) that represents minimum size
+	 *            A {@link BlockPos} that represents minimum size
 	 * @param posMax
-	 *            A {@link Blockpos) that represents maximum size
+	 *            A {@link BlockPos} that represents maximum size
 	 */
 	public void contract( BlockPos posMin, BlockPos posMax )
 	{

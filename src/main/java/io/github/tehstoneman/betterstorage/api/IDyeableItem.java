@@ -5,10 +5,11 @@ import java.util.List;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 /**
  * Interface used to describe an item that can be dyed.
- * 
+ *
  * @author TehStoneMan
  *
  */
@@ -21,16 +22,10 @@ public interface IDyeableItem
 	 *            The {@link ItemStack} to check.
 	 * @return True if this {@link ItemStack} can be dyed.
 	 */
-	boolean canDye( ItemStack itemStack );
-
-	/**
-	 * Get the color of the {@link ItemStack}.
-	 *
-	 * @param itemStack
-	 *            The {@link ItemStack} to get the color for.
-	 * @return The color expressed as an int.
-	 */
-	public int getColor( ItemStack itemStack );
+	default boolean canDye( ItemStack itemStack )
+	{
+		return true;
+	}
 
 	/**
 	 * Check if the {@link ItemStack} has a color.
@@ -39,7 +34,39 @@ public interface IDyeableItem
 	 *            The {@link ItemStack} to check
 	 * @return True of the {@link ItemStack} has a color applied.
 	 */
-	boolean hasColor( ItemStack itemStack );
+	default boolean hasColor( ItemStack itemStack )
+	{
+		if( itemStack.hasTag() )
+		{
+			final CompoundNBT compound = itemStack.getTag();
+			return compound.contains( "Color" );
+		}
+		return false;
+	}
+
+	/**
+	 * Get the color of the {@link ItemStack}.
+	 *
+	 * @param itemStack
+	 *            The {@link ItemStack} to get the color for.
+	 * @return The color expressed as an int.
+	 */
+	default int getColor( ItemStack itemStack )
+	{
+		if( hasColor( itemStack ) )
+		{
+			final CompoundNBT compound = itemStack.getTag();
+			return compound.getInt( "Color" );
+		}
+		return getDefaultColor();
+	}
+
+	/**
+	 * Get the default color when no dye is applied
+	 *
+	 * @return The color expressed as an int.
+	 */
+	public int getDefaultColor();
 
 	/**
 	 * Set the color of an {@link ItemStack}.
@@ -49,18 +76,23 @@ public interface IDyeableItem
 	 * @param colorRGB
 	 *            The color to apply expressed as an int.
 	 */
-	void setColor( ItemStack itemStack, int colorRGB );
+	default void setColor( ItemStack itemStack, int colorRGB )
+	{
+		final CompoundNBT compound = itemStack.getOrCreateTag();
+		compound.putInt( "Color", colorRGB );
+		itemStack.setTag( compound );
+	}
 
 	/**
 	 * Dyes the {@link ItemStack} with the given list of dyes.
-	 * 
+	 *
 	 * @param itemStack
 	 *            The {@link ItemStack} to dye.
 	 * @param dyeList
 	 *            A list of {@link DyeColor}s to apply.
 	 * @return an {@link ItemStack} with the applied dyes.
 	 */
-	static ItemStack dyeItem( ItemStack itemStack, List< DyeColor > dyeList )
+	public static ItemStack dyeItem( ItemStack itemStack, List< DyeColor > dyeList )
 	{
 		ItemStack restuleStacktack = ItemStack.EMPTY;
 

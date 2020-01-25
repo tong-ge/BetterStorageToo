@@ -8,9 +8,8 @@ import javax.annotation.Nullable;
 import io.github.tehstoneman.betterstorage.common.block.BlockTank;
 import io.github.tehstoneman.betterstorage.common.inventory.FluidTankHandler;
 import io.github.tehstoneman.betterstorage.common.inventory.StackedTankHandler;
+import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -23,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class TileEntityTank extends TileEntity
 {
-	private final FluidTankHandler				fluidTank		= new FluidTankHandler( 16000 )
+	private final FluidTankHandler				fluidTank		= new FluidTankHandler( BetterStorageConfig.COMMON.tankBuckets.get() * 1000 )
 																{
 																	@Override
 																	protected void onContentsChanged()
@@ -176,10 +175,5 @@ public class TileEntityTank extends TileEntity
 			mainPos = BlockPos.fromLong( nbt.getLong( "mainPos" ) );
 
 		super.read( nbt );
-	}
-
-	public static boolean isLigterThanAir( Fluid fluid )
-	{
-		return fluid.getAttributes().isLighterThanAir();
 	}
 }

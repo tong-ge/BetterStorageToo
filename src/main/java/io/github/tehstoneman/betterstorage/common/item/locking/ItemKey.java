@@ -3,10 +3,11 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 import java.util.UUID;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -25,16 +25,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemKey extends ItemKeyLock implements IKey
+public class ItemKey extends KeyLockItem implements IKey
 {
 	public ItemKey()
 	{
-		this( "key" );
-	}
-
-	public ItemKey( String name )
-	{
-		super( name );
+		super( new Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	@Override
@@ -42,19 +37,6 @@ public class ItemKey extends ItemKeyLock implements IKey
 	{
 		if( !worldIn.isRemote )
 			ensureHasID( stack );
-	}
-
-	/** Gives the key a random ID if it doesn't have one already. */
-	public static void ensureHasID( ItemStack stack )
-	{
-		CompoundNBT tag = stack.getTag();
-		if( tag == null )
-			tag = new CompoundNBT();
-		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-		{
-			tag.putUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
-			stack.setTag( tag );
-		}
 	}
 
 	@Override

@@ -149,7 +149,7 @@ dependencies {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main.output
+    from sourceSets.main.allSource
     classifier = 'sources'
 }
 build.dependsOn sourcesJar
@@ -160,9 +160,16 @@ task deobfJar(type: Jar, dependsOn: classes) {
 }
 build.dependsOn deobfJar
 
+task javadocJar(type: Jar, dependsOn: classes) {
+    from javadoc
+    classifier = 'javadoc'
+}
+build.dependsOn javadocJar
+
 artifacts {
     archives sourcesJar
     archives deobfJar
+    archives javadocJar
 }
 
 // Process resources on build
@@ -212,6 +219,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact reobfArtifact
+            artifact deobfJar
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
     repositories {

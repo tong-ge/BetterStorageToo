@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
-import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -15,15 +14,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class TileEntityContainer extends TileEntity implements INamedContainerProvider, INameable
 {
@@ -76,19 +71,31 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return new ExpandableStackHandler( getColumns(), getRows() );
 	}
 
-	/** The amount of columns in the container. */
+	/**
+	 * The amount of columns in the container.
+	 *
+	 * @return Number of columns
+	 */
 	public int getColumns()
 	{
 		return 9;
 	}
 
-	/** The amount of rows in the container. */
+	/**
+	 * The amount of rows in the container.
+	 *
+	 * @return Number of rows.
+	 */
 	public int getRows()
 	{
 		return 3;
 	}
 
-	/** The size of the container's contents, or 0 if it's not supposed to have any items. */
+	/**
+	 * The size of the container's contents, or 0 if it's not supposed to have any items.
+	 *
+	 * @return Number of slots.
+	 */
 	protected int getSizeContents()
 	{
 		return getColumns() * getRows();
@@ -100,7 +107,11 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 * ===========
 	 */
 
-	/** The number of players which are currently accessing this container. */
+	/**
+	 * The number of players which are currently accessing this container.
+	 *
+	 * @return Number of players using.
+	 */
 	public final int getPlayersUsing()
 	{
 		return numPlayersUsing;
@@ -112,13 +123,21 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 * ===================
 	 */
 
-	/** Sets the custom title of this container. Has no effect if it can't be set. */
+	/**
+	 * Sets the custom title of this container. Has no effect if it can't be set.
+	 *
+	 * @param name
+	 *            The name of this container.
+	 */
 	public void setCustomName( @Nullable ITextComponent name )
 	{
 		customName = name;
 	}
 
-	/** Returns the custom title of this container. */
+	/**
+	 * Returns the custom title of this container.
+	 *
+	 */
 	@Override
 	@Nullable
 	public ITextComponent getCustomName()

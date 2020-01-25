@@ -1,10 +1,10 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import java.util.UUID;
-
-import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
@@ -18,8 +18,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -30,26 +28,26 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemLock extends ItemKeyLock implements ILock
+public class ItemLock extends KeyLockItem implements ILock
 {
 	public ItemLock()
 	{
-		super( "lock" );
-		// setMaxDamage( 64 );
-		// setMaxStackSize( 1 );
+		super( new Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
-	@Override
-	public boolean getIsRepairable( ItemStack stack, ItemStack material )
-	{
-		return material.getItem() == Items.GOLD_INGOT;
-	}
-
-	@Override
-	public boolean isDamageable()
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean getIsRepairable( ItemStack stack, ItemStack material )
+	 * {
+	 * return material.getItem() == Items.GOLD_INGOT;
+	 * }
+	 * 
+	 * @Override
+	 * public boolean isDamageable()
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	@Override
 	public void onCreated( ItemStack stack, World world, PlayerEntity player )
@@ -122,22 +120,6 @@ public class ItemLock extends ItemKeyLock implements ILock
 			}
 		}
 		return super.onItemUse( context );
-	}
-
-	/**
-	 * Gives the lock a random ID if it doesn't have one. <br>
-	 * This is usually only when the lock is taken out of creative.
-	 */
-	public static void ensureHasID( ItemStack stack )
-	{
-		CompoundNBT tag = stack.getTag();
-		if( tag == null )
-			tag = new CompoundNBT();
-		if( !tag.hasUniqueId( TAG_KEYLOCK_ID ) )
-		{
-			tag.putUniqueId( TAG_KEYLOCK_ID, UUID.randomUUID() );
-			stack.setTag( tag );
-		}
 	}
 
 	/*

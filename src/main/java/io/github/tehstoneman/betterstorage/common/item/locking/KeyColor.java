@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 
 import java.awt.Color;
 
+import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
 
@@ -13,9 +14,9 @@ public class KeyColor implements IItemColor
 		switch( tintIndex )
 		{
 		case 0:
-			return ItemKeyLock.getKeyColor2( stack );
+			return KeyLockItem.getKeyColor2( stack );
 		case 1:
-			return ItemKeyLock.getKeyColor1( stack );
+			return KeyLockItem.getKeyColor1( stack );
 		case 2:
 			return Color.WHITE.getRGB();
 		}

@@ -2,16 +2,12 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import java.util.ArrayList;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityTank;
-import net.minecraft.fluid.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class StackedTankHandler implements IFluidHandler
 {
 	private final ArrayList< FluidTankHandler >	tanks;
-	private boolean								inverted	= false;
 	private FluidStack							baseFluid;
 
 	public StackedTankHandler( ArrayList< FluidTankHandler > tankList )
@@ -20,7 +16,6 @@ public class StackedTankHandler implements IFluidHandler
 		baseFluid = getFluidInTank( 0 );
 		if( baseFluid.isEmpty() )
 			baseFluid = getFluidInTank( tanks.size() - 1 );
-		inverted = TileEntityTank.isLigterThanAir( baseFluid.getFluid() );
 	}
 
 	@Override
@@ -65,7 +60,7 @@ public class StackedTankHandler implements IFluidHandler
 
 		int filled = 0;
 		final FluidStack filler = resource.copy();
-		if( TileEntityTank.isLigterThanAir( resource.getFluid() ) )
+		if( resource.getFluid().getAttributes().isLighterThanAir() )
 		{
 			for( int i = tanks.size() - 1; i >= 0; i-- )
 				if( !filler.isEmpty() )
@@ -100,7 +95,7 @@ public class StackedTankHandler implements IFluidHandler
 		if( action.simulate() )
 			return new FluidStack( baseFluid, Math.min( getTotalAmount(), maxDrain ) );
 		FluidStack returnFluid = FluidStack.EMPTY;
-		if( inverted )
+		if( baseFluid.getFluid().getAttributes().isLighterThanAir() )
 		{
 			for( final FluidTankHandler tank : tanks )
 				if( maxDrain > 0 )

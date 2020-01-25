@@ -47,8 +47,9 @@ public class ModelLocker extends Model
 		lockerBody.rotationPointZ = 2.0F;
 	}
 
-	/**
-	 * This method renders out all parts of the locker model.
+	/** This method renders out all parts of the locker model.
+	 * 
+	 * @param flag True for left-sided door
 	 */
 
 	public void renderAll( boolean flag )

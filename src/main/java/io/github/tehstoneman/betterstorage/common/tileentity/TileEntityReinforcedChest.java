@@ -230,7 +230,11 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	// Trigger enchantment related
 
-	/** Returns if the chest is emitting redstone. */
+	/**
+	 * Returns if the chest is emitting redstone.
+	 *
+	 * @return True if powered
+	 */
 	public boolean isPowered()
 	{
 		if( isMain() )
@@ -240,7 +244,11 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	/**
 	 * Sets if the chest is emitting redstone.
+	 * <p>
 	 * Updates all nearby blocks to make sure they notice it.
+	 *
+	 * @param powered
+	 *            True if powered
 	 */
 	public void setPowered( boolean powered )
 	{

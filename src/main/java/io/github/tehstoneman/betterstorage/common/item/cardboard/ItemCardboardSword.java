@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.api.ICardboardItem;
+import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
@@ -49,41 +49,4 @@ public class ItemCardboardSword extends SwordItem implements ICardboardItem
 	 * return ItemCardboardSheet.damageItem( stack, 1, player );
 	 * }
 	 */
-
-	// Cardboard items
-	@Override
-	public boolean canDye( ItemStack stack )
-	{
-		return true;
-	}
-
-	@Override
-	public int getColor( ItemStack itemstack )
-	{
-		if( hasColor( itemstack ) )
-		{
-			final CompoundNBT compound = itemstack.getTag();
-			return compound.getInt( "color" );
-		}
-		return 0xA08060;
-	}
-
-	@Override
-	public boolean hasColor( ItemStack itemstack )
-	{
-		if( itemstack.hasTag() )
-		{
-			final CompoundNBT compound = itemstack.getTag();
-			return compound.contains( "color" );
-		}
-		return false;
-	}
-
-	@Override
-	public void setColor( ItemStack itemstack, int colorRGB )
-	{
-		final CompoundNBT compound = itemstack.getOrCreateTag();
-		compound.putInt( "color", colorRGB );
-		itemstack.setTag( compound );
-	}
 }

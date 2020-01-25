@@ -73,7 +73,7 @@ public class TileEntityTankRenderer extends TileEntityRenderer< TileEntityTank >
 			double y2 = y1 + height * ( (float)fluidStack.getAmount() / (float)capacity );
 			final double z2 = 0.875;
 
-			if( TileEntityTank.isLigterThanAir( fluid ) )
+			if( fluid.getAttributes().isLighterThanAir() )
 			{
 				y2 = blockState.get( BlockTank.UP ) ? 1.0 : 0.9375;
 				y1 = y2 - height * ( (float)fluidStack.getAmount() / (float)capacity );

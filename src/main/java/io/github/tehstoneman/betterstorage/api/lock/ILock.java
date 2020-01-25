@@ -14,7 +14,7 @@ public interface ILock
 {
 	/**
 	 * Returns a string describing the lock's type or how it functions. <br>
-	 * Currently there is only "normal" locks, which work with damage.
+	 * Key and Lock types must match.
 	 *
 	 * @return The lock type.
 	 */

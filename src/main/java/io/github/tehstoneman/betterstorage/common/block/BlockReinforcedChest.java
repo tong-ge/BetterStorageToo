@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
-import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
@@ -191,8 +191,10 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 * Returns facing pointing to a chest to form a double chest with, null otherwise
 	 *
 	 * @param context
+	 *            Context
 	 * @param facing
-	 * @return
+	 *            The offset direction
+	 * @return Facing direction
 	 */
 	@Nullable
 	private Direction getDirectionToAttach( BlockItemUseContext context, Direction facing )
@@ -205,7 +207,8 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 * Returns a facing pointing from the given state to its attached double chest
 	 *
 	 * @param state
-	 * @return
+	 *            The BlockState of the block to attach to
+	 * @return The direction of the attached block
 	 */
 	public static Direction getDirectionToAttached( BlockState state )
 	{
@@ -394,6 +397,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 * @param allowBlockedChest
 	 *            If false, then if the chest is blocked then <code>null</code> will be returned. If true,
 	 *            then the chest can still be blocked (used by hoppers).
+	 *            @return The chest at the position, or null if none.
 	 */
 	@Nullable
 	public TileEntityReinforcedChest getContainer( BlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )

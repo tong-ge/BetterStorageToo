@@ -22,6 +22,17 @@ public interface IKey
 	};
 
 	/**
+	 * Returns a string describing the key's type or how it functions. <br>
+	 * Key and Lock types must match.
+	 *
+	 * @return The lock type.
+	 */
+	default String getKeyType()
+	{
+		return "normal";
+	}
+
+	/**
 	 * Gets called when a key is used to open a lock and returns if it's successful. <br>
 	 * If useAbility is true, the key will use up an ability, like lockpicking or morphing.
 	 *

@@ -71,7 +71,11 @@ public class ContainerCrate extends Container
 		return rows;
 	}
 
-	/** Returns the recorded volume of this container */
+	/**
+	 * Returns the recorded volume of this container
+	 *
+	 * @return Volume
+	 */
 	public int getVolume()
 	{
 		return volume.get();

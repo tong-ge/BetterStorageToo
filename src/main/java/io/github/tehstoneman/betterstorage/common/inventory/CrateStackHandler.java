@@ -91,7 +91,14 @@ public class CrateStackHandler extends ItemStackHandler
 		super.setStackInSlot( getIndexedSlot( slot ), stack );
 	}
 
-	/** Bypass the randomization of the overridden version of this function */
+	/**
+	 * Bypass the randomization of the overridden version of this function
+	 *
+	 * @param slot
+	 *            Slot to modify
+	 * @param stack
+	 *            ItemStack to set slot to (may be empty).
+	 */
 	public void setStackInSlotFixed( int slot, ItemStack stack )
 	{
 		doShuffle = false;
@@ -105,7 +112,22 @@ public class CrateStackHandler extends ItemStackHandler
 		return super.getStackInSlot( getIndexedSlot( slot ) );
 	}
 
-	/** Bypass the randomization of the overridden version of this function */
+	/**
+	 * Bypass the randomization of the overridden version of this function
+	 * 
+	 * <p>
+	 * <strong>IMPORTANT:</strong> This ItemStack <em>MUST NOT</em> be modified. This method is not for
+	 * altering an inventory's contents. Any implementers who are able to detect
+	 * modification through this method should throw an exception.
+	 * </p>
+	 * <p>
+	 * <strong><em>SERIOUSLY: DO NOT MODIFY THE RETURNED ITEMSTACK</em></strong>
+	 * </p>
+	 *
+	 * @param slot
+	 *            Slot to query
+	 * @return ItemStack in given slot. Empty Itemstack if the slot is empty.
+	 */
 	public ItemStack getStackInSlotFixed( int slot )
 	{
 		return super.getStackInSlot( slot );
@@ -117,7 +139,18 @@ public class CrateStackHandler extends ItemStackHandler
 		return super.extractItem( getIndexedSlot( slot ), amount, simulate );
 	}
 
-	/** Bypass the randomization of the overridden version of this function */
+	/**
+	 * Bypass the randomization of the overridden version of this function
+	 * 
+	 * @param slot
+	 *            Slot to extract from.
+	 * @param amount
+	 *            Amount to extract (may be greater than the current stack's max limit)
+	 * @param simulate
+	 *            If true, the extraction is only simulated
+	 * @return ItemStack extracted from the slot, must be empty if nothing can be extracted.
+	 *         The returned ItemStack can be safely modified after, so item handlers should return a new or copied stack.
+	 */
 	public ItemStack extractItemFixed( int slot, int amount, boolean simulate )
 	{
 		doShuffle = false;
@@ -132,7 +165,19 @@ public class CrateStackHandler extends ItemStackHandler
 		return super.insertItem( getIndexedSlot( slot ), stack, simulate );
 	}
 
-	/** Bypass the randomization of the overridden version of this function */
+	/**
+	 * Bypass the randomization of the overridden version of this function
+	 * 
+	 * @param slot
+	 *            Slot to insert into.
+	 * @param stack
+	 *            ItemStack to insert. This must not be modified by the item handler.
+	 * @param simulate
+	 *            If true, the insertion is only simulated
+	 * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return an empty ItemStack).
+	 *         May be the same as the input ItemStack if unchanged, otherwise a new ItemStack.
+	 *         The returned ItemStack can be safely modified after.
+	 */
 	public ItemStack insertItemFixed( int slot, ItemStack stack, boolean simulate )
 	{
 		doShuffle = false;
@@ -402,7 +447,12 @@ public class CrateStackHandler extends ItemStackHandler
 					addItems( itemStack );
 	}
 
-	/** Records a tileentity to notify if contents has changed */
+	/**
+	 * Records a tileentity to notify if contents has changed.
+	 *
+	 * @param tileEntityCrate
+	 *            The TileEntityCrat to update.
+	 */
 	public void sendUpdatesTo( TileEntityCrate tileEntityCrate )
 	{
 		crateToUpdate = tileEntityCrate;

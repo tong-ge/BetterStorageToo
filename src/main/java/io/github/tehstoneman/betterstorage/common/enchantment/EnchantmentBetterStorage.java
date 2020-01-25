@@ -27,7 +27,15 @@ public class EnchantmentBetterStorage
 	@ObjectHolder( "trigger" )		public static EnchantmentLock	TRIGGER;
 	//@formatter:on
 
-	/** Helper method to get the level of that enchantment on the item. */
+	/**
+	 * Helper method to get the level of that enchantment on the item.
+	 *
+	 * @param stack
+	 *            {@link ItemStack} to get the {@link Enchantment} from.
+	 * @param enchantment
+	 *            {@link Enchantment} to check level for.
+	 * @return The level of the requested (@link Enchantment}, or 0 if none.
+	 */
 	public static int getLevel( ItemStack stack, Enchantment enchantment )
 	{
 		if( stack.isEnchanted() )
@@ -38,7 +46,16 @@ public class EnchantmentBetterStorage
 		return 0;
 	}
 
-	/** Helper method to decrease the level of an enchantment on the item. */
+	/**
+	 * Helper method to decrease the level of an enchantment on the item.
+	 *
+	 * @param stack
+	 *            {@link ItemStack} with the {@link Enchantment}.
+	 * @param ench
+	 *            {@link Enchantment} to decrease.
+	 * @param level
+	 *            Amount to decrease by.
+	 */
 	public static void decEnchantment( ItemStack stack, Enchantment ench, int level )
 	{
 		if( stack.isEmpty() )

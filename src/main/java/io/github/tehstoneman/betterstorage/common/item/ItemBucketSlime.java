@@ -197,7 +197,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * playerIn.setActiveHand( handIn );
 	 * return new ActionResult( EnumActionResult.SUCCESS, playerIn.getHeldItem( handIn ) );
 	 * }
-	 * 
+	 *
 	 * return super.onItemRightClick( worldIn, playerIn, handIn );
 	 * }
 	 */
@@ -299,13 +299,24 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * }
 	 */
 
-	/** Registers a slime handler. */
+	/**
+	 * Registers a slime handler.
+	 *
+	 * @param handler
+	 *            The handler
+	 */
 	public static void registerHandler( Handler handler )
 	{
 		handlers.put( handler.resourceLocation, handler );
 	}
 
-	/** Returns the handler for an entity id, null if none. */
+	/**
+	 * Returns the handler for an entity id, null if none.
+	 *
+	 * @param resourceLocation
+	 *            ResourceLocation to query
+	 * @return The handler
+	 */
 	public static Handler getHandler( ResourceLocation resourceLocation )
 	{
 		return handlers.get( resourceLocation );
@@ -518,27 +529,39 @@ public class ItemBucketSlime extends ItemBetterStorage
 		 * public void setSize( EntityLiving slime, int size )
 		 * {
 		 * final NBTTagCompound compound = new NBTTagCompound();
-		 * 
+		 *
 		 * slime.writeToNBT( compound );
 		 * compound.setInteger( "Size", size - 1 );
 		 * slime.readFromNBT( compound );
-		 * 
+		 *
 		 * }
 		 */
 
-		/** How much food is restored when eating this slime. */
+		/**
+		 * How much food is restored when eating this slime.
+		 *
+		 * @return Amount
+		 */
 		public int foodAmount()
 		{
 			return 4;
 		}
 
-		/** The satuation amount added when eating this slime. */
+		/**
+		 * The satuation amount added when eating this slime.
+		 *
+		 * @return Saturation
+		 */
 		public float saturationAmount()
 		{
 			return 0.3F;
 		}
 
-		/** Duration will get multiplied by this value. */
+		/**
+		 * Duration will get multiplied by this value.
+		 *
+		 * @return Multiplier
+		 */
 		public float durationMultiplier()
 		{
 			return 0.25F;

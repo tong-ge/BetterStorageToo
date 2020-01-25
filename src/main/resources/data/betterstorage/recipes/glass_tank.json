@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "betterstorage:glass_tank",
+	"pattern":
+	[
+		"igi",
+		"ggg",
+		"igi"
+	],
+	"mirrored": false,
+	"key":
+	{
+		"g": { "tag": "forge:glass" },
+		"i": { "tag": "forge:ingots/iron" }
+	},
+	"result": { "item": "betterstorage:glass_tank" }
+}

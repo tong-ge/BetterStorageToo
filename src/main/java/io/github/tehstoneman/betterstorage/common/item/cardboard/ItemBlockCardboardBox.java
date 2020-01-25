@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.ICardboardItem;
+import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import io.github.tehstoneman.betterstorage.common.item.BlockItemBetterStorage;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
@@ -109,46 +109,13 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 		}
 	}
 
-	/** Returns how many times cardboard boxes can be reused. */
+	/**
+	 * Returns how many times cardboard boxes can be reused.
+	 *
+	 * @return Total number of uses.
+	 */
 	public static int getMaxUses()
 	{
 		return BetterStorageConfig.COMMON.cardboardBoxUses.get();
-	}
-
-	// Cardboard items
-	@Override
-	public boolean canDye( ItemStack stack )
-	{
-		return true;
-	}
-
-	@Override
-	public int getColor( ItemStack itemstack )
-	{
-		if( hasColor( itemstack ) )
-		{
-			final CompoundNBT compound = itemstack.getTag();
-			return compound.getInt( "Color" );
-		}
-		return 0xA08060;
-	}
-
-	@Override
-	public boolean hasColor( ItemStack itemstack )
-	{
-		if( itemstack.hasTag() )
-		{
-			final CompoundNBT compound = itemstack.getTag();
-			return compound.contains( "Color" );
-		}
-		return false;
-	}
-
-	@Override
-	public void setColor( ItemStack itemstack, int colorRGB )
-	{
-		final CompoundNBT compound = itemstack.getOrCreateTag();
-		compound.putInt( "Color", colorRGB );
-		itemstack.setTag( compound );
 	}
 }

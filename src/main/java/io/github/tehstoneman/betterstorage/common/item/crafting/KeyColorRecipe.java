@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyLock;
+import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -34,7 +34,7 @@ public class KeyColorRecipe extends SpecialRecipe
 		{
 			final ItemStack itemStack = inv.getStackInSlot( i );
 			if( !itemStack.isEmpty() )
-				if( itemStack.getItem() instanceof ItemKeyLock )
+				if( itemStack.getItem() instanceof KeyLockItem )
 				{
 					if( !resultStack.isEmpty() )
 						return false;
@@ -66,12 +66,12 @@ public class KeyColorRecipe extends SpecialRecipe
 			if( !ingredientStack.isEmpty() )
 			{
 				final Item item = ingredientStack.getItem();
-				if( item instanceof ItemKeyLock )
+				if( item instanceof KeyLockItem )
 				{
 					if( !resultStack.isEmpty() )
 						return ItemStack.EMPTY;
 
-					ItemKeyLock.clearColors( ingredientStack );
+					KeyLockItem.clearColors( ingredientStack );
 
 					resultStack = ingredientStack.copy();
 					if( ingredientStack.hasTag() )
@@ -80,10 +80,10 @@ public class KeyColorRecipe extends SpecialRecipe
 				else if( item.isIn( Tags.Items.DYES ) )
 				{
 					final DyeColor dyeColor = DyeColor.getColor( ingredientStack );
-					if( !tagCompound.contains( ItemKeyLock.TAG_COLOR1 ) )
-						tagCompound.putInt( ItemKeyLock.TAG_COLOR1, dyeColor.getFireworkColor() );
-					else if( !tagCompound.contains( ItemKeyLock.TAG_COLOR2 ) )
-						tagCompound.putInt( ItemKeyLock.TAG_COLOR2, dyeColor.getFireworkColor() );
+					if( !tagCompound.contains( KeyLockItem.TAG_COLOR1 ) )
+						tagCompound.putInt( KeyLockItem.TAG_COLOR1, dyeColor.getFireworkColor() );
+					else if( !tagCompound.contains( KeyLockItem.TAG_COLOR2 ) )
+						tagCompound.putInt( KeyLockItem.TAG_COLOR2, dyeColor.getFireworkColor() );
 				}
 				else
 					return ItemStack.EMPTY;
