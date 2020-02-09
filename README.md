@@ -28,3 +28,5 @@ use the same amount of ```#```'s as the en_US language file or less.
 You can test your translation easily by moving it into the mod's .jar file in the
 folder ```assets/betterstorage/lang/```. Use this to make sure the tooltips look good
 with different window sizes and GUI scales.
+
+[![Become a Patron!](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/bePatron?u=3018034)

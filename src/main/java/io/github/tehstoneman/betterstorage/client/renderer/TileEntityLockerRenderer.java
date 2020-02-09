@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.client.renderer.entity.model.ModelLargeLocker;
@@ -15,10 +15,11 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforce
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -29,6 +30,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLocker >
 {
+	public TileEntityLockerRenderer( TileEntityRendererDispatcher rendererDispatcherIn )
+	{
+		super( rendererDispatcherIn );
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE		= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/locker/normal_double.png" );
 	private static final ResourceLocation	TEXTURE_NORMAL				= new ResourceLocation( ModInfo.MOD_ID, "textures/entity/locker/normal.png" );
@@ -40,7 +47,7 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 	private final ModelLocker				simpleLocker				= new ModelLocker();
 	private final ModelLocker				largeLocker					= new ModelLargeLocker();
 
-	@Override
+	// @Override
 	public void render( TileEntityLocker tileEntityLocker, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		// Modified from vanilla chest
@@ -102,15 +109,17 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 	private ModelLocker getLockerModel( TileEntityLocker tileEntityLocker, int destroyStage, boolean flag )
 	{
-		ResourceLocation resourcelocation;
-		if( destroyStage >= 0 )
-			resourcelocation = DESTROY_STAGES[destroyStage];
-		else if( tileEntityLocker instanceof TileEntityReinforcedLocker )
-			resourcelocation = flag ? TEXTURE_REINFORCED_DOUBLE : TEXTURE_REINFORCED;
-		else
-			resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
+		final ResourceLocation resourcelocation;
+		/*
+		 * if( destroyStage >= 0 )
+		 * resourcelocation = DESTROY_STAGES[destroyStage];
+		 * else if( tileEntityLocker instanceof TileEntityReinforcedLocker )
+		 * resourcelocation = flag ? TEXTURE_REINFORCED_DOUBLE : TEXTURE_REINFORCED;
+		 * else
+		 * resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
+		 */
 
-		bindTexture( resourcelocation );
+		// bindTexture( resourcelocation );
 		return flag ? largeLocker : simpleLocker;
 	}
 
@@ -119,16 +128,18 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 		float f = ( (IChestLid)tileEntityLocker ).getLidAngle( partialTicks );
 		f = 1.0F - f;
 		f = 1.0F - f * f * f;
-		switch( hingeSide )
-		{
-		case LEFT:
-		default:
-			modelLocker.getDoor( true ).rotateAngleY = f * ( (float)Math.PI / 2F );
-			break;
-		case RIGHT:
-			modelLocker.getDoor( false ).rotateAngleY = -( f * ( (float)Math.PI / 2F ) );
-			break;
-		}
+		/*
+		 * switch( hingeSide )
+		 * {
+		 * case LEFT:
+		 * default:
+		 * modelLocker.getDoor( true ).rotateAngleY = f * ( (float)Math.PI / 2F );
+		 * break;
+		 * case RIGHT:
+		 * modelLocker.getDoor( false ).rotateAngleY = -( f * ( (float)Math.PI / 2F ) );
+		 * break;
+		 * }
+		 */
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
@@ -150,19 +161,27 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
 
 			GlStateManager.translated( left ? 0.0 : 1.0, 0.0, 0.1875 );
-			GlStateManager.rotated( left ? openAngle * 90 : -openAngle * 90, 0.0, 1.0, 0.0 );
+			// GlStateManager.rotated( left ? openAngle * 90 : -openAngle * 90, 0.0, 1.0, 0.0 );
 			GlStateManager.translated( left ? -0.0 : -1.0, 0.0, -0.1875 );
 
-			GlStateManager.rotated( 180.0F, 0.0F, 0.0F, 1.0F );
+			// GlStateManager.rotated( 180.0F, 0.0F, 0.0F, 1.0F );
 			GlStateManager.translated( left ? -0.8125 : -0.1875, locker.isConnected() ? -0.125 : -0.625, 0.03125 );
 			GlStateManager.scaled( 0.5, 0.5, 0.5 );
 
 			RenderHelper.enableStandardItemLighting();
-			itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			// itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
 			RenderHelper.disableStandardItemLighting();
 
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void render( TileEntityLocker tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+			int combinedOverlayIn )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

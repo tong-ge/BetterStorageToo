@@ -28,6 +28,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -162,16 +163,16 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	 */
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( worldIn.isRemote )
-			return true;
+			return ActionResultType.SUCCESS;
 		else
 		{
 			final INamedContainerProvider box = getContainer( state, worldIn, pos );
 			if( box != null )
 				NetworkHooks.openGui( (ServerPlayerEntity)player, box, pos );
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 
 public class CardboardColor implements IItemColor, IBlockColor
 {
@@ -29,7 +29,7 @@ public class CardboardColor implements IItemColor, IBlockColor
 	}
 
 	@Override
-	public int getColor( BlockState state, IEnviromentBlockReader reader, BlockPos pos, int tint )
+	public int getColor( BlockState state, ILightReader reader, BlockPos pos, int tint )
 	{
 		final TileEntity tileEntity = reader.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityCardboardBox )

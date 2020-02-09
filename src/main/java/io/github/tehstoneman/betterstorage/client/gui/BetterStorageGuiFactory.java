@@ -1,36 +1,35 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import java.util.Set;
-
 import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.IModGuiFactory;
 
-public class BetterStorageGuiFactory implements IModGuiFactory
+public class BetterStorageGuiFactory // implements IModGuiFactory
 {
-	@Override
+	// @Override
 	public void initialize( Minecraft minecraftInstance )
 	{}
 
-	@Override
+	// @Override
 	public boolean hasConfigGui()
 	{
 		return true;
 	}
 
-	@Override
+	// @Override
 	public Screen createConfigGui( Screen parentScreen )
 	{
 		return new BetterStorageGuiConfig( parentScreen );
 	}
 
-	@Override
-	public Set< RuntimeOptionCategoryElement > runtimeGuiCategories()
-	{
-		return null;
-	}
+	/*
+	 * @Override
+	 * public Set< RuntimeOptionCategoryElement > runtimeGuiCategories()
+	 * {
+	 * return null;
+	 * }
+	 */
 
 	public static class BetterStorageGuiConfig extends Screen
 	{

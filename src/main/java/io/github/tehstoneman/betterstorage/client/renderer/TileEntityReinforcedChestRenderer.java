@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
@@ -10,28 +11,32 @@ import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.model.ChestModel;
-import net.minecraft.client.renderer.tileentity.model.LargeChestModel;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.IChestLid;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileEntityReinforcedChest >
 {
+	public TileEntityReinforcedChestRenderer( TileEntityRendererDispatcher rendererDispatcherIn )
+	{
+		super( rendererDispatcherIn );
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final ResourceLocation	TEXTURE_NORMAL_DOUBLE	= new ResourceLocation( ModInfo.MOD_ID,
 			"textures/entity/chest/reinforced_double.png" );
 	private static final ResourceLocation	TEXTURE_NORMAL			= new ResourceLocation( ModInfo.MOD_ID, "textures/entity/chest/reinforced.png" );
 
-	private final ChestModel				simpleChest				= new ChestModel();
-	private final ChestModel				largeChest				= new LargeChestModel();
+	// private final ChestModel simpleChest = new ChestModel();
+	// private final ChestModel largeChest = new LargeChestModel();
 
-	@Override
+	// @Override
 	public void render( TileEntityReinforcedChest tileEntityChest, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		// Modified from vanilla chest
@@ -46,7 +51,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 		if( chesttype != ConnectedType.SLAVE )
 		{
 			final boolean flag = chesttype != ConnectedType.SINGLE;
-			final ChestModel modelchest = getChestModel( tileEntityChest, destroyStage, flag );
+			// final ChestModel modelchest = getChestModel( tileEntityChest, destroyStage, flag );
 
 			if( destroyStage >= 0 )
 			{
@@ -72,8 +77,8 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 				GlStateManager.translatef( -0.5F, -0.5F, -0.5F );
 			}
 
-			rotateLid( tileEntityChest, partialTicks, modelchest );
-			modelchest.renderAll();
+			// rotateLid( tileEntityChest, partialTicks, modelchest );
+			// modelchest.renderAll();
 			renderItem( tileEntityChest, partialTicks, destroyStage, iblockstate );
 
 			GlStateManager.disableRescaleNormal();
@@ -88,25 +93,29 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 		}
 	}
 
-	private ChestModel getChestModel( TileEntityReinforcedChest tileEntityChest, int destroyStage, boolean flag )
-	{
-		ResourceLocation resourcelocation;
-		if( destroyStage >= 0 )
-			resourcelocation = DESTROY_STAGES[destroyStage];
-		else
-			resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
+	/*
+	 * private ChestModel getChestModel( TileEntityReinforcedChest tileEntityChest, int destroyStage, boolean flag )
+	 * {
+	 * ResourceLocation resourcelocation;
+	 * if( destroyStage >= 0 )
+	 * resourcelocation = DESTROY_STAGES[destroyStage];
+	 * else
+	 * resourcelocation = flag ? TEXTURE_NORMAL_DOUBLE : TEXTURE_NORMAL;
+	 * 
+	 * bindTexture( resourcelocation );
+	 * return flag ? largeChest : simpleChest;
+	 * }
+	 */
 
-		bindTexture( resourcelocation );
-		return flag ? largeChest : simpleChest;
-	}
-
-	private void rotateLid( TileEntityReinforcedChest tileEntityChest, float partialTicks, ChestModel modelchest )
-	{
-		float f = ( (IChestLid)tileEntityChest ).getLidAngle( partialTicks );
-		f = 1.0F - f;
-		f = 1.0F - f * f * f;
-		modelchest.getLid().rotateAngleX = -( f * ( (float)Math.PI / 2F ) );
-	}
+	/*
+	 * private void rotateLid( TileEntityReinforcedChest tileEntityChest, float partialTicks, ChestModel modelchest )
+	 * {
+	 * float f = ( (IChestLid)tileEntityChest ).getLidAngle( partialTicks );
+	 * f = 1.0F - f;
+	 * f = 1.0F - f * f * f;
+	 * modelchest.getLid().rotateAngleX = -( f * ( (float)Math.PI / 2F ) );
+	 * }
+	 */
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
 	private void renderItem( TileEntityReinforcedChest chest, float partialTicks, int destroyStage, BlockState state )
@@ -127,11 +136,19 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 			GlStateManager.scaled( 0.5, 0.5, 0.5 );
 
 			RenderHelper.enableStandardItemLighting();
-			itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			// itemRenderer.renderItem( entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED );
 			RenderHelper.disableStandardItemLighting();
 
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void render( TileEntityReinforcedChest tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+			int combinedLightIn, int combinedOverlayIn )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -2,8 +2,8 @@ package io.github.tehstoneman.betterstorage.common.block;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
+import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import net.minecraft.block.Block;
@@ -21,7 +21,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -74,10 +74,11 @@ public class BlockLockableDoor extends Block
 	}
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+			BlockRayTraceResult hit )
 	{
 		if( worldIn.isRemote )
-			return true;
+			return ActionResultType.SUCCESS;
 		else
 		{
 			if( state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
@@ -90,13 +91,13 @@ public class BlockLockableDoor extends Block
 				{
 					final ItemStack lock = tileDoor.getLock();
 					( (ILock)lock.getItem() ).applyEffects( lock, tileDoor, player, LockInteraction.OPEN );
-					return false;
+					return ActionResultType.PASS;
 				}
-				if( player.isSneaking() )
+				if( player.isCrouching() )
 				{
 					worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileDoor.getLock().copy() ) );
 					tileDoor.setLock( ItemStack.EMPTY );
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 				state = state.cycle( DoorBlock.OPEN );
 				worldIn.setBlockState( pos, worldIn.getBlockState( pos ).cycle( DoorBlock.OPEN ), 11 );
@@ -104,7 +105,7 @@ public class BlockLockableDoor extends Block
 				worldIn.playEvent( player, state.get( DoorBlock.OPEN ) ? getOpenSound() : getCloseSound(), pos, 0 );
 			}
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -186,11 +187,13 @@ public class BlockLockableDoor extends Block
 		return super.getExplosionResistance( state, world, pos, exploder, explosion );
 	}
 
-	@Override
-	public BlockRenderLayer getRenderLayer()
-	{
-		return BlockRenderLayer.CUTOUT;
-	}
+	/*
+	 * @Override
+	 * public BlockRenderLayer getRenderLayer()
+	 * {
+	 * return BlockRenderLayer.CUTOUT;
+	 * }
+	 */
 
 	@Override
 	public boolean canProvidePower( BlockState state )

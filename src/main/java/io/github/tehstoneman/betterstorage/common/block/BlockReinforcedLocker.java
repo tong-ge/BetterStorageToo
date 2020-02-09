@@ -18,6 +18,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +48,7 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( hit.getFace() == state.get( FACING ) )
 		{
@@ -60,20 +61,20 @@ public class BlockReinforcedLocker extends BlockLocker
 					{
 						final ItemStack lock = tileChest.getLock();
 						( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
-						return false;
+						return ActionResultType.PASS;
 					}
-					if( player.isSneaking() )
+					if( player.isCrouching() )
 					{
 						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
 						tileChest.setLock( ItemStack.EMPTY );
-						return true;
+						return ActionResultType.SUCCESS;
 					}
 				}
 				return super.onBlockActivated( state, worldIn, pos, player, hand, hit );
 			}
-			return true;
+			return ActionResultType.SUCCESS;
 		}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	@Nullable

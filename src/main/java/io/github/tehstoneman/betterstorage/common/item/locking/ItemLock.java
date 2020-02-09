@@ -41,7 +41,7 @@ public class ItemLock extends KeyLockItem implements ILock
 	 * {
 	 * return material.getItem() == Items.GOLD_INGOT;
 	 * }
-	 * 
+	 *
 	 * @Override
 	 * public boolean isDamageable()
 	 * {
@@ -149,8 +149,8 @@ public class ItemLock extends KeyLockItem implements ILock
 				damage *= 3;
 			player.attackEntityFrom( DamageSource.MAGIC, damage );
 			final World world = player.getEntityWorld();
-			world.playSound( (PlayerEntity)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 0.5f,
-					world.rand.nextFloat() * 0.1F + 0.9F );
+			world.playSound( (PlayerEntity)null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_BLAZE_SHOOT,
+					SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1F + 0.9F );
 			if( shock >= 3 && interaction != LockInteraction.OPEN )
 				player.setFire( 3 );
 		}

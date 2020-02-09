@@ -23,6 +23,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
@@ -114,16 +115,16 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	}
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( worldIn.isRemote )
-			return true;
+			return ActionResultType.SUCCESS;
 		else
 		{
 			final INamedContainerProvider tileEntityCrate = getContainer( state, worldIn, pos );
 			if( tileEntityCrate != null )
 				NetworkHooks.openGui( (ServerPlayerEntity)player, tileEntityCrate, pos );
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

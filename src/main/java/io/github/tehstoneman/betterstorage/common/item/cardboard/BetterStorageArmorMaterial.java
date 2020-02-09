@@ -7,7 +7,6 @@ import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyLoadBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -17,14 +16,14 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 	CARDBOARD( "cardboard", 3, new int[] { 1, 2, 3, 1 }, 12, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F,
 			() -> Ingredient.fromItems( BetterStorageItems.CARDBOARD_SHEET ) ),;
 
-	private static final int[]			MAX_DAMAGE_ARRAY	= new int[] { 13, 15, 16, 11 };
-	private String						name;
-	private int							maxDamageFactor;
-	private int[]						damageReductionAmountArray;
-	private int							enchantability;
-	private SoundEvent					soundEvent;
-	private float						toughness;
-	private LazyLoadBase< Ingredient >	repairMaterial;
+	private static final int[]	MAX_DAMAGE_ARRAY	= new int[] { 13, 15, 16, 11 };
+	private String				name;
+	private int					maxDamageFactor;
+	private int[]				damageReductionAmountArray;
+	private int					enchantability;
+	private SoundEvent			soundEvent;
+	private float				toughness;
+	// private LazyLoadBase< Ingredient > repairMaterial;
 
 	BetterStorageArmorMaterial( final String name, final int maxDamageFactor, final int[] damageReductionAmountArray, final int enchantability,
 			final SoundEvent soundEvent, final float toughness, final Supplier< Ingredient > repairMaterial )
@@ -35,7 +34,7 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 		this.enchantability = enchantability;
 		this.soundEvent = soundEvent;
 		this.toughness = toughness;
-		this.repairMaterial = new LazyLoadBase<>( repairMaterial );
+		// this.repairMaterial = new LazyLoadBase<>( repairMaterial );
 	}
 
 	@Override
@@ -65,7 +64,8 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 	@Override
 	public Ingredient getRepairMaterial()
 	{
-		return repairMaterial.getValue();
+		// return repairMaterial.getValue();
+		return null;
 	}
 
 	@Override

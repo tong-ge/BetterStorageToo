@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
@@ -8,10 +9,11 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.DoorHingeSide;
@@ -20,7 +22,13 @@ import net.minecraft.util.Direction;
 
 public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEntityLockableDoor >
 {
-	@Override
+	public TileEntityLockableDoorRenderer( TileEntityRendererDispatcher rendererDispatcherIn )
+	{
+		super( rendererDispatcherIn );
+		// TODO Auto-generated constructor stub
+	}
+
+	// @Override
 	public void render( TileEntityLockableDoor tileEntityDoor, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		final BlockState iblockstate = tileEntityDoor.hasWorld() ? tileEntityDoor.getBlockState()
@@ -68,18 +76,25 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
 			final boolean open = state.get( DoorBlock.OPEN );
 
-			if( open )
-				GlStateManager.rotated( left ? 90 : -90, 0.0, 1.0, 0.0 );
+			// if( open ) GlStateManager.rotated( left ? 90 : -90, 0.0, 1.0, 0.0 );
 			GlStateManager.translated( left ? -0.25 : 0.25, -0.0625, open ? 0.280875 : -0.531625 );
 
 			GlStateManager.scaled( 0.5, 0.5, 0.5 );
 
 			RenderHelper.enableStandardItemLighting();
-			itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
+			// itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
 			RenderHelper.disableStandardItemLighting();
 
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void render( TileEntityLockableDoor tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+			int combinedLightIn, int combinedOverlayIn )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

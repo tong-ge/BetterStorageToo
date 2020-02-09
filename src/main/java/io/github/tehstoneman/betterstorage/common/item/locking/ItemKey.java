@@ -83,7 +83,7 @@ public class ItemKey extends KeyLockItem implements IKey
 				final IKeyLockable lockable = (IKeyLockable)tileEntity;
 				if( unlock( stack, lockable.getLock(), false ) )
 				{
-					if( playerIn.isSneaking() )
+					if( playerIn.isCrouching() )
 					{
 						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
 						lockable.setLock( ItemStack.EMPTY );

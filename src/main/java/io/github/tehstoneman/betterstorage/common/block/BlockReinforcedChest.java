@@ -35,6 +35,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
@@ -106,11 +107,11 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		return new TileEntityReinforcedChest();
 	}
 
-	@Override
+	/*@Override
 	public boolean hasCustomBreakingProgress( BlockState state )
 	{
 		return true;
-	}
+	}*/
 
 	/*
 	 * =========
@@ -143,7 +144,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.isPlacerSneaking();
+		final boolean sneaking = context.func_225518_g_();
 
 		final Direction direction1 = context.getFace();
 		if( direction1.getAxis().isHorizontal() && sneaking )
@@ -330,10 +331,10 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 */
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( worldIn.isRemote )
-			return true;
+			return ActionResultType.SUCCESS;
 		else
 		{
 			final TileEntityReinforcedChest tileChest = getChestAt( worldIn, pos );
@@ -343,13 +344,13 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				{
 					final ItemStack lock = tileChest.getLock();
 					( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
-					return false;
+					return ActionResultType.PASS;
 				}
-				if( player.isSneaking() )
+				if( player.isCrouching() )
 				{
 					worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
 					tileChest.setLock( ItemStack.EMPTY );
-					return true;
+					return ActionResultType.SUCCESS;
 				}
 			}
 			final INamedContainerProvider chest = getContainer( state, worldIn, pos );
@@ -359,7 +360,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				player.addStat( getOpenStat() );
 			}
 
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 

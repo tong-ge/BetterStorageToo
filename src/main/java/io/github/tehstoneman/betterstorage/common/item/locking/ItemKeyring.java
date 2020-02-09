@@ -49,7 +49,7 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	{
 		final ItemStack stack = player.getHeldItem( hand );
 
-		if( !player.isSneaking() )
+		if( !player.isCrouching() )
 			return new ActionResult( ActionResultType.PASS, stack );
 
 		if( !world.isRemote )

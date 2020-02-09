@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityTank;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,7 +14,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
@@ -74,11 +73,13 @@ public class BlockTank extends BlockContainerBetterStorage
 	 * ======================
 	 */
 
-	@Override
-	public BlockRenderLayer getRenderLayer()
-	{
-		return BlockRenderLayer.CUTOUT;
-	}
+	/*
+	 * @Override
+	 * public BlockRenderLayer getRenderLayer()
+	 * {
+	 * return BlockRenderLayer.CUTOUT;
+	 * }
+	 */
 
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
@@ -99,7 +100,7 @@ public class BlockTank extends BlockContainerBetterStorage
 	 */
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		final ItemStack itemStack = player.getHeldItem( hand );
 		final LazyOptional< IFluidHandlerItem > capability = itemStack.getCapability( CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY );
@@ -107,7 +108,7 @@ public class BlockTank extends BlockContainerBetterStorage
 		{
 			final IFluidHandlerItem handler = capability.orElse( null );
 			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getFace() );
-			return success;
+			return success ? ActionResultType.SUCCESS : ActionResultType.PASS;
 		}
 		return super.onBlockActivated( state, world, pos, player, hand, hit );
 	}

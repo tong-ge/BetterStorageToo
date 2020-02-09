@@ -28,6 +28,7 @@ import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
@@ -98,11 +99,11 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		return new TileEntityLocker();
 	}
 
-	@Override
+	/*@Override
 	public boolean hasCustomBreakingProgress( BlockState state )
 	{
 		return true;
-	}
+	}*/
 
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
@@ -133,7 +134,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		final Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.isPlacerSneaking();
+		final boolean sneaking = context.func_225518_g_();
 		DoorHingeSide hingeSide = getHingeSide( context );
 		if( connectedType == ConnectedType.SINGLE && !sneaking )
 			if( direction == getDirectionToAttach( context, Direction.DOWN ) )
@@ -288,11 +289,11 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	 */
 
 	@Override
-	public boolean onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
 		if( hit.getFace() == state.get( FACING ) )
 			if( worldIn.isRemote )
-				return true;
+				return ActionResultType.SUCCESS;
 			else
 			{
 				final INamedContainerProvider locker = getContainer( state, worldIn, pos );
@@ -301,9 +302,9 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 					NetworkHooks.openGui( (ServerPlayerEntity)player, locker, pos );
 					player.addStat( getOpenStat() );
 				}
-				return true;
+				return ActionResultType.SUCCESS;
 			}
-		return false;
+		return ActionResultType.PASS;
 	}
 
 	protected Stat< ResourceLocation > getOpenStat()
