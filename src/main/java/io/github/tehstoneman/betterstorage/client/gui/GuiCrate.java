@@ -28,6 +28,7 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 	@Override
 	public void render( int mouseX, int mouseY, float partialTicks )
 	{
+		renderBackground();
 		super.render( mouseX, mouseY, partialTicks );
 
 		if( mouseX >= guiLeft + 115 && mouseX < guiLeft + 169 && mouseY >= guiTop + 7 && mouseY < guiTop + 13 )

@@ -90,18 +90,16 @@ minecraft {
 }
 
 repositories {
-	/*maven
-	{
-    	// location of the maven that hosts JEI files
-    	name = "Progwml6 maven"
-    	url = "http://dvs1.progwml6.com/files/maven"
-  	}*/
-  	/*maven
-  	{
-    	// location of a maven mirror for JEI files, as a fallback
-    	name = "ModMaven"
-    	url = "modmaven.k-4u.nl"
-  	}*/
+	maven {
+	    // location of the maven that hosts JEI files
+	    name = "Progwml6 maven"
+	    url = "https://dvs1.progwml6.com/files/maven/"
+	}
+	maven {
+	    // location of a maven mirror for JEI files, as a fallback
+	    name = "ModMaven"
+	    url = "https://modmaven.k-4u.nl"
+	}
   	/*ivy
     {
         name "MineTweaker3"
@@ -143,9 +141,9 @@ dependencies {
     //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
 
 	// compile against the JEI API but do not include it at runtime
-	//deobfProvided "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"
+	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
 	// at runtime, use the full JEI jar
-	//runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
+	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
