@@ -46,6 +46,7 @@ public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChes
 	@Override
 	public void render( int mouseX, int mouseY, float partialTicks )
 	{
+		renderBackground();
 		super.render( mouseX, mouseY, partialTicks );
 		renderHoveredToolTip( mouseX, mouseY );
 	}

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Removed
+## [4.1.0.1] - 2020-02-11
+### Changed
+- Fixed background rendering of GUI's.
+- Fixed color rendering of armor.
 
 ## [4.1.0.0] - 2020-01-26
 ### Added

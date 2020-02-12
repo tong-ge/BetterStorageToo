@@ -46,6 +46,7 @@ public class GuiReinforcedLocker extends ContainerScreen< ContainerReinforcedLoc
 	@Override
 	public void render( int mouseX, int mouseY, float partialTicks )
 	{
+		renderBackground();
 		super.render( mouseX, mouseY, partialTicks );
 		renderHoveredToolTip( mouseX, mouseY );
 	}

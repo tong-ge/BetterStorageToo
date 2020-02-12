@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -42,6 +41,7 @@ public class GuiLocker extends ContainerScreen< ContainerLocker >
 	@Override
 	public void render( int mouseX, int mouseY, float partialTicks )
 	{
+		renderBackground();
 		super.render( mouseX, mouseY, partialTicks );
 		renderHoveredToolTip( mouseX, mouseY );
 	}

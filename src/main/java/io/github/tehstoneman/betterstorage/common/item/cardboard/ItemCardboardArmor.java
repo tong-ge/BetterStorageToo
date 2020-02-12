@@ -5,13 +5,11 @@ import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 
-public class ItemCardboardArmor extends ArmorItem implements ICardboardItem
+public class ItemCardboardArmor extends DyeableArmorItem implements ICardboardItem
 {
 	private static final String[] armorText = { "Helmet", "Chestplate", "Leggings", "Boots" };
 
@@ -25,5 +23,23 @@ public class ItemCardboardArmor extends ArmorItem implements ICardboardItem
 	{
 		return ( type != null ? Resources.TEXTURE_EMPTY
 				: slot == EquipmentSlotType.LEGS ? Resources.TEXTURE_CARDBOARD_LEGGINGS : Resources.TEXTURE_CARDBOARD_ARMOR ).toString();
+	}
+
+	@Override
+	public boolean hasColor( ItemStack stack )
+	{
+		return ICardboardItem.super.hasColor( stack );
+	}
+
+	@Override
+	public int getColor( ItemStack stack )
+	{
+		return ICardboardItem.super.getColor( stack );
+	}
+
+	@Override
+	public void setColor( ItemStack itemStack, int colorRGB )
+	{
+		ICardboardItem.super.setColor( itemStack, colorRGB );
 	}
 }
