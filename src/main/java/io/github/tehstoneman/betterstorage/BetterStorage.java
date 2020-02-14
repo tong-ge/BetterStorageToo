@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -48,6 +49,9 @@ public class BetterStorage
 
 		BetterStorageConfig.register( ModLoadingContext.get() );
 
+		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		BetterStorageBlocks.BLOCK_REGISTER.register( modEventBus );
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 	}
@@ -59,7 +63,7 @@ public class BetterStorage
 		DeferredWorkQueue.runLater( () ->
 		{
 			if( BetterStorageConfig.COMMON.cardboardBoxDispenserPlaceable.get() )
-				DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX, new OptionalDispenseBehavior()
+				DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX.get(), new OptionalDispenseBehavior()
 				{
 					/**
 					 * Dispense the specified stack, play the dispense sound and spawn particles.
@@ -83,12 +87,4 @@ public class BetterStorage
 				} );
 		} );
 	}
-
-	/*
-	 * public void preInit( FMLPreInitializationEvent event )
-	 * {
-	 * // Addon.initialize();
-	 * // Addon.setupConfigsAll();
-	 * }
-	 */
 }

@@ -39,27 +39,27 @@ public final class BetterStorageContainerTypes
 			{
 				final BlockPos pos = data.readBlockPos();
 				return new ContainerCrate( windowID, inv, getClientWorld(), pos );
-			} ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageBlocks.CRATE.get().getRegistryName() ) );
 			registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 			{
 				final BlockPos pos = data.readBlockPos();
 				return new ContainerLocker( windowID, inv, getClientWorld(), pos );
-			} ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageBlocks.LOCKER.get().getRegistryName() ) );
 			registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 			{
 				final BlockPos pos = data.readBlockPos();
 				return new ContainerReinforcedChest( windowID, inv, getClientWorld(), pos );
-			} ).setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.get().getRegistryName() ) );
 			registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 			{
 				final BlockPos pos = data.readBlockPos();
 				return new ContainerReinforcedLocker( windowID, inv, getClientWorld(), pos );
-			} ).setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.get().getRegistryName() ) );
 			registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 			{
 				final BlockPos pos = data.readBlockPos();
 				return new ContainerCardboardBox( windowID, inv, getClientWorld(), pos );
-			} ).setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.get().getRegistryName() ) );
 			registry.register( IForgeContainerType.create( ( windowID, inv, data ) ->
 			{
 				final ItemStack keyring = data.readItemStack();

@@ -80,12 +80,12 @@ public class ItemLock extends KeyLockItem implements ILock
 				}
 
 				//@formatter:off
-				worldIn.setBlockState( pos, BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
+				worldIn.setBlockState( pos, BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState()
 						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
 						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
 						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
 						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
-				worldIn.setBlockState( pos.up(), BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState()
+				worldIn.setBlockState( pos.up(), BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState()
 						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
 						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
 						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )

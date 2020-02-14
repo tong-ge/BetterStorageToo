@@ -17,6 +17,6 @@ public class BetterStorageItemGroup extends ItemGroup
 	@Override
 	public ItemStack createIcon()
 	{
-		return new ItemStack( BetterStorageBlocks.CRATE );
+		return new ItemStack( BetterStorageBlocks.CRATE.get() );
 	}
 }

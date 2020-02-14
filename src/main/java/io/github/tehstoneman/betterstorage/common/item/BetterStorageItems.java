@@ -59,12 +59,12 @@ public final class BetterStorageItems
 		{
 			final IForgeRegistry< Item > registry = event.getRegistry();
 
-			registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE ).setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
-			registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
-			registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER ).setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
-			registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
+			registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE.get() ).setRegistryName( BetterStorageBlocks.CRATE.get().getRegistryName() ) );
+			registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST.get() )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.get().getRegistryName() ) );
+			registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER.get() ).setRegistryName( BetterStorageBlocks.LOCKER.get().getRegistryName() ) );
+			registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER.get() )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.get().getRegistryName() ) );
 
 			registry.register( new ItemKey().setRegistryName( "key" ) );
 			registry.register( new ItemKeyring().setRegistryName( "keyring" ) );
@@ -73,7 +73,7 @@ public final class BetterStorageItems
 
 			registry.register( new ItemCardboardSheet().setRegistryName( ModInfo.MOD_ID, "cardboard_sheet" ) );
 
-			registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX ).setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
+			registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX.get() ).setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
 
 			registry.register( new ItemCardboardSword().setRegistryName( ModInfo.MOD_ID, "cardboard_sword" ) );
 			registry.register( new ItemCardboardShovel().setRegistryName( ModInfo.MOD_ID, "cardboard_shovel" ) );
@@ -86,10 +86,10 @@ public final class BetterStorageItems
 			registry.register( new ItemCardboardArmor( EquipmentSlotType.LEGS ).setRegistryName( "cardboard_leggings" ) );
 			registry.register( new ItemCardboardArmor( EquipmentSlotType.FEET ).setRegistryName( "cardboard_boots" ) );
 
-			registry.register( new BlockItem( BetterStorageBlocks.BLOCK_FLINT, new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
-					.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.getRegistryName() ) );
-			registry.register( new BlockItem( BetterStorageBlocks.GLASS_TANK, new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
-					.setRegistryName( BetterStorageBlocks.GLASS_TANK.getRegistryName() ) );
+			registry.register( new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
+					.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.get().getRegistryName() ) );
+			registry.register( new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
+					.setRegistryName( BetterStorageBlocks.GLASS_TANK.get().getRegistryName() ) );
 		}
 	}
 }

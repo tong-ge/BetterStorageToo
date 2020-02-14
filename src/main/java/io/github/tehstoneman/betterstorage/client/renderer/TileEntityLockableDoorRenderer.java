@@ -32,7 +32,7 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 	public void render( TileEntityLockableDoor tileEntityDoor, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		final BlockState iblockstate = tileEntityDoor.hasWorld() ? tileEntityDoor.getBlockState()
-				: BetterStorageBlocks.LOCKABLE_DOOR.getDefaultState().with( DoorBlock.FACING, Direction.SOUTH );
+				: BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState().with( DoorBlock.FACING, Direction.SOUTH );
 		final DoubleBlockHalf lockertype = iblockstate.has( DoorBlock.HALF ) ? iblockstate.get( DoorBlock.HALF ) : DoubleBlockHalf.LOWER;
 
 		if( lockertype == DoubleBlockHalf.UPPER )

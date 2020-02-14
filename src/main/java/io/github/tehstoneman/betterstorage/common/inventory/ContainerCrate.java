@@ -139,6 +139,6 @@ public class ContainerCrate extends Container
 	@Override
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
-		return isWithinUsableDistance( IWorldPosCallable.of( tileCrate.getWorld(), tileCrate.getPos() ), playerIn, BetterStorageBlocks.CRATE );
+		return isWithinUsableDistance( IWorldPosCallable.of( tileCrate.getWorld(), tileCrate.getPos() ), playerIn, BetterStorageBlocks.CRATE.get() );
 	}
 }

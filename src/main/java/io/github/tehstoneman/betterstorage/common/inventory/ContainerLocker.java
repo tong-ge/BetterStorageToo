@@ -121,6 +121,6 @@ public class ContainerLocker extends Container
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
-				BetterStorageBlocks.LOCKER );
+				BetterStorageBlocks.LOCKER.get() );
 	}
 }

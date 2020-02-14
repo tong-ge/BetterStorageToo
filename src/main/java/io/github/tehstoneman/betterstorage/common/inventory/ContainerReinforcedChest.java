@@ -121,6 +121,6 @@ public class ContainerReinforcedChest extends Container
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
-				BetterStorageBlocks.REINFORCED_CHEST );
+				BetterStorageBlocks.REINFORCED_CHEST.get() );
 	}
 }

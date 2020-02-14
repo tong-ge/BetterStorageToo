@@ -5,43 +5,25 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageBlocks
 {
-	//@formatter:off
-	@ObjectHolder( "crate" )				public static BlockCrate			CRATE;
-	@ObjectHolder( "reinforced_chest" )		public static BlockReinforcedChest	REINFORCED_CHEST;
-	@ObjectHolder( "locker" )				public static BlockLocker			LOCKER;
-	@ObjectHolder( "reinforced_locker" )	public static BlockReinforcedLocker REINFORCED_LOCKER;
-	@ObjectHolder( "block_flint" )			public static Block					BLOCK_FLINT;
-	@ObjectHolder( "lockable_door" )		public static BlockLockableDoor		LOCKABLE_DOOR;
-	@ObjectHolder( "cardboard_box" )		public static BlockCardboardBox		CARDBOARD_BOX;
-	@ObjectHolder( "glass_tank" )			public static BlockTank				GLASS_TANK;
-	//@formatter:on
+	public static final DeferredRegister< Block >			BLOCK_REGISTER		= new DeferredRegister<>( ForgeRegistries.BLOCKS, ModInfo.MOD_ID );
 
-	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
-	private static class Register
-	{
-		@SubscribeEvent
-		public static void onBlocksRegistry( final RegistryEvent.Register< Block > event )
-		{
-			final IForgeRegistry< Block > registry = event.getRegistry();
-
-			registry.register( new BlockCrate().setRegistryName( ModInfo.MOD_ID, "crate" ) );
-			registry.register( new BlockReinforcedChest().setRegistryName( ModInfo.MOD_ID, "reinforced_chest" ) );
-			registry.register( new BlockLocker().setRegistryName( ModInfo.MOD_ID, "locker" ) );
-			registry.register( new BlockReinforcedLocker().setRegistryName( ModInfo.MOD_ID, "reinforced_locker" ) );
-			registry.register( new BlockLockableDoor().setRegistryName( ModInfo.MOD_ID, "lockable_door" ) );
-			registry.register( new BlockCardboardBox().setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
-			registry.register( new Block( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance( 5.0F, 6.0F ) )
-					.setRegistryName( ModInfo.MOD_ID, "block_flint" ) );
-			registry.register( new BlockTank().setRegistryName( ModInfo.MOD_ID, "glass_tank" ) );
-		}
-	}
+	public static RegistryObject< BlockCrate >				CRATE				= BLOCK_REGISTER.register( "crate", () -> new BlockCrate() );
+	public static RegistryObject< BlockReinforcedChest >	REINFORCED_CHEST	= BLOCK_REGISTER.register( "reinforced_chest",
+			() -> new BlockReinforcedChest() );
+	public static RegistryObject< BlockLocker >				LOCKER				= BLOCK_REGISTER.register( "locker", () -> new BlockLocker() );
+	public static RegistryObject< BlockReinforcedLocker >	REINFORCED_LOCKER	= BLOCK_REGISTER.register( "reinforced_locker",
+			() -> new BlockReinforcedLocker() );
+	public static RegistryObject< Block >					BLOCK_FLINT			= BLOCK_REGISTER.register( "block_flint",
+			() -> new Block( Properties.create( Material.ROCK, MaterialColor.BLACK ).hardnessAndResistance( 5.0F, 6.0F ) ) );
+	public static RegistryObject< BlockLockableDoor >		LOCKABLE_DOOR		= BLOCK_REGISTER.register( "lockable_door",
+			() -> new BlockLockableDoor() );
+	public static RegistryObject< BlockCardboardBox >		CARDBOARD_BOX		= BLOCK_REGISTER.register( "cardboard_box",
+			() -> new BlockCardboardBox() );
+	public static RegistryObject< BlockTank >				GLASS_TANK			= BLOCK_REGISTER.register( "glass_tank", () -> new BlockTank() );
 }

@@ -30,20 +30,20 @@ public final class BetterStorageTileEntityTypes
 		{
 			final IForgeRegistry< TileEntityType< ? > > registry = event.getRegistry();
 
-			registry.register( TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE ).build( null )
-					.setRegistryName( BetterStorageBlocks.CRATE.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityReinforcedChest::new, BetterStorageBlocks.REINFORCED_CHEST ).build( null )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER ).build( null )
-					.setRegistryName( BetterStorageBlocks.LOCKER.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER ).build( null )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityLockableDoor::new, BetterStorageBlocks.LOCKABLE_DOOR ).build( null )
-					.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX ).build( null )
-					.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK ).build( null )
-					.setRegistryName( BetterStorageBlocks.GLASS_TANK.getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.CRATE.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityReinforcedChest::new, BetterStorageBlocks.REINFORCED_CHEST.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.LOCKER.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityLockableDoor::new, BetterStorageBlocks.LOCKABLE_DOOR.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.get().getRegistryName() ) );
+			registry.register( TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK.get() ).build( null )
+					.setRegistryName( BetterStorageBlocks.GLASS_TANK.get().getRegistryName() ) );
 		}
 	}
 }

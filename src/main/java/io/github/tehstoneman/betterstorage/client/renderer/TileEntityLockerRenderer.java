@@ -56,7 +56,7 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 		GlStateManager.depthMask( true );
 
 		final BlockState iblockstate = tileEntityLocker.hasWorld() ? tileEntityLocker.getBlockState()
-				: BetterStorageBlocks.LOCKER.getDefaultState().with( BlockLocker.FACING, Direction.SOUTH );
+				: BetterStorageBlocks.LOCKER.get().getDefaultState().with( BlockLocker.FACING, Direction.SOUTH );
 		final ConnectedType lockertype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
 				: ConnectedType.SINGLE;
 		final DoorHingeSide hingeSide = iblockstate.has( BlockStateProperties.DOOR_HINGE ) ? iblockstate.get( BlockStateProperties.DOOR_HINGE )

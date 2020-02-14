@@ -122,6 +122,6 @@ public class ContainerCardboardBox extends Container
 	public boolean canInteractWith( PlayerEntity playerIn )
 	{
 		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
-				BetterStorageBlocks.CARDBOARD_BOX );
+				BetterStorageBlocks.CARDBOARD_BOX.get() );
 	}
 }

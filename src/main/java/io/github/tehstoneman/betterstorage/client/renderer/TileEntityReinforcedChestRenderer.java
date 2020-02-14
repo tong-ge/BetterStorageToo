@@ -45,7 +45,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 		GlStateManager.depthMask( true );
 
 		final BlockState iblockstate = tileEntityChest.hasWorld() ? tileEntityChest.getBlockState()
-				: BetterStorageBlocks.REINFORCED_CHEST.getDefaultState().with( BlockReinforcedChest.FACING, Direction.SOUTH );
+				: BetterStorageBlocks.REINFORCED_CHEST.get().getDefaultState().with( BlockReinforcedChest.FACING, Direction.SOUTH );
 		final ConnectedType chesttype = iblockstate.has( BlockConnectableContainer.TYPE ) ? iblockstate.get( BlockConnectableContainer.TYPE )
 				: ConnectedType.SINGLE;
 		if( chesttype != ConnectedType.SLAVE )
