@@ -27,7 +27,7 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 
 	public TileEntityLockableDoor()
 	{
-		super( BetterStorageTileEntityTypes.LOCKABLE_DOOR );
+		super( BetterStorageTileEntityTypes.LOCKABLE_DOOR.get() );
 	}
 
 	@Override

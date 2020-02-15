@@ -41,7 +41,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	public TileEntityReinforcedChest()
 	{
-		super( BetterStorageTileEntityTypes.REINFORCED_CHEST );
+		super( BetterStorageTileEntityTypes.REINFORCED_CHEST.get() );
 	}
 
 	@Override

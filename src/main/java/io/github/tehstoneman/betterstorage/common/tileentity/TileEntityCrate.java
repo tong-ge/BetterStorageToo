@@ -67,7 +67,7 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public TileEntityCrate()
 	{
-		this( BetterStorageTileEntityTypes.CRATE );
+		this( BetterStorageTileEntityTypes.CRATE.get() );
 	}
 
 	@Override

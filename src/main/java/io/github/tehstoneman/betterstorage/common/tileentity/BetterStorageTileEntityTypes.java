@@ -3,47 +3,27 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageTileEntityTypes
 {
-	//@formatter:off
-	@ObjectHolder( "crate" )				public static TileEntityType< TileEntityCrate >				CRATE;
-	@ObjectHolder( "cardboard_box" )		public static TileEntityType< TileEntityCardboardBox >		CARDBOARD_BOX;
-	@ObjectHolder( "reinforced_chest" )		public static TileEntityType< TileEntityReinforcedChest >	REINFORCED_CHEST;
-	@ObjectHolder( "locker" )				public static TileEntityType< TileEntityLocker >			LOCKER;
-	@ObjectHolder( "reinforced_locker" )	public static TileEntityType< TileEntityReinforcedLocker >	REINFORCED_LOCKER;
-	@ObjectHolder( "lockable_door" )		public static TileEntityType< TileEntityLockableDoor >		LOCKABLE_DOOR;
-	@ObjectHolder( "glass_tank" )			public static TileEntityType< TileEntityTank > 				GLASS_TANK;
-	//@formatter:on
+	public static final DeferredRegister< TileEntityType< ? > >						REGISTERY			= new DeferredRegister<>(
+			ForgeRegistries.TILE_ENTITIES, ModInfo.MOD_ID );
 
-	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
-	private static class Register
-	{
-		@SubscribeEvent
-		public static void onTileEntityRegistry( final RegistryEvent.Register< TileEntityType< ? > > event )
-		{
-			final IForgeRegistry< TileEntityType< ? > > registry = event.getRegistry();
-
-			registry.register( TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.CRATE.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityReinforcedChest::new, BetterStorageBlocks.REINFORCED_CHEST.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.LOCKER.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityLockableDoor::new, BetterStorageBlocks.LOCKABLE_DOOR.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.LOCKABLE_DOOR.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.CARDBOARD_BOX.get().getRegistryName() ) );
-			registry.register( TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK.get() ).build( null )
-					.setRegistryName( BetterStorageBlocks.GLASS_TANK.get().getRegistryName() ) );
-		}
-	}
+	public static RegistryObject< TileEntityType< TileEntityCardboardBox > >		CARDBOARD_BOX		= REGISTERY.register( "cardboard_box",
+			() -> TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityCrate > >				CRATE				= REGISTERY.register( "crate",
+			() -> TileEntityType.Builder.create( TileEntityCrate::new, BetterStorageBlocks.CRATE.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityLockableDoor > >		LOCKABLE_DOOR		= REGISTERY.register( "lockable_door",
+			() -> TileEntityType.Builder.create( TileEntityLockableDoor::new, BetterStorageBlocks.LOCKABLE_DOOR.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityLocker > >				LOCKER				= REGISTERY.register( "locker",
+			() -> TileEntityType.Builder.create( TileEntityLocker::new, BetterStorageBlocks.LOCKER.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityReinforcedChest > >		REINFORCED_CHEST	= REGISTERY.register( "reinforced_chest",
+			() -> TileEntityType.Builder.create( TileEntityReinforcedChest::new, BetterStorageBlocks.REINFORCED_CHEST.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityReinforcedLocker > >	REINFORCED_LOCKER	= REGISTERY.register( "reinforced_locker",
+			() -> TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< TileEntityTank > >				GLASS_TANK			= REGISTERY.register( "glass_tank",
+			() -> TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK.get() ).build( null ) );
 }

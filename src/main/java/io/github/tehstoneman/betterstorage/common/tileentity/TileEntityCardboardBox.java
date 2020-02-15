@@ -19,7 +19,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 
 	public TileEntityCardboardBox()
 	{
-		super( BetterStorageTileEntityTypes.CARDBOARD_BOX );
+		super( BetterStorageTileEntityTypes.CARDBOARD_BOX.get() );
 	}
 
 	public boolean isEmpty()

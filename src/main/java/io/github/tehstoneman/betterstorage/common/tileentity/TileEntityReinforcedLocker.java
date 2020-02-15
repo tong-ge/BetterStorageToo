@@ -26,7 +26,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 
 	public TileEntityReinforcedLocker()
 	{
-		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER );
+		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER.get() );
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class TileEntityTank extends TileEntity
 
 	public TileEntityTank()
 	{
-		super( BetterStorageTileEntityTypes.GLASS_TANK );
+		super( BetterStorageTileEntityTypes.GLASS_TANK.get() );
 		tankCount = 1;
 	}
 

@@ -30,7 +30,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 
 	public TileEntityLocker()
 	{
-		super( BetterStorageTileEntityTypes.LOCKER );
+		super( BetterStorageTileEntityTypes.LOCKER.get() );
 	}
 
 	@Override
