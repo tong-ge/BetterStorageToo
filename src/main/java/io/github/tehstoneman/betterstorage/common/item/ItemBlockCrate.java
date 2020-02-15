@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import net.minecraft.block.Block;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 
 public class ItemBlockCrate extends BlockItemBetterStorage
 {
-	public ItemBlockCrate( Block block )
+	public ItemBlockCrate()
 	{
-		super( block );
+		super( BetterStorageBlocks.CRATE.get() );
 	}
 }

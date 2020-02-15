@@ -5,9 +5,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BlockItemBetterStorage;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,9 +20,9 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICardboardItem
 {
-	public ItemBlockCardboardBox( Block block )
+	public ItemBlockCardboardBox()
 	{
-		super( block, new Item.Properties() );
+		super( BetterStorageBlocks.CARDBOARD_BOX.get(), new Item.Properties() );
 	}
 
 	// Item stuff

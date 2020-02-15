@@ -77,7 +77,7 @@ public class EnchantmentKey extends Enchantment
 			final IKey key = (IKey)stack.getItem();
 			return key.canApplyEnchantment( stack, this );
 		}
-		return stack.getItem() != BetterStorageItems.MASTER_KEY && stack.getItem() instanceof IKey;
+		return stack.getItem() != BetterStorageItems.MASTER_KEY.get() && stack.getItem() instanceof IKey;
 	}
 
 	@Override

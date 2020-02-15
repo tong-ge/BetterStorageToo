@@ -65,7 +65,7 @@ public final class BetterStorageContainerTypes
 				final ItemStack keyring = data.readItemStack();
 				final int protectedIndex = data.readInt();
 				return new ContainerKeyring( windowID, inv, keyring, protectedIndex );
-			} ).setRegistryName( BetterStorageItems.KEYRING.getRegistryName() ) );
+			} ).setRegistryName( BetterStorageItems.KEYRING.get().getRegistryName() ) );
 		}
 
 		private static World getClientWorld()

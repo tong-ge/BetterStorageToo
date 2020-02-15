@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItemGroup;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.ModNetwork;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
@@ -51,7 +52,9 @@ public class BetterStorage
 
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		BetterStorageBlocks.BLOCK_REGISTER.register( modEventBus );
+		BetterStorageBlocks.REGISTERY.register( modEventBus );
+		BetterStorageItems.REGISTERY.register( modEventBus );
+		
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 	}

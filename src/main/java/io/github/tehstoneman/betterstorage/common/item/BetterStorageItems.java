@@ -18,78 +18,57 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageItems
 {
-	//@formatter:off
-	@ObjectHolder( "key" )					public static ItemKey KEY;
-	@ObjectHolder( "master_key" )			public static ItemMasterKey MASTER_KEY;
-	@ObjectHolder( "keyring" )				public static ItemKeyring KEYRING;
-	@ObjectHolder( "lock" )					public static ItemLock LOCK;
-	@ObjectHolder( "cardboard_sheet" )		public static ItemCardboardSheet CARDBOARD_SHEET;
+	public static final DeferredRegister< Item >				REGISTERY				= new DeferredRegister<>( ForgeRegistries.ITEMS,
+			ModInfo.MOD_ID );
 
-	@ObjectHolder( "cardboard_sword" )		public static ItemCardboardSword CARDBOARD_SWORD;
-	@ObjectHolder( "cardboard_shovel" )		public static ItemCardboardShovel CARDBOARD_SHOVEL;
-	@ObjectHolder( "cardboard_pickaxe" )	public static ItemCardboardPickaxe CARDBOARD_PICKAXE;
-	@ObjectHolder( "cardboard_axe" )		public static ItemCardboardAxe CARDBOARD_AXE;
-	@ObjectHolder( "cardboard_hoe" )		public static ItemCardboardHoe CARDBOARD_HOE;
+	public static RegistryObject< ItemBlockCrate >				CRATE					= REGISTERY.register( "crate", () -> new ItemBlockCrate() );
+	public static RegistryObject< ItemBlockReinforcedChest >	REINFORCED_CHEST		= REGISTERY.register( "reinforced_chest",
+			() -> new ItemBlockReinforcedChest() );
+	public static RegistryObject< ItemBlockLocker >				LOCKER					= REGISTERY.register( "locker", () -> new ItemBlockLocker() );
+	public static RegistryObject< ItemBlockReinforcedLocker >	REINFORCED_LOCKER		= REGISTERY.register( "reinforced_locker",
+			() -> new ItemBlockReinforcedLocker() );
 
-	@ObjectHolder( "cardboard_helmet" )		public static ItemCardboardArmor CARDBOARD_HELMET;
-	@ObjectHolder( "cardboard_chestplate" )	public static ItemCardboardArmor CARDBOARD_CHESTPLATE;
-	@ObjectHolder( "cardboard_leggings" )	public static ItemCardboardArmor CARDBOARD_LEGGINGS;
-	@ObjectHolder( "cardboard_boots" )		public static ItemCardboardArmor CARDBOARD_BOOTS;
+	public static RegistryObject< ItemKey >						KEY						= REGISTERY.register( "key", () -> new ItemKey() );
+	public static RegistryObject< ItemKeyring >					KEYRING					= REGISTERY.register( "keyring", () -> new ItemKeyring() );
+	public static RegistryObject< ItemMasterKey >				MASTER_KEY				= REGISTERY.register( "master_key",
+			() -> new ItemMasterKey() );
+	public static RegistryObject< ItemLock >					LOCK					= REGISTERY.register( "lock", () -> new ItemLock() );
 
-	// public static ItemBucketSlime SLIME_BUCKET = new ItemBucketSlime();
+	public static RegistryObject< ItemCardboardSheet >			CARDBOARD_SHEET			= REGISTERY.register( "cardboard_sheet",
+			() -> new ItemCardboardSheet() );
+	public static RegistryObject< ItemBlockCardboardBox >		CARDBOARD_BOX			= REGISTERY.register( "cardboard_box",
+			() -> new ItemBlockCardboardBox() );
 
-	// public static ItemDrinkingHelmet drinkingHelmet;
-	// public static ItemPresentBook PRESENT_BOOK;
-	//@formatter:on
+	public static RegistryObject< ItemCardboardSword >			CARDBOARD_SWORD			= REGISTERY.register( "cardboard_sword",
+			() -> new ItemCardboardSword() );
+	public static RegistryObject< ItemCardboardShovel >			CARDBOARD_SHOVEL		= REGISTERY.register( "cardboard_shovel",
+			() -> new ItemCardboardShovel() );
+	public static RegistryObject< ItemCardboardPickaxe >		CARDBOARD_PICKAXE		= REGISTERY.register( "cardboard_pickaxe",
+			() -> new ItemCardboardPickaxe() );
+	public static RegistryObject< ItemCardboardAxe >			CARDBOARD_AXE			= REGISTERY.register( "cardboard_axe",
+			() -> new ItemCardboardAxe() );
+	public static RegistryObject< ItemCardboardHoe >			CARDBOARD_HOE			= REGISTERY.register( "cardboard_hoe",
+			() -> new ItemCardboardHoe() );
 
-	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
-	private static class Register
-	{
-		@SubscribeEvent
-		public static void onItemsRegistry( final RegistryEvent.Register< Item > event )
-		{
-			final IForgeRegistry< Item > registry = event.getRegistry();
+	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_HELMET		= REGISTERY.register( "cardboard_helmet",
+			() -> new ItemCardboardArmor( EquipmentSlotType.HEAD ) );
+	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_CHESTPLATE	= REGISTERY.register( "cardboard_chestplate",
+			() -> new ItemCardboardArmor( EquipmentSlotType.CHEST ) );
+	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_LEGGINGS		= REGISTERY.register( "cardboard_leggings",
+			() -> new ItemCardboardArmor( EquipmentSlotType.LEGS ) );
+	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_BOOTS			= REGISTERY.register( "cardboard_boots",
+			() -> new ItemCardboardArmor( EquipmentSlotType.FEET ) );
 
-			registry.register( new ItemBlockCrate( BetterStorageBlocks.CRATE.get() ).setRegistryName( BetterStorageBlocks.CRATE.get().getRegistryName() ) );
-			registry.register( new ItemBlockReinforcedChest( BetterStorageBlocks.REINFORCED_CHEST.get() )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_CHEST.get().getRegistryName() ) );
-			registry.register( new ItemBlockLocker( BetterStorageBlocks.LOCKER.get() ).setRegistryName( BetterStorageBlocks.LOCKER.get().getRegistryName() ) );
-			registry.register( new ItemBlockReinforcedLocker( BetterStorageBlocks.REINFORCED_LOCKER.get() )
-					.setRegistryName( BetterStorageBlocks.REINFORCED_LOCKER.get().getRegistryName() ) );
-
-			registry.register( new ItemKey().setRegistryName( "key" ) );
-			registry.register( new ItemKeyring().setRegistryName( "keyring" ) );
-			registry.register( new ItemMasterKey().setRegistryName( "master_key" ) );
-			registry.register( new ItemLock().setRegistryName( "lock" ) );
-
-			registry.register( new ItemCardboardSheet().setRegistryName( ModInfo.MOD_ID, "cardboard_sheet" ) );
-
-			registry.register( new ItemBlockCardboardBox( BetterStorageBlocks.CARDBOARD_BOX.get() ).setRegistryName( ModInfo.MOD_ID, "cardboard_box" ) );
-
-			registry.register( new ItemCardboardSword().setRegistryName( ModInfo.MOD_ID, "cardboard_sword" ) );
-			registry.register( new ItemCardboardShovel().setRegistryName( ModInfo.MOD_ID, "cardboard_shovel" ) );
-			registry.register( new ItemCardboardPickaxe().setRegistryName( ModInfo.MOD_ID, "cardboard_pickaxe" ) );
-			registry.register( new ItemCardboardAxe().setRegistryName( ModInfo.MOD_ID, "cardboard_axe" ) );
-			registry.register( new ItemCardboardHoe().setRegistryName( ModInfo.MOD_ID, "cardboard_hoe" ) );
-
-			registry.register( new ItemCardboardArmor( EquipmentSlotType.HEAD ).setRegistryName( "cardboard_helmet" ) );
-			registry.register( new ItemCardboardArmor( EquipmentSlotType.CHEST ).setRegistryName( "cardboard_chestplate" ) );
-			registry.register( new ItemCardboardArmor( EquipmentSlotType.LEGS ).setRegistryName( "cardboard_leggings" ) );
-			registry.register( new ItemCardboardArmor( EquipmentSlotType.FEET ).setRegistryName( "cardboard_boots" ) );
-
-			registry.register( new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
-					.setRegistryName( BetterStorageBlocks.BLOCK_FLINT.get().getRegistryName() ) );
-			registry.register( new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) )
-					.setRegistryName( BetterStorageBlocks.GLASS_TANK.get().getRegistryName() ) );
-		}
-	}
+	public static RegistryObject< BlockItem >					BLOCK_FLINT				= REGISTERY.register( "block_flint",
+			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
+	public static RegistryObject< BlockItem >					GLASS_TANK				= REGISTERY.register( "glass_tank",
+			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
 }

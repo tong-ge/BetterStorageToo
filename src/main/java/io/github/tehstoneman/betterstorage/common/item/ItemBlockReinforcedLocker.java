@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import net.minecraft.block.Block;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 
 public class ItemBlockReinforcedLocker extends ItemBlockLocker
 {
-	public ItemBlockReinforcedLocker( Block block )
+	public ItemBlockReinforcedLocker()
 	{
-		super( block );
+		super( BetterStorageBlocks.REINFORCED_LOCKER.get() );
 	}
 }

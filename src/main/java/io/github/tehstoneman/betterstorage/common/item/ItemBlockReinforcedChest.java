@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import net.minecraft.block.Block;
+import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 
 public class ItemBlockReinforcedChest extends BlockItemBetterStorage
 {
-	public ItemBlockReinforcedChest( Block block )
+	public ItemBlockReinforcedChest()
 	{
-		super( block );
+		super( BetterStorageBlocks.REINFORCED_CHEST.get() );
 	}
 }

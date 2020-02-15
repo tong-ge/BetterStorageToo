@@ -53,7 +53,7 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 			return new ActionResult( ActionResultType.PASS, stack );
 
 		if( !world.isRemote )
-			NetworkHooks.openGui( (ServerPlayerEntity)player, BetterStorageItems.KEYRING,
+			NetworkHooks.openGui( (ServerPlayerEntity)player, BetterStorageItems.KEYRING.get(),
 					buf -> buf.writeItemStack( player.getHeldItem( hand ) ).writeInt( player.inventory.currentItem ) );
 		return new ActionResult( ActionResultType.SUCCESS, stack );
 	}
