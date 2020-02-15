@@ -47,7 +47,7 @@ public class BetterStorageEventHandler
 						{
 							final int level = Math.max( tool.getHarvestLevel( ToolType.AXE, player, blockState ),
 									tool.getHarvestLevel( ToolType.PICKAXE, player, blockState ) );
-							if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, lockable.getLock() ) )
+							if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), lockable.getLock() ) )
 								speed *= 0.1f;
 						}
 						event.setNewSpeed( speed );

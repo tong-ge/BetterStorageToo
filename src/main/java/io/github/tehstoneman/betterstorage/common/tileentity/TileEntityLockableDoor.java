@@ -51,7 +51,7 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	public boolean isPowered()
 	{
 		if( isMain() )
-			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
+			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
 		return ( (TileEntityLockableDoor)getMain() ).isPowered();
 	}
 

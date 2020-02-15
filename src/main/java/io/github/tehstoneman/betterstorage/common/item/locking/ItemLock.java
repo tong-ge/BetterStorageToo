@@ -140,7 +140,7 @@ public class ItemLock extends KeyLockItem implements ILock
 	@Override
 	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, LockInteraction interaction )
 	{
-		final int shock = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SHOCK, lock );
+		final int shock = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SHOCK.get(), lock );
 
 		if( shock > 0 )
 		{

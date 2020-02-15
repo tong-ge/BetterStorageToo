@@ -180,7 +180,7 @@ public class BlockLockableDoor extends Block
 			final TileEntityLockableDoor door = (TileEntityLockableDoor)tileEntity;
 			if( door.isLocked() )
 			{
-				final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, door.getLock() ) + 1;
+				final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), door.getLock() ) + 1;
 				return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
 			}
 		}

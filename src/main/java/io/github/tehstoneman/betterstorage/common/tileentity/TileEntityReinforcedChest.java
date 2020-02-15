@@ -201,7 +201,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			{
 				this.lock = lock;
 				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
-				setPowered( EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, lock ) > 0 );
+				setPowered( EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), lock ) > 0 );
 				markDirty();
 			}
 		}
@@ -238,7 +238,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	public boolean isPowered()
 	{
 		if( isMain() )
-			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER, getLock() ) > 0;
+			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
 		return ( (TileEntityReinforcedChest)getMainTileEntity() ).isPowered();
 	}
 

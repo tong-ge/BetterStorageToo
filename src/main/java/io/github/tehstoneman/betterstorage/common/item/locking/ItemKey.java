@@ -119,10 +119,10 @@ public class ItemKey extends KeyLockItem implements IKey
 		if( lockId.equals( keyId ) )
 			return true;
 
-		final int lockSecurity = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SECURITY, lock );
-		final int unlocking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.UNLOCKING, key );
-		final int lockpicking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.LOCKPICKING, key );
-		final int morphing = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.MORPHING, key );
+		final int lockSecurity = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SECURITY.get(), lock );
+		final int unlocking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.UNLOCKING.get(), key );
+		final int lockpicking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.LOCKPICKING.get(), key );
+		final int morphing = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.MORPHING.get(), key );
 
 		final int effectiveUnlocking = Math.max( 0, unlocking - lockSecurity );
 		final int effectiveLockpicking = Math.max( 0, lockpicking - lockSecurity );
@@ -136,13 +136,13 @@ public class ItemKey extends KeyLockItem implements IKey
 		}
 		if( effectiveLockpicking > 0 )
 		{
-			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.LOCKPICKING, 1 );
+			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.LOCKPICKING.get(), 1 );
 			return true;
 		}
 		if( effectiveMorphing > 0 )
 		{
 			setID( key, lockId );
-			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.MORPHING, morphing );
+			EnchantmentBetterStorage.decEnchantment( key, EnchantmentBetterStorage.MORPHING.get(), morphing );
 			return true;
 		}
 

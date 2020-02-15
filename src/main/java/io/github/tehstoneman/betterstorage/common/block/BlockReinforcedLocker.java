@@ -116,7 +116,7 @@ public class BlockReinforcedLocker extends BlockLocker
 		final TileEntityReinforcedLocker chest = getChestAt( (World)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
-			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE, chest.getLock() ) + 1;
+			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
 			return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
 		}
 		return super.getExplosionResistance( state, world, pos, exploder, explosion );

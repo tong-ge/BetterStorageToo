@@ -7,25 +7,29 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantment.Rarity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@ObjectHolder( ModInfo.MOD_ID )
 public class EnchantmentBetterStorage
 {
-	//@formatter:off
-	@ObjectHolder( "unlocking" )	public static EnchantmentKey	UNLOCKING;
-	@ObjectHolder( "lockpicking" )	public static EnchantmentKey	LOCKPICKING;
-	@ObjectHolder( "morphing" )		public static EnchantmentKey	MORPHING;
+	public static final DeferredRegister< Enchantment >	REGISTERY	= new DeferredRegister<>( ForgeRegistries.ENCHANTMENTS, ModInfo.MOD_ID );
 
-	@ObjectHolder( "persistance" )	public static EnchantmentLock	PERSISTANCE;
-	@ObjectHolder( "security" )		public static EnchantmentLock	SECURITY;
-	@ObjectHolder( "shock" )		public static EnchantmentLock	SHOCK;
-	@ObjectHolder( "trigger" )		public static EnchantmentLock	TRIGGER;
-	//@formatter:on
+	public static RegistryObject< EnchantmentKey >		UNLOCKING	= REGISTERY.register( "unlocking",
+			() -> new EnchantmentKey( Rarity.COMMON, 5, 5, 10, 30, 0 ) );
+	public static RegistryObject< EnchantmentKey >		LOCKPICKING	= REGISTERY.register( "lockpicking",
+			() -> new EnchantmentKey( Rarity.COMMON, 5, 5, 8, 30, 0 ) );
+	public static RegistryObject< EnchantmentKey >		MORPHING	= REGISTERY.register( "morphing",
+			() -> new EnchantmentKey( Rarity.COMMON, 5, 10, 12, 30, 0 ) );
+
+	public static RegistryObject< EnchantmentLock >		PERSISTANCE	= REGISTERY.register( "persistance",
+			() -> new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ) );
+	public static RegistryObject< EnchantmentLock >		SECURITY	= REGISTERY.register( "security",
+			() -> new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ) );
+	public static RegistryObject< EnchantmentLock >		SHOCK		= REGISTERY.register( "shock",
+			() -> new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ) );
+	public static RegistryObject< EnchantmentLock >		TRIGGER		= REGISTERY.register( "trigger",
+			() -> new EnchantmentLock( Rarity.COMMON, 1, 1, 8, 30, 0 ) );
 
 	/**
 	 * Helper method to get the level of that enchantment on the item.
@@ -71,24 +75,5 @@ public class EnchantmentBetterStorage
 			list.put( ench, newLevel );
 
 		EnchantmentHelper.setEnchantments( list, stack );
-	}
-
-	@Mod.EventBusSubscriber( bus = Mod.EventBusSubscriber.Bus.MOD )
-	private static class Register
-	{
-		@SubscribeEvent
-		public static void onEnchantmentRegistry( final RegistryEvent.Register< Enchantment > event )
-		{
-			final IForgeRegistry< Enchantment > registry = event.getRegistry();
-
-			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 10, 30, 0 ).setRegistryName( "unlocking" ) );
-			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 5, 8, 30, 0 ).setRegistryName( "lockpicking" ) );
-			registry.register( new EnchantmentKey( Rarity.COMMON, 5, 10, 12, 30, 0 ).setRegistryName( "morphing" ) );
-
-			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "persistance" ) );
-			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "security" ) );
-			registry.register( new EnchantmentLock( Rarity.COMMON, 5, 1, 8, 30, 0 ).setRegistryName( "shock" ) );
-			registry.register( new EnchantmentLock( Rarity.COMMON, 1, 1, 8, 30, 0 ).setRegistryName( "trigger" ) );
-		}
 	}
 }
