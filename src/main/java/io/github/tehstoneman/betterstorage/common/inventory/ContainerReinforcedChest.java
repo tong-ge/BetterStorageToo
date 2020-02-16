@@ -26,7 +26,7 @@ public class ContainerReinforcedChest extends Container
 
 	public ContainerReinforcedChest( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.REINFORCED_CHEST, windowId );
+		super( BetterStorageContainerTypes.REINFORCED_CHEST.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );

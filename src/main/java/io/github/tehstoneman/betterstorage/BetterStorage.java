@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItemGroup;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
@@ -55,8 +56,9 @@ public class BetterStorage
 
 		BetterStorageBlocks.REGISTERY.register( modEventBus );
 		BetterStorageItems.REGISTERY.register( modEventBus );
+		BetterStorageContainerTypes.REGISTERY.register( modEventBus );
 		EnchantmentBetterStorage.REGISTERY.register( modEventBus );
-		
+
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 	}

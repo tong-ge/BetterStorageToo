@@ -26,7 +26,7 @@ public class ContainerReinforcedLocker extends Container
 
 	public ContainerReinforcedLocker( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.REINFORCED_LOCKER, windowId );
+		super( BetterStorageContainerTypes.REINFORCED_LOCKER.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );

@@ -28,7 +28,7 @@ public class ContainerCrate extends Container
 
 	public ContainerCrate( int windowID, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.CRATE, windowID );
+		super( BetterStorageContainerTypes.CRATE.get(), windowID );
 		tileCrate = (TileEntityCrate)world.getTileEntity( pos );
 		inventoryCrate = tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( new CrateStackHandler( 18 ) );
 

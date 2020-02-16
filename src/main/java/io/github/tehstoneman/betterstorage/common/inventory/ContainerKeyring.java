@@ -20,7 +20,7 @@ public class ContainerKeyring extends Container
 
 	public ContainerKeyring( int windowID, PlayerInventory playerInventory, ItemStack keyring, int protectedIndex )
 	{
-		super( BetterStorageContainerTypes.KEYRING, windowID );
+		super( BetterStorageContainerTypes.KEYRING.get(), windowID );
 
 		inventoryPlayer = playerInventory;
 		inventoryKeyRing = (KeyringStackHandler)keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );

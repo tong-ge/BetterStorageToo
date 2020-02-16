@@ -26,7 +26,7 @@ public class ContainerLocker extends Container
 
 	public ContainerLocker( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.LOCKER, windowId );
+		super( BetterStorageContainerTypes.LOCKER.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
