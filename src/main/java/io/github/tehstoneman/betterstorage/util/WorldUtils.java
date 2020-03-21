@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.utils;
+package io.github.tehstoneman.betterstorage.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

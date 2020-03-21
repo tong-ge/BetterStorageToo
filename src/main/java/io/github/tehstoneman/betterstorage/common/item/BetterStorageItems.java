@@ -21,9 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder( ModInfo.MOD_ID )
 public final class BetterStorageItems
 {
 	public static final DeferredRegister< Item >				REGISTERY				= new DeferredRegister<>( ForgeRegistries.ITEMS,
@@ -70,5 +68,5 @@ public final class BetterStorageItems
 	public static RegistryObject< BlockItem >					BLOCK_FLINT				= REGISTERY.register( "block_flint",
 			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
 	public static RegistryObject< BlockItem >					GLASS_TANK				= REGISTERY.register( "glass_tank",
-			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
+			() -> new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
 }

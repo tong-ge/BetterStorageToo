@@ -19,7 +19,7 @@ import io.github.tehstoneman.betterstorage.common.inventory.Region;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.UpdateCrateMessage;
-import io.github.tehstoneman.betterstorage.utils.BlockUtils;
+import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

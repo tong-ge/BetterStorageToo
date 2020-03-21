@@ -73,14 +73,6 @@ public class BlockTank extends BlockContainerBetterStorage
 	 * ======================
 	 */
 
-	/*
-	 * @Override
-	 * public BlockRenderLayer getRenderLayer()
-	 * {
-	 * return BlockRenderLayer.CUTOUT;
-	 * }
-	 */
-
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
 	{

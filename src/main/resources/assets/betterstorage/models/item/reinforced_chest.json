@@ -57,7 +57,7 @@
                 "east": { "texture": "#normal", "uv": [ 10.5, 3.5, 14, 4.75 ] },
                 "south": { "texture": "#normal", "uv": [ 3.5, 3.5, 7, 4.75 ] },
                 "west": { "texture": "#normal", "uv": [ 0, 3.5, 3.5, 4.75 ] },
-                "up": { "texture": "#normal", "uv": [ 3.5, 0, 7, 3.5 ], "rotation": 180 }
+                "up": { "texture": "#normal", "uv": [ 7, 0, 10.5, 3.5 ], "rotation": 180 }
             }
         },
         {

@@ -28,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public class CopyKeyRecipe extends SpecialRecipe// ShapedRecipe
+public class CopyKeyRecipe extends SpecialRecipe
 {
 	static int							MAX_WIDTH	= 3;
 	static int							MAX_HEIGHT	= 3;

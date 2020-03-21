@@ -10,7 +10,7 @@ import com.google.common.base.MoreObjects;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import io.github.tehstoneman.betterstorage.utils.BlockUtils;
+import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

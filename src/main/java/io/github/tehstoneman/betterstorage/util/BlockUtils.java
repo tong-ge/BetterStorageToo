@@ -1,4 +1,4 @@
-package io.github.tehstoneman.betterstorage.utils;
+package io.github.tehstoneman.betterstorage.util;
 
 import java.util.List;
 import java.util.stream.Collectors;

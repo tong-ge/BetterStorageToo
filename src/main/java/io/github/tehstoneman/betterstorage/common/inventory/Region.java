@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import com.google.common.base.MoreObjects;
 
-import io.github.tehstoneman.betterstorage.utils.BlockUtils;
+import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;

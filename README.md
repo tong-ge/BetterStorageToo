@@ -4,19 +4,14 @@ BetterStorageToo
 .. is a continuation of copygirl's Better Storage [Minecraft](http://minecraft.net/) mod which adds more storage options. It aims
 for fun, interesting and balanced features which would fit well into vanilla Minecraft,
 but also work nicely together with other mods. Information about all its features can be
-found in the [Minecraft Forums thread](http://www.minecraftforum.net/topic/1548203-/).
+found in the [Wiki](https://github.com/TehStoneMan/BetterStorageToo/wiki).
+
+The mod can be downloaded from [CurseForge](https://www.curseforge.com/minecraft/mc-mods/better-storage-too)
 
 BetterStorageToo is licensed under the MIT license, so feel free to modify and distribute
 it all you want. If you're planning to contribute features to the master repository,
 I'd appreciate if you talk to me first. You can reach me on the forums, or via
 [email](mailto:tehstoneman@gmail.com).
-
-Setting up the Development Environment
---------------------------------------
-Thanks to the magic of gradle, setting up the development environment is easy.
-
-In the windows or linux/unix command prompt, run ```./gradlew setupDecompWorkspace```,
-then run either ```./gradlew idea``` or ```./gradlew eclipse``` depending on what IDE you use.
 
 Localizations
 -------------

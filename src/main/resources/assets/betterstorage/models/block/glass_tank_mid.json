@@ -1,7 +1,8 @@
 {
     "textures": {
         "particle": "betterstorage:block/glass_tank_cap",
-        "side": "betterstorage:block/glass_tank_middle"
+        "side": "betterstorage:block/glass_tank_middle",
+        "black": "betterstorage:black"
     },
     "elements": [
         {
@@ -13,6 +14,17 @@
                 "east": { "texture": "#side", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
                 "south": { "texture": "#side", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
                 "west": { "texture": "#side", "uv": [ 1.0, 0.0, 15.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "inside",
+            "from": [ 1.2, 0.0, 1.2 ], 
+            "to": [ 14.8, 16.0, 14.8 ], 
+            "faces": {
+                "north": { "texture": "#black", "uv": [ 1.2, 0.0, 14.8, 16.0 ] },
+                "east": { "texture": "#black", "uv": [ 1.2, 0.0, 14.8, 16.0 ] },
+                "south": { "texture": "#black", "uv": [ 1.2, 0.0, 14.8, 16.0 ] },
+                "west": { "texture": "#black", "uv": [ 1.2, 0.0, 14.8, 16.0 ] }
             }
         }
     ]

@@ -54,7 +54,7 @@
             "to": [ 16, 16, 15 ], 
             "faces": {
                 "east": { "texture": "#normal", "uv": [ 7.5, 0.5, 8, 4.5 ] },
-                "south": { "texture": "#normal", "uv": [ 3.5, 0.5, 7.5, 4.5 ] },
+                "south": { "texture": "#normal", "uv": [ 8, 0.5, 12, 4.5 ] },
                 "west": { "texture": "#normal", "uv": [ 3, 0.5, 3.5, 4.5 ] },
                 "up": { "texture": "#normal", "uv": [ 3.5, 0, 7.5, 0.5 ] },
                 "down": { "texture": "#normal", "uv": [ 7.5, 0, 11.5, 0.5 ] }

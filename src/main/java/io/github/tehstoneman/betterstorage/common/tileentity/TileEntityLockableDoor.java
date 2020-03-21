@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
-import io.github.tehstoneman.betterstorage.utils.WorldUtils;
+import io.github.tehstoneman.betterstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;

@@ -4,14 +4,15 @@
 	"pattern":
 	[
 		"igi",
-		"ggg",
+		"wgw",
 		"igi"
 	],
 	"mirrored": false,
 	"key":
 	{
 		"g": { "tag": "forge:glass" },
-		"i": { "tag": "forge:ingots/iron" }
+		"i": { "tag": "forge:ingots/iron" },
+		"w": { "tag": "minecraft:planks" }
 	},
 	"result": { "item": "betterstorage:glass_tank" }
 }

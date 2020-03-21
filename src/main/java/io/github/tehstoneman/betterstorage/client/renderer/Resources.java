@@ -1,35 +1,29 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.util.BetterStorageResource;
 import net.minecraft.util.ResourceLocation;
 
-public final class Resources
+public class Resources
 {
-	public static final ResourceLocation	TEXTURE_EMPTY				= new ResourceLocation( ModInfo.MOD_ID, "textures/empty.png" );
-	// public static final ResourceLocation enchantedEffect = new ResourceLocation( "textures/misc/enchanted_item_glint.png" );
+	// Generic textures
+	public static final BetterStorageResource	TEXTURE_EMPTY						= new BetterStorageResource( "textures/empty.png" );
+	public static final BetterStorageResource	TEXTURE_WHITE						= new BetterStorageResource( "white" );
 
 	// Gui Textures
-	public static final ResourceLocation	CONTAINER_CRATE				= new ResourceLocation( ModInfo.MOD_ID, "textures/gui/crate.png" );
-	public static final ResourceLocation	CONTAINER_EXPANDABLE		= new ResourceLocation( ModInfo.MOD_ID, "textures/gui/reinforcedchest.png" );
-	public static final ResourceLocation	CONTAINER_GENERIC			= new ResourceLocation( "textures/gui/container/generic_54.png" );
-	// public static final ResourceLocation containerCraftingStation = new BetterStorageResource( "textures/gui/craftingStation.png" );
+	public static final BetterStorageResource	CONTAINER_CRATE						= new BetterStorageResource( "textures/gui/crate.png" );
+	public static final BetterStorageResource	CONTAINER_EXPANDABLE				= new BetterStorageResource( "textures/gui/reinforcedchest.png" );
+	public static final ResourceLocation		CONTAINER_GENERIC					= new ResourceLocation( "textures/gui/container/generic_54.png" );
 
-	// public static final ResourceLocation textureLocker = new BetterStorageResource( "textures/models/locker/wood.png" );
-	// public static final ResourceLocation textureLockerLarge = new BetterStorageResource( "textures/models/locker_large/wood.png" );
-	// public static final ResourceLocation textureArmorStand = new BetterStorageResource( "textures/models/armorstand.png" );
-	// public static final ResourceLocation textureBackpack = new BetterStorageResource( "textures/models/backpack.png" );
-	// public static final ResourceLocation textureBackpackOverlay = new BetterStorageResource( "textures/models/backpack_overlay.png" );
-	// public static final ResourceLocation textureEnderBackpack = new BetterStorageResource( "textures/models/enderBackpack.png" );
-	// public static final ResourceLocation textureDrinkingHelmet = new BetterStorageResource( "textures/models/drinking_helmet.png" );
-	public static final ResourceLocation	TEXTURE_CARDBOARD_ARMOR		= new ResourceLocation( ModInfo.MOD_ID,
+	// Model textures
+	public static final BetterStorageResource	TEXTURE_CHEST_REINFORCED			= new BetterStorageResource( "entity/chest/reinforced" );
+	public static final BetterStorageResource	TEXTURE_CHEST_REINFORCED_DOUBLE		= new BetterStorageResource( "entity/chest/reinforced_double" );
+	public static final BetterStorageResource	TEXTURE_LOCKER_NORMAL				= new BetterStorageResource( "entity/locker/normal" );
+	public static final BetterStorageResource	TEXTURE_LOCKER_NORMAL_DOUBLE		= new BetterStorageResource( "entity/locker/normal_double" );
+	public static final BetterStorageResource	TEXTURE_LOCKER_REINFORCED			= new BetterStorageResource( "entity/locker/reinforced" );
+	public static final BetterStorageResource	TEXTURE_LOCKER_REINFORCED_DOUBLE	= new BetterStorageResource( "entity/locker/reinforced_double" );
+
+	public static final BetterStorageResource	TEXTURE_CARDBOARD_ARMOR				= new BetterStorageResource(
 			"textures/models/armor/cardboard_armor.png" );
-	public static final ResourceLocation	TEXTURE_CARDBOARD_LEGGINGS	= new ResourceLocation( ModInfo.MOD_ID,
+	public static final BetterStorageResource	TEXTURE_CARDBOARD_LEGGINGS			= new BetterStorageResource(
 			"textures/models/armor/cardboard_armor_leggings.png" );
-	// public static final ResourceLocation textureCluckOverlay = new BetterStorageResource( "textures/models/cluck.png" );
-	// public static final ResourceLocation texturePresentOverlay = new BetterStorageResource( "textures/models/present_overlay.png" );
-
-	// public static final ResourceLocation modelLocker = new BetterStorageResource( "models/locker.obj" );
-	// public static final ResourceLocation modelLockerLarge = new BetterStorageResource( "models/locker_large.obj" );
-
-	// public static final ResourceLocation modelPresent = new BetterStorageResource( "models/present.obj" );
 }

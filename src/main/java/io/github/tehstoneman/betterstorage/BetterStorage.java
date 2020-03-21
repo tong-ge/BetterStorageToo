@@ -10,11 +10,9 @@ import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterS
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItemGroup;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntityTypes;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.ModNetwork;
-import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
-import io.github.tehstoneman.betterstorage.proxy.IProxy;
-import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.OptionalDispenseBehavior;
@@ -28,7 +26,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,7 +38,6 @@ public class BetterStorage
 	public static final Logger			LOGGER		= LogManager.getLogger( ModInfo.MOD_ID );
 	public static final ItemGroup		ITEM_GROUP	= new BetterStorageItemGroup();
 	public static final SimpleChannel	NETWORK		= ModNetwork.getNetworkChannel();
-	public static final IProxy			PROXY		= DistExecutor.<IProxy> runForDist( () -> ClientProxy::new, () -> ServerProxy::new );
 
 	public static Random				RANDOM;
 
@@ -56,8 +52,9 @@ public class BetterStorage
 
 		BetterStorageBlocks.REGISTERY.register( modEventBus );
 		BetterStorageItems.REGISTERY.register( modEventBus );
-		BetterStorageContainerTypes.REGISTERY.register( modEventBus );
 		EnchantmentBetterStorage.REGISTERY.register( modEventBus );
+		BetterStorageTileEntityTypes.REGISTERY.register( modEventBus );
+		BetterStorageContainerTypes.REGISTERY.register( modEventBus );
 
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
@@ -65,8 +62,6 @@ public class BetterStorage
 
 	public void setup( FMLCommonSetupEvent event )
 	{
-		PROXY.setup( event );
-
 		DeferredWorkQueue.runLater( () ->
 		{
 			if( BetterStorageConfig.COMMON.cardboardBoxDispenserPlaceable.get() )
