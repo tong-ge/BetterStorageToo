@@ -63,4 +63,10 @@ public class ClientProxy implements IProxy
 			Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX );
 		} );
 	}
+
+	@Override
+	public World getClientWorld()
+	{
+		return Minecraft.getInstance().world;
+	}
 }
