@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.fluid.BetterStorageFluids;
+import io.github.tehstoneman.betterstorage.common.fluid.FluidMilk;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItemGroup;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
@@ -17,16 +19,21 @@ import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
 import io.github.tehstoneman.betterstorage.proxy.IProxy;
 import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.OptionalDispenseBehavior;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DirectionalPlaceContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
@@ -56,6 +63,7 @@ public class BetterStorage
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		BetterStorageBlocks.REGISTERY.register( modEventBus );
+		BetterStorageFluids.REGISTERY.register( modEventBus );
 		BetterStorageItems.REGISTERY.register( modEventBus );
 		EnchantmentBetterStorage.REGISTERY.register( modEventBus );
 		BetterStorageTileEntityTypes.REGISTERY.register( modEventBus );
@@ -90,6 +98,23 @@ public class BetterStorage
 						}
 
 						return stack;
+					}
+				} );
+			if( BetterStorageConfig.COMMON.useFluidMilk.get() )
+				DispenserBlock.registerDispenseBehavior( Items.MILK_BUCKET, new OptionalDispenseBehavior()
+				{
+					private final DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior();
+
+					@Override
+					protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
+					{
+						final Item bucketitem = stack.getItem();
+						final BlockPos blockpos = source.getBlockPos().offset( source.getBlockState().get( DispenserBlock.FACING ) );
+						final World world = source.getWorld();
+						if( FluidMilk.tryPlaceContainedLiquid( bucketitem, (PlayerEntity)null, world, blockpos, (BlockRayTraceResult)null ) )
+							return new ItemStack( Items.BUCKET );
+						else
+							return dispenseBehavior.dispense( source, stack );
 					}
 				} );
 		} );

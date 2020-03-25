@@ -1,17 +1,21 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.fluid.BetterStorageFluids;
+import io.github.tehstoneman.betterstorage.common.fluid.FluidMilk;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.item.DyeColor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public final class BetterStorageBlocks
 {
-	public static final DeferredRegister< Block >			REGISTERY		= new DeferredRegister<>( ForgeRegistries.BLOCKS, ModInfo.MOD_ID );
+	public static final DeferredRegister< Block >			REGISTERY			= new DeferredRegister<>( ForgeRegistries.BLOCKS, ModInfo.MOD_ID );
 
 	public static RegistryObject< BlockCrate >				CRATE				= REGISTERY.register( "crate", () -> new BlockCrate() );
 	public static RegistryObject< BlockReinforcedChest >	REINFORCED_CHEST	= REGISTERY.register( "reinforced_chest",
@@ -26,4 +30,6 @@ public final class BetterStorageBlocks
 	public static RegistryObject< BlockCardboardBox >		CARDBOARD_BOX		= REGISTERY.register( "cardboard_box",
 			() -> new BlockCardboardBox() );
 	public static RegistryObject< BlockTank >				GLASS_TANK			= REGISTERY.register( "glass_tank", () -> new BlockTank() );
+	public static RegistryObject< FlowingFluidBlock >		MILK				= REGISTERY.register( "milk",
+			() -> new FlowingFluidBlock( BetterStorageFluids.MILK, Properties.create( FluidMilk.MATERIAL_MILK, DyeColor.WHITE ) ) );
 }

@@ -27,6 +27,7 @@ public class BetterStorageConfig
 
 		public ForgeConfigSpec.BooleanValue	lockBreakable;
 		public ForgeConfigSpec.IntValue tankBuckets;
+		public ForgeConfigSpec.BooleanValue	useFluidMilk;
 
 		public Common( ForgeConfigSpec.Builder builder )
 		{
@@ -75,6 +76,10 @@ public class BetterStorageConfig
 					.comment( "Number of buckets that one tank can hold." )
 					.translation( "config.betterstorage.general.tankBuckets" )
 					.defineInRange( "tankBuckets", 16, 1, Integer.MAX_VALUE );
+			useFluidMilk = builder
+					.comment( "Allow the use of fluid milk" )
+					.translation( "config.betterstorage.general.useFluidMilk" )
+					.define( "useFluidMilk", true );
 			//@formatter:on
 			builder.pop();
 		}
