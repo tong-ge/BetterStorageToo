@@ -3,6 +3,7 @@ package io.github.tehstoneman.betterstorage.common.fluid;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.util.BetterStorageResource;
@@ -55,11 +56,21 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 
 	public static boolean interactFluidHandler( @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull IFluidHandler handler )
 	{
+		final ItemStack heldItem = new ItemStack( BetterStorageItems.MILK_BUCKET.get() );
 		return player.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ).map( playerInventory ->
 		{
-			final FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(
-					new ItemStack( BetterStorageItems.FAKE_MILK_BUCKET.get() ), handler, playerInventory, Integer.MAX_VALUE, player, true );
-			return fluidActionResult.isSuccess();
+
+			FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow( heldItem, handler, playerInventory, Integer.MAX_VALUE, player,
+					true );
+			if( !fluidActionResult.isSuccess() )
+				fluidActionResult = FluidUtil.tryEmptyContainerAndStow( heldItem, handler, playerInventory, Integer.MAX_VALUE, player, true );
+
+			if( fluidActionResult.isSuccess() )
+			{
+				//player.setHeldItem( hand, fluidActionResult.getResult() );
+				return true;
+			}
+			return false;
 		} ).orElse( false );
 	}
 

@@ -38,6 +38,7 @@
 	"item.betterstorage.keyring":"Keyring",
 	"item.betterstorage.lock":"Lock",
 	"item.betterstorage.master_key":"Master Key",
+	"item.betterstorage.milk_bucket":"Milk Bucket",
 	"itemGroup.better_storage_too":"Better Storage Too",
 	"tooltip.betterstorage.cardboard_box.contains_items":"Contains items.",
 	"tooltip.betterstorage.cardboard_box.plus_more":"... Plus %s more.",

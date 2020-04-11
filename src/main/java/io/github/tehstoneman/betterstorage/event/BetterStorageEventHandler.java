@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.event;
 
 import java.util.Set;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
@@ -90,7 +89,7 @@ public class BetterStorageEventHandler
 			if( !result )
 			{
 				final FluidActionResult fluidActionResult = FluidUtil.tryPlaceFluid( player, world, hand, pos.offset( face ),
-						new ItemStack( BetterStorageItems.FAKE_MILK_BUCKET.get() ), new FluidStack( BetterStorageFluids.MILK.get(), 1000 ) );
+						new ItemStack( BetterStorageItems.MILK_BUCKET.get() ), new FluidStack( BetterStorageFluids.MILK.get(), 1000 ) );
 				result = fluidActionResult.isSuccess();
 			}
 
