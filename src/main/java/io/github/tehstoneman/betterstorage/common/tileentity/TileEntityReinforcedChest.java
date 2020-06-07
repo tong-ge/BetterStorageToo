@@ -2,17 +2,24 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
+import io.github.tehstoneman.betterstorage.api.IHasConfig;
+import io.github.tehstoneman.betterstorage.api.IHexKeyConfig;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.capabilities.CapabilityConfig;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer;
+import io.github.tehstoneman.betterstorage.common.inventory.ReinforcedChestContainer;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,15 +40,25 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable
+public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable, IHasConfig
 {
-	private boolean		powered;
-	protected int		ticksSinceSync;
-	private ItemStack	lock	= ItemStack.EMPTY.copy();
+	private boolean								powered;
+	protected int								ticksSinceSync;
+	private ItemStack							lock			= ItemStack.EMPTY.copy();
+	public HexKeyConfig							config;
+	private final LazyOptional< IHexKeyConfig >	configHandler	= LazyOptional.of( () -> config );
 
 	public TileEntityReinforcedChest()
 	{
 		super( BetterStorageTileEntityTypes.REINFORCED_CHEST.get() );
+		config = new HexKeyConfig()
+		{
+			@Override
+			protected void onContentsChanged( int slot )
+			{
+				TileEntityReinforcedChest.this.markDirty();
+			}
+		};
 	}
 
 	@Override
@@ -49,6 +66,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	{
 		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
 			return LazyOptional.empty();
+		if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
+			return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
 		return super.getCapability( capability, facing );
 	}
 
@@ -85,6 +104,22 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		return pos;
 	}
 
+	@Override
+	public void dropInventoryItems()
+	{
+		super.dropInventoryItems();
+		if( !config.isEmpty() )
+			if( isConnected() && isMain() )
+				( (TileEntityReinforcedChest)getConnectedTileEntity() ).setConfig( config );
+			else
+				for( int i = 0; i < config.getSlots(); i++ )
+				{
+					final ItemStack stack = config.getStackInSlot( i );
+					if( !stack.isEmpty() )
+						InventoryHelper.spawnItemStack( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack );
+				}
+	}
+
 	/*
 	 * ==================
 	 * TileEntityLockable
@@ -95,7 +130,11 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
 		if( isMain() )
-			return new ContainerReinforcedChest( windowID, playerInventory, world, pos );
+		{
+			if( player.getHeldItemMainhand().getItem() == BetterStorageItems.HEX_KEY.get() )
+				return new ConfigContainer( windowID, playerInventory, world, pos );
+			return new ReinforcedChestContainer( windowID, playerInventory, world, pos );
+		}
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
@@ -120,7 +159,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( i - 5.0F, j - 5.0F, k - 5.0F, i + 1 + 5.0F, j + 1 + 5.0F, k + 1 + 5.0F ) ) )
-				if( entityplayer.openContainer instanceof ContainerReinforcedChest )
+				if( entityplayer.openContainer instanceof ReinforcedChestContainer )
 					++numPlayersUsing;
 		}
 
@@ -270,6 +309,19 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
 	}
 
+	@Override
+	public HexKeyConfig getConfig()
+	{
+		return config;
+	}
+
+	@Override
+	public void setConfig( HexKeyConfig config )
+	{
+		this.config = config;
+		markDirty();
+	}
+
 	/*
 	 * ==========================
 	 * TileEntity synchronization
@@ -281,6 +333,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	{
 		final CompoundNBT nbt = super.getUpdateTag();
 
+		if( !config.isEmpty() )
+			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 			nbt.put( "lock", lock.serializeNBT() );
 
@@ -291,6 +345,10 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
 	{
 		final CompoundNBT nbt = packet.getNbtCompound();
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
@@ -311,6 +369,10 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	{
 		super.handleUpdateTag( nbt );
 
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
@@ -323,6 +385,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
 	{
+		if( !config.isEmpty() )
+			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 		{
 			final CompoundNBT lockNBT = new CompoundNBT();
@@ -336,6 +400,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	@Override
 	public void read( CompoundNBT nbt )
 	{
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );

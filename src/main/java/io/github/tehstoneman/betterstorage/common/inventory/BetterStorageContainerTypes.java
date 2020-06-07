@@ -2,6 +2,7 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -41,17 +42,23 @@ public final class BetterStorageContainerTypes
 											final BlockPos pos = data.readBlockPos();
 											return new ContainerLocker( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 										} ) );
-	public static RegistryObject< ContainerType< ContainerReinforcedChest > >	REINFORCED_CHEST	= REGISTERY.register( "reinforced_chest",
+	public static RegistryObject< ContainerType< ReinforcedChestContainer > >	REINFORCED_CHEST	= REGISTERY.register( "reinforced_chest",
 			() -> IForgeContainerType.create( ( windowID, inv, data ) ->
 										{
 											final BlockPos pos = data.readBlockPos();
-											return new ContainerReinforcedChest( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
+											return new ReinforcedChestContainer( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 										} ) );
 	public static RegistryObject< ContainerType< ContainerReinforcedLocker > >	REINFORCED_LOCKER	= REGISTERY.register( "reinforced_locker",
 			() -> IForgeContainerType.create( ( windowID, inv, data ) ->
 										{
 											final BlockPos pos = data.readBlockPos();
 											return new ContainerReinforcedLocker( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
+										} ) );
+	public static RegistryObject< ContainerType< ConfigContainer > >			CONFIG	= REGISTERY.register( "config_container",
+			() -> IForgeContainerType.create( ( windowID, inv, data ) ->
+										{
+											final BlockPos pos = data.readBlockPos();
+											return new ConfigContainer( windowID, inv, BetterStorage.PROXY.getClientWorld(), pos );
 										} ) );
 	//@formatter:on
 }

@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Hex key - used for configuring storage certain storage blocks
+- Configuration GUI
+- OBJ models for some blocks
+- Option to disable OBJ models
 
 ### Changed
+- Updated Forge requirement to 31.2.0
 
 ### Removed
 

@@ -79,7 +79,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 																													// TextFormatting.ITALIC +
 				}
 			}
-			if( BetterStorageConfig.COMMON.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
+			if( BetterStorageConfig.CLIENT.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
 			{
 				final ItemStackHandler contents = new ItemStackHandler( 9 );
 				contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );

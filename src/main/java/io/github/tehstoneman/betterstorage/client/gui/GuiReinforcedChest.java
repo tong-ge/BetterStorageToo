@@ -3,19 +3,19 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
-import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.inventory.ReinforcedChestContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class GuiReinforcedChest extends ContainerScreen< ContainerReinforcedChest >
+public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContainer >
 {
 	private final int	columns, rows;
 	private final int	x1, x2, x3, x4;
 	private final int	y1;
 
-	public GuiReinforcedChest( ContainerReinforcedChest container, PlayerInventory playerInventory, ITextComponent title )
+	public GuiReinforcedChest( ReinforcedChestContainer container, PlayerInventory playerInventory, ITextComponent title )
 	{
 		super( container, playerInventory, title );
 

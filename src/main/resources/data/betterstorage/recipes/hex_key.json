@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "betterstorage:hex_key",
+	"pattern":
+	[
+		".i",
+		" .",
+		" ."
+	],
+	"key":
+	{
+		"i": { "tag": "forge:ingots/iron" },
+		".": { "tag": "forge:nuggets/iron" }
+	},
+	"result": { "item": "betterstorage:hex_key" }
+}

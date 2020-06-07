@@ -75,4 +75,7 @@ public final class BetterStorageItems
 
 	public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
 			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().containerItem( Items.BUCKET ) ) );
+
+	public static RegistryObject< HexKeyItem >						HEX_KEY					= REGISTERY.register( "hex_key",
+			() -> new HexKeyItem() );
 }

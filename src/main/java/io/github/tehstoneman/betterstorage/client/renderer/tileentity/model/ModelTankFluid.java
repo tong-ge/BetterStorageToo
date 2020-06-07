@@ -13,7 +13,7 @@ public class ModelTankFluid extends Model
 
 	public ModelTankFluid()
 	{
-		super( RenderType::entityCutout );
+		super( RenderType::getEntityCutout );
 	}
 
 	public void setLevel( float amount, boolean fillTop, boolean fillBottom, boolean isLigterThanAir )

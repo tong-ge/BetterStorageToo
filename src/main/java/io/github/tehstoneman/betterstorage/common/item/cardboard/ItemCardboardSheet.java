@@ -9,7 +9,7 @@ public class ItemCardboardSheet extends ItemBetterStorage
 {
 	public ItemCardboardSheet()
 	{
-		super( "cardboard_sheet", new Item.Properties().group( BetterStorage.ITEM_GROUP ).maxStackSize( 8 ) );
+		super( new Item.Properties().maxStackSize( 8 ) );
 		// toolMaterial.setRepairItem( new ItemStack( this ) );
 		// armorMaterial.setRepairItem( new ItemStack( this ) );
 	}

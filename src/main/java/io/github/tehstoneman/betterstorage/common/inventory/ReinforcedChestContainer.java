@@ -14,7 +14,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerReinforcedChest extends Container
+public class ReinforcedChestContainer extends Container
 {
 	private final IItemHandler			inventoryContainer;
 	private final TileEntityContainer	tileContainer;
@@ -24,7 +24,7 @@ public class ContainerReinforcedChest extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerReinforcedChest( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ReinforcedChestContainer( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.REINFORCED_CHEST.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );

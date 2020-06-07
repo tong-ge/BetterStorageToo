@@ -24,7 +24,7 @@ public class ModelLocker extends Model
 
 	public ModelLocker()
 	{
-		super( RenderType::entityCutout );
+		super( RenderType::getEntityCutout );
 		lockerBody = new ModelRenderer( 64, 64, 0, 18 );
 		lockerBody.addBox( 0.0F, 0.0F, 0.0F, 16.0F, 16.0F, 14.0F, 0.0F );
 		

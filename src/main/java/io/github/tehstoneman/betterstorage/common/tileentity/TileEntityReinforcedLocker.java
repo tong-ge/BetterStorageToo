@@ -1,32 +1,64 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.api.IHasConfig;
+import io.github.tehstoneman.betterstorage.api.IHexKeyConfig;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
+import io.github.tehstoneman.betterstorage.common.capabilities.CapabilityConfig;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
+import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
+import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
+import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable
+public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable, IHasConfig
 {
-	private boolean		powered;
-	private ItemStack	lock	= ItemStack.EMPTY.copy();
+	private boolean								powered;
+	private ItemStack							lock			= ItemStack.EMPTY.copy();
+	public HexKeyConfig							config;
+	private final LazyOptional< IHexKeyConfig >	configHandler	= LazyOptional.of( () -> config );
 
 	public TileEntityReinforcedLocker()
 	{
 		super( BetterStorageTileEntityTypes.REINFORCED_LOCKER.get() );
+		config = new HexKeyConfig()
+		{
+			@Override
+			protected void onContentsChanged( int slot )
+			{
+				TileEntityReinforcedLocker.this.markDirty();
+			}
+		};
+	}
+
+	@Override
+	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
+	{
+		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
+			return LazyOptional.empty();
+		if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
+			return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
+		return super.getCapability( capability, facing );
 	}
 
 	@Override
@@ -42,10 +74,30 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	}
 
 	@Override
+	public void dropInventoryItems()
+	{
+		super.dropInventoryItems();
+		if( !config.isEmpty() )
+			if( isConnected() && isMain() )
+				( (TileEntityReinforcedLocker)getConnectedTileEntity() ).setConfig( config );
+			else
+				for( int i = 0; i < config.getSlots(); i++ )
+				{
+					final ItemStack stack = config.getStackInSlot( i );
+					if( !stack.isEmpty() )
+						InventoryHelper.spawnItemStack( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack );
+				}
+	}
+
+	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
 		if( isMain() )
+		{
+			if( player.getHeldItemMainhand().getItem() == BetterStorageItems.HEX_KEY.get() )
+				return new ConfigContainer( windowID, playerInventory, world, pos );
 			return new ContainerReinforcedLocker( windowID, playerInventory, world, pos );
+		}
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
@@ -186,6 +238,19 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
 	}
 
+	@Override
+	public HexKeyConfig getConfig()
+	{
+		return config;
+	}
+
+	@Override
+	public void setConfig( HexKeyConfig config )
+	{
+		this.config = config;
+		markDirty();
+	}
+
 	/*
 	 * ==========================
 	 * TileEntity synchronization
@@ -197,6 +262,8 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	{
 		final CompoundNBT nbt = super.getUpdateTag();
 
+		if( !config.isEmpty() )
+			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 			nbt.put( "lock", lock.serializeNBT() );
 
@@ -207,6 +274,10 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
 	{
 		final CompoundNBT nbt = packet.getNbtCompound();
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
@@ -227,6 +298,10 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	{
 		super.handleUpdateTag( nbt );
 
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
@@ -239,6 +314,8 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
 	{
+		if( !config.isEmpty() )
+			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 		{
 			final CompoundNBT lockNBT = new CompoundNBT();
@@ -252,6 +329,10 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public void read( CompoundNBT nbt )
 	{
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );

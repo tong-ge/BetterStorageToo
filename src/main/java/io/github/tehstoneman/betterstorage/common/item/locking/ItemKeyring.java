@@ -37,7 +37,7 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 {
 	public ItemKeyring()
 	{
-		super( "keyring", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( new Item.Properties() );
 		addPropertyOverride( new ResourceLocation( "full" ), ( itemStack, world, entityPlayer ) ->
 		{
 			return getFilledCapacity( itemStack );

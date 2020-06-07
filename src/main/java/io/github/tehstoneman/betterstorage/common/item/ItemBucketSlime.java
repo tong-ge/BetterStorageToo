@@ -14,7 +14,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	public ItemBucketSlime()
 	{
-		super( "bucket", new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( new Item.Properties() );
 		// setContainerItem( Items.BUCKET );
 		// setHasSubtypes( true );
 		// setMaxStackSize( 0 );

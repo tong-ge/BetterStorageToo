@@ -1,12 +1,14 @@
 package io.github.tehstoneman.betterstorage.client;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
+import io.github.tehstoneman.betterstorage.client.gui.ConfigContainerGui;
 import io.github.tehstoneman.betterstorage.client.gui.GuiCardboardBox;
 import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
 import io.github.tehstoneman.betterstorage.client.gui.GuiKeyring;
 import io.github.tehstoneman.betterstorage.client.gui.GuiLocker;
 import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedChest;
 import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedLocker;
+import io.github.tehstoneman.betterstorage.client.model.xobj.XOBJLoader;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityLockerRenderer;
@@ -22,10 +24,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +50,8 @@ public class ClientSetup
 		ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_CHEST.get(), GuiReinforcedChest::new );
 		ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_LOCKER.get(), GuiReinforcedLocker::new );
 
+		ScreenManager.registerFactory( BetterStorageContainerTypes.CONFIG.get(), ConfigContainerGui::new );
+
 		// Register Tile Entity Renderers
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.GLASS_TANK.get(), TileEntityTankRenderer::new );
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.LOCKABLE_DOOR.get(), TileEntityLockableDoorRenderer::new );
@@ -59,13 +66,13 @@ public class ClientSetup
 				BetterStorageItems.CARDBOARD_SHOVEL.get(), BetterStorageItems.CARDBOARD_SWORD.get(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 		Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 
-		RenderTypeLookup.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.cutout() );
+		RenderTypeLookup.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.getCutout() );
 	}
 
 	@SubscribeEvent
 	public static void onTextureStitch( TextureStitchEvent.Pre event )
 	{
-		if( !event.getMap().getBasePath().equals( PlayerContainer.LOCATION_BLOCKS_TEXTURE ) )
+		if( !event.getMap().getTextureLocation().equals( PlayerContainer.LOCATION_BLOCKS_TEXTURE ) )
 			return;
 
 		event.addSprite( Resources.TEXTURE_CHEST_REINFORCED );
@@ -75,5 +82,33 @@ public class ClientSetup
 		event.addSprite( Resources.TEXTURE_LOCKER_REINFORCED );
 		event.addSprite( Resources.TEXTURE_LOCKER_REINFORCED_DOUBLE );
 		event.addSprite( Resources.TEXTURE_WHITE );
+	}
+
+	@SubscribeEvent
+	public static void onModelRegistryEvent( ModelRegistryEvent event )
+	{
+		ModelLoaderRegistry.registerLoader( new ResourceLocation( ModInfo.MOD_ID, "xobj" ), XOBJLoader.INSTANCE );
+
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_FRAME );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LID );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LID_FRAME );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LARGE );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LARGE_FRAME );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LID_LARGE );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_CHEST_LID_LARGE_FRAME );
+
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_FRAME );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_L );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_R );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_FRAME_L );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_FRAME_R );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_LARGE );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_LARGE_FRAME );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_L );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_R );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_L );
+		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_R );
 	}
 }

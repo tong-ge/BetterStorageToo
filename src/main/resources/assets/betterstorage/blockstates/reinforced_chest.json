@@ -1,3 +1,9 @@
 {
-    "variants": { "": { "model": "betterstorage:block/reinforced_chest" } }
+    "variants":
+    {
+    	"type=single": { "model": "betterstorage:block/reinforced_chest" },
+    	"type=master": { "model": "betterstorage:block/reinforced_chest_large" },
+    	"type=slave": { "model": "betterstorage:block/reinforced_chest_empty" },
+    	"type=pile": { "model": "betterstorage:block/reinforced_chest_empty" }
+    }
 }

@@ -7,7 +7,7 @@ public class ModelLargeLocker extends ModelLocker
 {
 	public ModelLargeLocker()
 	{
-		super( RenderType::entityCutout );
+		super( RenderType::getEntityCutout );
 
 		lockerBody = new ModelRenderer( 64, 128, 0, 34 );
 		lockerBody.addBox( 0.0F, 0.0F, 0.0F, 16.0F, 32.0F, 14.0F, 0.0F );

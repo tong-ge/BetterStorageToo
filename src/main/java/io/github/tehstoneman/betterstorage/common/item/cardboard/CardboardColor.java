@@ -31,9 +31,12 @@ public class CardboardColor implements IItemColor, IBlockColor
 	@Override
 	public int getColor( BlockState state, ILightReader reader, BlockPos pos, int tint )
 	{
-		final TileEntity tileEntity = reader.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityCardboardBox )
-			return ( (TileEntityCardboardBox)tileEntity ).getColor();
+		if( reader != null )
+		{
+			final TileEntity tileEntity = reader.getTileEntity( pos );
+			if( tileEntity instanceof TileEntityCardboardBox )
+				return ( (TileEntityCardboardBox)tileEntity ).getColor();
+		}
 		return 0xA08060;
 	}
 }

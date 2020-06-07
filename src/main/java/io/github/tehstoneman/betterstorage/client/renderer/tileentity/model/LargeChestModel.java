@@ -7,7 +7,7 @@ public class LargeChestModel extends ChestModel
 {
 	public LargeChestModel()
 	{
-		super( RenderType::entityCutout );
+		super( RenderType::getEntityCutout );
 
 		chestBody = new ModelRenderer( 128, 64, 0, 19 );
 		chestBody.addBox( 1.0F, 0.0F, 1.0F, 30.0F, 10.0F, 14.0F, 0.0F );

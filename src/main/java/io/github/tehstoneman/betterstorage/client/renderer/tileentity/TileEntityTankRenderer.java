@@ -52,7 +52,7 @@ public class TileEntityTankRenderer extends TileEntityRenderer< TileEntityTank >
 			final BlockState blockState = tileEntity.getBlockState();
 
 			final Material material = new Material( PlayerContainer.LOCATION_BLOCKS_TEXTURE, Resources.TEXTURE_WHITE );
-			final IVertexBuilder vertexBuilder = material.getBuffer( buffer, RenderType::entityCutout );
+			final IVertexBuilder vertexBuilder = material.getBuffer( buffer, RenderType::getEntityCutout );
 
 			tankFluidModel.setLevel( (float)fluidStack.getAmount() / (float)capacity, blockState.get( BlockTank.UP ),
 					blockState.get( BlockTank.DOWN ), fluid.getAttributes().isLighterThanAir() );

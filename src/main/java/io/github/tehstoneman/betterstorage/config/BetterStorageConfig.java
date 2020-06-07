@@ -7,12 +7,14 @@ import net.minecraftforge.fml.config.ModConfig;
 public class BetterStorageConfig
 {
 	private static final ForgeConfigSpec.Builder	COMMON_BUILDER	= new ForgeConfigSpec.Builder();
+	private static final ForgeConfigSpec.Builder	CLIENT_BUILDER	= new ForgeConfigSpec.Builder();
 
 	public static Common							COMMON			= new Common( COMMON_BUILDER );
-	// public static Client CLIENT = new Common( CLIENT_BUILDER );
+	public static Client							CLIENT			= new Client( CLIENT_BUILDER );
 	// public static Server SERVER = new Common( SERVER_BUILDER );
 
 	private static ForgeConfigSpec					COMMON_SPEC		= COMMON_BUILDER.build();
+	private static ForgeConfigSpec					CLIENT_SPEC		= CLIENT_BUILDER.build();
 
 	public static class Common
 	{
@@ -21,12 +23,11 @@ public class BetterStorageConfig
 
 		public ForgeConfigSpec.IntValue		cardboardBoxRows;
 		public ForgeConfigSpec.IntValue		cardboardBoxUses;
-		public ForgeConfigSpec.BooleanValue	cardboardBoxShowContents;
 		public ForgeConfigSpec.BooleanValue	cardboardBoxPistonBreakable;
 		public ForgeConfigSpec.BooleanValue	cardboardBoxDispenserPlaceable;
 
 		public ForgeConfigSpec.BooleanValue	lockBreakable;
-		public ForgeConfigSpec.IntValue tankBuckets;
+		public ForgeConfigSpec.IntValue		tankBuckets;
 		public ForgeConfigSpec.BooleanValue	useFluidMilk;
 
 		public Common( ForgeConfigSpec.Builder builder )
@@ -54,10 +55,6 @@ public class BetterStorageConfig
 					.comment( "Number of times cardboard boxes can be picked up with items before they break. Use 0 for infinite uses." )
 					.translation( "config.betterstorage.general.cardboardBoxUses" )
 					.defineInRange( "cardboardBoxUses", 25, 0, Integer.MAX_VALUE );
-			cardboardBoxShowContents = builder
-					.comment( "If disabled, doesn't show cardboard box contents in their tooltips." )
-					.translation( "config.betterstorage.general.cardboardBoxShowContents" )
-					.define( "cardboardBoxShowContents", true );
 			cardboardBoxPistonBreakable = builder
 					.comment( "Allow pistons to break cardboard boxes." )
 					.translation( "config.betterstorage.general.cardboardBoxPistonBreakable" )
@@ -85,8 +82,32 @@ public class BetterStorageConfig
 		}
 	}
 
+	public static class Client
+	{
+		public ForgeConfigSpec.BooleanValue	cardboardBoxShowContents;
+		public ForgeConfigSpec.BooleanValue useObjModels;
+
+		public Client( ForgeConfigSpec.Builder builder )
+		{
+			builder.comment( "General settings." ).push( "General" );
+			cardboardBoxShowContents = builder
+					.comment( "If disabled, doesn't show cardboard box contents in their tooltips." )
+					.translation( "config.betterstorage.general.cardboardBoxShowContents" )
+					.define( "cardboardBoxShowContents", true );
+			builder.comment( "Rendering settings." ).push( "Rendering" );
+			//@formatter:off
+			useObjModels = builder
+					.comment( "Allow the use of OBJ models for some blocks." )
+					.translation( "config.betterstorage.rendering.useObjModels" )
+					.define( "useObjModels", true );
+			//@formatter:on
+			builder.pop();
+		}
+	}
+
 	public static void register( ModLoadingContext context )
 	{
 		context.registerConfig( ModConfig.Type.COMMON, COMMON_SPEC );
+		context.registerConfig( ModConfig.Type.CLIENT, CLIENT_SPEC );
 	}
 }

@@ -1,0 +1,33 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards":
+	{
+		"recipes": [ "betterstorage:hex_key" ]
+	},
+	"criteria":
+	{
+		"has_nugget":
+		{
+			"trigger": "minecraft:inventory_changed",
+			"conditions":
+			{
+        		"items":
+        		[
+          			{ "tag": "forge:nuggets/iron" }
+				]
+			}
+		},
+		"has_the_recipe":
+		{
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": { "recipe": "betterstorage:hex_key" }
+		}
+	},
+	"requirements":
+	[
+		[
+			"has_nugget",
+			"has_the_recipe"
+		]
+	]
+}

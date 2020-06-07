@@ -1,5 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
@@ -102,6 +103,14 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 			return null;
 		final TileEntity tileEntity = getWorld().getTileEntity( getConnected() );
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
+	}
+
+	@Override
+	public void markDirty()
+	{
+		if( !isMain() )
+			getConnectedTileEntity().markDirty();
+		super.markDirty();
 	}
 
 	/*

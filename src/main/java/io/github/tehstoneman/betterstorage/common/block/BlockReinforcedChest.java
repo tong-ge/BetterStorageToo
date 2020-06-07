@@ -10,6 +10,7 @@ import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedChest;
+import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -98,6 +99,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public BlockRenderType getRenderType( BlockState state )
 	{
+		// return BlockRenderType.MODEL;
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
@@ -106,12 +108,6 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	{
 		return new TileEntityReinforcedChest();
 	}
-
-	/*@Override
-	public boolean hasCustomBreakingProgress( BlockState state )
-	{
-		return true;
-	}*/
 
 	/*
 	 * =========
@@ -168,24 +164,34 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	}
 
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updatePostPlacement( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
 			BlockPos facingPos )
 	{
-		if( stateIn.get( WATERLOGGED ) )
-			worldIn.getPendingFluidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickRate( worldIn ) );
+		if( thisState.get( WATERLOGGED ) )
+			world.getPendingFluidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickRate( world ) );
 
 		if( facingState.getBlock() == this && facing.getAxis().isHorizontal() )
 		{
-			final ConnectedType lockerType = facingState.get( TYPE );
+			final ConnectedType facingType = facingState.get( TYPE );
 
-			if( stateIn.get( TYPE ) == ConnectedType.SINGLE && lockerType != ConnectedType.SINGLE
-					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
-				return stateIn.with( TYPE, lockerType.opposite() );
+			if( thisState.get( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
+					&& thisState.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
+			{
+				final ConnectedType newType = facingType.opposite();
+				final TileEntityReinforcedChest thisChest = getChestAt( (World)world, thisPos );
+				final TileEntityReinforcedChest facingChest = getChestAt( (World)world, facingPos );
+				if( newType == ConnectedType.SLAVE )
+				{
+					facingChest.setConfig( thisChest.getConfig() );
+					thisChest.setConfig( new HexKeyConfig() );
+				}
+				return thisState.with( TYPE, newType );
+			}
 		}
-		else if( getDirectionToAttached( stateIn ) == facing )
-			return stateIn.with( TYPE, ConnectedType.SINGLE );
+		else if( getDirectionToAttached( thisState ) == facing )
+			return thisState.with( TYPE, ConnectedType.SINGLE );
 
-		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+		return super.updatePostPlacement( thisState, facing, facingState, world, thisPos, facingPos );
 	}
 
 	/**
@@ -229,18 +235,26 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	}
 
 	@Override
-	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = world.getTileEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 			{
+				if( state.get( TYPE ) == ConnectedType.MASTER )
+				{
+					final TileEntityReinforcedChest thisChest = getChestAt( world, pos );
+					final TileEntityReinforcedChest facingChest = getChestAt( world, pos.offset( getDirectionToAttached( state ) ) );
+
+					facingChest.setConfig( thisChest.getConfig() );
+					thisChest.setConfig( new HexKeyConfig() );
+				}
 				( (TileEntityContainer)tileentity ).dropInventoryItems();
-				worldIn.updateComparatorOutputLevel( pos, this );
+				world.updateComparatorOutputLevel( pos, this );
 			}
 
-			super.onReplaced( state, worldIn, pos, newState, isMoving );
+			super.onReplaced( state, world, pos, newState, isMoving );
 		}
 	}
 
@@ -398,7 +412,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 * @param allowBlockedChest
 	 *            If false, then if the chest is blocked then <code>null</code> will be returned. If true,
 	 *            then the chest can still be blocked (used by hoppers).
-	 *            @return The chest at the position, or null if none.
+	 * @return The chest at the position, or null if none.
 	 */
 	@Nullable
 	public TileEntityReinforcedChest getContainer( BlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )

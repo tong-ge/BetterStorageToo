@@ -27,7 +27,7 @@ public class ContainerCardboardBox extends Container
 
 	public ContainerCardboardBox( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
-		super( BetterStorageContainerTypes.LOCKER.get(), windowId );
+		super( BetterStorageContainerTypes.CARDBOARD_BOX.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
