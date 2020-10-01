@@ -22,13 +22,13 @@ ext.configFile = file "gradle.properties"
 
 configFile.withReader
 {
-    // Load config. It shall from now be referenced as simply config or project.config
+    // Load  It shall from now be referenced as simply config or project.config
     def prop = new Properties()
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.minecraft_version}-${config.mod_major_version}.${config.api_major_version}.${config.minor_version}.${config.patch_version}"
+version = "${minecraft_version}-${mod_major_version}.${api_major_version}.${minor_version}.${patch_version}"
 group = "io.github.thestoneman.betterstorage"
 archivesBaseName = "BetterStorageToo"
 
@@ -41,8 +41,8 @@ compileJava
 
 minecraft
 {
-    version = "${config.minecraft_version}-${config.forge_version}"
-    //mc_version = "${config.minecraft_version}"
+    version = "${minecraft_version}-${forge_version}"
+    //mc_version = "${minecraft_version}"
 
 	if( file('../run').exists() )
 	{
@@ -53,15 +53,15 @@ minecraft
 		runDir = "assets"
 	}
 
-    mappings = "${config.mappings_version}"
+    mappings = mappings_version
 
     replaceIn "src/main/java/io/github/tehstoneman/betterstorage/ModInfo.java"
-    replace "@minecraft_version@", config.minecraft_version
-    replace "@mod_major_version@", config.mod_major_version
-    replace "@api_major_version@", config.api_major_version
-    replace "@minor_version@", config.minor_version
-    replace "@patch_version@", config.patch_version
-    replace "@forge_version@", config.forge_version
+    replace "@minecraft_version@", minecraft_version
+    replace "@mod_major_version@", mod_major_version
+    replace "@api_major_version@", api_major_version
+    replace "@minor_version@", minor_version
+    replace "@patch_version@", patch_version
+    replace "@forge_version@", forge_version
 }
 
 repositories
@@ -78,32 +78,32 @@ repositories
     	name = "ModMaven"
     	url = "modmaven.k-4u.nl"
   	}
-  	ivy
-    {
-        name "MineTweaker3"
-        artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-([classifier]-)[revision].[ext]"
-    }
-    maven
-    {
-        name "RX14"
-        url "http://mvn.rx14.co.uk/repo/"
-    }
-    ivy
-    {
-        name "Thaumcraft"
-        //artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-([classifier]-)[revision].[ext]"
-        // https://dl.dropboxusercontent.com/u/47135879/Baubles-1.11-1.4.3-api.zip
-        url "https://dl.dropboxusercontent.com/u/47135879"
-        layout "pattern",
-        {
-        	artifact "[module]-[revision].[ext]"
-        }
-    }
-	ivy
-	{
-        name "Botania"
-        artifactPattern "http://botaniamod.net/files/deobf/[module] [revision]-[classifier].[ext]"
-    }
+  	// ivy
+    // {
+    //     name "MineTweaker3"
+    //     artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-([classifier]-)[revision].[ext]"
+    // }
+    // maven
+    // {
+    //     name "RX14"
+    //     url "http://mvn.rx14.co.uk/repo/"
+    // }
+    // ivy
+    // {
+    //     name "Thaumcraft"
+    //     //artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-([classifier]-)[revision].[ext]"
+    //     // https://dl.dropboxusercontent.com/u/47135879/Baubles-1.11-1.4.3-api.zip
+    //     url "https://dl.dropboxusercontent.com/u/47135879"
+    //     layout "pattern",
+    //     {
+    //     	artifact "[module]-[revision].[ext]"
+    //     }
+    // }
+	// ivy
+	// {
+    //     name "Botania"
+    //     artifactPattern "http://botaniamod.net/files/deobf/[module] [revision]-[classifier].[ext]"
+    // }
 }
 
 dependencies
@@ -111,16 +111,16 @@ dependencies
     //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
     //compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
 
-    //runtime "com.azanor.baubles:Baubles:${config.baubles_version}-deobf"
+    //runtime "com.azanor.baubles:Baubles:${baubles_version}-deobf"
 
     //compile name: "Botania"           , group: "vazkii.botania", version: botania_version, classifier: "deobf"
     //compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
     //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
 
 	// compile against the JEI API but do not include it at runtime
-	deobfProvided "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"
+	deobfProvided "mezz.jei:jei_${minecraft_version}:${jei_version}:api"
 	// at runtime, use the full JEI jar
-	runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
+	runtime "mezz.jei:jei_${minecraft_version}:${jei_version}"
 }
 
 sourceSets
@@ -147,11 +147,11 @@ processResources
     from(sourceSets.main.resources.srcDirs)
     {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mc_version':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs)
     {
