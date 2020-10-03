@@ -1,12 +1,11 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
+import io.github.tehstoneman.betterstorage.utils.LanguageUtils;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.github.tehstoneman.betterstorage.BetterStorage;
-import io.github.tehstoneman.betterstorage.utils.LanguageUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,7 +20,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -69,8 +67,10 @@ public class ItemBucketSlime extends ItemBetterStorage
 	@Override
 	public void getSubItems( CreativeTabs tab, NonNullList< ItemStack > subItems )
 	{
-		for( final EnumSlime slime : EnumSlime.values() )
-			subItems.add( new ItemStack( this, 1, slime.getMetadata() ) );
+		if( isInCreativeTab(tab) ) {
+			for( final EnumSlime slime : EnumSlime.values() )
+				subItems.add( new ItemStack( this, 1, slime.getMetadata() ) );
+		}
 	}
 
 	@Override
