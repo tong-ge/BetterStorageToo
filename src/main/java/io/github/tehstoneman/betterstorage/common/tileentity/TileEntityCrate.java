@@ -43,22 +43,21 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+@SuppressWarnings( "deprecation" )
 public class TileEntityCrate extends TileEntityContainer
 {
-	private static final int	maxCratePileSize	= 125;
+	// private static final int maxCratePileSize = 125;
 
-	public static final int		slotsPerCrate		= 18;
-	public static final int		MAX_CRATES			= 125;
-	public static final int		MAX_PER_SIDE		= 5;
+	public static final int		slotsPerCrate	= 18;
+	public static final int		MAX_CRATES		= 125;
+	public static final int		MAX_PER_SIDE	= 5;
 
 	// private BlockPos mainPos;
 	private UUID				pileID;
 	protected ITextComponent	customName;
 
-	private int					numCrates			= 1;
-	private int					capacity			= slotsPerCrate;
-
-	private String				customTitle;
+	private int					numCrates		= 1;
+	private int					capacity		= slotsPerCrate;
 
 	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
 	{
@@ -178,8 +177,6 @@ public class TileEntityCrate extends TileEntityContainer
 	private List< HashSet< TileEntityCrate > > getCrateSets( BlockPos pos, UUID pileID )
 	{
 		final List< HashSet< TileEntityCrate > > crateSets = new ArrayList<>();
-		int checkedCrates = 0;
-
 		for( final Direction dir : Direction.values() )
 		{
 			// Continue if this neighbor block is not part of the crate pile.
@@ -193,7 +190,6 @@ public class TileEntityCrate extends TileEntityContainer
 					for( final Direction ndir : Direction.values() )
 						checkConnections( tileCrate.getPos().offset( ndir ), pileID, set );
 					crateSets.add( set );
-					checkedCrates += set.size();
 				}
 		}
 
@@ -235,9 +231,7 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	public void setCustomTitle( String displayName )
-	{
-		customTitle = displayName;
-	}
+	{}
 
 	public int getNumCrates()
 	{
@@ -311,16 +305,18 @@ public class TileEntityCrate extends TileEntityContainer
 		return nbt;
 	}
 
-	@Override
-	public void handleUpdateTag( CompoundNBT nbt )
-	{
-		super.handleUpdateTag( nbt );
-
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
-		numCrates = nbt.getInt( "NumCrates" );
-		capacity = nbt.getInt( "Capacity" );
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * {
+	 * super.handleUpdateTag( nbt );
+	 *
+	 * if( nbt.hasUniqueId( "PileID" ) )
+	 * pileID = nbt.getUniqueId( "PileID" );
+	 * numCrates = nbt.getInt( "NumCrates" );
+	 * capacity = nbt.getInt( "Capacity" );
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 
@@ -335,14 +331,16 @@ public class TileEntityCrate extends TileEntityContainer
 		return nbt;
 	}
 
-	@Override
-	public void read( CompoundNBT nbt )
-	{
-		super.read( nbt );
-
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
-	}
+	/*
+	 * @Override
+	 * public void read( CompoundNBT nbt )
+	 * {
+	 * super.read( nbt );
+	 *
+	 * if( nbt.hasUniqueId( "PileID" ) )
+	 * pileID = nbt.getUniqueId( "PileID" );
+	 * }
+	 */
 
 	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )

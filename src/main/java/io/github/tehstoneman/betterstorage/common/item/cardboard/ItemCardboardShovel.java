@@ -3,10 +3,8 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.item.ShovelItem;
-import net.minecraft.nbt.CompoundNBT;
 
 public class ItemCardboardShovel extends ShovelItem implements ICardboardItem
 {

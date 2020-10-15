@@ -1,10 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Item.Properties;
 import net.minecraft.world.World;
 
 public class ItemMasterKey extends ItemKey

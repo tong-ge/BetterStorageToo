@@ -36,8 +36,6 @@ public class BetterStorageEventHandler
 	public static void onPlayerBreakSpeed( PlayerEvent.BreakSpeed event )
 	{
 		final BlockState blockState = event.getState();
-		final BlockPos pos = event.getPos();
-
 		if( blockState.hasTileEntity() )
 		{
 			final PlayerEntity player = event.getPlayer();

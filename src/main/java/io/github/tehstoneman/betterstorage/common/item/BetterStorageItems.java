@@ -27,7 +27,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class BetterStorageItems
 {
-	public static final DeferredRegister< Item >				REGISTERY				= new DeferredRegister<>( ForgeRegistries.ITEMS,
+	public static final DeferredRegister< Item >				REGISTERY				= DeferredRegister.create( ForgeRegistries.ITEMS,
 			ModInfo.MOD_ID );
 
 	public static RegistryObject< ItemBlockCrate >				CRATE					= REGISTERY.register( "crate", () -> new ItemBlockCrate() );
@@ -76,6 +76,5 @@ public final class BetterStorageItems
 	public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
 			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().containerItem( Items.BUCKET ) ) );
 
-	public static RegistryObject< HexKeyItem >						HEX_KEY					= REGISTERY.register( "hex_key",
-			() -> new HexKeyItem() );
+	public static RegistryObject< HexKeyItem >					HEX_KEY					= REGISTERY.register( "hex_key", () -> new HexKeyItem() );
 }

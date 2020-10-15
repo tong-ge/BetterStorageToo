@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -13,8 +12,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class BetterStorageContainerTypes
 {
-	public static final DeferredRegister< ContainerType< ? > >					REGISTERY			= new DeferredRegister<>(
-			ForgeRegistries.CONTAINERS, ModInfo.MOD_ID );
+	public static final DeferredRegister< ContainerType< ? > >					REGISTERY			= DeferredRegister
+			.create( ForgeRegistries.CONTAINERS, ModInfo.MOD_ID );
 
 	//@formatter:off
 	public static RegistryObject< ContainerType< ContainerCardboardBox > >		CARDBOARD_BOX		= REGISTERY.register( "cardboard_box",

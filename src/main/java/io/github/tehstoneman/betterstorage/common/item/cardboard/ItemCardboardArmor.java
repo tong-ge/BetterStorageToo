@@ -11,8 +11,6 @@ import net.minecraft.item.ItemStack;
 
 public class ItemCardboardArmor extends DyeableArmorItem implements ICardboardItem
 {
-	private static final String[] armorText = { "Helmet", "Chestplate", "Leggings", "Boots" };
-
 	public ItemCardboardArmor( EquipmentSlotType armorSlot )
 	{
 		super( BetterStorageArmorMaterial.CARDBOARD, armorSlot, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );

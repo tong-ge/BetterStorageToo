@@ -95,6 +95,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 		}
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState updatePostPlacement( BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos,
 			BlockPos facingPos )
@@ -137,6 +138,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 		return null;
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{

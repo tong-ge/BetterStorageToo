@@ -7,60 +7,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import joptsimple.internal.Strings;
-import net.minecraft.client.renderer.TransformationMatrix;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.Vector4f;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IModelTransform;
-import net.minecraft.client.renderer.model.IUnbakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.model.Material;
 import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraftforge.client.model.IModelBuilder;
 import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.geometry.IModelGeometryPart;
 import net.minecraftforge.client.model.geometry.IMultipartModelGeometry;
 import net.minecraftforge.client.model.obj.LineReader;
 import net.minecraftforge.client.model.obj.MaterialLibrary;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
-import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 
 public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 {
-	private static Vector4f					COLOR_WHITE		= new Vector4f( 1, 1, 1, 1 );
-	private static Vec2f[]					DEFAULT_COORDS	= { new Vec2f( 0, 0 ), new Vec2f( 0, 1 ), new Vec2f( 1, 1 ), new Vec2f( 1, 0 ), };
+	// private static Vector4f COLOR_WHITE = new Vector4f( 1, 1, 1, 1 );
+	/*
+	 * private static Vector2f[] DEFAULT_COORDS = { new Vector2f( 0, 0 ), new Vector2f( 0, 1 ), new Vector2f( 1, 1 ),
+	 * new Vector2f( 1, 0 ), };
+	 */
 
-	private final Map< String, ModelGroup >	parts			= Maps.newHashMap();
+	private final Map< String, ModelGroup >	parts		= Maps.newHashMap();
 
-	private final List< Vector3f >			positions		= Lists.newArrayList();
-	private final List< Vec2f >				texCoords		= Lists.newArrayList();
-	private final List< Vector3f >			normals			= Lists.newArrayList();
-	private final List< Vector4f >			colors			= Lists.newArrayList();
+	private final List< Vector3f >			positions	= Lists.newArrayList();
+	private final List< Vector2f >			texCoords	= Lists.newArrayList();
+	private final List< Vector3f >			normals		= Lists.newArrayList();
+	private final List< Vector4f >			colors		= Lists.newArrayList();
 
 	public final boolean					detectCullableFaces;
 	public final boolean					diffuseLighting;
@@ -279,151 +265,157 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 		return Optional.ofNullable( parts.get( name ) );
 	}
 
-	@Override
-	public IBakedModel bake( IModelConfiguration owner, ModelBakery bakery, Function< Material, TextureAtlasSprite > spriteGetter,
-			IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation )
-	{
-		final TextureAtlasSprite particle = spriteGetter.apply( owner.resolveTexture( "particle" ) );
+	/*
+	 * @Override
+	 * public IBakedModel bake( IModelConfiguration owner, ModelBakery bakery, Function< Material, TextureAtlasSprite > spriteGetter,
+	 * IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation )
+	 * {
+	 * final TextureAtlasSprite particle = spriteGetter.apply( owner.resolveTexture( "particle" ) );
+	 *
+	 * final IModelBuilder< ? > builder = IModelBuilder.of( owner, overrides, particle );
+	 *
+	 * addQuads( owner, builder, bakery, spriteGetter, modelTransform, modelLocation );
+	 *
+	 * return builder.build();
+	 * }
+	 */
 
-		final IModelBuilder< ? > builder = IModelBuilder.of( owner, overrides, particle );
+	/*
+	 * private Pair< BakedQuad, Direction > makeQuad( int[][] indices, int tintIndex, Vector4f colorTint, Vector4f ambientColor,
+	 * TextureAtlasSprite texture, TransformationMatrix transform )
+	 * {
+	 * boolean needsNormalRecalculation = false;
+	 * for( final int[] ints : indices )
+	 * needsNormalRecalculation |= ints.length < 3;
+	 * Vector3f faceNormal = new Vector3f( 0, 0, 0 );
+	 * if( needsNormalRecalculation )
+	 * {
+	 * final Vector3f a = positions.get( indices[0][0] );
+	 * final Vector3f ab = positions.get( indices[1][0] );
+	 * final Vector3f ac = positions.get( indices[2][0] );
+	 * final Vector3f abs = ab.copy();
+	 * abs.sub( a );
+	 * final Vector3f acs = ac.copy();
+	 * acs.sub( a );
+	 * abs.cross( acs );
+	 * abs.normalize();
+	 * faceNormal = abs;
+	 * }
+	 * 
+	 * final Vector4f[] pos = new Vector4f[4];
+	 * final Vector3f[] norm = new Vector3f[4];
+	 * 
+	 * final BakedQuadBuilder builder = new BakedQuadBuilder( texture );
+	 * 
+	 * builder.setQuadTint( tintIndex );
+	 * 
+	 * Vector2f uv2 = new Vector2f( 0, 0 );
+	 * if( ambientToFullbright )
+	 * {
+	 * final int fakeLight = (int)( ( ambientColor.getX() + ambientColor.getY() + ambientColor.getZ() ) * 15 / 3.0f );
+	 * uv2 = new Vector2f( ( fakeLight << 4 ) / 32767.0f, ( fakeLight << 4 ) / 32767.0f );
+	 * builder.setApplyDiffuseLighting( fakeLight == 0 );
+	 * }
+	 * 
+	 * final boolean hasTransform = !transform.isIdentity();
+	 * // The incoming transform is referenced on the center of the block, but our coords are referenced on the corner
+	 * final TransformationMatrix transformation = hasTransform ? transform.blockCenterToCorner() : transform;
+	 * 
+	 * for( int i = 0; i < 4; i++ )
+	 * {
+	 * final int[] index = indices[Math.min( i, indices.length - 1 )];
+	 * final Vector3f pos0 = positions.get( index[0] );
+	 * final Vector4f position = new Vector4f( pos0 );
+	 * final Vector2f texCoord = index.length >= 2 && texCoords.size() > 0 ? texCoords.get( index[1] ) : DEFAULT_COORDS[i];
+	 * final Vector3f norm0 = !needsNormalRecalculation && index.length >= 3 && normals.size() > 0 ? normals.get( index[2] ) : faceNormal;
+	 * Vector3f normal = norm0;
+	 * final Vector4f color = index.length >= 4 && colors.size() > 0 ? colors.get( index[3] ) : COLOR_WHITE;
+	 * if( hasTransform )
+	 * {
+	 * normal = norm0.copy();
+	 * transformation.transformPosition( position );
+	 * transformation.transformNormal( normal );
+	 * } ;
+	 * final Vector4f tintedColor = new Vector4f( color.getX() * colorTint.getX(), color.getY() * colorTint.getY(),
+	 * color.getZ() * colorTint.getZ(), color.getW() * colorTint.getW() );
+	 * putVertexData( builder, position, texCoord, normal, tintedColor, uv2, texture );
+	 * pos[i] = position;
+	 * norm[i] = normal;
+	 * }
+	 * 
+	 * builder.setQuadOrientation( Direction.getFacingFromVector( norm[0].getX(), norm[0].getY(), norm[0].getZ() ) );
+	 * 
+	 * Direction cull = null;
+	 * if( detectCullableFaces )
+	 * if( MathHelper.epsilonEquals( pos[0].getX(), 0 ) && // vertex.position.x
+	 * MathHelper.epsilonEquals( pos[1].getX(), 0 ) && MathHelper.epsilonEquals( pos[2].getX(), 0 )
+	 * && MathHelper.epsilonEquals( pos[3].getX(), 0 ) && norm[0].getX() < 0 )
+	 * cull = Direction.WEST;
+	 * else if( MathHelper.epsilonEquals( pos[0].getX(), 1 ) && // vertex.position.x
+	 * MathHelper.epsilonEquals( pos[1].getX(), 1 ) && MathHelper.epsilonEquals( pos[2].getX(), 1 )
+	 * && MathHelper.epsilonEquals( pos[3].getX(), 1 ) && norm[0].getX() > 0 )
+	 * cull = Direction.EAST;
+	 * else if( MathHelper.epsilonEquals( pos[0].getZ(), 0 ) && // vertex.position.z
+	 * MathHelper.epsilonEquals( pos[1].getZ(), 0 ) && MathHelper.epsilonEquals( pos[2].getZ(), 0 )
+	 * && MathHelper.epsilonEquals( pos[3].getZ(), 0 ) && norm[0].getZ() < 0 )
+	 * cull = Direction.NORTH; // can never remember
+	 * else if( MathHelper.epsilonEquals( pos[0].getZ(), 1 ) && // vertex.position.z
+	 * MathHelper.epsilonEquals( pos[1].getZ(), 1 ) && MathHelper.epsilonEquals( pos[2].getZ(), 1 )
+	 * && MathHelper.epsilonEquals( pos[3].getZ(), 1 ) && norm[0].getZ() > 0 )
+	 * cull = Direction.SOUTH;
+	 * else if( MathHelper.epsilonEquals( pos[0].getY(), 0 ) && // vertex.position.y
+	 * MathHelper.epsilonEquals( pos[1].getY(), 0 ) && MathHelper.epsilonEquals( pos[2].getY(), 0 )
+	 * && MathHelper.epsilonEquals( pos[3].getY(), 0 ) && norm[0].getY() < 0 )
+	 * cull = Direction.DOWN; // can never remember
+	 * else if( MathHelper.epsilonEquals( pos[0].getY(), 1 ) && // vertex.position.y
+	 * MathHelper.epsilonEquals( pos[1].getY(), 1 ) && MathHelper.epsilonEquals( pos[2].getY(), 1 )
+	 * && MathHelper.epsilonEquals( pos[3].getY(), 1 ) && norm[0].getY() > 0 )
+	 * cull = Direction.UP;
+	 * 
+	 * return Pair.of( builder.build(), cull );
+	 * }
+	 */
 
-		addQuads( owner, builder, bakery, spriteGetter, modelTransform, modelLocation );
-
-		return builder.build();
-	}
-
-	private Pair< BakedQuad, Direction > makeQuad( int[][] indices, int tintIndex, Vector4f colorTint, Vector4f ambientColor,
-			TextureAtlasSprite texture, TransformationMatrix transform )
-	{
-		boolean needsNormalRecalculation = false;
-		for( final int[] ints : indices )
-			needsNormalRecalculation |= ints.length < 3;
-		Vector3f faceNormal = new Vector3f( 0, 0, 0 );
-		if( needsNormalRecalculation )
-		{
-			final Vector3f a = positions.get( indices[0][0] );
-			final Vector3f ab = positions.get( indices[1][0] );
-			final Vector3f ac = positions.get( indices[2][0] );
-			final Vector3f abs = ab.copy();
-			abs.sub( a );
-			final Vector3f acs = ac.copy();
-			acs.sub( a );
-			abs.cross( acs );
-			abs.normalize();
-			faceNormal = abs;
-		}
-
-		final Vector4f[] pos = new Vector4f[4];
-		final Vector3f[] norm = new Vector3f[4];
-
-		final BakedQuadBuilder builder = new BakedQuadBuilder( texture );
-
-		builder.setQuadTint( tintIndex );
-
-		Vec2f uv2 = new Vec2f( 0, 0 );
-		if( ambientToFullbright )
-		{
-			final int fakeLight = (int)( ( ambientColor.getX() + ambientColor.getY() + ambientColor.getZ() ) * 15 / 3.0f );
-			uv2 = new Vec2f( ( fakeLight << 4 ) / 32767.0f, ( fakeLight << 4 ) / 32767.0f );
-			builder.setApplyDiffuseLighting( fakeLight == 0 );
-		}
-
-		final boolean hasTransform = !transform.isIdentity();
-		// The incoming transform is referenced on the center of the block, but our coords are referenced on the corner
-		final TransformationMatrix transformation = hasTransform ? transform.blockCenterToCorner() : transform;
-
-		for( int i = 0; i < 4; i++ )
-		{
-			final int[] index = indices[Math.min( i, indices.length - 1 )];
-			final Vector3f pos0 = positions.get( index[0] );
-			final Vector4f position = new Vector4f( pos0 );
-			final Vec2f texCoord = index.length >= 2 && texCoords.size() > 0 ? texCoords.get( index[1] ) : DEFAULT_COORDS[i];
-			final Vector3f norm0 = !needsNormalRecalculation && index.length >= 3 && normals.size() > 0 ? normals.get( index[2] ) : faceNormal;
-			Vector3f normal = norm0;
-			final Vector4f color = index.length >= 4 && colors.size() > 0 ? colors.get( index[3] ) : COLOR_WHITE;
-			if( hasTransform )
-			{
-				normal = norm0.copy();
-				transformation.transformPosition( position );
-				transformation.transformNormal( normal );
-			} ;
-			final Vector4f tintedColor = new Vector4f( color.getX() * colorTint.getX(), color.getY() * colorTint.getY(),
-					color.getZ() * colorTint.getZ(), color.getW() * colorTint.getW() );
-			putVertexData( builder, position, texCoord, normal, tintedColor, uv2, texture );
-			pos[i] = position;
-			norm[i] = normal;
-		}
-
-		builder.setQuadOrientation( Direction.getFacingFromVector( norm[0].getX(), norm[0].getY(), norm[0].getZ() ) );
-
-		Direction cull = null;
-		if( detectCullableFaces )
-			if( MathHelper.epsilonEquals( pos[0].getX(), 0 ) && // vertex.position.x
-					MathHelper.epsilonEquals( pos[1].getX(), 0 ) && MathHelper.epsilonEquals( pos[2].getX(), 0 )
-					&& MathHelper.epsilonEquals( pos[3].getX(), 0 ) && norm[0].getX() < 0 )
-				cull = Direction.WEST;
-			else if( MathHelper.epsilonEquals( pos[0].getX(), 1 ) && // vertex.position.x
-					MathHelper.epsilonEquals( pos[1].getX(), 1 ) && MathHelper.epsilonEquals( pos[2].getX(), 1 )
-					&& MathHelper.epsilonEquals( pos[3].getX(), 1 ) && norm[0].getX() > 0 )
-				cull = Direction.EAST;
-			else if( MathHelper.epsilonEquals( pos[0].getZ(), 0 ) && // vertex.position.z
-					MathHelper.epsilonEquals( pos[1].getZ(), 0 ) && MathHelper.epsilonEquals( pos[2].getZ(), 0 )
-					&& MathHelper.epsilonEquals( pos[3].getZ(), 0 ) && norm[0].getZ() < 0 )
-				cull = Direction.NORTH; // can never remember
-			else if( MathHelper.epsilonEquals( pos[0].getZ(), 1 ) && // vertex.position.z
-					MathHelper.epsilonEquals( pos[1].getZ(), 1 ) && MathHelper.epsilonEquals( pos[2].getZ(), 1 )
-					&& MathHelper.epsilonEquals( pos[3].getZ(), 1 ) && norm[0].getZ() > 0 )
-				cull = Direction.SOUTH;
-			else if( MathHelper.epsilonEquals( pos[0].getY(), 0 ) && // vertex.position.y
-					MathHelper.epsilonEquals( pos[1].getY(), 0 ) && MathHelper.epsilonEquals( pos[2].getY(), 0 )
-					&& MathHelper.epsilonEquals( pos[3].getY(), 0 ) && norm[0].getY() < 0 )
-				cull = Direction.DOWN; // can never remember
-			else if( MathHelper.epsilonEquals( pos[0].getY(), 1 ) && // vertex.position.y
-					MathHelper.epsilonEquals( pos[1].getY(), 1 ) && MathHelper.epsilonEquals( pos[2].getY(), 1 )
-					&& MathHelper.epsilonEquals( pos[3].getY(), 1 ) && norm[0].getY() > 0 )
-				cull = Direction.UP;
-
-		return Pair.of( builder.build(), cull );
-	}
-
-	private void putVertexData( IVertexConsumer consumer, Vector4f position0, Vec2f texCoord0, Vector3f normal0, Vector4f color0, Vec2f uv2,
-			TextureAtlasSprite texture )
-	{
-		final ImmutableList< VertexFormatElement > elements = consumer.getVertexFormat().getElements();
-		for( int j = 0; j < elements.size(); j++ )
-		{
-			final VertexFormatElement e = elements.get( j );
-			switch( e.getUsage() )
-			{
-			case POSITION:
-				consumer.put( j, position0.getX(), position0.getY(), position0.getZ(), position0.getW() );
-				break;
-			case COLOR:
-				consumer.put( j, color0.getX(), color0.getY(), color0.getZ(), color0.getW() );
-				break;
-			case UV:
-				switch( e.getIndex() )
-				{
-				case 0:
-					consumer.put( j, texCoord0.x, flipV ? 1 - texCoord0.y : texCoord0.y );
-					break;
-				case 2:
-					consumer.put( j, uv2.x, uv2.y );
-					break;
-				default:
-					consumer.put( j );
-					break;
-				}
-				break;
-			case NORMAL:
-				consumer.put( j, normal0.getX(), normal0.getY(), normal0.getZ() );
-				break;
-			default:
-				consumer.put( j );
-				break;
-			}
-		}
-	}
+	/*
+	 * private void putVertexData( IVertexConsumer consumer, Vector4f position0, Vector2f texCoord0, Vector3f normal0, Vector4f color0, Vector2f uv2,
+	 * TextureAtlasSprite texture )
+	 * {
+	 * final ImmutableList< VertexFormatElement > elements = consumer.getVertexFormat().getElements();
+	 * for( int j = 0; j < elements.size(); j++ )
+	 * {
+	 * final VertexFormatElement e = elements.get( j );
+	 * switch( e.getUsage() )
+	 * {
+	 * case POSITION:
+	 * consumer.put( j, position0.getX(), position0.getY(), position0.getZ(), position0.getW() );
+	 * break;
+	 * case COLOR:
+	 * consumer.put( j, color0.getX(), color0.getY(), color0.getZ(), color0.getW() );
+	 * break;
+	 * case UV:
+	 * switch( e.getIndex() )
+	 * {
+	 * case 0:
+	 * consumer.put( j, texCoord0.x, flipV ? 1 - texCoord0.y : texCoord0.y );
+	 * break;
+	 * case 2:
+	 * consumer.put( j, uv2.x, uv2.y );
+	 * break;
+	 * default:
+	 * consumer.put( j );
+	 * break;
+	 * }
+	 * break;
+	 * case NORMAL:
+	 * consumer.put( j, normal0.getX(), normal0.getY(), normal0.getZ() );
+	 * break;
+	 * default:
+	 * consumer.put( j );
+	 * break;
+	 * }
+	 * }
+	 * }
+	 */
 
 	public class ModelObject implements IModelGeometryPart
 	{
@@ -442,36 +434,48 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 			return name;
 		}
 
+		/*
+		 * @Override
+		 * public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
+		 * Function< Material, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
+		 * {
+		 * for( final ModelMesh mesh : meshes )
+		 * {
+		 * final MaterialLibrary.Material mat = mesh.mat;
+		 * if( mat == null )
+		 * continue;
+		 * final TextureAtlasSprite texture = spriteGetter.apply( ModelLoaderRegistry.resolveTexture( mat.diffuseColorMap, owner ) );
+		 * final int tintIndex = mat.diffuseTintIndex;
+		 * final Vector4f colorTint = mat.diffuseColor;
+		 *
+		 * for( final int[][] face : mesh.faces )
+		 * {
+		 * final Pair< BakedQuad, Direction > quad = makeQuad( face, tintIndex, colorTint, mat.ambientColor, texture,
+		 * modelTransform.getRotation() );
+		 * if( quad.getRight() == null )
+		 * modelBuilder.addGeneralQuad( quad.getLeft() );
+		 * else
+		 * modelBuilder.addFaceQuad( quad.getRight(), quad.getLeft() );
+		 * }
+		 * }
+		 * }
+		 */
+
+		/*
+		 * @Override
+		 * public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
+		 * Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
+		 * {
+		 * return meshes.stream().map( mesh -> ModelLoaderRegistry.resolveTexture( mesh.mat.diffuseColorMap, owner ) ).collect( Collectors.toSet() );
+		 * }
+		 */
+
 		@Override
 		public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
-				Function< Material, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
+				Function< RenderMaterial, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
 		{
-			for( final ModelMesh mesh : meshes )
-			{
-				final MaterialLibrary.Material mat = mesh.mat;
-				if( mat == null )
-					continue;
-				final TextureAtlasSprite texture = spriteGetter.apply( ModelLoaderRegistry.resolveTexture( mat.diffuseColorMap, owner ) );
-				final int tintIndex = mat.diffuseTintIndex;
-				final Vector4f colorTint = mat.diffuseColor;
+			// TODO Auto-generated method stub
 
-				for( final int[][] face : mesh.faces )
-				{
-					final Pair< BakedQuad, Direction > quad = makeQuad( face, tintIndex, colorTint, mat.ambientColor, texture,
-							modelTransform.getRotation() );
-					if( quad.getRight() == null )
-						modelBuilder.addGeneralQuad( quad.getLeft() );
-					else
-						modelBuilder.addFaceQuad( quad.getRight(), quad.getLeft() );
-				}
-			}
-		}
-
-		@Override
-		public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
-				Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
-		{
-			return meshes.stream().map( mesh -> ModelLoaderRegistry.resolveTexture( mesh.mat.diffuseColorMap, owner ) ).collect( Collectors.toSet() );
 		}
 	}
 
@@ -489,26 +493,30 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 			return parts.values();
 		}
 
-		@Override
-		public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
-				Function< Material, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
-		{
-			super.addQuads( owner, modelBuilder, bakery, spriteGetter, modelTransform, modelLocation );
+		/*
+		 * @Override
+		 * public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
+		 * Function< Material, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
+		 * {
+		 * super.addQuads( owner, modelBuilder, bakery, spriteGetter, modelTransform, modelLocation );
+		 *
+		 * getParts().stream().filter( part -> owner.getPartVisibility( part ) )
+		 * .forEach( part -> part.addQuads( owner, modelBuilder, bakery, spriteGetter, modelTransform, modelLocation ) );
+		 * }
+		 */
 
-			getParts().stream().filter( part -> owner.getPartVisibility( part ) )
-					.forEach( part -> part.addQuads( owner, modelBuilder, bakery, spriteGetter, modelTransform, modelLocation ) );
-		}
-
-		@Override
-		public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
-				Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
-		{
-			final Set< Material > combined = Sets.newHashSet();
-			combined.addAll( super.getTextures( owner, modelGetter, missingTextureErrors ) );
-			for( final IModelGeometryPart part : getParts() )
-				combined.addAll( part.getTextures( owner, modelGetter, missingTextureErrors ) );
-			return combined;
-		}
+		/*
+		 * @Override
+		 * public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
+		 * Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
+		 * {
+		 * final Set< Material > combined = Sets.newHashSet();
+		 * combined.addAll( super.getTextures( owner, modelGetter, missingTextureErrors ) );
+		 * for( final IModelGeometryPart part : getParts() )
+		 * combined.addAll( part.getTextures( owner, modelGetter, missingTextureErrors ) );
+		 * return combined;
+		 * }
+		 */
 	}
 
 	private class ModelMesh

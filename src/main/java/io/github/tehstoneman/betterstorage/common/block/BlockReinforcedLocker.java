@@ -14,7 +14,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -29,7 +28,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class BlockReinforcedLocker extends BlockLocker
@@ -169,14 +167,14 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public float getExplosionResistance( BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion )
+	public float getExplosionResistance( BlockState state, IBlockReader world, BlockPos pos, Explosion explosion )
 	{
 		final TileEntityReinforcedLocker chest = getLockerAt( (World)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
 			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
-			return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
+			return super.getExplosionResistance( state, world, pos, explosion ) * resist * 2;
 		}
-		return super.getExplosionResistance( state, world, pos, exploder, explosion );
+		return super.getExplosionResistance( state, world, pos, explosion );
 	}
 }

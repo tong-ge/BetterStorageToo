@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.IHasConfig;
 import io.github.tehstoneman.betterstorage.api.IHexKeyConfig;
@@ -33,7 +32,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileEntityReinforcedLocker extends TileEntityLocker implements IKeyLockable, IHasConfig
 {
-	private boolean								powered;
 	private ItemStack							lock			= ItemStack.EMPTY.copy();
 	public HexKeyConfig							config;
 	private final LazyOptional< IHexKeyConfig >	configHandler	= LazyOptional.of( () -> config );
@@ -112,8 +110,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			final float f = 5.0F;
-
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
 				if( entityplayer.openContainer instanceof ContainerReinforcedLocker )
@@ -121,7 +117,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		}
 
 		prevLidAngle = lidAngle;
-		final float f1 = 0.1F;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
 			playSound( SoundEvents.BLOCK_CHEST_OPEN );
 
@@ -136,7 +131,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			if( lidAngle > 1.0F )
 				lidAngle = 1.0F;
 
-			final float f3 = 0.5F;
 			if( lidAngle < 0.5F && f2 >= 0.5F )
 				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
 
@@ -226,8 +220,6 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			return;
 		}
 
-		this.powered = powered;
-
 		final Block block = getBlockState().getBlock();
 
 		// Notify nearby blocks
@@ -293,23 +285,25 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
 	}
 
-	@Override
-	public void handleUpdateTag( CompoundNBT nbt )
-	{
-		super.handleUpdateTag( nbt );
-
-		if( nbt.contains( "Config" ) )
-			config.deserializeNBT( nbt.getCompound( "Config" ) );
-		else
-			config = new HexKeyConfig();
-		if( nbt.contains( "lock" ) )
-		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
-		}
-		else
-			lock = ItemStack.EMPTY;
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * {
+	 * super.handleUpdateTag( nbt );
+	 *
+	 * if( nbt.contains( "Config" ) )
+	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
+	 * else
+	 * config = new HexKeyConfig();
+	 * if( nbt.contains( "lock" ) )
+	 * {
+	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * lock = ItemStack.read( lockNBT );
+	 * }
+	 * else
+	 * lock = ItemStack.EMPTY;
+	 * }
+	 */
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -326,21 +320,23 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		return super.write( nbt );
 	}
 
-	@Override
-	public void read( CompoundNBT nbt )
-	{
-		if( nbt.contains( "Config" ) )
-			config.deserializeNBT( nbt.getCompound( "Config" ) );
-		else
-			config = new HexKeyConfig();
-		if( nbt.contains( "lock" ) )
-		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
-		}
-		else
-			lock = ItemStack.EMPTY;
-
-		super.read( nbt );
-	}
+	/*
+	 * @Override
+	 * public void read( CompoundNBT nbt )
+	 * {
+	 * if( nbt.contains( "Config" ) )
+	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
+	 * else
+	 * config = new HexKeyConfig();
+	 * if( nbt.contains( "lock" ) )
+	 * {
+	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * lock = ItemStack.read( lockNBT );
+	 * }
+	 * else
+	 * lock = ItemStack.EMPTY;
+	 *
+	 * super.read( nbt );
+	 * }
+	 */
 }

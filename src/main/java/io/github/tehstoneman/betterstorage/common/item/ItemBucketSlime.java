@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
@@ -632,7 +631,6 @@ public class ItemBucketSlime extends ItemBetterStorage
 			return name;
 		}
 
-		@Override
 		public String getName()
 		{
 			return name;
@@ -653,6 +651,12 @@ public class ItemBucketSlime extends ItemBetterStorage
 		public int getMetadata()
 		{
 			return meta;
+		}
+
+		@Override
+		public String func_176610_l()
+		{
+			return getName();
 		}
 	};
 }

@@ -58,6 +58,7 @@ public class BlockTank extends BlockContainerBetterStorage
 		builder.add( UP, DOWN );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )
@@ -91,6 +92,7 @@ public class BlockTank extends BlockContainerBetterStorage
 	 * ===========
 	 */
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public ActionResultType onBlockActivated( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
@@ -98,7 +100,6 @@ public class BlockTank extends BlockContainerBetterStorage
 		final LazyOptional< IFluidHandlerItem > capability = itemStack.getCapability( CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY );
 		if( capability.isPresent() )
 		{
-			final IFluidHandlerItem handler = capability.orElse( null );
 			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getFace() );
 			return success ? ActionResultType.SUCCESS : ActionResultType.PASS;
 		}

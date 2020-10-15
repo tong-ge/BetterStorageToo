@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[34,)"
+license="MIT"
 issueTrackerURL="https://github.com/TehStoneMan/BetterStorageToo/issues"
 
 [[mods]]
@@ -14,6 +15,6 @@ description='''Adds more storage related blocks and items to the game.'''
 [[dependencies.betterstorage]]
     modId="forge"
     mandatory=true
-    versionRange="[28.1.56,)"
+    versionRange="[34.0.0,)"
     ordering="NONE"
     side="BOTH"

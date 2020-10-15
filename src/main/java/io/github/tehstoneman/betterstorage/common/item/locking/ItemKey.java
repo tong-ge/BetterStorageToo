@@ -10,15 +10,12 @@ import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
 import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -68,7 +65,7 @@ public class ItemKey extends KeyLockItem implements IKey
 			final ItemStack stack = playerIn.getHeldItem( hand );
 			BlockPos pos = context.getPos();
 			TileEntity tileEntity = worldIn.getTileEntity( pos );
-			if( tileEntity == null )
+			/*if( tileEntity == null )
 			{
 				final BlockState state = worldIn.getBlockState( pos );
 				if( state.getProperties().contains( DoorBlock.HALF ) && state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
@@ -76,7 +73,7 @@ public class ItemKey extends KeyLockItem implements IKey
 					pos = pos.down();
 					tileEntity = worldIn.getTileEntity( pos );
 				}
-			}
+			}*/
 
 			if( tileEntity instanceof IKeyLockable )
 			{

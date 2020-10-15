@@ -14,8 +14,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -37,9 +37,9 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -99,11 +99,13 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		return new TileEntityLocker();
 	}
 
-	/*@Override
-	public boolean hasCustomBreakingProgress( BlockState state )
-	{
-		return true;
-	}*/
+	/*
+	 * @Override
+	 * public boolean hasCustomBreakingProgress( BlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
@@ -133,7 +135,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	{
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		final Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
+		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
 		final boolean sneaking = context.func_225518_g_();
 		DoorHingeSide hingeSide = getHingeSide( context );
 		if( connectedType == ConnectedType.SINGLE && !sneaking )
@@ -152,6 +154,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 				Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )
@@ -179,7 +182,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		final Direction direction = context.getPlacementHorizontalFacing();
 		final int offX = direction.getXOffset();
 		final int offY = direction.getZOffset();
-		final Vec3d v = context.getHitVec();
+		final Vector3d v = context.getHitVec();
 		final double hitX = v.x - blockPos.getX();
 		final double hitY = v.z - blockPos.getZ();
 		return ( offX >= 0 || !( hitY < 0.5D ) ) && ( offX <= 0 || !( hitY > 0.5D ) ) && ( offY >= 0 || !( hitX > 0.5D ) )
@@ -189,7 +192,6 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Nullable
 	private Direction getDirectionToAttach( BlockItemUseContext context, Direction facing )
 	{
-		final BlockState blockState = context.getWorld().getBlockState( context.getPos() );
 		final BlockState faceState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
 		return faceState.getBlock() == this && faceState.get( TYPE ) == ConnectedType.SINGLE ? faceState.get( FACING ) : null;
 	}
@@ -210,6 +212,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		}
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
 	{
@@ -238,6 +241,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState mirror( BlockState state, Mirror mirrorIn )
 	{
@@ -367,8 +371,9 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	 * =====
 	 */
 
+	@SuppressWarnings( "deprecation" )
 	@Override
-	public IFluidState getFluidState( BlockState state )
+	public FluidState getFluidState( BlockState state )
 	{
 		return state.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( state );
 	}

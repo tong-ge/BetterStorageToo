@@ -13,10 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICardboardItem
 {
@@ -79,7 +77,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 																													// TextFormatting.ITALIC +
 				}
 			}
-			if( BetterStorageConfig.CLIENT.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
+			/*if( BetterStorageConfig.CLIENT.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
 			{
 				final ItemStackHandler contents = new ItemStackHandler( 9 );
 				contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );
@@ -105,7 +103,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 				if( more > 0 )
 					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
 							.applyTextStyle( TextFormatting.ITALIC ) );
-			}
+			}*/
 		}
 	}
 

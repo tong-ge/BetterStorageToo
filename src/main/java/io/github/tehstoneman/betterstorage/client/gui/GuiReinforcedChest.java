@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ReinforcedChestContainer;
@@ -11,9 +11,9 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContainer >
 {
-	private final int	columns, rows;
-	private final int	x1, x2, x3, x4;
-	private final int	y1;
+	private final int columns, rows;
+	// private final int x1, x2, x3, x4;
+	// private final int y1;
 
 	public GuiReinforcedChest( ReinforcedChestContainer container, PlayerInventory playerInventory, ITextComponent title )
 	{
@@ -26,13 +26,13 @@ public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContaine
 		ySize = 114 + rows * 18;
 
 		// Calculate horizontal texture slices
-		x1 = columns * 18 + 7;
-		x2 = ( xSize - 176 ) / 2;
-		x3 = xSize - x2;
-		x4 = 248 - x2;
+		// x1 = columns * 18 + 7;
+		// x2 = ( xSize - 176 ) / 2;
+		// x3 = xSize - x2;
+		// x4 = 248 - x2;
 
 		// Calculate vertical texture slices
-		y1 = rows * 18 + 17;
+		// y1 = rows * 18 + 17;
 	}
 
 	protected ResourceLocation getResource()
@@ -43,22 +43,26 @@ public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContaine
 			return Resources.CONTAINER_EXPANDABLE;
 	}
 
-	@Override
-	public void render( int mouseX, int mouseY, float partialTicks )
-	{
-		renderBackground();
-		super.render( mouseX, mouseY, partialTicks );
-		renderHoveredToolTip( mouseX, mouseY );
-	}
+	/*
+	 * @Override
+	 * public void render( int mouseX, int mouseY, float partialTicks )
+	 * {
+	 * renderBackground();
+	 * super.render( mouseX, mouseY, partialTicks );
+	 * renderHoveredToolTip( mouseX, mouseY );
+	 * }
+	 */
 
-	@Override
-	protected void drawGuiContainerForegroundLayer( int par1, int par2 )
-	{
-		font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
-		font.drawString( playerInventory.getDisplayName().getFormattedText(), x2 + 8, y1 + 2, 0x404040 );
-	}
+	/*
+	 * @Override
+	 * protected void drawGuiContainerForegroundLayer( int par1, int par2 )
+	 * {
+	 * font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
+	 * font.drawString( playerInventory.getDisplayName().getFormattedText(), x2 + 8, y1 + 2, 0x404040 );
+	 * }
+	 */
 
-	@Override
+	/*@Override
 	protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
 	{
 		minecraft.getTextureManager().bindTexture( getResource() );
@@ -74,5 +78,12 @@ public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContaine
 		blit( guiLeft + x2, guiTop + y1, 36, 125, 176, 97 );
 		blit( guiLeft + x3, guiTop + y1, x4, 125,  x2, 17 );
 		//@formatter:on
+	}*/
+
+	@Override
+	protected void func_230450_a_( MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_ )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.IDyeableItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;
@@ -60,11 +59,6 @@ public class CardboardColorRecipe extends SpecialRecipe
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< DyeColor > dyeList = Lists.newArrayList();
 
-		final int[] aint = new int[3];
-		final int h = 0;
-		final int j = 0;
-		IDyeableItem itemdyable = null;
-
 		for( int i = 0; i < inv.getSizeInventory(); ++i )
 		{
 			final ItemStack ingredientStack = inv.getStackInSlot( i );
@@ -76,8 +70,6 @@ public class CardboardColorRecipe extends SpecialRecipe
 				{
 					if( !resultStack.isEmpty() )
 						return ItemStack.EMPTY;
-
-					itemdyable = (IDyeableItem)ingredientStack.getItem();
 
 					resultStack = ingredientStack.copy();
 				}

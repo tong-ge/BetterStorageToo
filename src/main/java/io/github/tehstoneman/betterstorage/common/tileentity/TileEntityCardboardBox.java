@@ -94,14 +94,16 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return nbt;
 	}
 
-	@Override
-	public void handleUpdateTag( CompoundNBT nbt )
-	{
-		super.handleUpdateTag( nbt );
-
-		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
-		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * {
+	 * super.handleUpdateTag( nbt );
+	 * 
+	 * uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+	 * color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+	 * }
+	 */
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -114,12 +116,14 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return super.write( nbt );
 	}
 
-	@Override
-	public void read( CompoundNBT nbt )
-	{
-		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
-		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
-
-		super.read( nbt );
-	}
+	/*
+	 * @Override
+	 * public void read( CompoundNBT nbt )
+	 * {
+	 * uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+	 * color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+	 * 
+	 * super.read( nbt );
+	 * }
+	 */
 }

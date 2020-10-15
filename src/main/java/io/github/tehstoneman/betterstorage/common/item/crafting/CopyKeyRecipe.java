@@ -12,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -33,7 +32,6 @@ public class CopyKeyRecipe extends SpecialRecipe
 	static int							MAX_WIDTH	= 3;
 	static int							MAX_HEIGHT	= 3;
 
-	private String						group;
 	private int							recipeWidth;
 	private int							recipeHeight;
 	private NonNullList< Ingredient >	recipeItems;
@@ -48,7 +46,6 @@ public class CopyKeyRecipe extends SpecialRecipe
 			ItemStack recipeOutputIn )
 	{
 		super( idIn );
-		group = groupIn;
 		recipeWidth = recipeWidthIn;
 		recipeHeight = recipeHeightIn;
 		recipeItems = recipeItemsIn;
@@ -291,8 +288,6 @@ public class CopyKeyRecipe extends SpecialRecipe
 	public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry< IRecipeSerializer< ? > >
 			implements IRecipeSerializer< CopyKeyRecipe >
 	{
-		private static final ResourceLocation NAME = new ResourceLocation( "minecraft", "crafting_shaped" );
-
 		@Override
 		public CopyKeyRecipe read( ResourceLocation recipeId, JsonObject json )
 		{

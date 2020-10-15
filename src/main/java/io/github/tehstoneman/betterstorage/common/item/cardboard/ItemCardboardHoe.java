@@ -4,15 +4,13 @@ import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
-import net.minecraft.nbt.CompoundNBT;
 
 public class ItemCardboardHoe extends HoeItem implements ICardboardItem
 {
 	public ItemCardboardHoe()
 	{
-		super( ItemTier.WOOD, -3.0F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( ItemTier.WOOD, 0, -3.0F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

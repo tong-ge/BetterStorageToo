@@ -4,7 +4,9 @@ buildscript {
         jcenter()
         mavenCentral()
     }
-    dependencies { classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
 }
 apply plugin: 'net.minecraftforge.gradle'
 
@@ -13,10 +15,12 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 archivesBaseName = "BetterStorageToo"
-group = "io.github.thestoneman.betterstorage"
-version = "$minecraft_version-$version_major.$version_api.$version_minor.$version_patch"
+group = "io.github.tehstoneman.betterstorage"
+version = "1.16.3-6.0.0.0_alpha0"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 sourceSets {
 	main {
@@ -36,7 +40,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.15.1'
+    mappings channel: 'snapshot', version: '20200514-1.16'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -129,7 +133,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
 
     //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
     //compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
@@ -141,9 +145,9 @@ dependencies {
     //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
 
 	// compile against the JEI API but do not include it at runtime
-	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+	compileOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}:api")
 	// at runtime, use the full JEI jar
-	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+	runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerKeyring;
@@ -24,7 +23,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -33,52 +31,45 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContainerProvider
-{
-	public ItemKeyring()
-	{
-		super( new Item.Properties() );
-		addPropertyOverride( new ResourceLocation( "full" ), ( itemStack, world, entityPlayer ) ->
-		{
-			return getFilledCapacity( itemStack );
-		} );
+public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContainerProvider {
+	public ItemKeyring() {
+		super(new Item.Properties());
+		/*
+		 * addPropertyOverride( new ResourceLocation( "full" ), ( itemStack, world,
+		 * entityPlayer ) -> { return getFilledCapacity( itemStack ); } );
+		 */
 	}
 
 	@Override
-	public ActionResult< ItemStack > onItemRightClick( World world, PlayerEntity player, Hand hand )
-	{
-		final ItemStack stack = player.getHeldItem( hand );
+	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
 
-		if( !player.isCrouching() )
-			return new ActionResult( ActionResultType.PASS, stack );
+		if (!player.isCrouching())
+			return new ActionResult<>(ActionResultType.PASS, stack);
 
-		if( !world.isRemote )
-			NetworkHooks.openGui( (ServerPlayerEntity)player, BetterStorageItems.KEYRING.get(),
-					buf -> buf.writeItemStack( player.getHeldItem( hand ) ).writeInt( player.inventory.currentItem ) );
-		return new ActionResult( ActionResultType.SUCCESS, stack );
+		if (!world.isRemote)
+			NetworkHooks.openGui((ServerPlayerEntity) player, BetterStorageItems.KEYRING.get(),
+					buf -> buf.writeItemStack(player.getHeldItem(hand)).writeInt(player.inventory.currentItem));
+		return new ActionResult<>(ActionResultType.SUCCESS, stack);
 	}
 
 	/*
-	 * ====
-	 * IKey
-	 * ====
+	 * ==== IKey ====
 	 */
 
 	@Override
-	public boolean unlock( ItemStack keyring, ItemStack lock, boolean useAbility )
-	{
+	public boolean unlock(ItemStack keyring, ItemStack lock, boolean useAbility) {
 		// Loop through all the keys in the keyring,
 		// returns if any of the keys fit in the lock.
 
-		final IItemHandler inventory = keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
-		if( inventory != null )
-			for( int i = 0; i < inventory.getSlots(); i++ )
-			{
-				final ItemStack key = inventory.getStackInSlot( i );
-				if( !key.isEmpty() )
-				{
-					final IKey keyType = (IKey)key.getItem();
-					if( keyType.unlock( key, lock, false ) )
+		final IItemHandler inventory = keyring.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
+				.orElse(null);
+		if (inventory != null)
+			for (int i = 0; i < inventory.getSlots(); i++) {
+				final ItemStack key = inventory.getStackInSlot(i);
+				if (!key.isEmpty()) {
+					final IKey keyType = (IKey) key.getItem();
+					if (keyType.unlock(key, lock, false))
 						return true;
 				}
 			}
@@ -87,39 +78,32 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	}
 
 	@Override
-	public boolean canApplyEnchantment( ItemStack key, Enchantment enchantment )
-	{
+	public boolean canApplyEnchantment(ItemStack key, Enchantment enchantment) {
 		return false;
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities( ItemStack stack, @Nullable CompoundNBT nbt )
-	{
-		return new KeyringCapabilityProvider( stack );
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+		return new KeyringCapabilityProvider(stack);
 	}
 
 	@Override
-	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
-	{
+	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
 		final ItemStack itemStack = player.getHeldItemMainhand();
 		final int index = player.inventory.currentItem;
-		return new ContainerKeyring( windowID, playerInventory, itemStack, index );
+		return new ContainerKeyring(windowID, playerInventory, itemStack, index);
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
-	{
-		return new TranslationTextComponent( ModInfo.CONTAINER_KEYRING_NAME );
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(ModInfo.CONTAINER_KEYRING_NAME);
 	}
 
-	public float getFilledCapacity( ItemStack itemStack )
-	{
-		if( itemStack.hasTag() )
-		{
+	public float getFilledCapacity(ItemStack itemStack) {
+		if (itemStack.hasTag()) {
 			final CompoundNBT tag = itemStack.getTag();
-			if( tag.contains( "Occupied" ) )
-			{
-				final int occupied = tag.getInt( "Occupied" );
+			if (tag.contains("Occupied")) {
+				final int occupied = tag.getInt("Occupied");
 				return occupied / 9.0f;
 			}
 		}
@@ -127,14 +111,13 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	}
 
 	@Override
-	public void addInformation( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
-	{
-		super.addInformation( stack, worldIn, tooltip, flagIn );
-		if( flagIn.isAdvanced() && stack.hasTag() )
-		{
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		if (flagIn.isAdvanced() && stack.hasTag()) {
 			final CompoundNBT tag = stack.getTag();
-			if( tag.contains( "Occupied" ) )
-				tooltip.add( new TranslationTextComponent( "Keys : " + tag.getInt( "Occupied" ) ) );
+			if (tag.contains("Occupied"))
+				tooltip.add(new TranslationTextComponent("Keys : " + tag.getInt("Occupied")));
 		}
 	}
 }

@@ -66,10 +66,10 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return super.getCapability( capability, facing );
 	}
 
-	private IItemHandler createHandler()
+	/*private IItemHandler createHandler()
 	{
 		return new ExpandableStackHandler( getColumns(), getRows() );
-	}
+	}*/
 
 	/**
 	 * The amount of columns in the container.
@@ -245,17 +245,19 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return nbt;
 	}
 
-	@Override
-	public void handleUpdateTag( CompoundNBT nbt )
-	{
-		super.handleUpdateTag( nbt );
-
-		if( nbt.contains( "Inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
-
-		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * {
+	 * super.handleUpdateTag( nbt );
+	 * 
+	 * if( nbt.contains( "Inventory" ) )
+	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+	 * 
+	 * if( nbt.contains( "CustomName" ) )
+	 * setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+	 * }
+	 */
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -269,19 +271,21 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return super.write( nbt );
 	}
 
-	@Override
-	public void read( CompoundNBT nbt )
-	{
-		if( nbt.contains( "Inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
-
-		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
-
-		// For backwards compatibility
-		if( nbt.contains( "inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
-
-		super.read( nbt );
-	}
+	/*
+	 * @Override
+	 * public void read( CompoundNBT nbt )
+	 * {
+	 * if( nbt.contains( "Inventory" ) )
+	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+	 * 
+	 * if( nbt.contains( "CustomName" ) )
+	 * setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+	 * 
+	 * // For backwards compatibility
+	 * if( nbt.contains( "inventory" ) )
+	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+	 * 
+	 * super.read( nbt );
+	 * }
+	 */
 }

@@ -63,13 +63,12 @@ public class CapabilityConfig
 
 	public static class Provider implements ICapabilitySerializable< CompoundNBT >
 	{
-		private final Capability< IHexKeyConfig >	capability;
-		private final LazyOptional					capabilityHandler;
+		public IHexKeyConfig hexKeyConfig;
+		private final LazyOptional< IHexKeyConfig >	capabilityHandler = LazyOptional.of( ()->hexKeyConfig );
 
-		public Provider( Capability< IHexKeyConfig > capability )
+		public Provider()
 		{
-			this.capability = capability;
-			capabilityHandler = LazyOptional.of( () -> this.capability );
+			hexKeyConfig = new HexKeyConfig();
 		}
 
 		@Override
@@ -81,13 +80,13 @@ public class CapabilityConfig
 		@Override
 		public CompoundNBT serializeNBT()
 		{
-			return (CompoundNBT)capability.writeNBT( capability.getDefaultInstance(), null );
+			return hexKeyConfig.serializeNBT();
 		}
 
 		@Override
 		public void deserializeNBT( CompoundNBT nbt )
 		{
-			capability.readNBT( capability.getDefaultInstance(), null, nbt );
+			hexKeyConfig.deserializeNBT( nbt );
 		}
 	}
 }

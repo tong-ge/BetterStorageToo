@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;

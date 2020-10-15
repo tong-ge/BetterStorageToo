@@ -9,8 +9,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class BetterStorageTileEntityTypes
 {
-	public static final DeferredRegister< TileEntityType< ? > >						REGISTERY			= new DeferredRegister<>(
-			ForgeRegistries.TILE_ENTITIES, ModInfo.MOD_ID );
+	public static final DeferredRegister< TileEntityType< ? > >						REGISTERY			= DeferredRegister
+			.create( ForgeRegistries.TILE_ENTITIES, ModInfo.MOD_ID );
 
 	public static RegistryObject< TileEntityType< TileEntityCardboardBox > >		CARDBOARD_BOX		= REGISTERY.register( "cardboard_box",
 			() -> TileEntityType.Builder.create( TileEntityCardboardBox::new, BetterStorageBlocks.CARDBOARD_BOX.get() ).build( null ) );

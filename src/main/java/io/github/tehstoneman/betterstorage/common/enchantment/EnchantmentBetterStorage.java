@@ -13,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class EnchantmentBetterStorage
 {
-	public static final DeferredRegister< Enchantment >	REGISTERY	= new DeferredRegister<>( ForgeRegistries.ENCHANTMENTS, ModInfo.MOD_ID );
+	public static final DeferredRegister< Enchantment >	REGISTERY	= DeferredRegister.create( ForgeRegistries.ENCHANTMENTS, ModInfo.MOD_ID );
 
 	public static RegistryObject< EnchantmentKey >		UNLOCKING	= REGISTERY.register( "unlocking",
 			() -> new EnchantmentKey( Rarity.COMMON, 5, 5, 10, 30, 0 ) );

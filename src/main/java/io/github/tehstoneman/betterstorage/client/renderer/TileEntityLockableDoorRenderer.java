@@ -8,16 +8,12 @@ import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
 
 public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEntityLockableDoor >
@@ -29,14 +25,15 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 	}
 
 	// @Override
+	@SuppressWarnings( "deprecation" )
 	public void render( TileEntityLockableDoor tileEntityDoor, double x, double y, double z, float partialTicks, int destroyStage )
 	{
 		final BlockState iblockstate = tileEntityDoor.hasWorld() ? tileEntityDoor.getBlockState()
 				: BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState().with( DoorBlock.FACING, Direction.SOUTH );
-		final DoubleBlockHalf lockertype = iblockstate.has( DoorBlock.HALF ) ? iblockstate.get( DoorBlock.HALF ) : DoubleBlockHalf.LOWER;
+		//final DoubleBlockHalf lockertype = iblockstate.has( DoorBlock.HALF ) ? iblockstate.get( DoorBlock.HALF ) : DoubleBlockHalf.LOWER;
 
-		if( lockertype == DoubleBlockHalf.UPPER )
-			return;
+		/*if( lockertype == DoubleBlockHalf.UPPER )
+			return;*/
 
 		GlStateManager.enableDepthTest();
 		GlStateManager.depthFunc( 515 );
@@ -60,19 +57,20 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
+	@SuppressWarnings( "deprecation" )
 	private void renderItem( TileEntityLockableDoor tileEntityDoor, float partialTicks, int destroyStage, BlockState state )
 	{
 		final ItemStack itemstack = tileEntityDoor.getLock();
 
 		if( !itemstack.isEmpty() )
 		{
-			final ItemEntity ItemEntity = new ItemEntity( tileEntityDoor.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
+			//final ItemEntity ItemEntity = new ItemEntity( tileEntityDoor.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
 
-			final float openAngle = state.get( DoorBlock.OPEN ) ? 1.0f : 0.0f;
+			//final float openAngle = state.get( DoorBlock.OPEN ) ? 1.0f : 0.0f;
 
-			final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+			//final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
 			final boolean open = state.get( DoorBlock.OPEN );
 

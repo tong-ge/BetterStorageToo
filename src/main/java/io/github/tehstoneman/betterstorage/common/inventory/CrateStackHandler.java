@@ -29,7 +29,7 @@ public class CrateStackHandler extends ItemStackHandler
 	private Region					region;
 	private UUID					pileID;
 	private List< Integer >			indexSlots;
-	private final List< BlockPos >	listCrates			= new ArrayList();
+	private final List< BlockPos >	listCrates			= new ArrayList<>();
 	private boolean					doShuffle			= true;
 
 	private TileEntityCrate			crateToUpdate;
@@ -114,11 +114,12 @@ public class CrateStackHandler extends ItemStackHandler
 
 	/**
 	 * Bypass the randomization of the overridden version of this function
-	 * 
+	 *
 	 * <p>
-	 * <strong>IMPORTANT:</strong> This ItemStack <em>MUST NOT</em> be modified. This method is not for
-	 * altering an inventory's contents. Any implementers who are able to detect
-	 * modification through this method should throw an exception.
+	 * <strong>IMPORTANT:</strong> This ItemStack <em>MUST NOT</em> be modified.
+	 * This method is not for altering an inventory's contents. Any implementers who
+	 * are able to detect modification through this method should throw an
+	 * exception.
 	 * </p>
 	 * <p>
 	 * <strong><em>SERIOUSLY: DO NOT MODIFY THE RETURNED ITEMSTACK</em></strong>
@@ -141,15 +142,17 @@ public class CrateStackHandler extends ItemStackHandler
 
 	/**
 	 * Bypass the randomization of the overridden version of this function
-	 * 
+	 *
 	 * @param slot
 	 *            Slot to extract from.
 	 * @param amount
-	 *            Amount to extract (may be greater than the current stack's max limit)
+	 *            Amount to extract (may be greater than the current stack's max
+	 *            limit)
 	 * @param simulate
 	 *            If true, the extraction is only simulated
-	 * @return ItemStack extracted from the slot, must be empty if nothing can be extracted.
-	 *         The returned ItemStack can be safely modified after, so item handlers should return a new or copied stack.
+	 * @return ItemStack extracted from the slot, must be empty if nothing can be
+	 *         extracted. The returned ItemStack can be safely modified after, so
+	 *         item handlers should return a new or copied stack.
 	 */
 	public ItemStack extractItemFixed( int slot, int amount, boolean simulate )
 	{
@@ -167,16 +170,18 @@ public class CrateStackHandler extends ItemStackHandler
 
 	/**
 	 * Bypass the randomization of the overridden version of this function
-	 * 
+	 *
 	 * @param slot
 	 *            Slot to insert into.
 	 * @param stack
-	 *            ItemStack to insert. This must not be modified by the item handler.
+	 *            ItemStack to insert. This must not be modified by the item
+	 *            handler.
 	 * @param simulate
 	 *            If true, the insertion is only simulated
-	 * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return an empty ItemStack).
-	 *         May be the same as the input ItemStack if unchanged, otherwise a new ItemStack.
-	 *         The returned ItemStack can be safely modified after.
+	 * @return The remaining ItemStack that was not inserted (if the entire stack is
+	 *         accepted, then return an empty ItemStack). May be the same as the
+	 *         input ItemStack if unchanged, otherwise a new ItemStack. The returned
+	 *         ItemStack can be safely modified after.
 	 */
 	public ItemStack insertItemFixed( int slot, ItemStack stack, boolean simulate )
 	{
@@ -230,7 +235,8 @@ public class CrateStackHandler extends ItemStackHandler
 	}
 
 	/**
-	 * Tries to fit contents into full stacks, and moves empty slots to the end of the inventory
+	 * Tries to fit contents into full stacks, and moves empty slots to the end of
+	 * the inventory
 	 */
 	public void consolidateStacks()
 	{
@@ -353,7 +359,8 @@ public class CrateStackHandler extends ItemStackHandler
 	}
 
 	/**
-	 * Removes a crate from the crate pile, decreasing the number of crates and removing it from the crate pile map.
+	 * Removes a crate from the crate pile, decreasing the number of crates and
+	 * removing it from the crate pile map.
 	 *
 	 * @param crate
 	 *            The {@link TileEntityCrate} to remove.
@@ -402,8 +409,6 @@ public class CrateStackHandler extends ItemStackHandler
 	public void addItems( ItemStack stack )
 	{
 		int i = 0;
-		final int count = stack.getCount();
-
 		while( i < stacks.size() && !stacks.get( i ).isEmpty() )
 			i++;
 

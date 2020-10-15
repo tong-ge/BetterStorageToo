@@ -9,7 +9,6 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICrateStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
 
 /** Holds all CratePile objects for one world / dimension. */
 public class CrateStorage implements ICrateStorage

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeColor;

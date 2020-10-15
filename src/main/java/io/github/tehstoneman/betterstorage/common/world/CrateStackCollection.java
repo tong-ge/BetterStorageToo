@@ -10,8 +10,6 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
 /** Holds all CratePileData objects for one world / dimension. */
@@ -44,16 +42,17 @@ public class CrateStackCollection extends WorldSavedData
 		if( world.isRemote )
 			return null;
 
-		final DimensionType dimType = world.getDimension().getType();
-		final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
-		final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
+		// final DimensionType dimType = world.getDimension().getType();
+		// final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
+		// final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
 
-		return (CrateStackCollection)data;
+		// return (CrateStackCollection)data;
+		return null;
 	}
 
 	/**
 	 * Get or create a {@link CrateStackHandler} for the given {@link UUID}
-	 * 
+	 *
 	 * @param pileID
 	 *            {@link UUID} for the stack handler we are looking for<BR>
 	 *            (Null to create new ID)

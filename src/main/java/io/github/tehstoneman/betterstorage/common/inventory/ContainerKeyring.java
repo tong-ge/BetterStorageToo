@@ -14,8 +14,6 @@ public class ContainerKeyring extends Container
 {
 	private final IInventory			inventoryPlayer;
 	private final KeyringStackHandler	inventoryKeyRing;
-	private final int					protectedIndex;
-
 	public int							indexStart, indexPlayer, indexHotbar;
 
 	public ContainerKeyring( int windowID, PlayerInventory playerInventory, ItemStack keyring, int protectedIndex )
@@ -24,8 +22,6 @@ public class ContainerKeyring extends Container
 
 		inventoryPlayer = playerInventory;
 		inventoryKeyRing = (KeyringStackHandler)keyring.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
-		this.protectedIndex = protectedIndex;
-
 		indexStart = 0;
 		indexHotbar = inventoryKeyRing.getSlots();
 		indexPlayer = indexHotbar + 9;

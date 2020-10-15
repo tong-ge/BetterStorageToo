@@ -11,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class BlockLockableDoor extends Block
@@ -99,9 +97,10 @@ public class BlockLockableDoor extends Block
 					tileDoor.setLock( ItemStack.EMPTY );
 					return ActionResultType.SUCCESS;
 				}
-				state = state.cycle( DoorBlock.OPEN );
-				worldIn.setBlockState( pos, worldIn.getBlockState( pos ).cycle( DoorBlock.OPEN ), 11 );
-				worldIn.setBlockState( pos.up(), worldIn.getBlockState( pos.up() ).cycle( DoorBlock.OPEN ), 11 );
+				state = state.func_235896_a_( DoorBlock.OPEN );
+				// state = state.cycle( DoorBlock.OPEN );
+				worldIn.setBlockState( pos, worldIn.getBlockState( pos ).func_235896_a_( DoorBlock.OPEN ), 11 );
+				worldIn.setBlockState( pos.up(), worldIn.getBlockState( pos.up() ).func_235896_a_( DoorBlock.OPEN ), 11 );
 				worldIn.playEvent( player, state.get( DoorBlock.OPEN ) ? getOpenSound() : getCloseSound(), pos, 0 );
 			}
 		}
@@ -172,7 +171,7 @@ public class BlockLockableDoor extends Block
 	}
 
 	@Override
-	public float getExplosionResistance( BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion )
+	public float getExplosionResistance( BlockState state, IBlockReader world, BlockPos pos, Explosion explosion )
 	{
 		final TileEntity tileEntity = world.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityLockableDoor )
@@ -181,10 +180,10 @@ public class BlockLockableDoor extends Block
 			if( door.isLocked() )
 			{
 				final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), door.getLock() ) + 1;
-				return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
+				return super.getExplosionResistance( state, world, pos, explosion ) * resist * 2;
 			}
 		}
-		return super.getExplosionResistance( state, world, pos, exploder, explosion );
+		return super.getExplosionResistance( state, world, pos, explosion );
 	}
 
 	/*

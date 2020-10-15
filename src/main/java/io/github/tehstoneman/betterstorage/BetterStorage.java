@@ -29,7 +29,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -49,6 +48,7 @@ public class BetterStorage
 	public static final Logger			LOGGER		= LogManager.getLogger( ModInfo.MOD_ID );
 	public static final ItemGroup		ITEM_GROUP	= new BetterStorageItemGroup();
 	public static final SimpleChannel	NETWORK		= ModNetwork.getNetworkChannel();
+	@SuppressWarnings( "deprecation" )
 	public static final IProxy			PROXY		= DistExecutor.<IProxy> runForDist( () -> ClientProxy::new, () -> ServerProxy::new );
 
 	public static Random				RANDOM;
@@ -73,6 +73,7 @@ public class BetterStorage
 		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	public void setup( FMLCommonSetupEvent event )
 	{
 		DeferredWorkQueue.runLater( () ->
@@ -86,15 +87,19 @@ public class BetterStorage
 					@Override
 					protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
 					{
-						successful = false;
+						// successful = false;
+						func_239796_a_( false );
 						final Item item = stack.getItem();
 						if( item instanceof BlockItem )
 						{
 							final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
 							final BlockPos blockpos = source.getBlockPos().offset( direction );
 							final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
-							successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack,
-									direction1 ) ) == ActionResultType.SUCCESS;
+							func_239796_a_( ( (BlockItem)item )
+									.tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack, direction1 ) )
+									.isSuccessOrConsume() );
+							// successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack, direction1
+							// ) ) == ActionResultType.SUCCESS;
 						}
 
 						return stack;

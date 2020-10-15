@@ -23,8 +23,6 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 
 	private ItemStack		lock	= ItemStack.EMPTY.copy();
 
-	private final boolean	powered	= false;
-
 	public TileEntityLockableDoor()
 	{
 		super( BetterStorageTileEntityTypes.LOCKABLE_DOOR.get() );
@@ -81,19 +79,21 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 			lock = ItemStack.EMPTY;
 	}
 
-	@Override
-	public void handleUpdateTag( CompoundNBT nbt )
-	{
-		super.handleUpdateTag( nbt );
-
-		if( nbt.contains( "lock" ) )
-		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
-		}
-		else
-			lock = ItemStack.EMPTY;
-	}
+	/*
+	 * @Override
+	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * {
+	 * super.handleUpdateTag( nbt );
+	 * 
+	 * if( nbt.contains( "lock" ) )
+	 * {
+	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * lock = ItemStack.read( lockNBT );
+	 * }
+	 * else
+	 * lock = ItemStack.EMPTY;
+	 * }
+	 */
 
 	// Reading from / writing to NBT
 
@@ -110,19 +110,21 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		return super.write( nbt );
 	}
 
-	@Override
-	public void read( CompoundNBT nbt )
-	{
-		if( nbt.contains( "lock" ) )
-		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
-		}
-		else
-			lock = ItemStack.EMPTY;
-
-		super.read( nbt );
-	}
+	/*
+	 * @Override
+	 * public void read( CompoundNBT nbt )
+	 * {
+	 * if( nbt.contains( "lock" ) )
+	 * {
+	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * lock = ItemStack.read( lockNBT );
+	 * }
+	 * else
+	 * lock = ItemStack.EMPTY;
+	 * 
+	 * super.read( nbt );
+	 * }
+	 */
 
 	/*
 	 * ============

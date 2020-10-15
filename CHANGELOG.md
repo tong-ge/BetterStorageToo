@@ -11,7 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [5.1.0.0] - 2020-04-11
+## [6.0.0.0]
+### Added
+
+### Changed
+- Updated to Minecraft 1.16.3
+
+### Removed
+
+## [5.1.0.0] - 2020-06-13
 ### Added
 - Hex key - used for configuring storage certain storage blocks
 - Configuration GUI
@@ -66,6 +74,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New models for reinforced lockers
 - New recipes for lockers
 - Changed how cardboard boxes work to match shulker box
+
+## [3.0.0.3] - 2020-10-03
+### Changed
+- (SettingDust) Fixed slime buckets appearing in multiple creative tabs
 
 ## [3.0.0.2] - 2018-10-03
 ### Changed

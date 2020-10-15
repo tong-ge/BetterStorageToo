@@ -4,7 +4,7 @@ import net.minecraft.util.IStringSerializable;
 
 /**
  * The type of connection used to connect multi-block containers
- * 
+ *
  * @author TehStoneMan
  *
  */
@@ -22,7 +22,6 @@ public enum ConnectedType implements IStringSerializable
 		opposite = oppositeIn;
 	}
 
-	@Override
 	public String getName()
 	{
 		return name;
@@ -31,5 +30,11 @@ public enum ConnectedType implements IStringSerializable
 	public ConnectedType opposite()
 	{
 		return VALUES[opposite];
+	}
+
+	@Override
+	public String func_176610_l()
+	{
+		return getName();
 	}
 }

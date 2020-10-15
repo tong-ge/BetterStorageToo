@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@EventBusSubscriber( modid = ModInfo.MOD_ID, bus = Bus.MOD )
+@EventBusSubscriber( modid = ModInfo.MOD_ID, bus = Bus.FORGE )
 public class InitModCapabilities
 {
 	@SubscribeEvent
@@ -21,8 +21,8 @@ public class InitModCapabilities
 	}
 
 	@SubscribeEvent
-	public static void attachWorldCapabilities( final AttachCapabilitiesEvent< World > event )
+	public static void attachWorldCapabilities( AttachCapabilitiesEvent< World > event )
 	{
-		event.addCapability( CapabilityCrate.CAPABILITY_RESOURCE, new CapabilityCrate.Provider( CapabilityCrate.CRATE_PILE_CAPABILITY ) );
+		event.addCapability( CapabilityCrate.CAPABILITY_RESOURCE, new CapabilityCrate.Provider() );
 	}
 }

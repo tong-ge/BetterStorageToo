@@ -18,14 +18,13 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -51,7 +50,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -139,7 +137,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	{
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		final IFluidState fluidState = context.getWorld().getFluidState( context.getPos() );
+		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
 		final boolean sneaking = context.func_225518_g_();
 
 		final Direction direction1 = context.getFace();
@@ -163,6 +161,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState updatePostPlacement( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
 			BlockPos facingPos )
@@ -234,6 +233,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		}
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
@@ -270,6 +270,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState mirror( BlockState state, Mirror mirrorIn )
 	{
@@ -462,7 +463,8 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				new AxisAlignedBB( pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1 ) );
 		if( !list.isEmpty() )
 			for( final CatEntity catentity : list )
-				if( catentity.isSitting() )
+				// if( catentity.isSitting() )
+				if( catentity.func_233684_eK_() )
 					return true;
 
 		return false;
@@ -474,22 +476,23 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 * =====
 	 */
 
+	@SuppressWarnings( "deprecation" )
 	@Override
-	public IFluidState getFluidState( BlockState blockState )
+	public FluidState getFluidState( BlockState blockState )
 	{
 		return blockState.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( blockState );
 
 	}
 
 	@Override
-	public float getExplosionResistance( BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity exploder, Explosion explosion )
+	public float getExplosionResistance( BlockState state, IBlockReader world, BlockPos pos, Explosion explosion )
 	{
 		final TileEntityReinforcedChest chest = getChestAt( (World)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
 			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
-			return super.getExplosionResistance( state, world, pos, exploder, explosion ) * resist * 2;
+			return super.getExplosionResistance( state, world, pos, explosion ) * resist * 2;
 		}
-		return super.getExplosionResistance( state, world, pos, exploder, explosion );
+		return super.getExplosionResistance( state, world, pos, explosion );
 	}
 }

@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.fluid;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.util.BetterStorageResource;
@@ -17,7 +16,6 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -66,14 +64,13 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				fluidActionResult = FluidUtil.tryEmptyContainerAndStow( heldItem, handler, playerInventory, Integer.MAX_VALUE, player, true );
 
 			if( fluidActionResult.isSuccess() )
-			{
-				//player.setHeldItem( hand, fluidActionResult.getResult() );
+				// player.setHeldItem( hand, fluidActionResult.getResult() );
 				return true;
-			}
 			return false;
 		} ).orElse( false );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	public static boolean tryPlaceContainedLiquid( Item bucketitem, @Nullable PlayerEntity player, World worldIn, BlockPos posIn,
 			@Nullable BlockRayTraceResult rayTraceResult )
 	{
@@ -88,18 +85,21 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 			if( blockstate.isAir() || flag || blockstate.getBlock() instanceof ILiquidContainer
 					&& ( (ILiquidContainer)blockstate.getBlock() ).canContainFluid( worldIn, posIn, blockstate, containedBlock ) )
 			{
-				if( worldIn.dimension.doesWaterVaporize() && containedBlock == BetterStorageFluids.MILK.get() )
-				{
-					final int i = posIn.getX();
-					final int j = posIn.getY();
-					final int k = posIn.getZ();
-					worldIn.playSound( player, posIn, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
-							2.6F + ( worldIn.rand.nextFloat() - worldIn.rand.nextFloat() ) * 0.8F );
-
-					for( int l = 0; l < 8; ++l )
-						worldIn.addParticle( ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(), 0.0D, 0.0D, 0.0D );
-				}
-				else if( blockstate.getBlock() instanceof ILiquidContainer && containedBlock == BetterStorageFluids.MILK.get() )
+				/*
+				 * if( worldIn.dimension.doesWaterVaporize() && containedBlock == BetterStorageFluids.MILK.get() )
+				 * {
+				 * final int i = posIn.getX();
+				 * final int j = posIn.getY();
+				 * final int k = posIn.getZ();
+				 * worldIn.playSound( player, posIn, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+				 * 2.6F + ( worldIn.rand.nextFloat() - worldIn.rand.nextFloat() ) * 0.8F );
+				 * 
+				 * for( int l = 0; l < 8; ++l )
+				 * worldIn.addParticle( ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(), 0.0D, 0.0D, 0.0D );
+				 * }
+				 * else
+				 */
+				if( blockstate.getBlock() instanceof ILiquidContainer && containedBlock == BetterStorageFluids.MILK.get() )
 				{
 					if( ( (ILiquidContainer)blockstate.getBlock() ).receiveFluid( worldIn, posIn, blockstate,
 							( (FlowingFluid)containedBlock ).getStillFluidState( false ) ) )

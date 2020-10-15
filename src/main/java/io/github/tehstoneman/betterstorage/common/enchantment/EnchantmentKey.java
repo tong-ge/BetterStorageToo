@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;

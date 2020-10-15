@@ -1,13 +1,14 @@
 package io.github.tehstoneman.betterstorage.common.capabilities;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ICrateStorage;
 import io.github.tehstoneman.betterstorage.common.world.storage.CrateStorage;
+import io.github.tehstoneman.betterstorage.util.BetterStorageResource;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -18,11 +19,11 @@ public class CapabilityCrate
 	@CapabilityInject( ICrateStorage.class )
 	public static final Capability< ICrateStorage >	CRATE_PILE_CAPABILITY	= null;
 
-	public static ResourceLocation					CAPABILITY_RESOURCE		= new ResourceLocation( ModInfo.MOD_ID, "crate_pile" );
+	public static ResourceLocation					CAPABILITY_RESOURCE		= new BetterStorageResource( "crate_pile" );
 
 	public static void register()
 	{
-		CapabilityManager.INSTANCE.register( ICrateStorage.class, new Capability.IStorage< ICrateStorage >()
+		CapabilityManager.INSTANCE.register( ICrateStorage.class, new IStorage< ICrateStorage >()
 		{
 			@Override
 			public INBT writeNBT( Capability< ICrateStorage > capability, ICrateStorage instance, Direction side )
@@ -37,18 +38,19 @@ public class CapabilityCrate
 					throw new IllegalArgumentException( "Can not deserialize to an instance that isn't the default implementation" );
 				instance.deserializeNBT( (CompoundNBT)nbt );
 			}
-		}, CrateStorage::new );
+		}, () -> new CrateStorage() );
 	}
 
 	public static class Provider implements ICapabilitySerializable< CompoundNBT >
 	{
-		private final Capability< ICrateStorage >	capability;
-		private final LazyOptional					capabilityHandler;
+		public ICrateStorage						crateStorage;
+		private final LazyOptional< ICrateStorage >	capabilityHandler	= LazyOptional.of( () -> crateStorage );
 
-		public Provider( Capability< ICrateStorage > capability )
+		public Provider()
 		{
-			this.capability = capability;
-			capabilityHandler = LazyOptional.of( () -> this.capability );
+			crateStorage = new CrateStorage();
+			// this.capability = capability;
+			// capabilityHandler = LazyOptional.of( () -> this.capability );
 		}
 
 		@Override
@@ -61,13 +63,13 @@ public class CapabilityCrate
 		@Override
 		public CompoundNBT serializeNBT()
 		{
-			return (CompoundNBT)capability.writeNBT( capability.getDefaultInstance(), null );
+			return crateStorage.serializeNBT();
 		}
 
 		@Override
 		public void deserializeNBT( CompoundNBT nbt )
 		{
-			capability.readNBT( capability.getDefaultInstance(), null, nbt );
+			crateStorage.deserializeNBT( nbt );
 		}
 	}
 }
