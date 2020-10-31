@@ -1,8 +1,11 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer;
+import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer.ConfigSlot;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -15,47 +18,27 @@ public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 		ySize = 132;
 	}
 
-	/*
-	 * @Override
-	 * public void render( int mouseX, int mouseY, float partialTicks )
-	 * {
-	 * renderBackground();
-	 * super.render( mouseX, mouseY, partialTicks );
-	 * renderHoveredToolTip( mouseX, mouseY );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * protected void drawGuiContainerForegroundLayer( int par1, int par2 )
-	 * {
-	 * font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
-	 * font.drawString( playerInventory.getDisplayName().getFormattedText(), 8 + ( xSize - 176 ) / 2, ySize - 94, 0x404040 );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * protected void drawGuiContainerBackgroundLayer( float partialTicks, int mouseX, int mouseY )
-	 * {
-	 * minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CONFIG );
-	 * RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-	 * 
-	 * blit( guiLeft, guiTop, 0, 0, xSize, ySize );
-	 * for( int i = 0; i < container.indexHotbar; i++ )
-	 * {
-	 * final ConfigSlot slot = (ConfigSlot)container.getSlot( i );
-	 * if( !slot.getHasStack() )
-	 * blit( guiLeft + slot.xPos, guiTop + slot.yPos, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
-	 * }
-	 * // blit( guiLeft, guiTop + 35, 0, 125, xSize, 97 );
-	 * }
-	 */
-
 	@Override
-	protected void func_230450_a_( MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_ )
+	public void func_230430_a_( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		// TODO Auto-generated method stub
+		func_230446_a_( matrixStack );
+		super.func_230430_a_( matrixStack, mouseX, mouseY, partialTicks );
+		func_230459_a_( matrixStack, mouseX, mouseY );
+	}
 
+	@SuppressWarnings( "deprecation" )
+	@Override
+	protected void func_230450_a_( MatrixStack matrixStack, float partialTicks, int x, int y )
+	{
+		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		field_230706_i_.getTextureManager().bindTexture( Resources.CONTAINER_CONFIG );
+
+		func_238474_b_( matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize );
+		for( int i = 0; i < container.indexHotbar; i++ )
+		{
+			final ConfigSlot slot = (ConfigSlot)container.getSlot( i );
+			if( !slot.getHasStack() )
+				func_238474_b_( matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerReinforcedLocker;
@@ -11,9 +12,9 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiReinforcedLocker extends ContainerScreen< ContainerReinforcedLocker >
 {
-	private final int columns, rows;
-	// private final int x1, x2, x3, x4;
-	// private final int y1;
+	private final int	columns, rows;
+	private final int	xSlice1, xSlice2, xSlice3, xSlice4;
+	private final int	offsetY;
 
 	public GuiReinforcedLocker( ContainerReinforcedLocker container, PlayerInventory playerInventory, ITextComponent title )
 	{
@@ -26,13 +27,19 @@ public class GuiReinforcedLocker extends ContainerScreen< ContainerReinforcedLoc
 		ySize = 114 + rows * 18;
 
 		// Calculate horizontal texture slices
-		// x1 = columns * 18 + 7;
-		// x2 = ( xSize - 176 ) / 2;
-		// x3 = xSize - x2;
-		// x4 = 248 - x2;
+		xSlice1 = columns * 18 + 7;
+		xSlice2 = ( xSize - 176 ) / 2;
+		xSlice3 = xSize - xSlice2;
+		xSlice4 = 248 - xSlice2;
 
 		// Calculate vertical texture slices
-		// y1 = rows * 18 + 17;
+		offsetY = rows * 18 + 17;
+
+		// GUI label co-ordinates
+		field_238742_p_ = 8;
+		field_238743_q_ = 6;
+		field_238744_r_ = xSlice2 + 8;
+		field_238745_s_ = offsetY + 3;
 	}
 
 	protected ResourceLocation getResource()
@@ -43,47 +50,40 @@ public class GuiReinforcedLocker extends ContainerScreen< ContainerReinforcedLoc
 			return Resources.CONTAINER_EXPANDABLE;
 	}
 
-	/*
-	 * @Override
-	 * public void render( int mouseX, int mouseY, float partialTicks )
-	 * {
-	 * renderBackground();
-	 * super.render( mouseX, mouseY, partialTicks );
-	 * renderHoveredToolTip( mouseX, mouseY );
-	 * }
-	 */
-
-	/*
-	 * @Override
-	 * protected void drawGuiContainerForegroundLayer( int par1, int par2 )
-	 * {
-	 * font.drawString( title.getFormattedText(), 8, 6, 0x404040 );
-	 * font.drawString( playerInventory.getDisplayName().getFormattedText(), x2 + 8, y1 + 2, 0x404040 );
-	 * }
-	 */
-
-	/*@Override
-	protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
+	@Override
+	// public void render( int mouseX, int mouseY, float partialTicks )
+	public void func_230430_a_( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		minecraft.getTextureManager().bindTexture( getResource() );
-		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		// renderBackground();
+		func_230446_a_( matrixStack );
+		// super.render( mouseX, mouseY, partialTicks );
+		super.func_230430_a_( matrixStack, mouseX, mouseY, partialTicks );
+		// renderHoveredToolTip( mouseX, mouseY );
+		func_230459_a_( matrixStack, mouseX, mouseY );
+	}
 
-		//@formatter:off
+	@SuppressWarnings( "deprecation" )
+	@Override
+	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
+	protected void func_230450_a_( MatrixStack matrixStack, float partialTicks, int x, int y )
+	{
+		// GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		// minecraft.getTextureManager().bindTexture( getResource() );
+		field_230706_i_.getTextureManager().bindTexture( getResource() );
+
 		// Chest inventory
-		blit( guiLeft,      guiTop,   0, 0, x1, y1 );
-		blit( guiLeft + x1, guiTop, 241, 0,  7, y1 );
+		// blit( guiLeft, guiTop, 0, 0, x1, y1 );
+		// blit( guiLeft + x1, guiTop, 241, 0, 7, y1 );
+		func_238474_b_( matrixStack, guiLeft, guiTop, 0, 0, xSlice1, offsetY );
+		func_238474_b_( matrixStack, guiLeft + xSlice1, guiTop, 241, 0, 7, offsetY );
 
 		// Player inventory
-		blit( guiLeft,      guiTop + y1,  0, 125,  x2, 17 );
-		blit( guiLeft + x2, guiTop + y1, 36, 125, 176, 97 );
-		blit( guiLeft + x3, guiTop + y1, x4, 125,  x2, 17 );
-		//@formatter:on
-	}*/
-
-	@Override
-	protected void func_230450_a_( MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_ )
-	{
-		// TODO Auto-generated method stub
-
+		// blit( guiLeft, guiTop + y1, 0, 125, x2, 17 );
+		// blit( guiLeft + x2, guiTop + y1, 36, 125, 176, 97 );
+		// blit( guiLeft + x3, guiTop + y1, x4, 125, x2, 17 );
+		func_238474_b_( matrixStack, guiLeft, guiTop + offsetY, 0, 125, xSlice2, 17 );
+		func_238474_b_( matrixStack, guiLeft + xSlice2, guiTop + offsetY, 36, 125, 176, 97 );
+		func_238474_b_( matrixStack, guiLeft + xSlice3, guiTop + offsetY, xSlice4, 125, xSlice2, 17 );
 	}
 }

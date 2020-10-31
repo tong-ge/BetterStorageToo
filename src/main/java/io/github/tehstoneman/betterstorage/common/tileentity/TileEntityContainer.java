@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -66,10 +67,12 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return super.getCapability( capability, facing );
 	}
 
-	/*private IItemHandler createHandler()
-	{
-		return new ExpandableStackHandler( getColumns(), getRows() );
-	}*/
+	/*
+	 * private IItemHandler createHandler()
+	 * {
+	 * return new ExpandableStackHandler( getColumns(), getRows() );
+	 * }
+	 */
 
 	/**
 	 * The amount of columns in the container.
@@ -245,19 +248,17 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return nbt;
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 * 
-	 * if( nbt.contains( "Inventory" ) )
-	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
-	 * 
-	 * if( nbt.contains( "CustomName" ) )
-	 * setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		if( nbt.contains( "Inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+
+		if( nbt.contains( "CustomName" ) )
+			setCustomName( ITextComponent.Serializer.func_240644_b_( nbt.getString( "CustomName" ) ) );
+	}
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -271,21 +272,19 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return super.write( nbt );
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * if( nbt.contains( "Inventory" ) )
-	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
-	 * 
-	 * if( nbt.contains( "CustomName" ) )
-	 * setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
-	 * 
-	 * // For backwards compatibility
-	 * if( nbt.contains( "inventory" ) )
-	 * inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
-	 * 
-	 * super.read( nbt );
-	 * }
-	 */
+	@Override
+	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	{
+		if( nbt.contains( "Inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+
+		if( nbt.contains( "CustomName" ) )
+			setCustomName( ITextComponent.Serializer.func_240644_b_( nbt.getString( "CustomName" ) ) );
+
+		// For backwards compatibility
+		if( nbt.contains( "inventory" ) )
+			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+
+		super.func_230337_a_( state, nbt );
+	}
 }

@@ -13,6 +13,7 @@ import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,11 +53,16 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
 	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
-			return LazyOptional.empty();
-		if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
-			return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
-		return super.getCapability( capability, facing );
+		if( isMain() )
+		{
+			if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
+				return LazyOptional.empty();
+			if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
+				return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
+			return super.getCapability( capability, facing );
+		}
+		else
+			return getMainTileEntity().getCapability( capability, facing );
 	}
 
 	@Override
@@ -285,25 +291,23 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 *
-	 * if( nbt.contains( "Config" ) )
-	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
-	 * else
-	 * config = new HexKeyConfig();
-	 * if( nbt.contains( "lock" ) )
-	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
-	 * }
-	 * else
-	 * lock = ItemStack.EMPTY;
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -320,23 +324,21 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		return super.write( nbt );
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * if( nbt.contains( "Config" ) )
-	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
-	 * else
-	 * config = new HexKeyConfig();
-	 * if( nbt.contains( "lock" ) )
-	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
-	 * }
-	 * else
-	 * lock = ItemStack.EMPTY;
-	 *
-	 * super.read( nbt );
-	 * }
-	 */
+	@Override
+	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	{
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+
+		super.func_230337_a_( state, nbt );
+	}
 }

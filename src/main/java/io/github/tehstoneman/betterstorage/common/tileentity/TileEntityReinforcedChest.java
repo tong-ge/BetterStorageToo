@@ -16,6 +16,7 @@ import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -63,11 +64,16 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	@Override
 	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
 	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
-			return LazyOptional.empty();
-		if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
-			return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
-		return super.getCapability( capability, facing );
+		if( isMain() )
+		{
+			if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
+				return LazyOptional.empty();
+			if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
+				return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
+			return super.getCapability( capability, facing );
+		}
+		else
+			return getMainTileEntity().getCapability( capability, facing );
 	}
 
 	@Override
@@ -131,8 +137,8 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		if( isMain() )
 		{
 			if( player.getHeldItemMainhand().getItem() == BetterStorageItems.HEX_KEY.get() )
-				return new ConfigContainer( windowID, playerInventory, world, pos );
-			return new ReinforcedChestContainer( windowID, playerInventory, world, pos );
+				return new ConfigContainer( windowID, playerInventory, getWorld(), getPos() );
+			return new ReinforcedChestContainer( windowID, playerInventory, getWorld(), getPos() );
 		}
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
@@ -147,15 +153,15 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	@Override
 	public void tick()
 	{
-		final int i = pos.getX();
-		final int j = pos.getY();
-		final int k = pos.getZ();
+		final int x = pos.getX();
+		final int y = pos.getY();
+		final int z = pos.getZ();
 		++ticksSinceSync;
-		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + i + j + k ) % 200 == 0 )
+		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
-					new AxisAlignedBB( i - 5.0F, j - 5.0F, k - 5.0F, i + 1 + 5.0F, j + 1 + 5.0F, k + 1 + 5.0F ) ) )
+					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
 				if( entityplayer.openContainer instanceof ReinforcedChestContainer )
 					++numPlayersUsing;
 		}
@@ -302,6 +308,19 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
 	}
 
+	public void renderUpdate()
+	{
+		if( isMain() )
+		{
+			final BlockState state = getBlockState();
+
+			// Notify nearby blocks
+			getWorld().markBlockRangeForRenderUpdate( pos, state, state );
+		}
+		else
+			( (TileEntityReinforcedChest)getMainTileEntity() ).renderUpdate();
+	}
+
 	@Override
 	public HexKeyConfig getConfig()
 	{
@@ -357,25 +376,23 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 * 
-	 * if( nbt.contains( "Config" ) )
-	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
-	 * else
-	 * config = new HexKeyConfig();
-	 * if( nbt.contains( "lock" ) )
-	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
-	 * }
-	 * else
-	 * lock = ItemStack.EMPTY;
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
 
 	@Override
 	public CompoundNBT write( CompoundNBT nbt )
@@ -392,21 +409,19 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		return super.write( nbt );
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * if( nbt.contains( "Config" ) )
-	 * config.deserializeNBT( nbt.getCompound( "Config" ) );
-	 * if( nbt.contains( "lock" ) )
-	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
-	 * }
-	 * else
-	 * lock = ItemStack.EMPTY;
-	 * 
-	 * super.read( nbt );
-	 * }
-	 */
+	@Override
+	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	{
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			lock = ItemStack.read( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+
+		super.func_230337_a_( state, nbt );
+	}
 }

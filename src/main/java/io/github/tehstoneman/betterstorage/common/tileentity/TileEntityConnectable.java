@@ -1,6 +1,9 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
+import io.github.tehstoneman.betterstorage.api.ConnectedType;
+import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -53,11 +56,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 */
 	public boolean isConnected()
 	{
-		// final BlockState state = getBlockState();
-		/*
-		 * if( state.has( BlockConnectableContainer.TYPE ) )
-		 * return state.get( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
-		 */
+		final BlockState state = getBlockState();
+		if( state.func_235901_b_( BlockConnectableContainer.TYPE ) )
+			return state.get( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
 		return false;
 	};
 
@@ -68,12 +69,10 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 */
 	public boolean isMain()
 	{
-		// final BlockState state = getBlockState();
-		/*
-		 * if( state.has( BlockConnectableContainer.TYPE ) )
-		 * return state.get( BlockConnectableContainer.TYPE ) == ConnectedType.SINGLE
-		 * || state.get( BlockConnectableContainer.TYPE ) == ConnectedType.MASTER;
-		 */
+		final BlockState state = getBlockState();
+		if( state.func_235901_b_( BlockConnectableContainer.TYPE ) )
+			return state.get( BlockConnectableContainer.TYPE ) == ConnectedType.SINGLE
+					|| state.get( BlockConnectableContainer.TYPE ) == ConnectedType.MASTER;
 		return true;
 	}
 
