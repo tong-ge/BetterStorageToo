@@ -66,11 +66,6 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		return super.getCapability( capability, facing );
 	}
 
-	private IItemHandler createHandler()
-	{
-		return new ExpandableStackHandler( getColumns(), getRows() );
-	}
-
 	/**
 	 * The amount of columns in the container.
 	 *

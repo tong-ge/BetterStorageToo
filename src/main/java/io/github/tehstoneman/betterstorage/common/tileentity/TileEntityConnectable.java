@@ -1,6 +1,5 @@
 package io.github.tehstoneman.betterstorage.common.tileentity;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;

@@ -42,7 +42,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable, IHasConfig
 {
-	private boolean								powered;
 	protected int								ticksSinceSync;
 	private ItemStack							lock			= ItemStack.EMPTY.copy();
 	public HexKeyConfig							config;
@@ -64,11 +63,16 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	@Override
 	public <T> LazyOptional< T > getCapability( Capability< T > capability, Direction facing )
 	{
-		if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
-			return LazyOptional.empty();
-		if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
-			return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
-		return super.getCapability( capability, facing );
+		if( isMain() )
+		{
+			if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isLocked() && facing != null )
+				return LazyOptional.empty();
+			if( capability == CapabilityConfig.CONFIG_CAPABILITY && !isLocked() )
+				return CapabilityConfig.CONFIG_CAPABILITY.orEmpty( capability, configHandler );
+			return super.getCapability( capability, facing );
+		}
+		else
+			return getMainTileEntity().getCapability( capability, facing );
 	}
 
 	@Override
@@ -155,8 +159,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + i + j + k ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			final float f = 5.0F;
-
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( i - 5.0F, j - 5.0F, k - 5.0F, i + 1 + 5.0F, j + 1 + 5.0F, k + 1 + 5.0F ) ) )
 				if( entityplayer.openContainer instanceof ReinforcedChestContainer )
@@ -164,7 +166,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		}
 
 		prevLidAngle = lidAngle;
-		final float f1 = 0.1F;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
 			playSound( SoundEvents.BLOCK_CHEST_OPEN );
 
@@ -179,7 +180,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			if( lidAngle > 1.0F )
 				lidAngle = 1.0F;
 
-			final float f3 = 0.5F;
 			if( lidAngle < 0.5F && f2 >= 0.5F )
 				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
 
@@ -296,8 +296,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			( (TileEntityReinforcedChest)getMainTileEntity() ).setPowered( powered );
 			return;
 		}
-
-		this.powered = powered;
 
 		final Block block = getBlockState().getBlock();
 

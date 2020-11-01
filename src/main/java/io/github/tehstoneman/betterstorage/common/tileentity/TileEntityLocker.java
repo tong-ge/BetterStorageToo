@@ -4,7 +4,6 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
-import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -75,8 +74,6 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			final float f = 5.0F;
-
 			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
 				if( entityplayer.openContainer instanceof ContainerLocker )
@@ -84,7 +81,6 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 		}
 
 		prevLidAngle = lidAngle;
-		final float f1 = 0.1F;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
 			playSound( SoundEvents.BLOCK_CHEST_OPEN );
 
@@ -99,7 +95,6 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 			if( lidAngle > 1.0F )
 				lidAngle = 1.0F;
 
-			final float f3 = 0.5F;
 			if( lidAngle < 0.5F && f2 >= 0.5F )
 				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
 
