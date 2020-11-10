@@ -111,6 +111,11 @@ public class TileEntityCrate extends TileEntityContainer
 		return pileID;
 	}
 
+	public boolean isSamePile( TileEntityCrate tileEntity )
+	{
+		return tileEntity.hasID() && getPileID().equals( tileEntity.getPileID() );
+	}
+
 	public void setPileID( @NotNull UUID pileID )
 	{
 		this.pileID = pileID;
@@ -305,18 +310,16 @@ public class TileEntityCrate extends TileEntityContainer
 		return nbt;
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 *
-	 * if( nbt.hasUniqueId( "PileID" ) )
-	 * pileID = nbt.getUniqueId( "PileID" );
-	 * numCrates = nbt.getInt( "NumCrates" );
-	 * capacity = nbt.getInt( "Capacity" );
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		if( nbt.hasUniqueId( "PileID" ) )
+			pileID = nbt.getUniqueId( "PileID" );
+		numCrates = nbt.getInt( "NumCrates" );
+		capacity = nbt.getInt( "Capacity" );
+	}
 
 	// Reading from / writing to NBT
 
@@ -331,16 +334,14 @@ public class TileEntityCrate extends TileEntityContainer
 		return nbt;
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * super.read( nbt );
-	 *
-	 * if( nbt.hasUniqueId( "PileID" ) )
-	 * pileID = nbt.getUniqueId( "PileID" );
-	 * }
-	 */
+	@Override
+	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	{
+		if( nbt.hasUniqueId( "PileID" ) )
+			pileID = nbt.getUniqueId( "PileID" );
+
+		super.func_230337_a_( state, nbt );
+	}
 
 	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
@@ -357,7 +358,7 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	@Nullable
-	static public TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
+	public static TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
 	{
 		final TileEntity tileEntity = world.getTileEntity( pos );
 		if( tileEntity instanceof TileEntityCrate )
@@ -393,8 +394,8 @@ public class TileEntityCrate extends TileEntityContainer
 				handler.addCrate( newCrate );
 		}
 		notifyRegionUpdate( region, pileID );
-		// checkPileConnections( pileID );
-		return true;
+		checkPileConnections( pileID );
+		return crate.getPileID().equals( pileID );
 	}
 
 	public NonNullList< ItemStack > removeCrate()

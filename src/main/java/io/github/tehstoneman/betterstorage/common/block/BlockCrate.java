@@ -109,7 +109,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 				state = state.with( FACING_TO_PROPERTY_MAP.get( facing ), tileCrate.tryAddCrate( facingCrate ) ).with( TYPE,
 						tileCrate.getNumCrates() > 1 ? ConnectedType.PILE : ConnectedType.SINGLE );
 			}
-			// tileCrate.updateConnections();
+			tileCrate.updateConnections();
 		}
 		return super.updatePostPlacement( state, facing, facingState, world, pos, facingPos );
 	}
@@ -130,12 +130,9 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	public INamedContainerProvider getContainer( BlockState state, World world, BlockPos pos )
 	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
-		if( tileEntity instanceof TileEntityCrate )
-			return (TileEntityCrate)tileEntity;
-		return null;
+		return TileEntityCrate.getCrateAt( world, pos );
 	}
 
 	@SuppressWarnings( "deprecation" )
@@ -159,18 +156,8 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	}
 
 	/*
-	 * @Nullable
-	 * private TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
-	 * {
-	 * final TileEntity tileEntity = world.getTileEntity( pos );
-	 * if( tileEntity instanceof TileEntityCrate )
-	 * return (TileEntityCrate)tileEntity;
-	 * return null;
-	 * }
-	 */
-	/*
 	 * @Override
-	 * public boolean hasComparatorInputOverride( IBlockState state )
+	 * public boolean hasComparatorInputOverride( BlockState state )
 	 * {
 	 * return true;
 	 * }
@@ -178,7 +165,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	/*
 	 * @Override
-	 * public int getComparatorInputOverride( IBlockState blockState, World worldIn, BlockPos pos )
+	 * public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
 	 * {
 	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
 	 * if( !( tileEntity instanceof TileEntityCrate ) )

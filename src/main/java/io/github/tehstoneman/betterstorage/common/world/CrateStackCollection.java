@@ -9,7 +9,9 @@ import javax.annotation.Nullable;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
 /** Holds all CratePileData objects for one world / dimension. */
@@ -43,11 +45,11 @@ public class CrateStackCollection extends WorldSavedData
 			return null;
 
 		// final DimensionType dimType = world.getDimension().getType();
-		// final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
-		// final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
+		final RegistryKey< World > dimType = world.func_234923_W_();
+		final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
+		final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
 
-		// return (CrateStackCollection)data;
-		return null;
+		return (CrateStackCollection)data;
 	}
 
 	/**
