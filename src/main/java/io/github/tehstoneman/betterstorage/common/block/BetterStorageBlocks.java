@@ -32,4 +32,5 @@ public final class BetterStorageBlocks
 	public static RegistryObject< BlockTank >				GLASS_TANK			= REGISTERY.register( "glass_tank", () -> new BlockTank() );
 	public static RegistryObject< FlowingFluidBlock >		MILK				= REGISTERY.register( "milk",
 			() -> new FlowingFluidBlock( BetterStorageFluids.MILK, AbstractBlock.Properties.create( FluidMilk.MATERIAL_MILK, DyeColor.WHITE ) ) );
+	public static RegistryObject< BinBlock >				STORAGE_BIN			= REGISTERY.register( "storage_bin", () -> new BinBlock() );
 }

@@ -58,6 +58,8 @@ public class Resources
 			"block/reinforced_locker_door_large_frame_l" );
 	public static final BetterStorageResource	MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_R	= new BetterStorageResource(
 			"block/reinforced_locker_door_large_frame_r" );
+	public static final BetterStorageResource	MODEL_STORAGE_BIN							= new BetterStorageResource( "block/storage_bin" );
+	public static final BetterStorageResource	MODEL_STORAGE_BIN_FRAME						= new BetterStorageResource( "block/storage_bin_frame" );
 
 	// Model textures
 	public static final BetterStorageResource	TEXTURE_CHEST_REINFORCED					= new BetterStorageResource( "entity/chest/reinforced" );
@@ -70,6 +72,10 @@ public class Resources
 	public static final BetterStorageResource	TEXTURE_LOCKER_REINFORCED_DOUBLE			= new BetterStorageResource(
 			"entity/locker/reinforced_double" );
 	public static final BetterStorageResource	TEXTURE_REINFORCED_FRAME					= new BetterStorageResource( "models/reinforced_frame" );
+	public static final BetterStorageResource	TEXTURE_STORAGE_BIN							= new BetterStorageResource(
+			"entity/storage_bin/storage_bin.png" );
+	public static final BetterStorageResource	TEXTURE_STORAGE_BIN_LABEL					= new BetterStorageResource(
+			"entity/storage_bin/storage_bin_label.png" );
 
 	public static final BetterStorageResource	TEXTURE_CARDBOARD_ARMOR						= new BetterStorageResource(
 			"textures/models/armor/cardboard_armor.png" );

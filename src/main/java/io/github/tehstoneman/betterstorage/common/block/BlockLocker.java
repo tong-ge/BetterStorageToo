@@ -136,7 +136,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		final Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.func_225518_g_();
+		final boolean sneaking = context.getPlayer().isSneaking();
 		DoorHingeSide hingeSide = getHingeSide( context );
 		if( connectedType == ConnectedType.SINGLE && !sneaking )
 			if( direction == getDirectionToAttach( context, Direction.DOWN ) )

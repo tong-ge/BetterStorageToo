@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube_directional",
+    "textures":
+    {
+        "north": "betterstorage:models/storage_bin_label",
+        "east": "betterstorage:models/storage_bin",
+        "south": "betterstorage:models/storage_bin",
+        "west": "betterstorage:models/storage_bin",
+        "up": "betterstorage:models/storage_bin",
+        "down": "betterstorage:models/storage_bin"
+    }
+}

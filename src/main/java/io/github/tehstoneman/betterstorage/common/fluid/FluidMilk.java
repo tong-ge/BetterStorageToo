@@ -64,8 +64,7 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				fluidActionResult = FluidUtil.tryEmptyContainerAndStow( heldItem, handler, playerInventory, Integer.MAX_VALUE, player, true );
 
 			if( fluidActionResult.isSuccess() )
-				// player.setHeldItem( hand, fluidActionResult.getResult() );
-				return true;
+				player.setHeldItem( hand, fluidActionResult.getResult() );
 			return false;
 		} ).orElse( false );
 	}

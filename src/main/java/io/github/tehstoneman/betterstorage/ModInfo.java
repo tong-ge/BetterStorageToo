@@ -13,6 +13,7 @@ public final class ModInfo
 	public static final String	CONTAINER_REINFORCED_LOCKER_NAME	= "container." + MOD_ID + ".reinforced_locker";
 	public static final String	CONTAINER_CARDBOARD_BOX_NAME		= "container." + MOD_ID + ".cardboard_box";
 	// public static final String containerPresent = "container." + MOD_ID + ".present";
+	public static final String	CONTAINER_STORAGE_BIN_NAME			= "container." + MOD_ID + ".storage_bin";
 
 	public static final String	CONTAINER_KEYRING_NAME				= "container." + MOD_ID + ".keyring";
 

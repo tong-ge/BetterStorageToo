@@ -67,11 +67,10 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 	{
 		final BlockState blockState = tileEntity.hasWorld() ? tileEntity.getBlockState()
 				: BetterStorageBlocks.LOCKER.get().getDefaultState().with( BlockLocker.FACING, Direction.SOUTH );
-		// blockState.func_235901_b_() <- blockState.has()
-		final ConnectedType lockerType = blockState.func_235901_b_( BlockConnectableContainer.TYPE )
+		final ConnectedType lockerType = blockState.hasProperty( BlockConnectableContainer.TYPE )
 				? blockState.get( BlockConnectableContainer.TYPE )
 				: ConnectedType.SINGLE;
-		final DoorHingeSide hingeSide = blockState.func_235901_b_( BlockStateProperties.DOOR_HINGE )
+		final DoorHingeSide hingeSide = blockState.hasProperty( BlockStateProperties.DOOR_HINGE )
 				? blockState.get( BlockStateProperties.DOOR_HINGE )
 				: DoorHingeSide.LEFT;
 		final Direction facing = blockState.get( BlockReinforcedChest.FACING );

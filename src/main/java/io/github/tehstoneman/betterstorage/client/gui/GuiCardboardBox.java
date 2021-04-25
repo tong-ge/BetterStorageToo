@@ -31,10 +31,10 @@ public class GuiCardboardBox extends ContainerScreen< ContainerCardboardBox >
 		offsetY = 17 + rows * 18;
 
 		// GUI label co-ordinates
-		field_238742_p_ = 8;
-		field_238743_q_ = 6;
-		field_238744_r_ = offsetX + 8;
-		field_238745_s_ = offsetY + 3;
+		titleX = 8;
+		titleY = 6;
+		playerInventoryTitleX = offsetX + 8;
+		playerInventoryTitleY = offsetY + 3;
 	}
 
 	protected ResourceLocation getResource()
@@ -46,31 +46,21 @@ public class GuiCardboardBox extends ContainerScreen< ContainerCardboardBox >
 	}
 
 	@Override
-	// public void render( int mouseX, int mouseY, float partialTicks )
-	public void func_230430_a_( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
+	public void render( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		// renderBackground();
-		func_230446_a_( matrixStack );
-		// super.render( mouseX, mouseY, partialTicks );
-		super.func_230430_a_( matrixStack, mouseX, mouseY, partialTicks );
-		// renderHoveredToolTip( mouseX, mouseY );
-		func_230459_a_( matrixStack, mouseX, mouseY );
+		renderBackground( matrixStack );
+		super.render( matrixStack, mouseX, mouseY, partialTicks );
+		renderHoveredTooltip( matrixStack, mouseX, mouseY );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void func_230450_a_( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
-		// GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		// minecraft.getTextureManager().bindTexture( getResource() );
-		field_230706_i_.getTextureManager().bindTexture( getResource() );
+		minecraft.getTextureManager().bindTexture( getResource() );
 
-		func_238474_b_( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
-		func_238474_b_( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
-
-		// blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
-		// blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
+		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
+		blit( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
 	}
 }

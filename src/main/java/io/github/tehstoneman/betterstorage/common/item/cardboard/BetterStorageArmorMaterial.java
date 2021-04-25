@@ -80,11 +80,9 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 		return toughness;
 	}
 
-	// Knockbask resistance
 	@Override
-	public float func_230304_f_()
+	public float getKnockbackResistance()
 	{
 		return 0;
 	}
-
 }

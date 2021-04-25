@@ -62,7 +62,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 	{
 		final BlockState blockState = tileEntity.hasWorld() ? tileEntity.getBlockState()
 				: BetterStorageBlocks.REINFORCED_CHEST.get().getDefaultState().with( BlockReinforcedChest.FACING, Direction.SOUTH );
-		final ConnectedType chestType = blockState.func_235901_b_( BlockConnectableContainer.TYPE ) ? blockState.get( BlockConnectableContainer.TYPE )
+		final ConnectedType chestType = blockState.hasProperty( BlockConnectableContainer.TYPE ) ? blockState.get( BlockConnectableContainer.TYPE )
 				: ConnectedType.SINGLE;
 		final Direction facing = blockState.get( BlockReinforcedChest.FACING );
 

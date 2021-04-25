@@ -26,4 +26,6 @@ public final class BetterStorageTileEntityTypes
 			() -> TileEntityType.Builder.create( TileEntityReinforcedLocker::new, BetterStorageBlocks.REINFORCED_LOCKER.get() ).build( null ) );
 	public static RegistryObject< TileEntityType< TileEntityTank > >				GLASS_TANK			= REGISTERY.register( "glass_tank",
 			() -> TileEntityType.Builder.create( TileEntityTank::new, BetterStorageBlocks.GLASS_TANK.get() ).build( null ) );
+	public static RegistryObject< TileEntityType< BinTileEntity > >					STORAGE_BIN			= REGISTERY.register( "storage_bin",
+			() -> TileEntityType.Builder.create( BinTileEntity::new, BetterStorageBlocks.STORAGE_BIN.get() ).build( null ) );
 }

@@ -138,7 +138,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		ConnectedType connectedType = ConnectedType.SINGLE;
 		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.func_225518_g_();
+		final boolean sneaking = context.getPlayer().isSneaking();
 
 		final Direction direction1 = context.getFace();
 		if( direction1.getAxis().isHorizontal() && sneaking )
@@ -463,8 +463,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				new AxisAlignedBB( pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1 ) );
 		if( !list.isEmpty() )
 			for( final CatEntity catentity : list )
-				// if( catentity.isSitting() )
-				if( catentity.func_233684_eK_() )
+				if( catentity.isSitting() )
 					return true;
 
 		return false;

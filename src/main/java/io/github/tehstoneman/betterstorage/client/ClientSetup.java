@@ -13,6 +13,7 @@ import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityLockerRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityReinforcedChestRenderer;
+import io.github.tehstoneman.betterstorage.client.renderer.tileentity.StorageBinTileEntityRenderer;
 import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityTankRenderer;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
@@ -58,6 +59,7 @@ public class ClientSetup
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.LOCKER.get(), TileEntityLockerRenderer::new );
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.REINFORCED_CHEST.get(), TileEntityReinforcedChestRenderer::new );
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.REINFORCED_LOCKER.get(), TileEntityLockerRenderer::new );
+		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.STORAGE_BIN.get(), StorageBinTileEntityRenderer::new );
 
 		Minecraft.getInstance().getItemColors().register( new KeyColor(), BetterStorageItems.KEY.get(), BetterStorageItems.LOCK.get() );
 		Minecraft.getInstance().getItemColors().register( new CardboardColor(), BetterStorageItems.CARDBOARD_AXE.get(),
@@ -81,6 +83,8 @@ public class ClientSetup
 		event.addSprite( Resources.TEXTURE_LOCKER_NORMAL_DOUBLE );
 		event.addSprite( Resources.TEXTURE_LOCKER_REINFORCED );
 		event.addSprite( Resources.TEXTURE_LOCKER_REINFORCED_DOUBLE );
+		event.addSprite( Resources.TEXTURE_STORAGE_BIN );
+		event.addSprite( Resources.TEXTURE_STORAGE_BIN_LABEL );
 		event.addSprite( Resources.TEXTURE_WHITE );
 	}
 
@@ -110,5 +114,8 @@ public class ClientSetup
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_R );
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_L );
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_R );
+
+		ModelLoader.addSpecialModel( Resources.MODEL_STORAGE_BIN );
+		ModelLoader.addSpecialModel( Resources.MODEL_STORAGE_BIN_FRAME );
 	}
 }

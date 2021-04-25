@@ -410,7 +410,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	public void read( BlockState state, CompoundNBT nbt )
 	{
 		if( nbt.contains( "Config" ) )
 			config.deserializeNBT( nbt.getCompound( "Config" ) );
@@ -422,6 +422,6 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 		else
 			lock = ItemStack.EMPTY;
 
-		super.func_230337_a_( state, nbt );
+		super.read( state, nbt );
 	}
 }

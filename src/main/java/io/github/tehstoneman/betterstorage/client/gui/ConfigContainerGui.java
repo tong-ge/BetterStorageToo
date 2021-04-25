@@ -19,26 +19,26 @@ public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 	}
 
 	@Override
-	public void func_230430_a_( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
+	public void render( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		func_230446_a_( matrixStack );
-		super.func_230430_a_( matrixStack, mouseX, mouseY, partialTicks );
-		func_230459_a_( matrixStack, mouseX, mouseY );
+		renderBackground( matrixStack );
+		super.render( matrixStack, mouseX, mouseY, partialTicks );
+		renderHoveredTooltip( matrixStack, mouseX, mouseY );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	protected void func_230450_a_( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		field_230706_i_.getTextureManager().bindTexture( Resources.CONTAINER_CONFIG );
+		minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CONFIG );
 
-		func_238474_b_( matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize );
+		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize );
 		for( int i = 0; i < container.indexHotbar; i++ )
 		{
 			final ConfigSlot slot = (ConfigSlot)container.getSlot( i );
 			if( !slot.getHasStack() )
-				func_238474_b_( matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
+				blit( matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
 		}
 	}
 }

@@ -28,19 +28,17 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 		offsetY = 17 + rows * 18;
 
 		// GUI label co-ordinates
-		field_238742_p_ = 8;
-		field_238743_q_ = 6;
-		field_238744_r_ = 8;
-		field_238745_s_ = offsetY + 3;
+		titleX = 8;
+		titleY = 6;
+		playerInventoryTitleX = 8;
+		playerInventoryTitleY = offsetY + 3;
 	}
 
 	@Override
-	// public void render( int mouseX, int mouseY, float partialTicks )
-	public void func_230430_a_( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
+	public void render( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		// renderBackground();
-		func_230446_a_( matrixStack );
-		super.func_230430_a_( matrixStack, mouseX, mouseY, partialTicks );
+		renderBackground( matrixStack );
+		super.render( matrixStack, mouseX, mouseY, partialTicks );
 
 		if( mouseX >= guiLeft + 115 && mouseX < guiLeft + 169 && mouseY >= guiTop + 7 && mouseY < guiTop + 13 )
 		{
@@ -50,27 +48,21 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 			// this.renderTooltip( toolTip.getFormattedText(), mouseX, mouseY );
 		}
 		else
-			// renderHoveredToolTip( mouseX, mouseY );
-			func_230459_a_( matrixStack, mouseX, mouseY );
+			renderHoveredTooltip( matrixStack, mouseX, mouseY );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void func_230450_a_( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		// minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
-		field_230706_i_.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
+		minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
 
-		func_238474_b_( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
-		func_238474_b_( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
-
-		// blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
-		// blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
+		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
+		blit( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
 
 		final int volume = container.getVolume();
 		if( volume > 0.0 )
-			func_238474_b_( matrixStack, guiLeft + 115, guiTop + 7, 176, 0, (int)( 54 * ( volume / 100.0 ) ), 6 );
+			blit( matrixStack, guiLeft + 115, guiTop + 7, 176, 0, (int)( 54 * ( volume / 100.0 ) ), 6 );
 	}
 }
