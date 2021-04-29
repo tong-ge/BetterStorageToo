@@ -45,7 +45,7 @@ public class CrateStackCollection extends WorldSavedData
 			return null;
 
 		// final DimensionType dimType = world.getDimension().getType();
-		final RegistryKey< World > dimType = world.func_234923_W_();
+		final RegistryKey< World > dimType = world.getDimensionKey();
 		final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
 		final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
 

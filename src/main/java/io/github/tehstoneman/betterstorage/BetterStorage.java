@@ -87,19 +87,16 @@ public class BetterStorage
 					@Override
 					protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
 					{
-						// successful = false;
-						func_239796_a_( false );
+						setSuccessful( false );
 						final Item item = stack.getItem();
 						if( item instanceof BlockItem )
 						{
 							final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
 							final BlockPos blockpos = source.getBlockPos().offset( direction );
 							final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
-							func_239796_a_( ( (BlockItem)item )
+							setSuccessful( ( (BlockItem)item )
 									.tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack, direction1 ) )
 									.isSuccessOrConsume() );
-							// successful = ( (BlockItem)item ).tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack, direction1
-							// ) ) == ActionResultType.SUCCESS;
 						}
 
 						return stack;

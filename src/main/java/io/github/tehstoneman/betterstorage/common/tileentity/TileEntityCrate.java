@@ -335,12 +335,12 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	@Override
-	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	public void read( BlockState state, CompoundNBT nbt )
 	{
 		if( nbt.hasUniqueId( "PileID" ) )
 			pileID = nbt.getUniqueId( "PileID" );
 
-		super.func_230337_a_( state, nbt );
+		super.read( state, nbt );
 	}
 
 	@Override

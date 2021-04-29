@@ -16,7 +16,7 @@ apply plugin: 'maven-publish'
 
 archivesBaseName = "BetterStorageToo"
 group = "io.github.tehstoneman.betterstorage"
-version = "1.16.3-6.0.0.0"
+version = "${minecraft_version}-${version_major}.${version_api}.${version_minor}.${version_patch}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -40,7 +40,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.16'
+    mappings channel: project.mapping_channel, version: project.mapping_version
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -133,7 +133,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    //minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"
     //compile name: "Thaumcraft"        , version: tc_version, classifier: "deobf"
@@ -144,11 +145,10 @@ dependencies {
     //compile name: "InventoryTweaks"   , group: "inventorytweaks", version: invtweaks_version, classifier: "deobf"
     //compile name: "MineTweaker3"      , group: "minetweaker", version: minetweaker_version, classifier: "Dev"
 
-	// compile against the JEI API but do not include it at runtime
-	compileOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}:api")
-	// at runtime, use the full JEI jar
-	runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
-}
+	//compileOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}:api")
+	//runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
@@ -199,7 +199,7 @@ jar {
         attributes ([
             "Specification-Title": "betterstorage",
             "Specification-Vendor": "TehStoneMan",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "${minecraft_version}-${version}",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"TehStoneMan",

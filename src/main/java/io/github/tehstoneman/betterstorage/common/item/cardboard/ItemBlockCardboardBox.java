@@ -96,8 +96,8 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 						if( count < limit )
 						{
 							count++;
-							final IFormattableTextComponent text = contentStack.getDisplayName().func_230532_e_();
-							text.func_240702_b_( " x" ).func_240702_b_( String.valueOf( contentStack.getCount() ) );
+							final IFormattableTextComponent text = contentStack.getDisplayName().deepCopy();
+							text.appendString( " x" ).appendString( String.valueOf( contentStack.getCount() ) );
 							tooltip.add( text );
 						}
 						else
@@ -105,7 +105,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 				}
 				if( more > 0 )
 					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
-							.func_240699_a_( TextFormatting.ITALIC ) );
+							.mergeStyle( TextFormatting.ITALIC ) );
 			}
 		}
 	}

@@ -57,7 +57,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public boolean isConnected()
 	{
 		final BlockState state = getBlockState();
-		if( state.func_235901_b_( BlockConnectableContainer.TYPE ) )
+		if( state.hasProperty( BlockConnectableContainer.TYPE ) )
 			return state.get( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
 		return false;
 	};
@@ -70,7 +70,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public boolean isMain()
 	{
 		final BlockState state = getBlockState();
-		if( state.func_235901_b_( BlockConnectableContainer.TYPE ) )
+		if( state.hasProperty( BlockConnectableContainer.TYPE ) )
 			return state.get( BlockConnectableContainer.TYPE ) == ConnectedType.SINGLE
 					|| state.get( BlockConnectableContainer.TYPE ) == ConnectedType.MASTER;
 		return true;

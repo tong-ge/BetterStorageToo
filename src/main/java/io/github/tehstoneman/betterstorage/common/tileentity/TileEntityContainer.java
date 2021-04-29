@@ -257,7 +257,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.func_240644_b_( nbt.getString( "CustomName" ) ) );
+			setCustomName( ITextComponent.Serializer.getComponentFromJson( nbt.getString( "CustomName" ) ) );
 	}
 
 	@Override
@@ -273,18 +273,18 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	}
 
 	@Override
-	public void func_230337_a_( BlockState state, CompoundNBT nbt )
+	public void read( BlockState state, CompoundNBT nbt )
 	{
 		if( nbt.contains( "Inventory" ) )
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.func_240644_b_( nbt.getString( "CustomName" ) ) );
+			setCustomName( ITextComponent.Serializer.getComponentFromJson( nbt.getString( "CustomName" ) ) );
 
 		// For backwards compatibility
 		if( nbt.contains( "inventory" ) )
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
 
-		super.func_230337_a_( state, nbt );
+		super.read( state, nbt );
 	}
 }
