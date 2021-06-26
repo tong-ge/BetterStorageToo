@@ -30,8 +30,8 @@ sourceSets {
 				include '**/**'
 				exclude '**/**.lang'
 				exclude '**/**.blend*'
-				//exclude '**/**.obj'
-				//exclude '**/**.mtl'
+				exclude '**/**.obj'
+				exclude '**/**.mtl'
 				exclude '**/**.model'
 				exclude '**/**.xcf'
 			}
@@ -133,7 +133,6 @@ repositories {
 }
 
 dependencies {
-    //minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     //compile name: "Armourers-Workshop", group: "riskyken.armourersWorkshop", version: aw_version, classifier: "api"

@@ -17,7 +17,10 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( value = Dist.CLIENT, _interface = IChestLid.class )
 public class TileEntityLocker extends TileEntityConnectable implements IChestLid, ITickableTileEntity
 {
 	protected int ticksSinceSync;

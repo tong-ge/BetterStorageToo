@@ -41,6 +41,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+@OnlyIn( value = Dist.CLIENT, _interface = IChestLid.class )
 public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable, IHasConfig
 {
 	protected int								ticksSinceSync;
