@@ -28,7 +28,7 @@ public class InventoryBackpackEquipped extends InventoryWrapper {
 	}
 	
 	@Override
-	public void markDirty() {
+	public void setChanged() {
 		if(!(base instanceof InventoryStacks)) return;
 		ItemBackpack.updateHasItems(carrier, ItemBackpack.getBackpackData(carrier));
 	}

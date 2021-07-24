@@ -52,15 +52,15 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 {
 	public static final EnumProperty< DoorHingeSide >	HINGE		= BlockStateProperties.DOOR_HINGE;
 	public static final BooleanProperty					WATERLOGGED	= BlockStateProperties.WATERLOGGED;
-	protected static final VoxelShape					SHAPE_NORTH	= Block.makeCuboidShape( 0.0D, 0.0D, 1.0D, 16.0D, 16.0D, 16.0D );
-	protected static final VoxelShape					SHAPE_SOUTH	= Block.makeCuboidShape( 0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 15.0D );
-	protected static final VoxelShape					SHAPE_WEST	= Block.makeCuboidShape( 1.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D );
-	protected static final VoxelShape					SHAPE_EAST	= Block.makeCuboidShape( 0.0D, 0.0D, 0.0D, 15.0D, 16.0D, 16.0D );
+	protected static final VoxelShape					SHAPE_NORTH	= Block.box( 0.0D, 0.0D, 1.0D, 16.0D, 16.0D, 16.0D );
+	protected static final VoxelShape					SHAPE_SOUTH	= Block.box( 0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 15.0D );
+	protected static final VoxelShape					SHAPE_WEST	= Block.box( 1.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D );
+	protected static final VoxelShape					SHAPE_EAST	= Block.box( 0.0D, 0.0D, 0.0D, 15.0D, 16.0D, 16.0D );
 	public static final DirectionProperty				FACING		= BlockStateProperties.HORIZONTAL_FACING;
 
 	public BlockLocker()
 	{
-		this( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 2.5F ).sound( SoundType.WOOD ) );
+		this( Block.Properties.of( Material.WOOD ).strength( 2.5F ).sound( SoundType.WOOD ) );
 	}
 
 	public BlockLocker( Properties properties )
@@ -68,16 +68,16 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		super( properties );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( FACING, Direction.NORTH )
-													  .with( HINGE, DoorHingeSide.LEFT )
-		  											  .with( WATERLOGGED, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( FACING, Direction.NORTH )
+													  			 .setValue( HINGE, DoorHingeSide.LEFT )
+													  			 .setValue( WATERLOGGED, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( FACING, HINGE, WATERLOGGED );
 	}
 
@@ -88,7 +88,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	 */
 
 	@Override
-	public BlockRenderType getRenderType( BlockState state )
+	public BlockRenderType getRenderShape( BlockState state )
 	{
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
@@ -110,7 +110,7 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
 	{
-		switch( state.get( FACING ) )
+		switch( state.getValue( FACING ) )
 		{
 		case NORTH:
 		default:
@@ -134,55 +134,55 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	public BlockState getStateForPlacement( BlockItemUseContext context )
 	{
 		ConnectedType connectedType = ConnectedType.SINGLE;
-		final Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.getPlayer().isSneaking();
+		final Direction direction = context.getHorizontalDirection().getOpposite();
+		final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos() );
+		final boolean sneaking = context.getPlayer().isShiftKeyDown();
 		DoorHingeSide hingeSide = getHingeSide( context );
 		if( connectedType == ConnectedType.SINGLE && !sneaking )
 			if( direction == getDirectionToAttach( context, Direction.DOWN ) )
 			{
 				connectedType = ConnectedType.SLAVE;
-				hingeSide = context.getWorld().getBlockState( context.getPos().offset( Direction.DOWN ) ).get( HINGE );
+				hingeSide = context.getLevel().getBlockState( context.getClickedPos().relative( Direction.DOWN ) ).getValue( HINGE );
 			}
 			else if( direction == getDirectionToAttach( context, Direction.UP ) )
 			{
 				connectedType = ConnectedType.MASTER;
-				hingeSide = context.getWorld().getBlockState( context.getPos().offset( Direction.UP ) ).get( HINGE );
+				hingeSide = context.getLevel().getBlockState( context.getClickedPos().relative( Direction.UP ) ).getValue( HINGE );
 			}
 
-		return getDefaultState().with( FACING, direction ).with( HINGE, hingeSide ).with( TYPE, connectedType ).with( WATERLOGGED,
-				Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
+		return defaultBlockState().setValue( FACING, direction ).setValue( HINGE, hingeSide ).setValue( TYPE, connectedType ).setValue( WATERLOGGED,
+				Boolean.valueOf( fluidState.getType() == Fluids.WATER ) );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )
 	{
-		if( stateIn.get( WATERLOGGED ) )
-			worldIn.getPendingFluidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickRate( worldIn ) );
+		if( stateIn.getValue( WATERLOGGED ) )
+			worldIn.getLiquidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickDelay( worldIn ) );
 
 		if( facingState.getBlock() == this && facing.getAxis().isVertical() )
 		{
-			final ConnectedType lockerType = facingState.get( TYPE );
+			final ConnectedType lockerType = facingState.getValue( TYPE );
 
-			if( stateIn.get( TYPE ) == ConnectedType.SINGLE && lockerType != ConnectedType.SINGLE
-					&& stateIn.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
-				return stateIn.with( TYPE, lockerType.opposite() );
+			if( stateIn.getValue( TYPE ) == ConnectedType.SINGLE && lockerType != ConnectedType.SINGLE
+					&& stateIn.getValue( FACING ) == facingState.getValue( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
+				return stateIn.setValue( TYPE, lockerType.opposite() );
 		}
 		else if( getDirectionToAttached( stateIn ) == facing )
-			return stateIn.with( TYPE, ConnectedType.SINGLE );
+			return stateIn.setValue( TYPE, ConnectedType.SINGLE );
 
-		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+		return super.updateShape( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
 
 	private DoorHingeSide getHingeSide( BlockItemUseContext context )
 	{
-		final BlockPos blockPos = context.getPos();
-		final Direction direction = context.getPlacementHorizontalFacing();
-		final int offX = direction.getXOffset();
-		final int offY = direction.getZOffset();
-		final Vector3d v = context.getHitVec();
+		final BlockPos blockPos = context.getClickedPos();
+		final Direction direction = context.getHorizontalDirection();
+		final int offX = direction.getStepX();
+		final int offY = direction.getStepY();
+		final Vector3d v = context.getClickLocation();
 		final double hitX = v.x - blockPos.getX();
 		final double hitY = v.z - blockPos.getZ();
 		return ( offX >= 0 || !( hitY < 0.5D ) ) && ( offX <= 0 || !( hitY > 0.5D ) ) && ( offY >= 0 || !( hitX > 0.5D ) )
@@ -192,21 +192,21 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Nullable
 	private Direction getDirectionToAttach( BlockItemUseContext context, Direction facing )
 	{
-		final BlockState faceState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return faceState.getBlock() == this && faceState.get( TYPE ) == ConnectedType.SINGLE ? faceState.get( FACING ) : null;
+		final BlockState faceState = context.getLevel().getBlockState( context.getClickedPos().relative( facing ) );
+		return faceState.getBlock() == this && faceState.getValue( TYPE ) == ConnectedType.SINGLE ? faceState.getValue( FACING ) : null;
 	}
 
 	public static Direction getDirectionToAttached( BlockState state )
 	{
-		return state.get( TYPE ) == ConnectedType.SLAVE ? Direction.DOWN : Direction.UP;
+		return state.getValue( TYPE ) == ConnectedType.SLAVE ? Direction.DOWN : Direction.UP;
 	}
 
 	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
 	{
-		if( stack.hasDisplayName() )
+		if( stack.hasCustomHoverName() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 				( (TileEntityContainer)tileentity ).setCustomName( stack.getDisplayName() );
 		}
@@ -214,18 +214,18 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 			{
 				( (TileEntityContainer)tileentity ).dropInventoryItems();
-				worldIn.updateComparatorOutputLevel( pos, this );
+				worldIn.updateNeighbourForOutputSignal( pos, this );
 			}
 
-			super.onReplaced( state, worldIn, pos, newState, isMoving );
+			super.onRemove( state, worldIn, pos, newState, isMoving );
 		}
 	}
 
@@ -238,27 +238,27 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Override
 	public BlockState rotate( BlockState state, Rotation rot )
 	{
-		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
+		return state.setValue( FACING, rot.rotate( state.getValue( FACING ) ) );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState mirror( BlockState state, Mirror mirrorIn )
 	{
-		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
+		return state.rotate( mirrorIn.getRotation( state.getValue( FACING ) ) );
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride( BlockState state )
+	public boolean hasAnalogOutputSignal( BlockState state )
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
+	public int getAnalogOutputSignal( BlockState blockState, World worldIn, BlockPos pos )
 	{
 		return calcRedstoneFromInventory(
-				( (TileEntityLocker)worldIn.getTileEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
+				( (TileEntityLocker)worldIn.getBlockEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
 	}
 
 	public static int calcRedstoneFromInventory( @Nullable LazyOptional< IItemHandler > lazyOptional )
@@ -293,18 +293,18 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	 */
 
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		if( hit.getFace() == state.get( FACING ) )
-			if( worldIn.isRemote )
+		if( hit.getDirection() == state.getValue( FACING ) )
+			if( worldIn.isClientSide )
 				return ActionResultType.SUCCESS;
 			else
 			{
-				final INamedContainerProvider locker = getContainer( state, worldIn, pos );
+				final INamedContainerProvider locker = getMenuProvider( state, worldIn, pos );
 				if( locker != null )
 				{
 					NetworkHooks.openGui( (ServerPlayerEntity)player, locker, pos );
-					player.addStat( getOpenStat() );
+					player.awardStat( getOpenStat() );
 				}
 				return ActionResultType.SUCCESS;
 			}
@@ -318,14 +318,14 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	public INamedContainerProvider getMenuProvider( BlockState state, World worldIn, BlockPos pos )
 	{
 		return this.getContainer( state, worldIn, pos, false );
 	}
 
 	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
 	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		final TileEntity tileentity = worldIn.getBlockEntity( pos );
 		if( !( tileentity instanceof TileEntityLocker ) )
 			return null;
 		else if( !allowBlockedChest && isBlocked( worldIn, pos ) )
@@ -333,17 +333,17 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 		else
 		{
 			final TileEntityLocker locker = (TileEntityLocker)tileentity;
-			final ConnectedType chesttype = state.get( TYPE );
+			final ConnectedType chesttype = state.getValue( TYPE );
 			if( chesttype == ConnectedType.SINGLE )
 				return locker;
 			else
 			{
-				final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
+				final BlockPos blockpos = pos.relative( getDirectionToAttached( state ) );
 				final BlockState iblockstate = worldIn.getBlockState( blockpos );
 				if( iblockstate.getBlock() == this )
 				{
-					final ConnectedType chesttype1 = iblockstate.get( TYPE );
-					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+					final ConnectedType chesttype1 = iblockstate.getValue( TYPE );
+					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.getValue( FACING ) == state.getValue( FACING ) )
 						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
 							return null;
 				}
@@ -360,9 +360,9 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 
 	private static boolean isBehindSolidBlock( IBlockReader reader, BlockPos worldIn )
 	{
-		final Direction facing = reader.getBlockState( worldIn ).get( FACING );
-		final BlockPos blockpos = worldIn.offset( facing );
-		return reader.getBlockState( blockpos ).isNormalCube( reader, blockpos );
+		final Direction facing = reader.getBlockState( worldIn ).getValue( FACING );
+		final BlockPos blockpos = worldIn.relative( facing );
+		return reader.getBlockState( blockpos ).isRedstoneConductor( reader, blockpos );
 	}
 
 	/*
@@ -375,6 +375,6 @@ public class BlockLocker extends BlockConnectableContainer implements IWaterLogg
 	@Override
 	public FluidState getFluidState( BlockState state )
 	{
-		return state.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( state );
+		return state.getValue( WATERLOGGED ) ? Fluids.WATER.getSource( false ) : super.getFluidState( state );
 	}
 }

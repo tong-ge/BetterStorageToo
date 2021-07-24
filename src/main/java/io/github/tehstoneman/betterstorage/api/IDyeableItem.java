@@ -123,7 +123,7 @@ public interface IDyeableItem
 
 			for( final DyeColor dyeitem : dyeList )
 			{
-				final float[] afloat = dyeitem.getColorComponentValues();
+				final float[] afloat = dyeitem.getTextureDiffuseColors();
 				final int r = (int)( afloat[0] * 255.0F );
 				final int g = (int)( afloat[1] * 255.0F );
 				final int b = (int)( afloat[2] * 255.0F );

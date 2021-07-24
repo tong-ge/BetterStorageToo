@@ -15,7 +15,7 @@ public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 	public ConfigContainerGui( ConfigContainer screenContainer, PlayerInventory inv, ITextComponent titleIn )
 	{
 		super( screenContainer, inv, titleIn );
-		ySize = 132;
+		imageHeight = 132;
 	}
 
 	@Override
@@ -23,21 +23,22 @@ public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 	{
 		renderBackground( matrixStack );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
-		renderHoveredTooltip( matrixStack, mouseX, mouseY );
+		renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
-	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CONFIG );
+		minecraft.getTextureManager().getTexture( Resources.CONTAINER_CONFIG );
 
-		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize );
-		for( int i = 0; i < container.indexHotbar; i++ )
+		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), imageHeight );
+		for( int i = 0; i < menu.indexHotbar; i++ )
 		{
-			final ConfigSlot slot = (ConfigSlot)container.getSlot( i );
-			if( !slot.getHasStack() )
-				blit( matrixStack, guiLeft + slot.xPos, guiTop + slot.yPos, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
+			final ConfigSlot slot = (ConfigSlot)menu.getSlot( i );
+			if( !slot.hasItem() )
+				blit( matrixStack, getGuiLeft() + slot.x, getGuiTop() + slot.y, slot.getIconX() + 1, slot.getIconY() + 1, 16, 16 );
 		}
 	}
 }

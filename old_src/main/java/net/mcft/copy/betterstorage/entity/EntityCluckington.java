@@ -72,7 +72,7 @@ public class EntityCluckington extends EntityChicken
 	@Override
 	public boolean attackEntityAsMob( Entity target )
 	{
-		return target.attackEntityFrom( DamageSource.causeMobDamage( this ),
+		return target.hurt( DamageSource.causeMobDamage( this ),
 				(float)getEntityAttribute( SharedMonsterAttributes.ATTACK_DAMAGE ).getBaseValue() );
 	}
 

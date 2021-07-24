@@ -48,7 +48,7 @@ public class GuiCraftingStation extends GuiContainer
 	{
 		final EntityPlayerSP p = mc.thePlayer;
 		p.worldObj.createExplosion( null, p.posX, p.posY, p.posZ, 10, true );
-		p.worldObj.playSound( p, p.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, 1.0F );
+		p.worldObj.playSound( p, p.getBlockPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, 1.0F );
 		p.addChatMessage( new TextComponentString( "Happy belated April Fools!" ) );
 	}
 
@@ -89,8 +89,8 @@ public class GuiCraftingStation extends GuiContainer
 		if( containerCraftingStation.getCurrentCrafting() != null )
 			for( int i = 9; i < 18; i++ )
 			{
-				final Slot slot = inventorySlots.getSlot( i );
-				if( !slot.getHasStack() )
+				final Slot slot = slots.getSlot( i );
+				if( !slot.hasItem() )
 					continue;
 
 				GL11.glDisable( GL11.GL_DEPTH_TEST );
@@ -120,7 +120,7 @@ public class GuiCraftingStation extends GuiContainer
 	{
 		final int i = slotIn.xDisplayPosition;
 		final int j = slotIn.yDisplayPosition;
-		final ItemStack itemstack = slotIn.getStack();
+		final ItemStack itemstack = slotIn.getItem();
 		final ItemStack itemstack1 = mc.thePlayer.inventory.getItemStack();
 		final String s = null;
 

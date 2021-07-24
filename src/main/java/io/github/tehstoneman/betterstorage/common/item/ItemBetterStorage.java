@@ -7,6 +7,6 @@ public abstract class ItemBetterStorage extends Item
 {
 	public ItemBetterStorage( Properties properties )
 	{
-		super( properties.group( BetterStorage.ITEM_GROUP ) );
+		super( properties.tab( BetterStorage.ITEM_GROUP ) );
 	}
 }

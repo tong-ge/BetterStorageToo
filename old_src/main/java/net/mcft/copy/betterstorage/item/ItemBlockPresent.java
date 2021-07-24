@@ -39,7 +39,7 @@ public class ItemBlockPresent extends ItemBlockCardboardBox
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
+	public void appendHoverText( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
 	{
 		if( stack.hasTagCompound() )
 		{

@@ -21,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 {
 
-	private ItemStack		lock	= ItemStack.EMPTY.copy();
+	private ItemStack lock = ItemStack.EMPTY.copy();
 
 	public TileEntityLockableDoor()
 	{
@@ -36,20 +36,20 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 
 	public boolean isMain()
 	{
-		return getBlockState().get( DoorBlock.HALF ) == DoubleBlockHalf.LOWER;
+		return getBlockState().getValue( DoorBlock.HALF ) == DoubleBlockHalf.LOWER;
 	}
 
 	public TileEntity getMain()
 	{
 		if( isMain() )
 			return this;
-		return world.getTileEntity( pos.down() );
+		return level.getBlockEntity( worldPosition.below() );
 	}
 
 	public boolean isPowered()
 	{
 		if( isMain() )
-			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
+			return EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
 		return ( (TileEntityLockableDoor)getMain() ).isPowered();
 	}
 
@@ -69,11 +69,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	@Override
 	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
 	{
-		final CompoundNBT nbt = packet.getNbtCompound();
+		final CompoundNBT nbt = packet.getTag();
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
+			lock = ItemStack.of( lockNBT );
 		}
 		else
 			lock = ItemStack.EMPTY;
@@ -84,11 +84,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	 * public void handleUpdateTag( CompoundNBT nbt )
 	 * {
 	 * super.handleUpdateTag( nbt );
-	 * 
+	 *
 	 * if( nbt.contains( "lock" ) )
 	 * {
 	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
+	 * lock = ItemStack.of( lockNBT );
 	 * }
 	 * else
 	 * lock = ItemStack.EMPTY;
@@ -98,16 +98,16 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	// Reading from / writing to NBT
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		if( !lock.isEmpty() )
 		{
 			final CompoundNBT lockNBT = new CompoundNBT();
-			lock.write( lockNBT );
+			lock.save( lockNBT );
 			nbt.put( "lock", lockNBT );
 		}
 
-		return super.write( nbt );
+		return super.save( nbt );
 	}
 
 	/*
@@ -117,11 +117,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	 * if( nbt.contains( "lock" ) )
 	 * {
 	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-	 * lock = ItemStack.read( lockNBT );
+	 * lock = ItemStack.of( lockNBT );
 	 * }
 	 * else
 	 * lock = ItemStack.EMPTY;
-	 * 
+	 *
 	 * super.read( nbt );
 	 * }
 	 */
@@ -147,22 +147,22 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		if( lock.isEmpty() )
 		{
 			this.lock = ItemStack.EMPTY;
-			final BlockState blockState = world.getBlockState( pos );
+			final BlockState blockState = level.getBlockState( worldPosition );
 
 			//@formatter:off
-				world.setBlockState( pos, Blocks.IRON_DOOR.getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
-				world.setBlockState( pos.up(), Blocks.IRON_DOOR.getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
+				level.setBlockAndUpdate( worldPosition, Blocks.IRON_DOOR.defaultBlockState()
+						.setValue( DoorBlock.FACING, blockState.getValue( DoorBlock.FACING ) )
+						.setValue( DoorBlock.OPEN, blockState.getValue( DoorBlock.OPEN ) )
+						.setValue( DoorBlock.HINGE, blockState.getValue( DoorBlock.HINGE ) )
+						.setValue( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
+				level.setBlockAndUpdate( worldPosition.above(), Blocks.IRON_DOOR.defaultBlockState()
+						.setValue( DoorBlock.FACING, blockState.getValue( DoorBlock.FACING ) )
+						.setValue( DoorBlock.OPEN, blockState.getValue( DoorBlock.OPEN ) )
+						.setValue( DoorBlock.HINGE, blockState.getValue( DoorBlock.HINGE ) )
+						.setValue( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
 				//@formatter:on
 
-			world.notifyBlockUpdate( pos, blockState, blockState, 3 );
+			level.sendBlockUpdated( worldPosition, blockState, blockState, 3 );
 		}
 		else if( isLockValid( lock ) )
 			setLockWithUpdate( lock );
@@ -172,9 +172,9 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	public void setLockWithUpdate( ItemStack lock )
 	{
 		this.lock = lock;
-		final BlockState blockState = world.getBlockState( pos );
-		world.notifyBlockUpdate( pos, blockState, blockState, 3 );
-		markDirty();
+		final BlockState blockState = level.getBlockState( worldPosition );
+		level.sendBlockUpdated( worldPosition, blockState, blockState, 3 );
+		setChanged();
 	}
 
 	@Override

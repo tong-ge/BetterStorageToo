@@ -11,11 +11,11 @@ public class BetterStorageItemGroup extends ItemGroup
 	public BetterStorageItemGroup()
 	{
 		super( "better_storage_too" );
-		setRelevantEnchantmentTypes( EnchantmentKey.KEY, EnchantmentLock.LOCK );
+		setEnchantmentCategories( EnchantmentKey.KEY, EnchantmentLock.LOCK );
 	}
 
 	@Override
-	public ItemStack createIcon()
+	public ItemStack makeIcon()
 	{
 		return new ItemStack( BetterStorageBlocks.CRATE.get() );
 	}

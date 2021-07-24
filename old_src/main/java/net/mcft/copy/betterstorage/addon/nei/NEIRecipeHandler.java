@@ -150,8 +150,8 @@ public class NEIRecipeHandler extends TemplateRecipeHandler {
 		public CachedStationRecipe(IStationRecipe recipe) {
 			this.recipe = recipe;
 			sampleInput = recipe.getSampleInputs();
-			possibleInputs = recipe.getPossibleInputs();
-			possibleOutputs = recipe.getPossibleOutputs();
+			possibleInputs = recipe.getBlockPossibleInputs();
+			possibleOutputs = recipe.getBlockPossibleOutputs();
 			
 			if (possibleInputs == null) {
 				possibleInputs = new ArrayList<IRecipeInput>();
@@ -167,7 +167,7 @@ public class NEIRecipeHandler extends TemplateRecipeHandler {
 					ItemStack[] stackArray = new ItemStack[inputArray.length];
 					for (int i = 0; i < inputArray.length; i++)
 						if (inputArray[i] != null)
-							stackArray[i] = inputArray[i].getPossibleMatches().get(0);
+							stackArray[i] = inputArray[i].getBlockPossibleMatches().get(0);
 					for (ItemStack stack : recipe.checkMatch(stackArray, new RecipeBounds(stackArray)).getOutput())
 						if (stack != null)
 							possibleOutputs.add(stack);
@@ -188,7 +188,7 @@ public class NEIRecipeHandler extends TemplateRecipeHandler {
 					int index = x + y * 3;
 					IRecipeInput input = inputArray[index];
 					if (input == null) continue;
-					List<ItemStack> possibleMatches = input.getPossibleMatches();
+					List<ItemStack> possibleMatches = input.getBlockPossibleMatches();
 					ingridients.add(new PositionedStack(possibleMatches, x * 18 + 12, y * 18 + 6));
 					stackArray[index] = possibleMatches.get(0);
 				}

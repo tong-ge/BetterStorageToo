@@ -34,7 +34,7 @@ public class BlockReinforcedLocker extends BlockLocker
 {
 	public BlockReinforcedLocker()
 	{
-		this( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
+		this( Block.Properties.of( Material.WOOD ).strength( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 	}
 
 	public BlockReinforcedLocker( Properties properties )
@@ -49,16 +49,16 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		if( hit.getFace() == state.get( FACING ) )
+		if( hit.getDirection() == state.getValue( FACING ) )
 		{
-			if( !worldIn.isRemote )
+			if( !worldIn.isClientSide )
 			{
 				final TileEntityReinforcedLocker tileChest = getLockerAt( worldIn, pos );
 				if( tileChest != null && tileChest.isLocked() )
 				{
-					if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
+					if( !tileChest.unlockWith( player.getItemInHand( hand ) ) )
 					{
 						final ItemStack lock = tileChest.getLock();
 						( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
@@ -66,12 +66,12 @@ public class BlockReinforcedLocker extends BlockLocker
 					}
 					if( player.isCrouching() )
 					{
-						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
+						worldIn.addFreshEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
 						tileChest.setLock( ItemStack.EMPTY );
 						return ActionResultType.SUCCESS;
 					}
 				}
-				return super.onBlockActivated( state, worldIn, pos, player, hand, hit );
+				return super.use( state, worldIn, pos, player, hand, hit );
 			}
 			return ActionResultType.SUCCESS;
 		}
@@ -81,25 +81,25 @@ public class BlockReinforcedLocker extends BlockLocker
 	@Nullable
 	public static TileEntityReinforcedLocker getLockerAt( World world, BlockPos pos )
 	{
-		final TileEntity tileEntity = world.getTileEntity( pos );
+		final TileEntity tileEntity = world.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedLocker )
 			return (TileEntityReinforcedLocker)tileEntity;
 		return null;
 	}
 
 	@Override
-	public BlockState updatePostPlacement( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
+	public BlockState updateShape( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
 			BlockPos facingPos )
 	{
-		if( thisState.get( WATERLOGGED ) )
-			world.getPendingFluidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickRate( world ) );
+		if( thisState.getValue( WATERLOGGED ) )
+			world.getLiquidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickDelay( world ) );
 
 		if( facingState.getBlock() == this && facing.getAxis().isVertical() )
 		{
-			final ConnectedType facingType = facingState.get( TYPE );
+			final ConnectedType facingType = facingState.getValue( TYPE );
 
-			if( thisState.get( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
-					&& thisState.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
+			if( thisState.getValue( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
+					&& thisState.getValue( FACING ) == facingState.getValue( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 			{
 				final ConnectedType newType = facingType.opposite();
 				final TileEntityReinforcedLocker thisLocker = getLockerAt( (World)world, thisPos );
@@ -109,49 +109,49 @@ public class BlockReinforcedLocker extends BlockLocker
 					facingLocker.setConfig( thisLocker.getConfig() );
 					thisLocker.setConfig( new HexKeyConfig() );
 				}
-				return thisState.with( TYPE, newType );
+				return thisState.setValue( TYPE, newType );
 			}
 		}
 		else if( getDirectionToAttached( thisState ) == facing )
-			return thisState.with( TYPE, ConnectedType.SINGLE );
+			return thisState.setValue( TYPE, ConnectedType.SINGLE );
 
-		return super.updatePostPlacement( thisState, facing, facingState, world, thisPos, facingPos );
+		return super.updateShape( thisState, facing, facingState, world, thisPos, facingPos );
 	}
 
 	@Override
-	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = world.getTileEntity( pos );
+			final TileEntity tileentity = world.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 			{
-				if( state.get( TYPE ) == ConnectedType.MASTER )
+				if( state.getValue( TYPE ) == ConnectedType.MASTER )
 				{
 					final TileEntityReinforcedLocker thisLocker = getLockerAt( world, pos );
-					final TileEntityReinforcedLocker facingLocker = getLockerAt( world, pos.offset( getDirectionToAttached( state ) ) );
+					final TileEntityReinforcedLocker facingLocker = getLockerAt( world, pos.relative( getDirectionToAttached( state ) ) );
 
 					facingLocker.setConfig( thisLocker.getConfig() );
 					thisLocker.setConfig( new HexKeyConfig() );
 				}
 				( (TileEntityContainer)tileentity ).dropInventoryItems();
-				world.updateComparatorOutputLevel( pos, this );
+				world.updateNeighbourForOutputSignal( pos, this );
 			}
 
-			super.onReplaced( state, world, pos, newState, isMoving );
+			super.onRemove( state, world, pos, newState, isMoving );
 		}
 	}
 
 	@Override
-	public boolean canProvidePower( BlockState state )
+	public boolean isSignalSource( BlockState state )
 	{
 		return true;
 	}
 
 	@Override
-	public int getWeakPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
 	{
-		final TileEntity tileEntity = blockAccess.getTileEntity( pos );
+		final TileEntity tileEntity = blockAccess.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedLocker )
 		{
 			final TileEntityReinforcedLocker chest = (TileEntityReinforcedLocker)tileEntity;
@@ -161,9 +161,9 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public int getStrongPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getDirectSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
 	{
-		return side == Direction.UP ? blockState.getWeakPower( blockAccess, pos, side ) : 0;
+		return side == Direction.UP ? blockState.getSignal( blockAccess, pos, side ) : 0;
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class BlockReinforcedLocker extends BlockLocker
 		final TileEntityReinforcedLocker chest = getLockerAt( (World)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
-			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
+			final int resist = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
 			return super.getExplosionResistance( state, world, pos, explosion ) * resist * 2;
 		}
 		return super.getExplosionResistance( state, world, pos, explosion );

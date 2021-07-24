@@ -29,9 +29,9 @@ public class CardboardColorRecipe extends SpecialRecipe
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< ItemStack > dyeList = Lists.newArrayList();
 
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		for( int i = 0; i < inv.getContainerSize(); ++i )
 		{
-			final ItemStack itemstack = inv.getStackInSlot( i );
+			final ItemStack itemstack = inv.getItem( i );
 
 			if( !itemstack.isEmpty() )
 				if( itemstack.getItem() instanceof IDyeableItem )
@@ -43,7 +43,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 				}
 				else
 				{
-					if( !itemstack.getItem().isIn( Tags.Items.DYES ) )
+					if( !itemstack.getItem().is( Tags.Items.DYES ) )
 						return false;
 
 					dyeList.add( itemstack );
@@ -54,14 +54,14 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack getCraftingResult( CraftingInventory inv )
+	public ItemStack assemble( CraftingInventory inv )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< DyeColor > dyeList = Lists.newArrayList();
 
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		for( int i = 0; i < inv.getContainerSize(); ++i )
 		{
-			final ItemStack ingredientStack = inv.getStackInSlot( i );
+			final ItemStack ingredientStack = inv.getItem( i );
 
 			if( !ingredientStack.isEmpty() )
 			{
@@ -73,7 +73,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 
 					resultStack = ingredientStack.copy();
 				}
-				else if( item.isIn( Tags.Items.DYES ) )
+				else if( item.is( Tags.Items.DYES ) )
 					dyeList.add( DyeColor.getColor( ingredientStack ) );
 				else
 					return ItemStack.EMPTY;
@@ -87,7 +87,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean canFit( int width, int height )
+	public boolean canCraftInDimensions( int width, int height )
 	{
 		return width * height >= 2;
 	}
@@ -99,7 +99,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean isDynamic()
+	public boolean isSpecial()
 	{
 		return true;
 	}

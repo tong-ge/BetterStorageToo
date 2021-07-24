@@ -45,7 +45,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 				@Override
 				protected void onContentsChanged( int slot )
 				{
-					TileEntityContainer.this.markDirty();
+					TileEntityContainer.this.setChanged();
 				}
 			};
 		else
@@ -170,8 +170,8 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 */
 	public void markForUpdate()
 	{
-		getWorld().notifyBlockUpdate( pos, getWorld().getBlockState( pos ), getWorld().getBlockState( pos ), 3 );
-		markDirty();
+		getLevel().sendBlockUpdated( worldPosition, getLevel().getBlockState( worldPosition ), getLevel().getBlockState( worldPosition ), 3 );
+		setChanged();
 	}
 
 	public void dropInventoryItems()
@@ -181,7 +181,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 			{
 				final ItemStack stack = inventory.getStackInSlot( i );
 				if( !stack.isEmpty() )
-					InventoryHelper.spawnItemStack( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack );
+					InventoryHelper.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
 			}
 	}
 
@@ -211,13 +211,13 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		final Block block = getBlockState().getBlock();
 		if( block instanceof BlockContainerBetterStorage )
 		{
-			world.addBlockEvent( pos, block, EVENT_PLAYER_USING, numPlayersUsing );
-			world.notifyNeighborsOfStateChange( pos, block );
+			level.blockEvent( worldPosition, block, EVENT_PLAYER_USING, numPlayersUsing );
+			level.updateNeighborsAt( worldPosition, block );
 		}
 	}
 
 	@Override
-	public boolean receiveClientEvent( int id, int type )
+	public boolean triggerEvent( int id, int type )
 	{
 		if( id == EVENT_PLAYER_USING )
 		{
@@ -225,7 +225,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 			return true;
 		}
 		else
-			return super.receiveClientEvent( id, type );
+			return super.triggerEvent( id, type );
 	}
 
 	/*
@@ -257,11 +257,11 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.getComponentFromJson( nbt.getString( "CustomName" ) ) );
+			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
 	}
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		if( inventory.getSlots() > 0 )
 			nbt.put( "Inventory", inventory.serializeNBT() );
@@ -269,22 +269,22 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		if( hasCustomName() )
 			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
 
-		return super.write( nbt );
+		return super.save( nbt );
 	}
 
 	@Override
-	public void read( BlockState state, CompoundNBT nbt )
+	public void load( BlockState state, CompoundNBT nbt )
 	{
 		if( nbt.contains( "Inventory" ) )
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.getComponentFromJson( nbt.getString( "CustomName" ) ) );
+			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
 
 		// For backwards compatibility
 		if( nbt.contains( "inventory" ) )
 			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
 
-		super.read( state, nbt );
+		super.load( state, nbt );
 	}
 }

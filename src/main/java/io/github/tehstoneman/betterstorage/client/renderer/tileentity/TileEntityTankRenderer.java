@@ -37,27 +37,27 @@ public class TileEntityTankRenderer extends TileEntityRenderer< TileEntityTank >
 
 		if( !fluidStack.isEmpty() )
 		{
-			matrixStack.push();
+			matrixStack.pushPose();
 
 			// final double posY = 0.0625 + 0.875 * ( (float)fluidStack.getAmount() / (float)capacity );
-			final MaterialColor mapColor = fluid.getDefaultState().getBlockState().getMaterial().getColor();
-			final int color = mapColor.colorValue;
+			final MaterialColor mapColor = fluid.defaultFluidState().createLegacyBlock().getMaterial().getColor();
+			final int color = mapColor.col;
 			// final float alpha = ( color >> 24 & 255 ) / 255.0F;
 			final float red = ( color >> 16 & 255 ) / 255.0F;
 			final float green = ( color >> 8 & 255 ) / 255.0F;
 			final float blue = ( color & 255 ) / 255.0F;
 
-			// final BlockPos pos = tileEntity.getPos();
+			// final BlockPos pos = tileEntity.getBlockPos();
 			final BlockState blockState = tileEntity.getBlockState();
 
-			final RenderMaterial material = new RenderMaterial( PlayerContainer.LOCATION_BLOCKS_TEXTURE, Resources.TEXTURE_WHITE );
-			final IVertexBuilder vertexBuilder = material.getBuffer( buffer, RenderType::getEntityCutout );
+			final RenderMaterial material = new RenderMaterial( PlayerContainer.BLOCK_ATLAS, Resources.TEXTURE_WHITE );
+			final IVertexBuilder vertexBuilder = material.buffer( buffer, RenderType::entityCutout );
 
-			tankFluidModel.setLevel( (float)fluidStack.getAmount() / (float)capacity, blockState.get( BlockTank.UP ),
-					blockState.get( BlockTank.DOWN ), fluid.getAttributes().isLighterThanAir() );
-			tankFluidModel.render( matrixStack, vertexBuilder, combinedLight, combinedOverlay, red, green, blue, 1.0F );
+			tankFluidModel.setLevel( (float)fluidStack.getAmount() / (float)capacity, blockState.getValue( BlockTank.UP ),
+					blockState.getValue( BlockTank.DOWN ), fluid.getAttributes().isLighterThanAir() );
+			tankFluidModel.renderToBuffer( matrixStack, vertexBuilder, combinedLight, combinedOverlay, red, green, blue, 1.0F );
 
-			matrixStack.pop();
+			matrixStack.popPose();
 
 		}
 	}

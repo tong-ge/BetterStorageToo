@@ -22,7 +22,7 @@ public class InventoryTileEntity extends InventoryBetterStorage
 		this.inventory = inventory;
 
 		columns = mainTileEntity.getColumns();
-		rows = inventory.getSizeInventory() / columns;
+		rows = inventory.getContainerSize() / columns;
 	}
 
 	public InventoryTileEntity( TileEntityContainer mainTileEntity, TileEntityContainer... tileEntities )
@@ -54,28 +54,28 @@ public class InventoryTileEntity extends InventoryBetterStorage
 	// public boolean hasCustomInventoryName() { return !mainTileEntity.shouldLocalizeTitle(); }
 
 	@Override
-	public int getSizeInventory()
+	public int getContainerSize()
 	{
-		return inventory.getSizeInventory();
+		return inventory.getContainerSize();
 	}
 
 	@Override
-	public ItemStack getStackInSlot( int slot )
+	public ItemStack getItem( int slot )
 	{
-		return inventory.getStackInSlot( slot );
+		return inventory.getItem( slot );
 	}
 
 	@Override
 	public void setInventorySlotContents( int slot, ItemStack stack )
 	{
 		inventory.setInventorySlotContents( slot, stack );
-		markDirty();
+		setChanged();
 	}
 
 	@Override
-	public boolean isItemValidForSlot( int slot, ItemStack stack )
+	public boolean mayPlaceForSlot( int slot, ItemStack stack )
 	{
-		return inventory.isItemValidForSlot( slot, stack );
+		return inventory.mayPlaceForSlot( slot, stack );
 	}
 
 	@Override
@@ -90,13 +90,13 @@ public class InventoryTileEntity extends InventoryBetterStorage
 	// @Override
 	// public void openInventory() { mainTileEntity.onContainerOpened(); }
 	// @Override
-	// public void closeInventory() { mainTileEntity.onContainerClosed(); }
+	// public void closeInventory() { mainTileEntity.removed(); }
 	@Override
-	public void markDirty()
+	public void setChanged()
 	{
-		inventory.markDirty();
+		inventory.setChanged();
 		for( final TileEntityContainer te : tileEntities )
-			te.markDirtySuper();
+			te.setChangedSuper();
 	}
 
 	@Override

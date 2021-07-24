@@ -30,7 +30,7 @@ public class Region
 
 	public Region( TileEntity entity )
 	{
-		this( entity.getPos() );
+		this( entity.getBlockPos() );
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class Region
 		this.posMin.subtract( new BlockPos( Math.min( posMin.getX(), posMax.getX() ),
 											Math.min( posMin.getY(), posMax.getY() ),
 											Math.min( posMin.getZ(), posMax.getZ() ) ) );
-		this.posMax.add( new BlockPos(	Math.max( posMin.getX(), posMax.getX() ),
-										Math.max( posMin.getY(), posMax.getY() ),
-										Math.max( posMin.getZ(), posMax.getZ() ) ) );
+		this.posMax.offset( new BlockPos(	Math.max( posMin.getX(), posMax.getX() ),
+											Math.max( posMin.getY(), posMax.getY() ),
+											Math.max( posMin.getZ(), posMax.getZ() ) ) );
 		//@formatter:on
 	}
 
@@ -149,7 +149,7 @@ public class Region
 	 */
 	public void expandToContain( TileEntity entity )
 	{
-		expandToContain( entity.getPos() );
+		expandToContain( entity.getBlockPos() );
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class Region
 	public boolean isFull( World world, TileEntity tileEntity )
 	{
 		for( final BlockPos blockPos : BlockUtils.getAllInBox( posMin, posMax ) )
-			if( !world.getTileEntity( blockPos ).equals( tileEntity ) )
+			if( !world.getBlockEntity( blockPos ).equals( tileEntity ) )
 				return false;
 		return true;
 	}
@@ -226,9 +226,9 @@ public class Region
 	public void contract( BlockPos posMin, BlockPos posMax )
 	{
 		//@formatter:off
-		this.posMin.add( new BlockPos( Math.min( posMin.getX(), posMax.getX() ),
-									   Math.min( posMin.getY(), posMax.getY() ),
-									   Math.min( posMin.getZ(), posMax.getZ() ) ) );
+		this.posMin.offset( new BlockPos( 	Math.min( posMin.getX(), posMax.getX() ),
+									   		Math.min( posMin.getY(), posMax.getY() ),
+									   		Math.min( posMin.getZ(), posMax.getZ() ) ) );
 		this.posMax.subtract( new BlockPos(	Math.max( posMin.getX(), posMax.getX() ),
 											Math.max( posMin.getY(), posMax.getY() ),
 											Math.max( posMin.getZ(), posMax.getZ() ) ) );
@@ -257,7 +257,7 @@ public class Region
 	 */
 	public boolean contains( TileEntity entity )
 	{
-		return contains( entity.getPos() );
+		return contains( entity.getBlockPos() );
 	}
 
 	/**

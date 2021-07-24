@@ -34,7 +34,7 @@ public interface ICrateStorage extends INBTSerializable< CompoundNBT >
 	 *            The {@link UUID} of the pile to get.
 	 * @return the {@link CrateStackHandler} for the associated crate pile.
 	 */
-	public CrateStackHandler getOrCreateCratePile( UUID pileID );
+	public CrateStackHandler computeIfAbsentCratePile( UUID pileID );
 
 	/**
 	 * Creates and adds a new crate to this collection.

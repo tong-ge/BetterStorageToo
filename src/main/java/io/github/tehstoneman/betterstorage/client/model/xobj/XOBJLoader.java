@@ -43,13 +43,13 @@ public class XOBJLoader implements IModelLoader< XOBJModel >
 
 		final String modelLocation = modelContents.get( "model" ).getAsString();
 
-		final boolean detectCullableFaces = JSONUtils.getBoolean( modelContents, "detectCullableFaces", true );
-		final boolean diffuseLighting = JSONUtils.getBoolean( modelContents, "diffuseLighting", false );
-		final boolean flipV = JSONUtils.getBoolean( modelContents, "flip-v", false );
-		final boolean ambientToFullbright = JSONUtils.getBoolean( modelContents, "ambientToFullbright", true );
+		final boolean detectCullableFaces = JSONUtils.getAsBoolean( modelContents, "detectCullableFaces", true );
+		final boolean diffuseLighting = JSONUtils.getAsBoolean( modelContents, "diffuseLighting", false );
+		final boolean flipV = JSONUtils.getAsBoolean( modelContents, "flip-v", false );
+		final boolean ambientToFullbright = JSONUtils.getAsBoolean( modelContents, "ambientToFullbright", true );
 		@Nullable
 		final String materialLibraryOverrideLocation = modelContents.has( "materialLibraryOverride" )
-				? JSONUtils.getString( modelContents, "materialLibraryOverride" )
+				? JSONUtils.getAsString( modelContents, "materialLibraryOverride" )
 				: null;
 
 		return loadModel( new XOBJModel.ModelSettings( new ResourceLocation( modelLocation ), detectCullableFaces, diffuseLighting, flipV,

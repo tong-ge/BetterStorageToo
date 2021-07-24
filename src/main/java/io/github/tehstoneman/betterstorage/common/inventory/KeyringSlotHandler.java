@@ -15,8 +15,8 @@ public class KeyringSlotHandler extends SlotItemHandler
 	}
 
 	@Override
-	public boolean isItemValid( @Nonnull ItemStack stack )
+	public boolean mayPlace( @Nonnull ItemStack stack )
 	{
-		return stack.isEmpty() || stack.getItem() instanceof IKey && ( (IKey)stack.getItem() ).isNormalKey() ? super.isItemValid( stack ) : false;
+		return stack.isEmpty() || stack.getItem() instanceof IKey && ( (IKey)stack.getItem() ).isNormalKey() ? super.mayPlace( stack ) : false;
 	}
 }

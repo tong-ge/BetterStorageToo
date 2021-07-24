@@ -23,23 +23,23 @@ public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContaine
 		columns = container.getColumns();
 		rows = container.getRows();
 
-		xSize = Math.max( 14 + columns * 18, 176 );
-		ySize = 114 + rows * 18;
+		width = Math.max( 14 + columns * 18, 176 );
+		height = 114 + rows * 18;
 
 		// Calculate horizontal texture slices
 		xSlice1 = columns * 18 + 7;
-		xSlice2 = ( xSize - 176 ) / 2;
-		xSlice3 = xSize - xSlice2;
+		xSlice2 = ( width - 176 ) / 2;
+		xSlice3 = width - xSlice2;
 		xSlice4 = 248 - xSlice2;
 
 		// Calculate vertical texture slices
 		offsetY = rows * 18 + 17;
 
 		// GUI label co-ordinates
-		titleX = 8;
-		titleY = 6;
-		playerInventoryTitleX = xSlice2 + 8;
-		playerInventoryTitleY = offsetY + 3;
+		titleLabelX = 8;
+		titleLabelY = 6;
+		inventoryLabelX = xSlice2 + 8;
+		inventoryLabelY = offsetY + 3;
 	}
 
 	protected ResourceLocation getResource()
@@ -59,30 +59,31 @@ public class GuiReinforcedChest extends ContainerScreen< ReinforcedChestContaine
 		// super.render( mouseX, mouseY, partialTicks );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 		// renderHoveredToolTip( mouseX, mouseY );
-		renderHoveredTooltip( matrixStack, mouseX, mouseY );
+		renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		// GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		// minecraft.getTextureManager().bindTexture( getResource() );
-		minecraft.getTextureManager().bindTexture( getResource() );
+		minecraft.getTextureManager().getTexture( getResource() );
 
 		// Chest inventory
 		// blit( guiLeft, guiTop, 0, 0, x1, y1 );
 		// blit( guiLeft + x1, guiTop, 241, 0, 7, y1 );
-		blit( matrixStack, guiLeft, guiTop, 0, 0, xSlice1, offsetY );
-		blit( matrixStack, guiLeft + xSlice1, guiTop, 241, 0, 7, offsetY );
+		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, xSlice1, offsetY );
+		blit( matrixStack, getGuiLeft() + xSlice1, getGuiTop(), 241, 0, 7, offsetY );
 
 		// Player inventory
 		// blit( guiLeft, guiTop + y1, 0, 125, x2, 17 );
 		// blit( guiLeft + x2, guiTop + y1, 36, 125, 176, 97 );
 		// blit( guiLeft + x3, guiTop + y1, x4, 125, x2, 17 );
-		blit( matrixStack, guiLeft, guiTop + offsetY, 0, 125, xSlice2, 17 );
-		blit( matrixStack, guiLeft + xSlice2, guiTop + offsetY, 36, 125, 176, 97 );
-		blit( matrixStack, guiLeft + xSlice3, guiTop + offsetY, xSlice4, 125, xSlice2, 17 );
+		blit( matrixStack, getGuiLeft(), getGuiTop() + offsetY, 0, 125, xSlice2, 17 );
+		blit( matrixStack, getGuiLeft() + xSlice2, getGuiTop() + offsetY, 36, 125, 176, 97 );
+		blit( matrixStack, getGuiLeft() + xSlice3, getGuiTop() + offsetY, xSlice4, 125, xSlice2, 17 );
 	}
 }

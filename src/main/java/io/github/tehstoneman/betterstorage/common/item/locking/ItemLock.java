@@ -32,7 +32,7 @@ public class ItemLock extends KeyLockItem implements ILock
 {
 	public ItemLock()
 	{
-		super( new Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( new Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	/*
@@ -50,20 +50,20 @@ public class ItemLock extends KeyLockItem implements ILock
 	 */
 
 	@Override
-	public void onCreated( ItemStack stack, World world, PlayerEntity player )
+	public void onCraftedBy( ItemStack stack, World world, PlayerEntity player )
 	{
-		if( !world.isRemote )
+		if( !world.isClientSide )
 			ensureHasID( stack );
 	}
 
 	@Override
-	public ActionResultType onItemUse( ItemUseContext context )
+	public ActionResultType useOn( ItemUseContext context )
 	{
 		final PlayerEntity playerIn = context.getPlayer();
 		final Hand hand = context.getHand();
-		final World worldIn = context.getWorld();
-		BlockPos pos = context.getPos();
-		final ItemStack stack = context.getItem();
+		final World worldIn = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		final ItemStack stack = context.getItemInHand();
 
 		if( hand == Hand.MAIN_HAND )
 		{
@@ -72,27 +72,27 @@ public class ItemLock extends KeyLockItem implements ILock
 
 			if( block == Blocks.IRON_DOOR )
 			{
-				if( blockState.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
+				if( blockState.getValue( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
 				{
-					pos = pos.down();
+					pos = pos.below();
 					blockState = worldIn.getBlockState( pos );
 					block = blockState.getBlock();
 				}
 
 				//@formatter:off
-				worldIn.setBlockState( pos, BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
-				worldIn.setBlockState( pos.up(), BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState()
-						.with( DoorBlock.FACING, blockState.get( DoorBlock.FACING ) )
-						.with( DoorBlock.OPEN, blockState.get( DoorBlock.OPEN ) )
-						.with( DoorBlock.HINGE, blockState.get( DoorBlock.HINGE ) )
-						.with( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
+				worldIn.setBlockAndUpdate( pos, BetterStorageBlocks.LOCKABLE_DOOR.get().defaultBlockState()
+						.setValue( DoorBlock.FACING, blockState.getValue( DoorBlock.FACING ) )
+						.setValue( DoorBlock.OPEN, blockState.getValue( DoorBlock.OPEN ) )
+						.setValue( DoorBlock.HINGE, blockState.getValue( DoorBlock.HINGE ) )
+						.setValue( DoorBlock.HALF, DoubleBlockHalf.LOWER ) );
+				worldIn.setBlockAndUpdate( pos.above(), BetterStorageBlocks.LOCKABLE_DOOR.get().defaultBlockState()
+						.setValue( DoorBlock.FACING, blockState.getValue( DoorBlock.FACING ) )
+						.setValue( DoorBlock.OPEN, blockState.getValue( DoorBlock.OPEN ) )
+						.setValue( DoorBlock.HINGE, blockState.getValue( DoorBlock.HINGE ) )
+						.setValue( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
 				//@formatter:on
 
-				final TileEntity tileEntity = worldIn.getTileEntity( pos );
+				final TileEntity tileEntity = worldIn.getBlockEntity( pos );
 				if( tileEntity instanceof TileEntityLockableDoor )
 				{
 					final TileEntityLockableDoor lockable = (TileEntityLockableDoor)tileEntity;
@@ -100,13 +100,13 @@ public class ItemLock extends KeyLockItem implements ILock
 					{
 						lockable.setLock( stack.copy() );
 						if( !playerIn.isCreative() )
-							playerIn.setHeldItem( hand, ItemStack.EMPTY );
+							playerIn.setItemInHand( hand, ItemStack.EMPTY );
 						return ActionResultType.SUCCESS;
 					}
 				}
 			}
 
-			final TileEntity tileEntity = worldIn.getTileEntity( pos );
+			final TileEntity tileEntity = worldIn.getBlockEntity( pos );
 			if( tileEntity instanceof IKeyLockable )
 			{
 				final IKeyLockable lockable = (IKeyLockable)tileEntity;
@@ -114,12 +114,12 @@ public class ItemLock extends KeyLockItem implements ILock
 				{
 					lockable.setLock( stack.copy() );
 					if( !playerIn.isCreative() )
-						playerIn.setHeldItem( hand, ItemStack.EMPTY );
+						playerIn.setItemInHand( hand, ItemStack.EMPTY );
 					return ActionResultType.SUCCESS;
 				}
 			}
 		}
-		return super.onItemUse( context );
+		return super.useOn( context );
 	}
 
 	/*
@@ -140,19 +140,19 @@ public class ItemLock extends KeyLockItem implements ILock
 	@Override
 	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, LockInteraction interaction )
 	{
-		final int shock = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SHOCK.get(), lock );
+		final int shock = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.SHOCK.get(), lock );
 
 		if( shock > 0 )
 		{
 			int damage = shock;
 			if( interaction == LockInteraction.PICK )
 				damage *= 3;
-			player.attackEntityFrom( DamageSource.MAGIC, damage );
-			final World world = player.getEntityWorld();
-			world.playSound( (PlayerEntity)null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_BLAZE_SHOOT,
-					SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1F + 0.9F );
+			player.hurt( DamageSource.MAGIC, damage );
+			final World world = player.getCommandSenderWorld();
+			world.playSound( (PlayerEntity)null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLAZE_SHOOT,
+					SoundCategory.BLOCKS, 0.5f, world.random.nextFloat() * 0.1F + 0.9F );
 			if( shock >= 3 && interaction != LockInteraction.OPEN )
-				player.setFire( 3 );
+				player.setSecondsOnFire( 3 );
 		}
 	}
 

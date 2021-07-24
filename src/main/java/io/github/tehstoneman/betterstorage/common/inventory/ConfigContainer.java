@@ -28,7 +28,7 @@ public class ConfigContainer extends Container
 	public ConfigContainer( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CONFIG.get(), windowId );
-		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
+		tileContainer = (TileEntityContainer)world.getBlockEntity( pos );
 		configContainer = tileContainer.getCapability( CapabilityConfig.CONFIG_CAPABILITY, null ).orElse( null );
 
 		indexStart = 0;
@@ -53,41 +53,41 @@ public class ConfigContainer extends Container
 	}
 
 	@Override
-	public ItemStack transferStackInSlot( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
 	{
-		final Slot slot = inventorySlots.get( index );
+		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
 
-		if( slot != null && slot.getHasStack() )
+		if( slot != null && slot.hasItem() )
 		{
-			final ItemStack itemStack = slot.getStack();
+			final ItemStack itemStack = slot.getItem();
 			returnStack = itemStack.copy();
 
 			if( index < indexHotbar )
 			{
 				// Try to transfer from container to player
-				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+				if( !moveItemStackTo( itemStack, indexHotbar, slots.size(), true ) )
 					return ItemStack.EMPTY;
 			} // Otherwise try to transfer from player to container
-			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+			else if( !moveItemStackTo( itemStack, 0, indexHotbar, false ) )
 				return ItemStack.EMPTY;
 
 			if( itemStack.isEmpty() )
-				slot.putStack( ItemStack.EMPTY );
+				slot.set( ItemStack.EMPTY );
 			else
-				slot.onSlotChanged();
+				slot.setChanged();
 		}
 
 		return returnStack;
 	}
 
 	@Override
-	public boolean canInteractWith( PlayerEntity playerIn )
+	public boolean stillValid( PlayerEntity playerIn )
 	{
-		final World world = tileContainer.getWorld();
-		final BlockPos pos = tileContainer.getPos();
+		final World world = tileContainer.getLevel();
+		final BlockPos pos = tileContainer.getBlockPos();
 		final BlockState state = world.getBlockState( pos );
-		return isWithinUsableDistance( IWorldPosCallable.of( world, pos ), playerIn, state.getBlock() );
+		return stillValid( IWorldPosCallable.create( world, pos ), playerIn, state.getBlock() );
 	}
 
 	public class ConfigSlot extends SlotItemHandler
@@ -99,7 +99,7 @@ public class ConfigContainer extends Container
 
 		public int getIconX()
 		{
-			if( isEnabled() )
+			if( isActive() )
 				return 176;
 			else
 				return 194;

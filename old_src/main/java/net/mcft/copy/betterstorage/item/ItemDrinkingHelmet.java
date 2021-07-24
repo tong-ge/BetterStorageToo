@@ -91,7 +91,7 @@ public class ItemDrinkingHelmet extends ItemArmorBetterStorage
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
+	public void appendHoverText( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
 	{
 		final int uses = StackUtils.get( stack, 0, "uses" );
 		if( uses > 0 && getDrinkingHelmet( player ) == stack )

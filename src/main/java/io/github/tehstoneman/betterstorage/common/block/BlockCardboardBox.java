@@ -46,19 +46,19 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 {
 	public static final BooleanProperty	WATERLOGGED	= BlockStateProperties.WATERLOGGED;
 
-	protected static final VoxelShape	SHAPE_BOX	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape	SHAPE_BOX	= Block.box( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 
 	public BlockCardboardBox()
 	{
-		super( Properties.create( Material.WOOL ).hardnessAndResistance( 0.8f ).sound( SoundType.CLOTH ) );
+		super( Properties.of( Material.WOOL ).strength( 0.8f ).sound( SoundType.WOOL ) );
 
-		setDefaultState( stateContainer.getBaseState().with( WATERLOGGED, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( WATERLOGGED, Boolean.valueOf( false ) ) );
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( WATERLOGGED );
 	}
 
@@ -84,7 +84,7 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	@Override
 	public FluidState getFluidState( BlockState state )
 	{
-		return state.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( state );
+		return state.getValue( WATERLOGGED ) ? Fluids.WATER.getSource( false ) : super.getFluidState( state );
 	}
 
 	/*
@@ -96,18 +96,18 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	@Override
 	public BlockState getStateForPlacement( BlockItemUseContext context )
 	{
-		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		return getDefaultState().with( WATERLOGGED, Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
+		final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos());
+		return defaultBlockState().setValue( WATERLOGGED, Boolean.valueOf( fluidState.getType() == Fluids.WATER ) );
 	}
 
 	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
 	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		final TileEntity tileentity = worldIn.getBlockEntity( pos );
 		if( tileentity instanceof TileEntityCardboardBox )
 		{
 			final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
-			if( stack.hasDisplayName() )
+			if( stack.hasCustomHoverName() )
 				cardboardBox.setCustomName( stack.getDisplayName() );
 			if( stack.hasTag() )
 			{
@@ -130,32 +130,32 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )
 	{
-		if( stateIn.get( WATERLOGGED ) )
-			worldIn.getPendingFluidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickRate( worldIn ) );
+		if( stateIn.getValue( WATERLOGGED ) )
+			worldIn.getLiquidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickDelay( worldIn ) );
 
-		return super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+		return super.updateShape( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onReplaced( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityCardboardBox )
 			{
 				final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
 				if( cardboardBox.uses < 1 )
 					cardboardBox.dropInventoryItems();
-				worldIn.updateComparatorOutputLevel( pos, this );
+				worldIn.updateNeighbourForOutputSignal( pos, this );
 			}
 
 		}
-		super.onReplaced( state, worldIn, pos, newState, isMoving );
+		super.onRemove( state, worldIn, pos, newState, isMoving );
 	}
 
 	/*
@@ -165,13 +165,13 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	 */
 
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		if( worldIn.isRemote )
+		if( worldIn.isClientSide )
 			return ActionResultType.SUCCESS;
 		else
 		{
-			final INamedContainerProvider box = getContainer( state, worldIn, pos );
+			final INamedContainerProvider box = getMenuProvider( state, worldIn, pos );
 			if( box != null )
 				NetworkHooks.openGui( (ServerPlayerEntity)player, box, pos );
 			return ActionResultType.SUCCESS;
@@ -180,41 +180,41 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onBlockHarvested( World worldIn, BlockPos pos, BlockState state, PlayerEntity player )
+	public void playerWillDestroy( World worldIn, BlockPos pos, BlockState state, PlayerEntity player )
 	{
-		if( !worldIn.isRemote() )
+		if( !worldIn.isClientSide() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityCardboardBox )
 			{
 				final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
 				if( player.isCreative() && !cardboardBox.isEmpty() && cardboardBox.uses > 0 )
 				{
-					final ItemStack itemstack = getItem( worldIn, pos, state );
-					final CompoundNBT nbt = cardboardBox.write( new CompoundNBT() );
+					final ItemStack itemstack = getCloneItemStack( worldIn, pos, state );
+					final CompoundNBT nbt = cardboardBox.save( new CompoundNBT() );
 					if( nbt.contains( "Inventory" ) )
-						itemstack.setTagInfo( "Inventory", nbt.get( "Inventory" ) );
+						itemstack.addTagElement( "Inventory", nbt.get( "Inventory" ) );
 					if( cardboardBox.hasCustomName() )
-						itemstack.setDisplayName( cardboardBox.getCustomName() );
+						itemstack.setHoverName( cardboardBox.getCustomName() );
 					if( nbt.contains( "Color" ) )
-						itemstack.setTagInfo( "Color", nbt.get( "Color" ) );
+						itemstack.addTagElement( "Color", nbt.get( "Color" ) );
 					if( nbt.contains( "Uses" ) )
-						itemstack.setTagInfo( "Uses", nbt.get( "Uses" ) );
+						itemstack.addTagElement( "Uses", nbt.get( "Uses" ) );
 
 					final ItemEntity itementity = new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack );
-					itementity.setDefaultPickupDelay();
-					worldIn.addEntity( itementity );
+					itementity.setDefaultPickUpDelay();
+					worldIn.addFreshEntity( itementity );
 				}
 			}
 		}
-		super.onBlockHarvested( worldIn, pos, state, player );
+		super.playerWillDestroy( worldIn, pos, state, player );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
 	public List< ItemStack > getDrops( BlockState state, LootContext.Builder builder )
 	{
-		final TileEntity tileentity = builder.get( LootParameters.BLOCK_ENTITY );
+		final TileEntity tileentity = builder.getOptionalParameter( LootParameters.BLOCK_ENTITY );
 		if( tileentity instanceof TileEntityCardboardBox )
 		{
 			final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
@@ -227,16 +227,16 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	public INamedContainerProvider getMenuProvider( BlockState state, World worldIn, BlockPos pos )
 	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		final TileEntity tileentity = worldIn.getBlockEntity( pos );
 		if( tileentity instanceof TileEntityCardboardBox )
 			return (TileEntityCardboardBox)tileentity;
 		return null;
 	}
 
 	@Override
-	public PushReaction getPushReaction( BlockState state )
+	public PushReaction getPistonPushReaction( BlockState state )
 	{
 		return BetterStorageConfig.COMMON.cardboardBoxPistonBreakable.get() ? PushReaction.DESTROY : PushReaction.BLOCK;
 	}

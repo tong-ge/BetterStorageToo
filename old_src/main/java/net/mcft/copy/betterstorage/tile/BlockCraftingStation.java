@@ -42,7 +42,7 @@ public class BlockCraftingStation extends Block implements ITileEntityProvider
 	public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
 			EnumFacing side, float hitX, float hitY, float hitZ )
 	{
-		final TileEntity tileEntity = worldIn.getTileEntity( pos );
+		final TileEntity tileEntity = worldIn.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityCraftingStation )
 			return ( (TileEntityCraftingStation)tileEntity ).onBlockActivated( playerIn, side.getIndex(), hitX, hitY, hitZ );
 

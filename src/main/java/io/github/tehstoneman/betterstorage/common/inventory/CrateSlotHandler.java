@@ -16,18 +16,18 @@ public class CrateSlotHandler extends SlotItemHandler
 	}
 
 	@Override
-	public boolean isItemValid( ItemStack stack )
+	public boolean mayPlace( ItemStack stack )
 	{
 		if( stack.isEmpty() )
 			return false;
 
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			return super.isItemValid( stack );
+			return super.mayPlace( stack );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
 		ItemStack remainder;
-		final ItemStack currentStack = crateHandler.getStackInSlotFixed( index );
+		final ItemStack currentStack = crateHandler.getItemFixed( index );
 
 		crateHandler.setStackInSlotFixed( index, ItemStack.EMPTY );
 
@@ -39,34 +39,34 @@ public class CrateSlotHandler extends SlotItemHandler
 	}
 
 	@Override
-	public ItemStack getStack()
+	public ItemStack getItem()
 	{
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			return super.getStack();
+			return super.getItem();
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
-		return crateHandler.getStackInSlotFixed( index );
+		return crateHandler.getItemFixed( index );
 	}
 
 	@Override
-	public void putStack( ItemStack stack )
+	public void set( ItemStack stack )
 	{
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			super.putStack( stack );
+			super.set( stack );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
 		crateHandler.setStackInSlotFixed( index, stack );
-		onSlotChanged();
+		setChanged();
 	}
 
 	@Override
-	public int getItemStackLimit( ItemStack stack )
+	public int getMaxStackSize( ItemStack stack )
 	{
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			return super.getItemStackLimit( stack );
+			return super.getMaxStackSize( stack );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
 
@@ -74,7 +74,7 @@ public class CrateSlotHandler extends SlotItemHandler
 		final int maxInput = stack.getMaxStackSize();
 		maxAdd.setCount( maxInput );
 
-		final ItemStack currentStack = crateHandler.getStackInSlotFixed( index );
+		final ItemStack currentStack = crateHandler.getItemFixed( index );
 
 		crateHandler.setStackInSlotFixed( index, ItemStack.EMPTY );
 
@@ -86,22 +86,22 @@ public class CrateSlotHandler extends SlotItemHandler
 	}
 
 	@Override
-	public boolean canTakeStack( PlayerEntity playerIn )
+	public boolean mayPickup( PlayerEntity playerIn )
 	{
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			return super.canTakeStack( playerIn );
+			return super.mayPickup( playerIn );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
 		return !crateHandler.extractItemFixed( index, 1, true ).isEmpty();
 	}
 
 	@Override
-	public ItemStack decrStackSize( int amount )
+	public ItemStack remove( int amount )
 	{
 		final IItemHandler handler = getItemHandler();
 		if( !( handler instanceof CrateStackHandler ) )
-			return super.decrStackSize( amount );
+			return super.remove( amount );
 
 		final CrateStackHandler crateHandler = (CrateStackHandler)handler;
 		return crateHandler.extractItemFixed( index, amount, false );

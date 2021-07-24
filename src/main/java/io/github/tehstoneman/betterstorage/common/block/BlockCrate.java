@@ -55,22 +55,22 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	public BlockCrate()
 	{
-		super( Properties.from( Blocks.OAK_PLANKS ) );
+		super( Properties.copy( Blocks.OAK_PLANKS ) );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( NORTH, Boolean.valueOf( false ) )
-													  .with( EAST, Boolean.valueOf( false ) )
-													  .with( SOUTH, Boolean.valueOf( false ) )
-													  .with( WEST, Boolean.valueOf( false ) )
-													  .with( UP, Boolean.valueOf( false ) )
-													  .with( DOWN, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( NORTH, Boolean.valueOf( false ) )
+													  			 .setValue( EAST, Boolean.valueOf( false ) )
+													  			 .setValue( SOUTH, Boolean.valueOf( false ) )
+													  			 .setValue( WEST, Boolean.valueOf( false ) )
+													  			 .setValue( UP, Boolean.valueOf( false ) )
+													  			 .setValue( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
 	}
 
@@ -81,10 +81,10 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	}
 
 	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack )
 	{
-		super.onBlockPlacedBy( worldIn, pos, state, placer, stack );
-		if( !worldIn.isRemote )
+		super.setPlacedBy( worldIn, pos, state, placer, stack );
+		if( !worldIn.isClientSide() )
 		{
 			final TileEntityCrate crate = TileEntityCrate.getCrateAt( worldIn, pos );
 			if( crate != null && !crate.hasID() )
@@ -97,31 +97,31 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updatePostPlacement( BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos,
+	public BlockState updateShape( BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos,
 			BlockPos facingPos )
 	{
-		if( !world.isRemote() )
+		if( !world.isClientSide() )
 		{
 			final TileEntityCrate tileCrate = TileEntityCrate.getCrateAt( world, pos );
 			if( tileCrate != null )
 			{
 				final TileEntityCrate facingCrate = TileEntityCrate.getCrateAt( world, facingPos );
-				state = state.with( FACING_TO_PROPERTY_MAP.get( facing ), tileCrate.tryAddCrate( facingCrate ) ).with( TYPE,
+				state = state.setValue( FACING_TO_PROPERTY_MAP.get( facing ), tileCrate.tryAddCrate( facingCrate ) ).setValue( TYPE,
 						tileCrate.getNumCrates() > 1 ? ConnectedType.PILE : ConnectedType.SINGLE );
 			}
 			tileCrate.updateConnections();
 		}
-		return super.updatePostPlacement( state, facing, facingState, world, pos, facingPos );
+		return super.updateShape( state, facing, facingState, world, pos, facingPos );
 	}
 
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		if( worldIn.isRemote )
+		if( worldIn.isClientSide )
 			return ActionResultType.SUCCESS;
 		else
 		{
-			final INamedContainerProvider tileEntityCrate = getContainer( state, worldIn, pos );
+			final INamedContainerProvider tileEntityCrate = getMenuProvider( state, worldIn, pos );
 			if( tileEntityCrate != null )
 				NetworkHooks.openGui( (ServerPlayerEntity)player, tileEntityCrate, pos );
 			return ActionResultType.SUCCESS;
@@ -130,16 +130,16 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World world, BlockPos pos )
+	public INamedContainerProvider getMenuProvider( BlockState state, World world, BlockPos pos )
 	{
 		return TileEntityCrate.getCrateAt( world, pos );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
-		if( !world.isRemote && state.getBlock() != newState.getBlock() )
+		if( !world.isClientSide && state.getBlock() != newState.getBlock() )
 		{
 			final TileEntityCrate tileCrate = TileEntityCrate.getCrateAt( world, pos );
 			if( tileCrate != null )
@@ -147,12 +147,12 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 				final CrateStackHandler handler = tileCrate.getCrateStackHandler();
 				final NonNullList< ItemStack > overflow = tileCrate.removeCrate();
 				if( !overflow.isEmpty() )
-					InventoryHelper.dropItems( world, pos, overflow );
+					InventoryHelper.dropContents( world, pos, overflow );
 				tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
 			}
 
 		}
-		super.onReplaced( state, world, pos, newState, isMoving );
+		super.onRemove( state, world, pos, newState, isMoving );
 	}
 
 	/*
@@ -167,7 +167,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	 * @Override
 	 * public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
 	 * {
-	 * final TileEntity tileEntity = worldIn.getTileEntity( pos );
+	 * final TileEntity tileEntity = worldIn.getBlockEntity( pos );
 	 * if( !( tileEntity instanceof TileEntityCrate ) )
 	 * return 0;
 	 *

@@ -58,9 +58,9 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 	}
 
 	@Override
-	public void addInformation( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
+	public void appendHoverText( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
 	{
-		super.addInformation( stack, worldIn, tooltip, flagIn );
+		super.appendHoverText( stack, worldIn, tooltip, flagIn );
 		if( stack.hasTag() )
 		{
 			if( flagIn.isAdvanced() )
@@ -96,8 +96,8 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 						if( count < limit )
 						{
 							count++;
-							final IFormattableTextComponent text = contentStack.getDisplayName().deepCopy();
-							text.appendString( " x" ).appendString( String.valueOf( contentStack.getCount() ) );
+							final IFormattableTextComponent text = contentStack.getDisplayName().copy();
+							text.append( " x" ).append( String.valueOf( contentStack.getCount() ) );
 							tooltip.add( text );
 						}
 						else
@@ -105,7 +105,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 				}
 				if( more > 0 )
 					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
-							.mergeStyle( TextFormatting.ITALIC ) );
+							.withStyle( TextFormatting.ITALIC ) );
 			}
 		}
 	}

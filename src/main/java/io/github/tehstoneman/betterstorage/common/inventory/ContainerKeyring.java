@@ -49,52 +49,52 @@ public class ContainerKeyring extends Container
 	}
 
 	@Override
-	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player )
+	public ItemStack clicked( int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player )
 	{
-		if( slotId >= 0 && getSlot( slotId ) != null && getSlot( slotId ).getStack() == player.getHeldItemMainhand() )
+		if( slotId >= 0 && getSlot( slotId ) != null && getSlot( slotId ).getItem() == player.getMainHandItem() )
 			return ItemStack.EMPTY;
-		return super.slotClick( slotId, dragType, clickTypeIn, player );
+		return super.clicked( slotId, dragType, clickTypeIn, player );
 	}
 
 	@Override
-	public boolean canInteractWith( PlayerEntity playerIn )
+	public boolean stillValid( PlayerEntity playerIn )
 	{
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
 	{
-		final Slot slot = inventorySlots.get( index );
+		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
 
-		if( slot != null && slot.getHasStack() )
+		if( slot != null && slot.hasItem() )
 		{
-			final ItemStack itemStack = slot.getStack();
+			final ItemStack itemStack = slot.getItem();
 			returnStack = itemStack.copy();
 
 			if( index < indexHotbar )
 			{
 				// Try to transfer from container to player
-				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+				if( !moveItemStackTo( itemStack, indexHotbar, slots.size(), true ) )
 					return ItemStack.EMPTY;
 			}
-			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+			else if( !moveItemStackTo( itemStack, 0, indexHotbar, false ) )
 				return ItemStack.EMPTY;
 
 			if( itemStack.isEmpty() )
-				slot.putStack( ItemStack.EMPTY );
+				slot.set( ItemStack.EMPTY );
 			else
-				slot.onSlotChanged();
+				slot.setChanged();
 		}
 
 		return returnStack;
 	}
 
 	@Override
-	public void onContainerClosed( PlayerEntity playerIn )
+	public void removed( PlayerEntity playerIn )
 	{
-		super.onContainerClosed( playerIn );
+		super.removed( playerIn );
 		inventoryKeyRing.updateCount();
 	}
 }

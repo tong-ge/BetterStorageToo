@@ -45,27 +45,27 @@ public class EnchantmentKey extends Enchantment
 	}
 
 	@Override
-	public int getMinEnchantability( int level )
+	public int getMinCost( int level )
 	{
 		return minBase + ( level - 1 ) * minScaling;
 	}
 
 	@Override
-	public int getMaxEnchantability( int level )
+	public int getMaxCost( int level )
 	{
-		return getMinEnchantability( level ) + maxBase + ( level - 1 ) * maxScaling;
+		return getMinCost( level ) + maxBase + ( level - 1 ) * maxScaling;
 	}
 
 	@Override
-	public boolean canApplyTogether( Enchantment other )
+	public boolean checkCompatibility( Enchantment other )
 	{
-		return super.canApplyTogether( other ) && !incompatible.contains( other );
+		return super.checkCompatibility( other ) && !incompatible.contains( other );
 	}
 
 	@Override
-	public boolean canApply( ItemStack stack )
+	public boolean canEnchant( ItemStack stack )
 	{
-		return stack.getItem() instanceof IKey ? true : super.canApply( stack );
+		return stack.getItem() instanceof IKey ? true : super.canEnchant( stack );
 	}
 
 	@Override
@@ -80,8 +80,8 @@ public class EnchantmentKey extends Enchantment
 	}
 
 	@Override
-	public boolean isTreasureEnchantment()
+	public boolean isTreasureOnly()
 	{
-		return super.isTreasureEnchantment();
+		return super.isTreasureOnly();
 	}
 }

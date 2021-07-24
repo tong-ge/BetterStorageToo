@@ -13,8 +13,8 @@ import net.minecraft.util.SoundEvents;
 
 public enum BetterStorageArmorMaterial implements IArmorMaterial
 {
-	CARDBOARD( "cardboard", 3, new int[] { 1, 2, 3, 1 }, 12, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F,
-			() -> Ingredient.fromItems( BetterStorageItems.CARDBOARD_SHEET.get() ) ),;
+	CARDBOARD( "cardboard", 3, new int[] { 1, 2, 3, 1 }, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F,
+			() -> Ingredient.of( BetterStorageItems.CARDBOARD_SHEET.get() ) ),;
 
 	private static final int[]	MAX_DAMAGE_ARRAY	= new int[] { 13, 15, 16, 11 };
 	private String				name;
@@ -38,31 +38,31 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 	}
 
 	@Override
-	public int getDurability( EquipmentSlotType slotIn )
+	public int getDurabilityForSlot( EquipmentSlotType slotIn )
 	{
 		return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * maxDamageFactor;
 	}
 
 	@Override
-	public int getDamageReductionAmount( EquipmentSlotType slotIn )
+	public int getDefenseForSlot( EquipmentSlotType slotIn )
 	{
 		return damageReductionAmountArray[slotIn.getIndex()];
 	}
 
 	@Override
-	public int getEnchantability()
+	public int getEnchantmentValue()
 	{
 		return enchantability;
 	}
 
 	@Override
-	public SoundEvent getSoundEvent()
+	public SoundEvent getEquipSound()
 	{
 		return soundEvent;
 	}
 
 	@Override
-	public Ingredient getRepairMaterial()
+	public Ingredient getRepairIngredient()
 	{
 		// return repairMaterial.getValue();
 		return null;

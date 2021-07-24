@@ -70,32 +70,32 @@ public class BetterStorage
 		BetterStorageContainerTypes.REGISTERY.register( modEventBus );
 
 		// Register the setup method for modloading
-		FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
+		//FMLJavaModLoadingContext.get().getModEventBus().addListener( this::setup );
 	}
 
-	@SuppressWarnings( "deprecation" )
+	/*@SuppressWarnings( "deprecation" )
 	public void setup( FMLCommonSetupEvent event )
 	{
 		DeferredWorkQueue.runLater( () ->
 		{
 			if( BetterStorageConfig.COMMON.cardboardBoxDispenserPlaceable.get() )
-				DispenserBlock.registerDispenseBehavior( BetterStorageBlocks.CARDBOARD_BOX.get(), new OptionalDispenseBehavior()
+				DispenserBlock.registerBehavior( BetterStorageBlocks.CARDBOARD_BOX.get(), new OptionalDispenseBehavior()
 				{
-					/**
+					*//**
 					 * Dispense the specified stack, play the dispense sound and spawn particles.
-					 */
+					 *//*
 					@Override
 					protected ItemStack dispenseStack( IBlockSource source, ItemStack stack )
 					{
-						setSuccessful( false );
+						setSuccess( false );
 						final Item item = stack.getItem();
 						if( item instanceof BlockItem )
 						{
 							final Direction direction = source.getBlockState().get( DispenserBlock.FACING );
 							final BlockPos blockpos = source.getBlockPos().offset( direction );
-							final Direction direction1 = source.getWorld().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
+							final Direction direction1 = source.getLevel().isAirBlock( blockpos.down() ) ? direction : Direction.UP;
 							setSuccessful( ( (BlockItem)item )
-									.tryPlace( new DirectionalPlaceContext( source.getWorld(), blockpos, direction, stack, direction1 ) )
+									.place( new DirectionalPlaceContext( source.getLevel(), blockpos, direction, stack, direction1 ) )
 									.isSuccessOrConsume() );
 						}
 
@@ -103,7 +103,7 @@ public class BetterStorage
 					}
 				} );
 			if( BetterStorageConfig.COMMON.useFluidMilk.get() )
-				DispenserBlock.registerDispenseBehavior( Items.MILK_BUCKET, new OptionalDispenseBehavior()
+				DispenserBlock.registerBehavior( Items.MILK_BUCKET, new OptionalDispenseBehavior()
 				{
 					private final DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior();
 
@@ -112,7 +112,7 @@ public class BetterStorage
 					{
 						final Item bucketitem = stack.getItem();
 						final BlockPos blockpos = source.getBlockPos().offset( source.getBlockState().get( DispenserBlock.FACING ) );
-						final World world = source.getWorld();
+						final World world = source.getLevel();
 						if( FluidMilk.tryPlaceContainedLiquid( bucketitem, (PlayerEntity)null, world, blockpos, (BlockRayTraceResult)null ) )
 							return new ItemStack( Items.BUCKET );
 						else
@@ -120,5 +120,5 @@ public class BetterStorage
 					}
 				} );
 		} );
-	}
+	}*/
 }

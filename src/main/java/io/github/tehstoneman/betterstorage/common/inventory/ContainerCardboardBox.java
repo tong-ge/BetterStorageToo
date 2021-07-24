@@ -27,7 +27,7 @@ public class ContainerCardboardBox extends Container
 	public ContainerCardboardBox( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CARDBOARD_BOX.get(), windowId );
-		tileContainer = (TileEntityContainer)world.getTileEntity( pos );
+		tileContainer = (TileEntityContainer)world.getBlockEntity( pos );
 		tileContainer.openInventory( playerInventory.player );
 		inventoryContainer = tileContainer.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( null );
 
@@ -82,45 +82,45 @@ public class ContainerCardboardBox extends Container
 	}
 
 	@Override
-	public void onContainerClosed( PlayerEntity playerIn )
+	public void removed( PlayerEntity playerIn )
 	{
 		tileContainer.closeInventory( playerIn );
-		super.onContainerClosed( playerIn );
+		super.removed( playerIn );
 	}
 
 	@Override
-	public ItemStack transferStackInSlot( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
 	{
-		final Slot slot = inventorySlots.get( index );
+		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
 
-		if( slot != null && slot.getHasStack() )
+		if( slot != null && slot.hasItem() )
 		{
-			final ItemStack itemStack = slot.getStack();
+			final ItemStack itemStack = slot.getItem();
 			returnStack = itemStack.copy();
 
 			if( index < indexHotbar )
 			{
 				// Try to transfer from container to player
-				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+				if( !moveItemStackTo( itemStack, indexHotbar, slots.size(), true ) )
 					return ItemStack.EMPTY;
 			} // Otherwise try to transfer from player to container
-			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+			else if( !moveItemStackTo( itemStack, 0, indexHotbar, false ) )
 				return ItemStack.EMPTY;
 
 			if( itemStack.isEmpty() )
-				slot.putStack( ItemStack.EMPTY );
+				slot.set( ItemStack.EMPTY );
 			else
-				slot.onSlotChanged();
+				slot.setChanged();
 		}
 
 		return returnStack;
 	}
 
 	@Override
-	public boolean canInteractWith( PlayerEntity playerIn )
+	public boolean stillValid( PlayerEntity playerIn )
 	{
-		return isWithinUsableDistance( IWorldPosCallable.of( tileContainer.getWorld(), tileContainer.getPos() ), playerIn,
+		return stillValid( IWorldPosCallable.create( tileContainer.getLevel(), tileContainer.getBlockPos() ), playerIn,
 				BetterStorageBlocks.CARDBOARD_BOX.get() );
 	}
 }

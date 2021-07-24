@@ -31,7 +31,7 @@ public final class BetterStorageContainerTypes
 	public static RegistryObject< ContainerType< ContainerKeyring > >			KEYRING				= REGISTERY.register( "keyring",
 			() -> IForgeContainerType.create( ( windowID, inv, data ) ->
 										{
-											final ItemStack keyring = data.readItemStack();
+											final ItemStack keyring = data.readItem();
 											final int protectedIndex = data.readInt();
 											return new ContainerKeyring( windowID, inv, keyring, protectedIndex );
 										} ) );

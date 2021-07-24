@@ -53,8 +53,8 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 		GL11.glDisable( GL11.GL_BLEND );
 
 		final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		if( present.nameTag != null && present.getWorld() != null && player != null && player.getDistanceSq( present.getPos().getX() + 0.5,
-				present.getPos().getY() + 0.5, present.getPos().getZ() + 0.5 ) < NAMETAG_RENDER_RANGE_SQ )
+		if( present.nameTag != null && present.getLevel() != null && player != null && player.getDistanceSq( present.getBlockPos().getX() + 0.5,
+				present.getBlockPos().getY() + 0.5, present.getBlockPos().getZ() + 0.5 ) < NAMETAG_RENDER_RANGE_SQ )
 			;
 		final RayTraceResult o = Minecraft.getMinecraft().objectMouseOver;
 		/*

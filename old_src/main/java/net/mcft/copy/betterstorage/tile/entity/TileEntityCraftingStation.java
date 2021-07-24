@@ -10,7 +10,7 @@ import io.github.tehstoneman.betterstorage.api.crafting.ICraftingSource;
 import io.github.tehstoneman.betterstorage.api.crafting.IRecipeInput;
 import io.github.tehstoneman.betterstorage.api.crafting.StationCrafting;
 import io.github.tehstoneman.betterstorage.client.gui.BetterStorageGUIHandler.EnumGui;
-import io.github.tehstoneman.betterstorage.common.inventory.OutputStackHandler;
+import io.github.tehstoneman.betterstorage.common.inventory.OutsetHandler;
 import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.inventory.InventoryStacks;
 import io.github.tehstoneman.betterstorage.item.recipe.VanillaStationCrafting;
@@ -40,7 +40,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class TileEntityCraftingStation extends TileEntity implements ITickable, IInventory
 {
 	public ItemStack[]			crafting	= new ItemStack[9];
-	public OutputStackHandler	output;
+	public OutsetHandler	output;
 	public ItemStackHandler		inventory;
 
 	public StationCrafting		currentCrafting;
@@ -50,12 +50,12 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 
 	public TileEntityCraftingStation()
 	{
-		output = new OutputStackHandler( 9 )
+		output = new OutsetHandler( 9 )
 		{
 			@Override
 			protected void onContentsChanged( int slot )
 			{
-				TileEntityCraftingStation.this.markDirty();
+				TileEntityCraftingStation.this.setChanged();
 			}
 		};
 		inventory = new ItemStackHandler( 18 )
@@ -63,7 +63,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 			@Override
 			protected void onContentsChanged( int slot )
 			{
-				TileEntityCraftingStation.this.markDirty();
+				TileEntityCraftingStation.this.setChanged();
 			}
 		};
 	}
@@ -190,7 +190,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 		super.readFromNBT( compound );
 
 		final NBTTagList nbttaglist = compound.getTagList( "Crafting", 10 );
-		crafting = new ItemStack[getSizeInventory()];
+		crafting = new ItemStack[getContainerSize()];
 
 		for( int i = 0; i < nbttaglist.tagCount(); ++i )
 		{
@@ -223,13 +223,13 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 		final ItemStack[] result = new ItemStack[output.getSlots()];
 
 		for( int i = 0; i < contents.length; i++ )
-			contents[i] = inventory.getStackInSlot( i );
+			contents[i] = inventory.getItem( i );
 
 		for( int i = 0; i < result.length; i++ )
 			if( simulate )
-				result[i] = ItemStack.copyItemStack( output.getStackInSlot( i ) );
+				result[i] = ItemStack.copyItemStack( output.getItem( i ) );
 			else
-				result[i] = output.getStackInSlot( i );
+				result[i] = output.getItem( i );
 
 		if( currentCrafting instanceof VanillaStationCrafting )
 		{
@@ -240,7 +240,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 				unset = true;
 			}
 
-			final ItemStack craftOutput = simulate ? output.getStackInSlot( 4 ).copy() : output.getStackInSlot( 4 );
+			final ItemStack craftOutput = simulate ? output.getItem( 4 ).copy() : output.getItem( 4 );
 			final IInventory craftMatrix = new InventoryStacks( result );
 			FMLCommonHandler.instance().firePlayerCraftingEvent( player, craftOutput, craftMatrix );
 			new CustomSlotCrafting( player, craftOutput );
@@ -314,7 +314,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 		if( containerItem != null && !simulate )
 			// Try to add the container item to the internal storage, or spawn the item in the world.
 			if( !InventoryUtils.tryAddItemToInventory( containerItem, new InventoryStacks( crafting ), true ) )
-				WorldUtils.spawnItem( worldObj, getPos().getX() + 0.5,getPos().getY() + 0.5, getPos().getZ() + 0.5,
+				WorldUtils.spawnItem( worldObj, getBlockPos().getX() + 0.5,getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
 						containerItem );
 
 		return stack;
@@ -367,7 +367,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 	private boolean outputEmpty()
 	{
 		for( int i = 0; i < output.getSlots(); i++ )
-			if( output.getStackInSlot( i ) != null )
+			if( output.getItem( i ) != null )
 				return false;
 		return true;
 	}
@@ -388,13 +388,13 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public int getSizeInventory()
+	public int getContainerSize()
 	{
 		return 9;
 	}
 
 	@Override
-	public ItemStack getStackInSlot( int index )
+	public ItemStack getItem( int index )
 	{
 		if( index < 0 || index >= crafting.length )
 			return null;
@@ -402,7 +402,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public ItemStack decrStackSize( int index, int count )
+	public ItemStack remove( int index, int count )
 	{
 		if( index >= 0 && index < crafting.length )
 			crafting[index] = null;
@@ -445,7 +445,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 	{}
 
 	@Override
-	public boolean isItemValidForSlot( int index, ItemStack stack )
+	public boolean mayPlaceForSlot( int index, ItemStack stack )
 	{
 		return true;
 	}
@@ -469,6 +469,6 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 	@Override
 	public void clear()
 	{
-		crafting = new ItemStack[getSizeInventory()];
+		crafting = new ItemStack[getContainerSize()];
 	}
 }

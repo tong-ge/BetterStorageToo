@@ -154,7 +154,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
+	public void appendHoverText(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
 		boolean enableHelpTooltips = BetterStorage.globalConfig.getBoolean(GlobalConfig.enableHelpTooltips);
 		if (getBackpack(player) == stack) {
 			String info = LanguageUtils.translateTooltip(getAdditionalInfo(stack, player));
@@ -202,10 +202,10 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		int index = 5 + armorType;
 		Slot slotBefore = player.inventoryContainer.getSlot(index);
 		if (slotBefore instanceof SlotArmorBackpack) return;
-		int slotIndex = player.inventory.getSizeInventory() - getChestSlotOffset(player) - armorType;
+		int slotIndex = player.inventory.getContainerSize() - getChestSlotOffset(player) - armorType;
 		SlotArmorBackpack slot = new SlotArmorBackpack(player.inventory, slotIndex, 8, 8 + armorType * 18);
 		slot.slotNumber = index;
-		player.inventoryContainer.inventorySlots.set(index, slot);
+		player.inventoryContainer.slots.set(index, slot);
 		
 	}
 	
@@ -219,10 +219,10 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 	}
 	
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) { return stack; }
+	public ItemStack use(ItemStack stack, World world, EntityPlayer player) { return stack; }
 	
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player,
+	public boolean useOn(ItemStack stack, EntityPlayer player,
 	                         World world, int x, int y, int z, int side,
 	                         float hitX, float hitY, float hitZ) {
 		ForgeDirection orientation = DirectionUtils.getOrientation(player).getOpposite();
@@ -324,7 +324,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		EntityUtils.createProperties(entity, PropertiesBackpack.class);
 	}
 	public static PropertiesBackpack getBackpackData(EntityLivingBase entity) {
-		PropertiesBackpack backpackData = EntityUtils.getOrCreateProperties(entity, PropertiesBackpack.class);
+		PropertiesBackpack backpackData = EntityUtils.computeIfAbsentProperties(entity, PropertiesBackpack.class);
 		if (!backpackData.initialized) {
 			updateHasItems(entity, backpackData);
 			backpackData.initialized = true;
@@ -379,7 +379,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		boolean success = false;
 		if (!ItemBackpack.isBackpackOpen(player)) {
 			// Try to place the backpack as if it was being held and used by the player.
-			success = backpack.getItem().onItemUse(backpack, player, player.worldObj, x, y, z, side, 0, 0, 0);
+			success = backpack.getItem().useOn(backpack, player, player.worldObj, x, y, z, side, 0, 0, 0);
 			if (backpack.stackSize <= 0) {
 				ItemBackpack.setBackpack(player, null, null);
 				backpack = null;

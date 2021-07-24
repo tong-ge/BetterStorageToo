@@ -18,14 +18,14 @@ public class SlotStationOutput extends Slot
 	}
 
 	@Override
-	public boolean isItemValid( ItemStack stack )
+	public boolean mayPlace( ItemStack stack )
 	{
 		return false;
 	}
 
 	@Override
-	public boolean canTakeStack( EntityPlayer player )
+	public boolean mayPickup( EntityPlayer player )
 	{
-		return super.canTakeStack( player ) && startingInventory.canTake( player );
+		return super.mayPickup( player ) && startingInventory.canTake( player );
 	}
 }

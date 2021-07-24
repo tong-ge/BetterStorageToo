@@ -34,8 +34,8 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 	public static BetterStorageResource		stillTexture	= new BetterStorageResource( "block/milk_still" );
 	public static BetterStorageResource		flowingTexture	= new BetterStorageResource( "block/milk_flowing" );
 
-	public static Material					MATERIAL_MILK	= new Material.Builder( DyeColor.WHITE.getMapColor() ).doesNotBlockMovement().liquid()
-			.notSolid().replaceable().build();
+	public static Material					MATERIAL_MILK	= new Material.Builder( DyeColor.WHITE.getMaterialColor() ).noCollider().liquid()
+			.nonSolid().replaceable().build();
 
 	public static FluidAttributes.Builder	BUILDER			= FluidAttributes.builder( stillTexture, flowingTexture ).color( 0xFFFFFFFF )
 			.density( 1025 ).temperature( 310 ).viscosity( 2000 );
@@ -64,7 +64,7 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				fluidActionResult = FluidUtil.tryEmptyContainerAndStow( heldItem, handler, playerInventory, Integer.MAX_VALUE, player, true );
 
 			if( fluidActionResult.isSuccess() )
-				// player.setHeldItem( hand, fluidActionResult.getResult() );
+				// player.setItemInHand( hand, fluidActionResult.getResult() );
 				return true;
 			return false;
 		} ).orElse( false );
@@ -81,9 +81,9 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 			final Fluid containedBlock = BetterStorageFluids.MILK.get();
 			final BlockState blockstate = worldIn.getBlockState( posIn );
 			final Material material = blockstate.getMaterial();
-			final boolean flag = blockstate.isReplaceable( containedBlock );
+			final boolean flag = blockstate.canBeReplaced( containedBlock );
 			if( blockstate.isAir() || flag || blockstate.getBlock() instanceof ILiquidContainer
-					&& ( (ILiquidContainer)blockstate.getBlock() ).canContainFluid( worldIn, posIn, blockstate, containedBlock ) )
+					&& ( (ILiquidContainer)blockstate.getBlock() ).canPlaceLiquid( worldIn, posIn, blockstate, containedBlock ) )
 			{
 				/*
 				 * if( worldIn.dimension.doesWaterVaporize() && containedBlock == BetterStorageFluids.MILK.get() )
@@ -101,24 +101,24 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				 */
 				if( blockstate.getBlock() instanceof ILiquidContainer && containedBlock == BetterStorageFluids.MILK.get() )
 				{
-					if( ( (ILiquidContainer)blockstate.getBlock() ).receiveFluid( worldIn, posIn, blockstate,
-							( (FlowingFluid)containedBlock ).getStillFluidState( false ) ) )
-						worldIn.playSound( player, posIn, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F );
+					if( ( (ILiquidContainer)blockstate.getBlock() ).placeLiquid( worldIn, posIn, blockstate,
+							( (FlowingFluid)containedBlock ).getSource( false ) ) )
+						worldIn.playSound( player, posIn, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F );
 				}
 				else
 				{
-					if( !worldIn.isRemote && flag && !material.isLiquid() )
+					if( !worldIn.isClientSide() && flag && !material.isLiquid() )
 						worldIn.destroyBlock( posIn, true );
 
-					worldIn.playSound( player, posIn, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F );
-					worldIn.setBlockState( posIn, containedBlock.getDefaultState().getBlockState(), 11 );
+					worldIn.playSound( player, posIn, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F );
+					worldIn.setBlock( posIn, containedBlock.defaultFluidState().createLegacyBlock(), 11 );
 				}
 
 				return true;
 			}
 			else
 				return rayTraceResult == null ? false
-						: tryPlaceContainedLiquid( bucketitem, player, worldIn, rayTraceResult.getPos().offset( rayTraceResult.getFace() ),
+						: tryPlaceContainedLiquid( bucketitem, player, worldIn, rayTraceResult.getBlockPos().relative( rayTraceResult.getDirection() ),
 								(BlockRayTraceResult)null );
 		}
 	}

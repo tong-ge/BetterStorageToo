@@ -45,7 +45,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			@Override
 			protected void onContentsChanged( int slot )
 			{
-				TileEntityReinforcedLocker.this.markDirty();
+				TileEntityReinforcedLocker.this.setChanged();
 			}
 		};
 	}
@@ -89,7 +89,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 				{
 					final ItemStack stack = config.getStackInSlot( i );
 					if( !stack.isEmpty() )
-						InventoryHelper.spawnItemStack( getWorld(), pos.getX(), pos.getY(), pos.getZ(), stack );
+						InventoryHelper.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
 				}
 	}
 
@@ -98,9 +98,9 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	{
 		if( isMain() )
 		{
-			if( player.getHeldItemMainhand().getItem() == BetterStorageItems.HEX_KEY.get() )
-				return new ConfigContainer( windowID, playerInventory, world, pos );
-			return new ContainerReinforcedLocker( windowID, playerInventory, world, pos );
+			if( player.getMainHandItem().getItem() == BetterStorageItems.HEX_KEY.get() )
+				return new ConfigContainer( windowID, playerInventory, level, worldPosition );
+			return new ContainerReinforcedLocker( windowID, playerInventory, level, worldPosition );
 		}
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
@@ -109,22 +109,22 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public void tick()
 	{
-		final int x = pos.getX();
-		final int y = pos.getY();
-		final int z = pos.getZ();
+		final int x = worldPosition.getX();
+		final int y = worldPosition.getY();
+		final int z = worldPosition.getZ();
 		++ticksSinceSync;
-		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
+		if( !level.isClientSide && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
+			for( final PlayerEntity entityplayer : level.getEntitiesOfClass( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
-				if( entityplayer.openContainer instanceof ContainerReinforcedLocker )
+				if( entityplayer.containerMenu instanceof ContainerReinforcedLocker )
 					++numPlayersUsing;
 		}
 
 		prevLidAngle = lidAngle;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
-			playSound( SoundEvents.BLOCK_CHEST_OPEN );
+			playSound( SoundEvents.CHEST_OPEN );
 
 		if( numPlayersUsing == 0 && lidAngle > 0.0F || numPlayersUsing > 0 && lidAngle < 1.0F )
 		{
@@ -138,7 +138,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 				lidAngle = 1.0F;
 
 			if( lidAngle < 0.5F && f2 >= 0.5F )
-				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
+				playSound( SoundEvents.CHEST_CLOSE );
 
 			if( lidAngle < 0.0F )
 				lidAngle = 0.0F;
@@ -168,9 +168,9 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 			if( lock.isEmpty() || isLockValid( lock ) )
 			{
 				this.lock = lock;
-				getWorld().notifyBlockUpdate( pos, getBlockState(), getBlockState(), 3 );
-				setPowered( EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), lock ) > 0 );
-				markDirty();
+				getLevel().sendBlockUpdated( worldPosition, getBlockState(), getBlockState(), 3 );
+				setPowered( EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), lock ) > 0 );
+				setChanged();
 			}
 		}
 		else
@@ -206,7 +206,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	public boolean isPowered()
 	{
 		if( isMain() )
-			return EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
+			return EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.TRIGGER.get(), getLock() ) > 0;
 		return ( (TileEntityReinforcedChest)getMainTileEntity() ).isPowered();
 	}
 
@@ -229,11 +229,11 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		final Block block = getBlockState().getBlock();
 
 		// Notify nearby blocks
-		getWorld().notifyNeighborsOfStateChange( pos, block );
+		getLevel().updateNeighborsAt( worldPosition, block );
 
 		// Notify nearby blocks of adjacent chest
 		if( isConnected() )
-			getWorld().notifyNeighborsOfStateChange( getConnected(), block );
+			getLevel().updateNeighborsAt( getConnected(), block );
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	public void setConfig( HexKeyConfig config )
 	{
 		this.config = config;
-		markDirty();
+		setChanged();
 	}
 
 	/*
@@ -271,7 +271,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
 	{
-		final CompoundNBT nbt = packet.getNbtCompound();
+		final CompoundNBT nbt = packet.getTag();
 		if( nbt.contains( "Config" ) )
 			config.deserializeNBT( nbt.getCompound( "Config" ) );
 		else
@@ -279,7 +279,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
+			lock = ItemStack.of( lockNBT );
 		}
 		else
 			lock = ItemStack.EMPTY;
@@ -288,7 +288,7 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket()
 	{
-		return new SUpdateTileEntityPacket( pos, 1, getUpdateTag() );
+		return new SUpdateTileEntityPacket( worldPosition, 1, getUpdateTag() );
 	}
 
 	@Override
@@ -303,29 +303,29 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
+			lock = ItemStack.of( lockNBT );
 		}
 		else
 			lock = ItemStack.EMPTY;
 	}
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		if( !config.isEmpty() )
 			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 		{
 			final CompoundNBT lockNBT = new CompoundNBT();
-			lock.write( lockNBT );
+			lock.save( lockNBT );
 			nbt.put( "lock", lockNBT );
 		}
 
-		return super.write( nbt );
+		return super.save( nbt );
 	}
 
 	@Override
-	public void read( BlockState state, CompoundNBT nbt )
+	public void load( BlockState state, CompoundNBT nbt )
 	{
 		if( nbt.contains( "Config" ) )
 			config.deserializeNBT( nbt.getCompound( "Config" ) );
@@ -334,11 +334,11 @@ public class TileEntityReinforcedLocker extends TileEntityLocker implements IKey
 		if( nbt.contains( "lock" ) )
 		{
 			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.read( lockNBT );
+			lock = ItemStack.of( lockNBT );
 		}
 		else
 			lock = ItemStack.EMPTY;
 
-		super.read( state, nbt );
+		super.load( state, nbt );
 	}
 }

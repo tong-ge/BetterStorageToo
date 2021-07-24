@@ -26,21 +26,21 @@ public class SlotBetterStorage extends Slot {
 	public boolean isProtected() { return isProtected; }
 	
 	@Override
-	public boolean isItemValid(ItemStack stack) {
-		return (!isProtected && inventory.isItemValidForSlot(slotNumber, stack));
+	public boolean mayPlace(ItemStack stack) {
+		return (!isProtected && inventory.mayPlaceForSlot(slotNumber, stack));
 	}
 	
 	@Override
-	public boolean canTakeStack(EntityPlayer player) {
-		// Not sure if isItemValidForSlot can / should be used to check
+	public boolean mayPickup(EntityPlayer player) {
+		// Not sure if mayPlaceForSlot can / should be used to check
 		// if items can be taken out, but I'll just use it anyway.
-		return (!isProtected && inventory.isItemValidForSlot(slotNumber, null));
+		return (!isProtected && inventory.mayPlaceForSlot(slotNumber, null));
 	}
 	
 	@Override
-	public void onSlotChanged() {
-		container.onSlotChanged(slotNumber);
-		super.onSlotChanged();
+	public void setChanged() {
+		container.setChanged(slotNumber);
+		super.setChanged();
 	}
 	
 }

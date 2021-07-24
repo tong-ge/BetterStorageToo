@@ -24,12 +24,12 @@ public class ContainerCrate extends Container
 
 	private final int					rows;
 	public int							indexStart, indexPlayer, indexHotbar;
-	private final IntReferenceHolder	volume	= IntReferenceHolder.single();
+	private final IntReferenceHolder	volume	= IntReferenceHolder.standalone();
 
 	public ContainerCrate( int windowID, PlayerInventory playerInventory, World world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CRATE.get(), windowID );
-		tileCrate = (TileEntityCrate)world.getTileEntity( pos );
+		tileCrate = (TileEntityCrate)world.getBlockEntity( pos );
 		inventoryCrate = tileCrate.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null ).orElse( new CrateStackHandler( 18 ) );
 
 		rows = Math.min( tileCrate.getCapacity() / 9, 6 );
@@ -63,7 +63,7 @@ public class ContainerCrate extends Container
 			addSlot( new Slot( playerInventory, i, x, y + offsetY ) );
 		}
 
-		trackInt( volume );
+		addDataSlot( volume );
 	}
 
 	public int getRows()
@@ -82,63 +82,63 @@ public class ContainerCrate extends Container
 	}
 
 	@Override
-	public void detectAndSendChanges()
+	public void broadcastChanges()
 	{
 		volume.set( ( (CrateStackHandler)inventoryCrate ).getOccupiedSlots() * 100 / inventoryCrate.getSlots() );
-		super.detectAndSendChanges();
+		super.broadcastChanges();
 	}
 
 	@Override
-	public ItemStack transferStackInSlot( PlayerEntity player, int index )
+	public ItemStack quickMoveStack( PlayerEntity player, int index )
 	{
-		final Slot slot = inventorySlots.get( index );
+		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
 
-		if( slot != null && slot.getHasStack() )
+		if( slot != null && slot.hasItem() )
 		{
-			final ItemStack itemStack = slot.getStack();
+			final ItemStack itemStack = slot.getItem();
 			returnStack = itemStack.copy();
 
 			if( index < indexHotbar )
 			{
 				// Try to transfer from crate to player
-				if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+				if( !moveItemStackTo( itemStack, indexHotbar, slots.size(), true ) )
 					return ItemStack.EMPTY;
 			}
-			else if( !mergeItemStack( itemStack, 0, indexHotbar, false ) )
+			else if( !moveItemStackTo( itemStack, 0, indexHotbar, false ) )
 				return ItemStack.EMPTY;
 			if( itemStack.getCount() > 0 )
 				( (CrateStackHandler)inventoryCrate ).addItems( itemStack );
 
 			if( itemStack.isEmpty() )
-				slot.putStack( ItemStack.EMPTY );
+				slot.set( ItemStack.EMPTY );
 			else
-				slot.onSlotChanged();
+				slot.setChanged();
 		}
 
 		return returnStack;
 	}
 
 	@Override
-	public void onContainerClosed( PlayerEntity playerIn )
+	public void removed( PlayerEntity playerIn )
 	{
-		super.onContainerClosed( playerIn );
+		super.removed( playerIn );
 		( (CrateStackHandler)inventoryCrate ).consolidateStacks();
-		tileCrate.markDirty();
+		tileCrate.setChanged();
 	}
 
 	@Override
-	protected boolean mergeItemStack( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
+	protected boolean moveItemStackTo( ItemStack stack, int startIndex, int endIndex, boolean reverseDirection )
 	{
-		boolean flag = super.mergeItemStack( stack, startIndex, endIndex, reverseDirection );
+		boolean flag = super.moveItemStackTo( stack, startIndex, endIndex, reverseDirection );
 		if( !flag && endIndex <= indexHotbar )
-			flag = ( (CrateStackHandler)inventoryCrate ).mergeItemStack( stack, 0, inventoryCrate.getSlots() ) == 0;
+			flag = ( (CrateStackHandler)inventoryCrate ).moveItemStackTo( stack, 0, inventoryCrate.getSlots() ) == 0;
 		return flag;
 	}
 
 	@Override
-	public boolean canInteractWith( PlayerEntity playerIn )
+	public boolean stillValid( PlayerEntity playerIn )
 	{
-		return isWithinUsableDistance( IWorldPosCallable.of( tileCrate.getWorld(), tileCrate.getPos() ), playerIn, BetterStorageBlocks.CRATE.get() );
+		return stillValid( IWorldPosCallable.create( tileCrate.getLevel(), tileCrate.getBlockPos() ), playerIn, BetterStorageBlocks.CRATE.get() );
 	}
 }

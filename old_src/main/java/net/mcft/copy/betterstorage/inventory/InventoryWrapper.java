@@ -41,21 +41,21 @@ public class InventoryWrapper implements IInventory
 	}
 
 	@Override
-	public int getSizeInventory()
+	public int getContainerSize()
 	{
-		return base.getSizeInventory();
+		return base.getContainerSize();
 	}
 
 	@Override
-	public ItemStack getStackInSlot( int slot )
+	public ItemStack getItem( int slot )
 	{
-		return base.getStackInSlot( slot );
+		return base.getItem( slot );
 	}
 
 	@Override
-	public ItemStack decrStackSize( int slot, int amount )
+	public ItemStack remove( int slot, int amount )
 	{
-		return base.decrStackSize( slot, amount );
+		return base.remove( slot, amount );
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class InventoryWrapper implements IInventory
 
 	/*
 	 * @Override
-	 * public ItemStack getStackInSlotOnClosing(int slot) { return base.getStackInSlotOnClosing(slot); }
+	 * public ItemStack getItemOnClosing(int slot) { return base.getItemOnClosing(slot); }
 	 */
 
 	@Override
@@ -82,15 +82,15 @@ public class InventoryWrapper implements IInventory
 	}
 
 	@Override
-	public boolean isItemValidForSlot( int slot, ItemStack stack )
+	public boolean mayPlaceForSlot( int slot, ItemStack stack )
 	{
-		return base.isItemValidForSlot( slot, stack );
+		return base.mayPlaceForSlot( slot, stack );
 	}
 
 	@Override
-	public void markDirty()
+	public void setChanged()
 	{
-		base.markDirty();
+		base.setChanged();
 	}
 
 	@Override

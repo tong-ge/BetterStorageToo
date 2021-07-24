@@ -24,14 +24,14 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 		super( container, playerInventory, title );
 
 		rows = container.getRows();
-		ySize = 114 + rows * 18;
+		height = 114 + rows * 18;
 		offsetY = 17 + rows * 18;
 
 		// GUI label co-ordinates
-		titleX = 8;
-		titleY = 6;
-		playerInventoryTitleX = 8;
-		playerInventoryTitleY = offsetY + 3;
+		titleLabelX = 8;
+		titleLabelY = 6;
+		inventoryLabelX = 8;
+		inventoryLabelY = offsetY + 3;
 	}
 
 	@Override
@@ -42,34 +42,35 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 		renderBackground( matrixStack );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 
-		if( mouseX >= guiLeft + 115 && mouseX < guiLeft + 169 && mouseY >= guiTop + 7 && mouseY < guiTop + 13 )
+		if( mouseX >= getGuiLeft() + 115 && mouseX < getGuiLeft() + 169 && mouseY >= getGuiTop() + 7 && mouseY < getGuiTop() + 13 )
 		{
-			final ITextComponent toolTip = new TranslationTextComponent( ModInfo.CONTAINER_CAPACITY, container.getVolume() );
+			final ITextComponent toolTip = new TranslationTextComponent( ModInfo.CONTAINER_CAPACITY, menu.getVolume() );
 			final List< ITextComponent > list1 = Lists.newArrayList( toolTip );
-			func_243308_b( matrixStack, list1, mouseX, mouseY );
+			renderComponentTooltip( matrixStack, list1, mouseX, mouseY );
 			// this.renderTooltip( toolTip.getFormattedText(), mouseX, mouseY );
 		}
 		else
 			// renderHoveredToolTip( mouseX, mouseY );
-			renderHoveredTooltip( matrixStack, mouseX, mouseY );
+			renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		// minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
-		minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
+		minecraft.getTextureManager().getTexture( Resources.CONTAINER_CRATE );
 
-		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
-		blit( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
+		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), offsetY );
+		blit( matrixStack, getGuiLeft(), getGuiTop() + offsetY, 0, 126, getXSize(), 96 );
 
 		// blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
 		// blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
 
-		final int volume = container.getVolume();
+		final int volume = menu.getVolume();
 		if( volume > 0.0 )
-			blit( matrixStack, guiLeft + 115, guiTop + 7, 176, 0, (int)( 54 * ( volume / 100.0 ) ), 6 );
+			blit( matrixStack, getGuiLeft() + 115, getGuiTop() + 7, 176, 0, (int)( 54 * ( volume / 100.0 ) ), 6 );
 	}
 }

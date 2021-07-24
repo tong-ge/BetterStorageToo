@@ -58,8 +58,8 @@ public class EntityFrienderman extends EntityEnderman {
 	}
 	
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float damage) {
-		boolean success = super.attackEntityFrom(source, damage);
+	public boolean hurt(DamageSource source, float damage) {
+		boolean success = super.hurt(source, damage);
 		if (entityToAttack != null) {
 			for (int i = 0; i < 40 - getMaxHealth() / 2; i++)
 				if (teleportRandomly()) break;

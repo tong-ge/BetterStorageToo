@@ -30,7 +30,7 @@ public class SlotArmorBackpack extends Slot {
 	public int getSlotStackLimit() { return 1; }
 	
 	@Override
-	public boolean isItemValid(ItemStack stack) {
+	public boolean mayPlace(ItemStack stack) {
 		if (stack == null) return false;
 		EntityPlayer player = ((InventoryPlayer)inventory).player;
 		Item item = stack.getItem();
@@ -40,7 +40,7 @@ public class SlotArmorBackpack extends Slot {
 	}
 	
 	@Override
-	public boolean canTakeStack(EntityPlayer player) { 
+	public boolean mayPickup(EntityPlayer player) { 
 		ItemStack backpack = getStack();
 		return ((backpack == null) || !(backpack.getItem() instanceof ItemBackpack));
 	}

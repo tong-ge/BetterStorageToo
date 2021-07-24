@@ -24,17 +24,17 @@ public class GuiCardboardBox extends ContainerScreen< ContainerCardboardBox >
 		columns = container.getColumns();
 		rows = container.getRows();
 
-		xSize = Math.max( 14 + columns * 18, 176 );
-		ySize = 114 + rows * 18;
+		imageHeight = Math.max( 14 + columns * 18, 176 );
+		imageWidth = 114 + rows * 18;
 
-		offsetX = Math.max( ( 176 - xSize ) / 2, 0 );
+		offsetX = Math.max( ( 176 - imageHeight ) / 2, 0 );
 		offsetY = 17 + rows * 18;
 
 		// GUI label co-ordinates
-		titleX = 8;
-		titleY = 6;
-		playerInventoryTitleX = offsetX + 8;
-		playerInventoryTitleY = offsetY + 3;
+		titleLabelX = 8;
+		titleLabelY = 6;
+		inventoryLabelX = offsetX + 8;
+		inventoryLabelY = offsetY + 3;
 	}
 
 	protected ResourceLocation getResource()
@@ -54,20 +54,21 @@ public class GuiCardboardBox extends ContainerScreen< ContainerCardboardBox >
 		// super.render( mouseX, mouseY, partialTicks );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 		// renderHoveredToolTip( mouseX, mouseY );
-		renderHoveredTooltip( matrixStack, mouseX, mouseY );
+		renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		// GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		// minecraft.getTextureManager().bindTexture( getResource() );
-		minecraft.getTextureManager().bindTexture( getResource() );
+		minecraft.getTextureManager().getTexture( getResource() );
 
-		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, offsetY );
-		blit( matrixStack, guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
+		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, imageHeight, offsetY );
+		blit( matrixStack, getGuiLeft(), getGuiTop() + offsetY, 0, 126, imageHeight, 96 );
 
 		// blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
 		// blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );

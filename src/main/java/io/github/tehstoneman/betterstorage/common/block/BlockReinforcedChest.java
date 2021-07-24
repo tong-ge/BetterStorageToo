@@ -59,16 +59,16 @@ import net.minecraftforge.items.IItemHandler;
 public class BlockReinforcedChest extends BlockConnectableContainer implements IWaterLoggable
 {
 	public static final BooleanProperty		WATERLOGGED		= BlockStateProperties.WATERLOGGED;
-	protected static final VoxelShape		SHAPE_NORTH		= Block.makeCuboidShape( 1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D );
-	protected static final VoxelShape		SHAPE_SOUTH		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D );
-	protected static final VoxelShape		SHAPE_WEST		= Block.makeCuboidShape( 0.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
-	protected static final VoxelShape		SHAPE_EAST		= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D );
-	protected static final VoxelShape		SHAPE_SINGLE	= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape		SHAPE_NORTH		= Block.box( 1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape		SHAPE_SOUTH		= Block.box( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D );
+	protected static final VoxelShape		SHAPE_WEST		= Block.box( 0.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
+	protected static final VoxelShape		SHAPE_EAST		= Block.box( 1.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D );
+	protected static final VoxelShape		SHAPE_SINGLE	= Block.box( 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D );
 	public static final DirectionProperty	FACING			= BlockStateProperties.HORIZONTAL_FACING;
 
 	public BlockReinforcedChest()
 	{
-		this( Block.Properties.create( Material.WOOD ).hardnessAndResistance( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
+		this( Block.Properties.of( Material.WOOD ).strength( 5.0F, 6.0F ).sound( SoundType.WOOD ) );
 	}
 
 	public BlockReinforcedChest( Properties properties )
@@ -76,15 +76,15 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		super( properties );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( FACING, Direction.NORTH )
-													  .with( WATERLOGGED, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( FACING, Direction.NORTH )
+																 .setValue( WATERLOGGED, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( FACING, WATERLOGGED );
 	}
 
@@ -95,7 +95,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 */
 
 	@Override
-	public BlockRenderType getRenderType( BlockState state )
+	public BlockRenderType getRenderShape( BlockState state )
 	{
 		// return BlockRenderType.MODEL;
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
@@ -116,7 +116,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
 	{
-		if( state.get( TYPE ) == ConnectedType.SINGLE )
+		if( state.getValue( TYPE ) == ConnectedType.SINGLE )
 			return SHAPE_SINGLE;
 		switch( getDirectionToAttached( state ) )
 		{
@@ -136,45 +136,45 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	public BlockState getStateForPlacement( BlockItemUseContext context )
 	{
 		ConnectedType connectedType = ConnectedType.SINGLE;
-		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		final FluidState fluidState = context.getWorld().getFluidState( context.getPos() );
-		final boolean sneaking = context.getPlayer().isSneaking();
+		Direction direction = context.getHorizontalDirection().getOpposite();
+		final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos() );
+		final boolean sneaking = context.getPlayer().isShiftKeyDown();
 
-		final Direction direction1 = context.getFace();
+		final Direction direction1 = context.getClickedFace();
 		if( direction1.getAxis().isHorizontal() && sneaking )
 		{
 			final Direction direction2 = getDirectionToAttach( context, direction1.getOpposite() );
 			if( direction2 != null && direction2.getAxis() != direction1.getAxis() )
 			{
 				direction = direction2;
-				connectedType = direction2.rotateYCCW() == direction1.getOpposite() ? ConnectedType.MASTER : ConnectedType.SLAVE;
+				connectedType = direction2.getCounterClockWise() == direction1.getOpposite() ? ConnectedType.MASTER : ConnectedType.SLAVE;
 			}
 		}
 
 		if( connectedType == ConnectedType.SINGLE && !sneaking )
-			if( direction == getDirectionToAttach( context, direction.rotateY() ) )
+			if( direction == getDirectionToAttach( context, direction.getClockWise() ) )
 				connectedType = ConnectedType.SLAVE;
-			else if( direction == getDirectionToAttach( context, direction.rotateYCCW() ) )
+			else if( direction == getDirectionToAttach( context, direction.getCounterClockWise() ) )
 				connectedType = ConnectedType.MASTER;
 
-		return getDefaultState().with( FACING, direction ).with( TYPE, connectedType ).with( WATERLOGGED,
-				Boolean.valueOf( fluidState.getFluid() == Fluids.WATER ) );
+		return defaultBlockState().setValue( FACING, direction ).setValue( TYPE, connectedType ).setValue( WATERLOGGED,
+				Boolean.valueOf( fluidState.getType() == Fluids.WATER ) );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updatePostPlacement( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
+	public BlockState updateShape( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
 			BlockPos facingPos )
 	{
-		if( thisState.get( WATERLOGGED ) )
-			world.getPendingFluidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickRate( world ) );
+		if( thisState.getValue( WATERLOGGED ) )
+			world.getLiquidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickDelay( world ) );
 
 		if( facingState.getBlock() == this && facing.getAxis().isHorizontal() )
 		{
-			final ConnectedType facingType = facingState.get( TYPE );
+			final ConnectedType facingType = facingState.getValue( TYPE );
 
-			if( thisState.get( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
-					&& thisState.get( FACING ) == facingState.get( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
+			if( thisState.getValue( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
+					&& thisState.getValue( FACING ) == facingState.getValue( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
 			{
 				final ConnectedType newType = facingType.opposite();
 				final TileEntityReinforcedChest thisChest = getChestAt( (World)world, thisPos );
@@ -184,13 +184,13 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 					facingChest.setConfig( thisChest.getConfig() );
 					thisChest.setConfig( new HexKeyConfig() );
 				}
-				return thisState.with( TYPE, newType );
+				return thisState.setValue( TYPE, newType );
 			}
 		}
 		else if( getDirectionToAttached( thisState ) == facing )
-			return thisState.with( TYPE, ConnectedType.SINGLE );
+			return thisState.setValue( TYPE, ConnectedType.SINGLE );
 
-		return super.updatePostPlacement( thisState, facing, facingState, world, thisPos, facingPos );
+		return super.updateShape( thisState, facing, facingState, world, thisPos, facingPos );
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Nullable
 	private Direction getDirectionToAttach( BlockItemUseContext context, Direction facing )
 	{
-		final BlockState blockState = context.getWorld().getBlockState( context.getPos().offset( facing ) );
-		return blockState.getBlock() == this && blockState.get( TYPE ) == ConnectedType.SINGLE ? blockState.get( FACING ) : null;
+		final BlockState blockState = context.getLevel().getBlockState( context.getClickedPos().relative( facing ) );
+		return blockState.getBlock() == this && blockState.getValue( TYPE ) == ConnectedType.SINGLE ? blockState.getValue( FACING ) : null;
 	}
 
 	/**
@@ -218,16 +218,16 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 */
 	public static Direction getDirectionToAttached( BlockState state )
 	{
-		final Direction direction = state.get( FACING );
-		return state.get( TYPE ) == ConnectedType.SLAVE ? direction.rotateY() : direction.rotateYCCW();
+		final Direction direction = state.getValue( FACING );
+		return state.getValue( TYPE ) == ConnectedType.SLAVE ? direction.getClockWise() : direction.getCounterClockWise();
 	}
 
 	@Override
-	public void onBlockPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
 	{
-		if( stack.hasDisplayName() )
+		if( stack.hasCustomHoverName() )
 		{
-			final TileEntity tileentity = worldIn.getTileEntity( pos );
+			final TileEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityReinforcedChest )
 				( (TileEntityReinforcedChest)tileentity ).setCustomName( stack.getDisplayName() );
 		}
@@ -235,26 +235,26 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onReplaced( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = world.getTileEntity( pos );
+			final TileEntity tileentity = world.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 			{
-				if( state.get( TYPE ) == ConnectedType.MASTER )
+				if( state.getValue( TYPE ) == ConnectedType.MASTER )
 				{
 					final TileEntityReinforcedChest thisChest = getChestAt( world, pos );
-					final TileEntityReinforcedChest facingChest = getChestAt( world, pos.offset( getDirectionToAttached( state ) ) );
+					final TileEntityReinforcedChest facingChest = getChestAt( world, pos.relative( getDirectionToAttached( state ) ) );
 
 					facingChest.setConfig( thisChest.getConfig() );
 					thisChest.setConfig( new HexKeyConfig() );
 				}
 				( (TileEntityContainer)tileentity ).dropInventoryItems();
-				world.updateComparatorOutputLevel( pos, this );
+				world.updateNeighbourForOutputSignal( pos, this );
 			}
 
-			super.onReplaced( state, world, pos, newState, isMoving );
+			super.onRemove( state, world, pos, newState, isMoving );
 		}
 	}
 
@@ -267,27 +267,27 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public BlockState rotate( BlockState state, Rotation rot )
 	{
-		return state.with( FACING, rot.rotate( state.get( FACING ) ) );
+		return state.setValue( FACING, rot.rotate( state.getValue( FACING ) ) );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
 	public BlockState mirror( BlockState state, Mirror mirrorIn )
 	{
-		return state.rotate( mirrorIn.toRotation( state.get( FACING ) ) );
+		return state.rotate( mirrorIn.getRotation( state.getValue( FACING ) ) );
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride( BlockState state )
+	public boolean hasAnalogOutputSignal( BlockState state )
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
+	public int getAnalogOutputSignal( BlockState blockState, World worldIn, BlockPos pos )
 	{
 		return calcRedstoneFromInventory(
-				( (TileEntityReinforcedChest)worldIn.getTileEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
+				( (TileEntityReinforcedChest)worldIn.getBlockEntity( pos ) ).getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ) );
 	}
 
 	public static int calcRedstoneFromInventory( @Nullable LazyOptional< IItemHandler > lazyOptional )
@@ -316,15 +316,15 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	}
 
 	@Override
-	public boolean canProvidePower( BlockState state )
+	public boolean isSignalSource( BlockState state )
 	{
 		return true;
 	}
 
 	@Override
-	public int getWeakPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
 	{
-		final TileEntity tileEntity = blockAccess.getTileEntity( pos );
+		final TileEntity tileEntity = blockAccess.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedChest )
 		{
 			final TileEntityReinforcedChest chest = (TileEntityReinforcedChest)tileEntity;
@@ -334,9 +334,9 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	}
 
 	@Override
-	public int getStrongPower( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getDirectSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
 	{
-		return side == Direction.UP ? blockState.getWeakPower( blockAccess, pos, side ) : 0;
+		return side == Direction.UP ? blockState.getSignal( blockAccess, pos, side ) : 0;
 	}
 
 	/*
@@ -346,16 +346,16 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	 */
 
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		if( worldIn.isRemote )
+		if( worldIn.isClientSide )
 			return ActionResultType.SUCCESS;
 		else
 		{
 			final TileEntityReinforcedChest tileChest = getChestAt( worldIn, pos );
 			if( tileChest != null && tileChest.isLocked() )
 			{
-				if( !tileChest.unlockWith( player.getHeldItem( hand ) ) )
+				if( !tileChest.unlockWith( player.getItemInHand( hand ) ) )
 				{
 					final ItemStack lock = tileChest.getLock();
 					( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
@@ -363,16 +363,16 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 				}
 				if( player.isCrouching() )
 				{
-					worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
+					worldIn.addFreshEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
 					tileChest.setLock( ItemStack.EMPTY );
 					return ActionResultType.SUCCESS;
 				}
 			}
-			final INamedContainerProvider chest = getContainer( state, worldIn, pos );
+			final INamedContainerProvider chest = getMenuProvider( state, worldIn, pos );
 			if( chest != null )
 			{
 				NetworkHooks.openGui( (ServerPlayerEntity)player, chest, pos );
-				player.addStat( getOpenStat() );
+				player.awardStat( getOpenStat() );
 			}
 
 			return ActionResultType.SUCCESS;
@@ -382,7 +382,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Nullable
 	public static TileEntityReinforcedChest getChestAt( World world, BlockPos pos )
 	{
-		final TileEntity tileEntity = world.getTileEntity( pos );
+		final TileEntity tileEntity = world.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedChest )
 			return (TileEntityReinforcedChest)tileEntity;
 		return null;
@@ -395,7 +395,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getContainer( BlockState state, World worldIn, BlockPos pos )
+	public INamedContainerProvider getMenuProvider( BlockState state, World worldIn, BlockPos pos )
 	{
 		return this.getContainer( state, worldIn, pos, false );
 	}
@@ -418,7 +418,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Nullable
 	public TileEntityReinforcedChest getContainer( BlockState state, World worldIn, BlockPos pos, boolean allowBlockedChest )
 	{
-		final TileEntity tileentity = worldIn.getTileEntity( pos );
+		final TileEntity tileentity = worldIn.getBlockEntity( pos );
 		if( !( tileentity instanceof TileEntityReinforcedChest ) )
 			return null;
 		else if( !allowBlockedChest && isBlocked( worldIn, pos ) )
@@ -426,17 +426,17 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		else
 		{
 			final TileEntityReinforcedChest ilockablecontainer = (TileEntityReinforcedChest)tileentity;
-			final ConnectedType chesttype = state.get( TYPE );
+			final ConnectedType chesttype = state.getValue( TYPE );
 			if( chesttype == ConnectedType.SINGLE )
 				return ilockablecontainer;
 			else
 			{
-				final BlockPos blockpos = pos.offset( getDirectionToAttached( state ) );
+				final BlockPos blockpos = pos.relative( getDirectionToAttached( state ) );
 				final BlockState iblockstate = worldIn.getBlockState( blockpos );
 				if( iblockstate.getBlock() == this )
 				{
-					final ConnectedType chesttype1 = iblockstate.get( TYPE );
-					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.get( FACING ) == state.get( FACING ) )
+					final ConnectedType chesttype1 = iblockstate.getValue( TYPE );
+					if( chesttype1 != ConnectedType.SINGLE && chesttype != chesttype1 && iblockstate.getValue( FACING ) == state.getValue( FACING ) )
 						if( !allowBlockedChest && isBlocked( worldIn, blockpos ) )
 							return null;
 				}
@@ -453,18 +453,17 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 
 	private static boolean isBelowSolidBlock( IBlockReader reader, BlockPos worldIn )
 	{
-		final BlockPos blockpos = worldIn.up();
-		return reader.getBlockState( blockpos ).isNormalCube( reader, blockpos );
+		final BlockPos blockpos = worldIn.above();
+		return reader.getBlockState( blockpos ).isRedstoneConductor( reader, blockpos );
 	}
 
 	private static boolean isCatSittingOn( IWorld world, BlockPos pos )
 	{
-		final List< CatEntity > list = world.getEntitiesWithinAABB( CatEntity.class,
+		final List< CatEntity > list = world.getEntitiesOfClass( CatEntity.class,
 				new AxisAlignedBB( pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1 ) );
 		if( !list.isEmpty() )
 			for( final CatEntity catentity : list )
-				// if( catentity.isSitting() )
-				if( catentity.isSitting() )
+				if( catentity.isInSittingPose() )
 					return true;
 
 		return false;
@@ -480,7 +479,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 	@Override
 	public FluidState getFluidState( BlockState blockState )
 	{
-		return blockState.get( WATERLOGGED ) ? Fluids.WATER.getStillFluidState( false ) : super.getFluidState( blockState );
+		return blockState.getValue( WATERLOGGED ) ? Fluids.WATER.getSource( false ) : super.getFluidState( blockState );
 
 	}
 
@@ -490,7 +489,7 @@ public class BlockReinforcedChest extends BlockConnectableContainer implements I
 		final TileEntityReinforcedChest chest = getChestAt( (World)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
-			final int resist = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
+			final int resist = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;
 			return super.getExplosionResistance( state, world, pos, explosion ) * resist * 2;
 		}
 		return super.getExplosionResistance( state, world, pos, explosion );

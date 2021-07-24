@@ -3,21 +3,21 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class OutputStackHandler extends ItemStackHandler
+public class OutsetHandler extends ItemStackHandler
 {
 	ItemStack[] ghostStacks;
-	public OutputStackHandler()
+	public OutsetHandler()
 	{
 		super();
 	}
 
-	public OutputStackHandler( int size )
+	public OutsetHandler( int size )
 	{
 		super( size );
 		ghostStacks = new ItemStack[size];
 	}
 
-	public OutputStackHandler( ItemStack[] stacks )
+	public OutsetHandler( ItemStack[] stacks )
 	{
 		super( stacks );
 		ghostStacks = new ItemStack[stacks.length];
@@ -32,7 +32,7 @@ public class OutputStackHandler extends ItemStackHandler
 	public void setStackGhosted(int slot, ItemStack stack)
     {
         validateSlotIndex(slot);
-        if (ItemStack.areItemStacksEqual(this.ghostStacks[slot], stack))
+        if (ItemStack.matches(this.ghostStacks[slot], stack))
             return;
         this.ghostStacks[slot] = stack;
     }

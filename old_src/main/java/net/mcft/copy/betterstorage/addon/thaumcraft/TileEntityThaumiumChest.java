@@ -31,8 +31,8 @@ public class TileEntityThaumiumChest extends TileEntityReinforcedChest {
 		// Count items over normal backpack capacity.
 		IInventory inventory = getPlayerInventory();
 		int count = -(getRows() * Config.reinforcedChestColumns);
-		for (int i = 0; i < inventory.getSizeInventory(); i++)
-			if (inventory.getStackInSlot(i) != null) count++;
+		for (int i = 0; i < inventory.getContainerSize(); i++)
+			if (inventory.getItem(i) != null) count++;
 		
 		// If there's more items in there than a reinforced chest can hold,
 		// randomly generate some flux. The more items, the more likely.
@@ -88,19 +88,19 @@ public class TileEntityThaumiumChest extends TileEntityReinforcedChest {
 		
 		// Collect indices of all slots with items inside.
 		List<Integer> indices = new ArrayList<Integer>();
-		for (int i = 0; i < inventory.getSizeInventory(); i++)
-			if (inventory.getStackInSlot(i) != null) indices.add(i);
+		for (int i = 0; i < inventory.getContainerSize(); i++)
+			if (inventory.getItem(i) != null) indices.add(i);
 		if (indices.size() <= 0) return;
 		
 		// Get a random item stack.
 		int index = indices.get(RandomUtils.getInt(indices.size()));
-		ItemStack item = inventory.getStackInSlot(index).copy();
+		ItemStack item = inventory.getItem(index).copy();
 		
 		// Get the item stack of a random slot (may be null).
 		int switchIndex;
-		do { switchIndex = RandomUtils.getInt(inventory.getSizeInventory()); }
+		do { switchIndex = RandomUtils.getInt(inventory.getContainerSize()); }
 		while (switchIndex == index);
-		ItemStack switchItem = ItemStack.copyItemStack(inventory.getStackInSlot(switchIndex));
+		ItemStack switchItem = ItemStack.copyItemStack(inventory.getItem(switchIndex));
 		
 		if ((switchItem == null) && (item.stackSize > 1) &&
 		    RandomUtils.getBoolean(0.5)) {

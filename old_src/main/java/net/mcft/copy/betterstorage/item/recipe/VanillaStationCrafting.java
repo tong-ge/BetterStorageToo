@@ -69,9 +69,9 @@ public class VanillaStationCrafting extends StationCrafting
 				crafting.setInventorySlotContents( i, ItemStack.copyItemStack( craftingIn[ i ] ) );
 			}
 
-			final ItemStack output = recipe.getCraftingResult( crafting );
+			final ItemStack output = recipe.assemble( crafting );
 			if( output == null )
-				throw new IllegalArgumentException( recipe.getClass() + " returned null for getCraftingResult." );
+				throw new IllegalArgumentException( recipe.getClass() + " returned null for assemble." );
 			expectedOutput = output.copy();
 		}
 
@@ -84,16 +84,16 @@ public class VanillaStationCrafting extends StationCrafting
 		@Override
 		public boolean matches( ItemStack stack )
 		{
-			final ItemStack stackBefore = crafting.getStackInSlot( slot );
+			final ItemStack stackBefore = crafting.getItem( slot );
 			crafting.setInventorySlotContents( slot, stack );
-			final boolean matches = recipe.matches( crafting, world ) && StackUtils.matches( expectedOutput, recipe.getCraftingResult( crafting ) );
+			final boolean matches = recipe.matches( crafting, world ) && StackUtils.matches( expectedOutput, recipe.assemble( crafting ) );
 			crafting.setInventorySlotContents( slot, stackBefore );
 			return matches;
 		}
 
 		@Override
 		@SideOnly( Side.CLIENT )
-		public List< ItemStack > getPossibleMatches()
+		public List< ItemStack > getBlockPossibleMatches()
 		{
 			return null;
 		}
@@ -102,7 +102,7 @@ public class VanillaStationCrafting extends StationCrafting
 
 	public static VanillaStationCrafting findVanillaRecipe( ItemStack[] craftingIn,  World world )
 	{
-		// final World world = inv.entity != null ? inv.entity.getWorld() : WorldUtils.getLocalWorld();
+		// final World world = inv.entity != null ? inv.entity.getLevel() : WorldUtils.getLocalWorld();
 		//final World world = Minecraft.getMinecraft().theWorld;
 
 		final InventoryCrafting crafting = new InventoryCrafting( new FakeContainer(), 3, 3 );
@@ -110,7 +110,7 @@ public class VanillaStationCrafting extends StationCrafting
 			crafting.setInventorySlotContents( i, ItemStack.copyItemStack( craftingIn[ i ] ) );
 
 		final IRecipe recipe = findRecipe( crafting, world );
-		return recipe == null ? null : new VanillaStationCrafting( world, recipe, craftingIn, recipe.getCraftingResult( crafting ) );
+		return recipe == null ? null : new VanillaStationCrafting( world, recipe, craftingIn, recipe.assemble( crafting ) );
 	}
 
 	private static IRecipe findRecipe( InventoryCrafting crafting, World world )
@@ -124,7 +124,7 @@ public class VanillaStationCrafting extends StationCrafting
 	private static class FakeContainer extends Container
 	{
 		@Override
-		public boolean canInteractWith( EntityPlayer player )
+		public boolean stillValid( EntityPlayer player )
 		{
 			return false;
 		}

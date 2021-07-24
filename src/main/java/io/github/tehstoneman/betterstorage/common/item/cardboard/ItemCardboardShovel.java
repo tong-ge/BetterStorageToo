@@ -11,7 +11,7 @@ public class ItemCardboardShovel extends ShovelItem implements ICardboardItem
 
 	public ItemCardboardShovel()
 	{
-		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( ItemTier.WOOD, 1.5F, -3.0F, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

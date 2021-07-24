@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class BlockTank extends BlockContainerBetterStorage
 {
-	protected static final VoxelShape						SHAPE_TANK				= Block.makeCuboidShape( 1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D );
+	protected static final VoxelShape						SHAPE_TANK				= Block.box( 1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D );
 	public static final BooleanProperty						UP						= BlockStateProperties.UP;
 	public static final BooleanProperty						DOWN					= BlockStateProperties.DOWN;
 	public static final Map< Direction, BooleanProperty >	FACING_TO_PROPERTY_MAP	= Util.make( Maps.newEnumMap( Direction.class ), ( facing ) ->
@@ -43,29 +43,29 @@ public class BlockTank extends BlockContainerBetterStorage
 
 	protected BlockTank()
 	{
-		super( Block.Properties.from( Blocks.GLASS ).hardnessAndResistance( 3.0f ) );
+		super( Block.Properties.copy( Blocks.GLASS ).strength( 3.0f ) );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( UP, Boolean.valueOf( false ) )
-													  .with( DOWN, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( UP, Boolean.valueOf( false ) )
+																 .setValue( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( UP, DOWN );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updatePostPlacement( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
 			BlockPos facingPos )
 	{
 		return facing.getAxis().getPlane() == Direction.Plane.VERTICAL
-				? stateIn.with( FACING_TO_PROPERTY_MAP.get( facing ), facingState.getBlock() == this )
-				: super.updatePostPlacement( stateIn, facing, facingState, worldIn, currentPos, facingPos );
+				? stateIn.setValue( FACING_TO_PROPERTY_MAP.get( facing ), facingState.getBlock() == this )
+				: super.updateShape( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
 
 	/*
@@ -94,15 +94,15 @@ public class BlockTank extends BlockContainerBetterStorage
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public ActionResultType onBlockActivated( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public ActionResultType use( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
 	{
-		final ItemStack itemStack = player.getHeldItem( hand );
+		final ItemStack itemStack = player.getItemInHand( hand );
 		final LazyOptional< IFluidHandlerItem > capability = itemStack.getCapability( CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY );
 		if( capability.isPresent() )
 		{
-			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getFace() );
+			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getDirection() );
 			return success ? ActionResultType.SUCCESS : ActionResultType.PASS;
 		}
-		return super.onBlockActivated( state, world, pos, player, hand, hit );
+		return super.use( state, world, pos, player, hand, hit );
 	}
 }

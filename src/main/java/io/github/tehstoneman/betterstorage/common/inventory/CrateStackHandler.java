@@ -129,7 +129,7 @@ public class CrateStackHandler extends ItemStackHandler
 	 *            Slot to query
 	 * @return ItemStack in given slot. Empty Itemstack if the slot is empty.
 	 */
-	public ItemStack getStackInSlotFixed( int slot )
+	public ItemStack getItemFixed( int slot )
 	{
 		return super.getStackInSlot( slot );
 	}
@@ -242,7 +242,7 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		for( int i = 1; i < stacks.size(); i++ )
 			if( !stacks.get( i ).isEmpty() )
-				if( mergeItemStack( stacks.get( i ), 0, i ) == 0 )
+				if( moveItemStackTo( stacks.get( i ), 0, i ) == 0 )
 					stacks.set( i, ItemStack.EMPTY );
 	}
 
@@ -257,7 +257,7 @@ public class CrateStackHandler extends ItemStackHandler
 	 *            The index to end merging from
 	 * @return The final size of the merged stack
 	 */
-	public int mergeItemStack( ItemStack stack, int startIndex, int endIndex )
+	public int moveItemStackTo( ItemStack stack, int startIndex, int endIndex )
 	{
 		int i = startIndex;
 
@@ -272,7 +272,7 @@ public class CrateStackHandler extends ItemStackHandler
 					stack.setCount( 0 );
 					break;
 				}
-				else if( ItemStack.areItemsEqual( stack, itemstack ) )
+				else if( ItemStack.isSame( stack, itemstack ) )
 				{
 					final int newSize = itemstack.getCount() + stack.getCount();
 
@@ -296,7 +296,7 @@ public class CrateStackHandler extends ItemStackHandler
 
 	public boolean canAdd( TileEntityCrate crate )
 	{
-		return getNumCrates() < maxCratePileSize && ( region.contains( crate.getPos() ) || canExpand( crate ) );
+		return getNumCrates() < maxCratePileSize && ( region.contains( crate.getBlockPos() ) || canExpand( crate ) );
 	}
 
 	private boolean canExpand( TileEntityCrate crate )
@@ -310,7 +310,7 @@ public class CrateStackHandler extends ItemStackHandler
 		final int height = region.height();
 		final int depth = region.depth();
 
-		if( crate.getPos().getX() < region.posMin.getX() || crate.getPos().getX() > region.posMax.getX() )
+		if( crate.getBlockPos().getX() < region.posMin.getX() || crate.getBlockPos().getX() > region.posMax.getX() )
 		{
 			if( width >= maxCratePileSize )
 				return false;
@@ -318,7 +318,7 @@ public class CrateStackHandler extends ItemStackHandler
 			if( width >= maxDiff + Math.min( height, depth ) )
 				return false;
 		}
-		else if( crate.getPos().getZ() < region.posMin.getZ() || crate.getPos().getZ() > region.posMax.getZ() )
+		else if( crate.getBlockPos().getZ() < region.posMin.getZ() || crate.getBlockPos().getZ() > region.posMax.getZ() )
 		{
 			if( depth >= maxCratePileSize )
 				return false;
@@ -326,7 +326,7 @@ public class CrateStackHandler extends ItemStackHandler
 			if( depth >= maxDiff + Math.min( height, depth ) )
 				return false;
 		}
-		else if( crate.getPos().getY() < region.posMin.getY() || crate.getPos().getY() > region.posMax.getY() )
+		else if( crate.getBlockPos().getY() < region.posMin.getY() || crate.getBlockPos().getY() > region.posMax.getY() )
 		{
 			if( height >= maxCratePileSize )
 				return false;
@@ -345,7 +345,7 @@ public class CrateStackHandler extends ItemStackHandler
 		else
 			region.expandToContain( crate );
 
-		listCrates.add( crate.getPos() );
+		listCrates.add( crate.getBlockPos() );
 		stacks = copyStack( stacks, getCapacity() );
 
 		if( crate.hasID() && !crate.getPileID().equals( getPileID() ) )
@@ -355,7 +355,7 @@ public class CrateStackHandler extends ItemStackHandler
 		}
 
 		crate.setPileID( getPileID() );
-		crate.markDirty();
+		crate.setChanged();
 	}
 
 	/**
@@ -368,12 +368,12 @@ public class CrateStackHandler extends ItemStackHandler
 	 */
 	public NonNullList< ItemStack > removeCrate( TileEntityCrate crate )
 	{
-		if( listCrates != null && listCrates.contains( crate.getPos() ) )
+		if( listCrates != null && listCrates.contains( crate.getBlockPos() ) )
 		{
-			final int i = listCrates.indexOf( crate.getPos() );
+			final int i = listCrates.indexOf( crate.getBlockPos() );
 			listCrates.remove( i );
-			final CrateStackCollection collection = CrateStackCollection.getCollection( crate.getWorld() );
-			collection.markDirty();
+			final CrateStackCollection collection = CrateStackCollection.getCollection( crate.getLevel() );
+			collection.setDirty();
 			if( getNumCrates() > 0 )
 			{
 				final NonNullList< ItemStack > overflow = copyStack( stacks, getCapacity(), stacks.size() );
@@ -399,7 +399,7 @@ public class CrateStackHandler extends ItemStackHandler
 	public void removeItems( ItemStack itemStack )
 	{
 		int i = 0;
-		while( i < stacks.size() && !ItemStack.areItemStacksEqual( stacks.get( i ), itemStack ) )
+		while( i < stacks.size() && !ItemStack.matches( stacks.get( i ), itemStack ) )
 			i++;
 
 		if( i < stacks.size() && !stacks.get( i ).isEmpty() )
@@ -448,7 +448,7 @@ public class CrateStackHandler extends ItemStackHandler
 	{
 		for( final ItemStack itemStack : stackIn )
 			if( !itemStack.isEmpty() )
-				if( mergeItemStack( itemStack, 0, stacks.size() ) != 0 )
+				if( moveItemStackTo( itemStack, 0, stacks.size() ) != 0 )
 					addItems( itemStack );
 	}
 
@@ -472,7 +472,7 @@ public class CrateStackHandler extends ItemStackHandler
 			indexSlots = getShuffledIndexes( stacks.size() );
 		}
 		if( crateToUpdate != null )
-			crateToUpdate.markDirty();
+			crateToUpdate.setChanged();
 	}
 
 	@Override
@@ -494,7 +494,7 @@ public class CrateStackHandler extends ItemStackHandler
 			nbt.put( "Crates", list );
 		}
 		if( pileID != null )
-			nbt.putUniqueId( "PileID", pileID );
+			nbt.putUUID( "PileID", pileID );
 
 		if( region != null )
 			nbt.put( "Region", region.toCompound() );
@@ -513,8 +513,8 @@ public class CrateStackHandler extends ItemStackHandler
 			for( final INBT tag : list )
 				listCrates.add( NBTUtil.readBlockPos( (CompoundNBT)tag ) );
 		}
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
+		if( nbt.hasUUID( "PileID" ) )
+			pileID = nbt.getUUID( "PileID" );
 
 		if( nbt.contains( "Region" ) )
 			region = Region.fromCompound( nbt.getCompound( "Region" ) );

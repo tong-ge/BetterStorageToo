@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Basic IInventory with name and default
- * decrStackSize and getStackInSlotOnClosing,
+ * remove and getItemOnClosing,
  */
 public abstract class InventoryBetterStorage implements IInventory
 {
@@ -35,9 +35,9 @@ public abstract class InventoryBetterStorage implements IInventory
 	}
 
 	@Override
-	public ItemStack decrStackSize( int slot, int amount )
+	public ItemStack remove( int slot, int amount )
 	{
-		ItemStack stack = getStackInSlot( slot );
+		ItemStack stack = getItem( slot );
 		if( stack == null )
 			return null;
 		amount = Math.min( amount, stack.stackSize );
@@ -45,7 +45,7 @@ public abstract class InventoryBetterStorage implements IInventory
 		{
 			stack.stackSize -= amount;
 			stack = StackUtils.copyStack( stack, amount );
-			markDirty();
+			setChanged();
 		}
 		else
 			setInventorySlotContents( slot, null );
@@ -54,8 +54,8 @@ public abstract class InventoryBetterStorage implements IInventory
 
 	/*
 	 * @Override
-	 * public ItemStack getStackInSlotOnClosing(int slot) {
-	 * ItemStack stack = getStackInSlot(slot);
+	 * public ItemStack getItemOnClosing(int slot) {
+	 * ItemStack stack = getItem(slot);
 	 * if (stack == null) return null;
 	 * setInventorySlotContents(slot, null);
 	 * return stack;
@@ -69,7 +69,7 @@ public abstract class InventoryBetterStorage implements IInventory
 	}
 
 	@Override
-	public boolean isItemValidForSlot( int slot, ItemStack stack )
+	public boolean mayPlaceForSlot( int slot, ItemStack stack )
 	{
 		return true;
 	}

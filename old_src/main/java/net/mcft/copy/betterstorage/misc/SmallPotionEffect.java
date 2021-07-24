@@ -29,7 +29,7 @@ public class SmallPotionEffect extends PotionEffect
 		// Potion potion = Potion.potionTypes[getPotion()];
 		/*
 		 * if (entity.isEntityUndead() ? (potion == Potion.heal) : (potion == Potion.harm))
-		 * entity.attackEntityFrom(DamageSource.magic, smallEffect);
+		 * entity.hurt(DamageSource.magic, smallEffect);
 		 * else if (potion == Potion.heal) entity.heal(smallEffect);
 		 * else
 		 */ super.performEffect( entity );

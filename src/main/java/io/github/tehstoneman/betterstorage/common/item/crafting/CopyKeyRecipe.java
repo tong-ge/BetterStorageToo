@@ -85,7 +85,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 					else
 						ingredient = recipeItems.get( k + l * recipeWidth );
 
-				if( !ingredient.test( craftingInventory.getStackInSlot( i + j * craftingInventory.getWidth() ) ) )
+				if( !ingredient.test( craftingInventory.getItem( i + j * craftingInventory.getWidth() ) ) )
 					return false;
 			}
 
@@ -93,44 +93,44 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack getRecipeOutput()
+	public ItemStack getResultItem()
 	{
 		return recipeOutput;
 	}
 
 	@Override
-	public ItemStack getCraftingResult( CraftingInventory inv )
+	public ItemStack assemble( CraftingInventory inv )
 	{
-		// final ItemStack outputStack = ItemStack.EMPTY;
-		final ItemStack outputStack = getRecipeOutput().copy();
+		// final ItemStack outset = ItemStack.EMPTY;
+		final ItemStack outset = getResultItem().copy();
 
-		if( !outputStack.isEmpty() )
+		if( !outset.isEmpty() )
 		{
-			final CompoundNBT tagCompound = outputStack.getOrCreateTag();
+			final CompoundNBT tagCompound = outset.getOrCreateTag();
 
-			for( int i = 0; i < inv.getSizeInventory(); ++i )
+			for( int i = 0; i < inv.getContainerSize(); ++i )
 			{
-				final ItemStack ingredientStack = inv.getStackInSlot( i );
+				final ItemStack ingredientStack = inv.getItem( i );
 
 				if( !ingredientStack.isEmpty() && ingredientStack.getItem() instanceof IKey )
 					if( ingredientStack.hasTag() )
 						tagCompound.merge( ingredientStack.getTag() );
 			}
 
-			outputStack.setTag( tagCompound );
+			outset.setTag( tagCompound );
 		}
 
-		return outputStack;
+		return outset;
 	}
 
 	@Override
 	public NonNullList< ItemStack > getRemainingItems( CraftingInventory inv )
 	{
-		final NonNullList< ItemStack > ret = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
+		final NonNullList< ItemStack > ret = NonNullList.withSize( inv.getContainerSize(), ItemStack.EMPTY );
 
 		for( int i = 0; i < ret.size(); ++i )
 		{
-			final ItemStack itemStack = inv.getStackInSlot( i );
+			final ItemStack itemStack = inv.getItem( i );
 			if( !itemStack.isEmpty() )
 				if( itemStack.getItem() instanceof IKey )
 					ret.set( i, itemStack.copy() );
@@ -142,7 +142,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean canFit( int width, int height )
+	public boolean canCraftInDimensions( int width, int height )
 	{
 		return width >= recipeWidth && height >= recipeHeight;
 	}
@@ -154,7 +154,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean isDynamic()
+	public boolean isSpecial()
 	{
 		return false;
 	}
@@ -174,7 +174,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 			if( " ".equals( entry.getKey() ) )
 				throw new JsonSyntaxException( "Invalid key entry: ' ' is a reserved symbol." );
 
-			map.put( entry.getKey(), Ingredient.deserialize( entry.getValue() ) );
+			map.put( entry.getKey(), Ingredient.fromJson( entry.getValue() ) );
 		}
 
 		map.put( " ", Ingredient.EMPTY );
@@ -246,7 +246,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 		{
 			for( int i = 0; i < astring.length; ++i )
 			{
-				final String s = JSONUtils.getString( jsonArr.get( i ), "pattern[" + i + "]" );
+				final String s = JSONUtils.convertToString( jsonArr.get( i ), "pattern[" + i + "]" );
 				if( s.length() > MAX_WIDTH )
 					throw new JsonSyntaxException( "Invalid pattern: too many columns, " + MAX_WIDTH + " is maximum" );
 
@@ -289,44 +289,44 @@ public class CopyKeyRecipe extends SpecialRecipe
 			implements IRecipeSerializer< CopyKeyRecipe >
 	{
 		@Override
-		public CopyKeyRecipe read( ResourceLocation recipeId, JsonObject json )
+		public CopyKeyRecipe fromJson( ResourceLocation recipeId, JsonObject json )
 		{
-			final String s = JSONUtils.getString( json, "group", "" );
-			final Map< String, Ingredient > map = deserializeKey( JSONUtils.getJsonObject( json, "key" ) );
-			final String[] astring = shrink( patternFromJson( JSONUtils.getJsonArray( json, "pattern" ) ) );
+			final String s = JSONUtils.getAsString( json, "group", "" );
+			final Map< String, Ingredient > map = deserializeKey( JSONUtils.convertToJsonObject( json, "key" ) );
+			final String[] astring = shrink( patternFromJson( JSONUtils.convertToJsonArray( json, "pattern" ) ) );
 			final int i = astring[0].length();
 			final int j = astring.length;
 			final NonNullList< Ingredient > nonnulllist = deserializeIngredients( astring, map, i, j );
-			final ItemStack itemstack = ShapedRecipe.deserializeItem( JSONUtils.getJsonObject( json, "result" ) );
+			final ItemStack itemstack = ShapedRecipe.itemFromJson( JSONUtils.convertToJsonObject( json, "result" ) );
 			return new CopyKeyRecipe( recipeId, s, i, j, nonnulllist, itemstack );
 		}
 
 		@Override
-		public CopyKeyRecipe read( ResourceLocation recipeId, PacketBuffer buffer )
+		public CopyKeyRecipe fromNetwork( ResourceLocation recipeId, PacketBuffer buffer )
 		{
 			final int i = buffer.readVarInt();
 			final int j = buffer.readVarInt();
-			final String s = buffer.readString( 32767 );
+			final String s = buffer.readUtf( 32767 );
 			final NonNullList< Ingredient > nonnulllist = NonNullList.withSize( i * j, Ingredient.EMPTY );
 
 			for( int k = 0; k < nonnulllist.size(); ++k )
-				nonnulllist.set( k, Ingredient.read( buffer ) );
+				nonnulllist.set( k, Ingredient.fromNetwork( buffer ) );
 
-			final ItemStack itemstack = buffer.readItemStack();
+			final ItemStack itemstack = buffer.readItem();
 			return new CopyKeyRecipe( recipeId, s, i, j, nonnulllist, itemstack );
 		}
 
 		@Override
-		public void write( PacketBuffer buffer, CopyKeyRecipe recipe )
+		public void toNetwork( PacketBuffer buffer, CopyKeyRecipe recipe )
 		{
 			buffer.writeVarInt( recipe.recipeWidth );
 			buffer.writeVarInt( recipe.recipeHeight );
-			buffer.writeString( recipe.getGroup() );
+			buffer.writeUtf( recipe.getGroup() );
 
 			for( final Ingredient ingredient : recipe.recipeItems )
-				ingredient.write( buffer );
+				ingredient.toNetwork( buffer );
 
-			buffer.writeItemStack( recipe.getRecipeOutput() );
+			buffer.writeItem( recipe.getResultItem() );
 		}
 	}
 }

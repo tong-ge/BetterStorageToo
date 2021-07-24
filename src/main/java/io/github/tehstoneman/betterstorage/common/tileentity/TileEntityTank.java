@@ -27,7 +27,7 @@ public class TileEntityTank extends TileEntity
 																	@Override
 																	protected void onContentsChanged()
 																	{
-																		TileEntityTank.this.markDirty();
+																		TileEntityTank.this.setChanged();
 																	}
 																};
 	private final LazyOptional< IFluidHandler >	fluidHandler	= LazyOptional.of( () -> fluidTank );
@@ -72,12 +72,12 @@ public class TileEntityTank extends TileEntity
 
 	public TileEntityTank getTankAt( BlockPos pos )
 	{
-		return (TileEntityTank)world.getTileEntity( pos );
+		return (TileEntityTank)level.getBlockEntity( pos );
 	}
 
 	public boolean isMain()
 	{
-		return !getBlockState().get( BlockTank.DOWN );
+		return !getBlockState().getValue( BlockTank.DOWN );
 	}
 
 	public TileEntityTank getMain()
@@ -86,8 +86,8 @@ public class TileEntityTank extends TileEntity
 		{
 			if( isMain() )
 				return this;
-			final TileEntityTank mainTank = getTankAt( pos.down() ).getMain();
-			mainPos = mainTank.getPos();
+			final TileEntityTank mainTank = getTankAt( worldPosition.below() ).getMain();
+			mainPos = mainTank.getBlockPos();
 			return mainTank;
 		}
 		else
@@ -96,20 +96,20 @@ public class TileEntityTank extends TileEntity
 
 	public int getFluidAmountAbove()
 	{
-		final TileEntityTank tank = getTankAt( pos.up() );
+		final TileEntityTank tank = getTankAt( worldPosition.above() );
 		return tank != null ? tank.getFluid().getAmount() : 0;
 	}
 
 	public int getFluidAmountBelow()
 	{
-		final TileEntityTank tank = getTankAt( pos.down() );
+		final TileEntityTank tank = getTankAt( worldPosition.below() );
 		return tank != null ? tank.getFluid().getAmount() : 0;
 	}
 
 	public boolean isStacked()
 	{
 		final BlockState state = getBlockState();
-		return state.get( BlockTank.UP ) || state.get( BlockTank.DOWN );
+		return state.getValue( BlockTank.UP ) || state.getValue( BlockTank.DOWN );
 	}
 
 	public FluidTankHandler getHandler()
@@ -120,11 +120,11 @@ public class TileEntityTank extends TileEntity
 	public ArrayList< FluidTankHandler > getStackedTanks()
 	{
 		final ArrayList< FluidTankHandler > tanks = new ArrayList< >();
-		BlockPos tankPos = pos;
-		while( world.getBlockState( tankPos ).getBlock() instanceof BlockTank )
+		BlockPos tankPos = worldPosition;
+		while( level.getBlockState( tankPos ).getBlock() instanceof BlockTank )
 		{
 			tanks.add( getTankAt( tankPos ).getHandler() );
-			tankPos = tankPos.up();
+			tankPos = tankPos.above();
 		}
 		return tanks;
 	}
@@ -156,15 +156,15 @@ public class TileEntityTank extends TileEntity
 	 */
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		fluidTank.writeToNBT( nbt );
 		nbt.putInt( "tankCount", tankCount );
 
 		if( !mainPos.equals( BlockPos.ZERO ) )
-			nbt.putLong( "mainPos", mainPos.toLong() );
+			nbt.putLong( "mainPos", mainPos.asLong() );
 
-		return super.write( nbt );
+		return super.save( nbt );
 	}
 
 	/*

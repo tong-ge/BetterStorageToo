@@ -19,17 +19,17 @@ public class DrinkingHelmetRecipe extends ShapedRecipes
 	}
 
 	@Override
-	public ItemStack getCraftingResult( InventoryCrafting crafting )
+	public ItemStack assemble( InventoryCrafting crafting )
 	{
 		ItemStack drinkingHelmet = null;
 		ItemStack[] potions = null;
-		for( int i = 0; i < crafting.getSizeInventory(); i++ )
+		for( int i = 0; i < crafting.getContainerSize(); i++ )
 		{
-			drinkingHelmet = crafting.getStackInSlot( i );
+			drinkingHelmet = crafting.getItem( i );
 			if( drinkingHelmet != null && drinkingHelmet.getItem() instanceof ItemDrinkingHelmet )
 			{
 				drinkingHelmet = drinkingHelmet.copy();
-				potions = new ItemStack[] { crafting.getStackInSlot( i + 1 ), crafting.getStackInSlot( i - 1 ) };
+				potions = new ItemStack[] { crafting.getItem( i + 1 ), crafting.getItem( i - 1 ) };
 				break;
 			}
 		}

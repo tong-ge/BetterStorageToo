@@ -73,7 +73,7 @@ public class CardboardRepairRecipe implements IStationRecipe
 			final ItemStack stack = input[i];
 			if( stack == null )
 				continue;
-			ItemStack outputStack = null;
+			ItemStack outset = null;
 
 			if( stack.getItem() instanceof ICardboardItem )
 			{
@@ -85,10 +85,10 @@ public class CardboardRepairRecipe implements IStationRecipe
 				 * experienceCost += calculateCost(ench);
 				 */
 
-				outputStack = StackUtils.copyStack( stack, 1 );
-				outputStack.setItemDamage( 0 );
+				outset = StackUtils.copyStack( stack, 1 );
+				outset.setItemDamage( 0 );
 
-				final ItemStack requiredStack = outputStack.copy();
+				final ItemStack requiredStack = outset.copy();
 				requiredStack.setItemDamage( OreDictionary.WILDCARD_VALUE );
 				requiredStack.setTagCompound( null );
 				requiredInput[i] = new RecipeInputItemStack( requiredStack );
@@ -97,7 +97,7 @@ public class CardboardRepairRecipe implements IStationRecipe
 			else
 				requiredInput[i] = numSheetsNeeded-- > 0 ? sheetUsed : sheetUnused;
 
-			output[i] = outputStack;
+			output[i] = outset;
 		}
 
 		return new StationCrafting( output, requiredInput, experienceCost );
@@ -158,7 +158,7 @@ public class CardboardRepairRecipe implements IStationRecipe
 	 * @Override
 	 * 
 	 * @SideOnly(Side.CLIENT)
-	 * public List<IRecipeInput> getPossibleInputs() {
+	 * public List<IRecipeInput> getBlockPossibleInputs() {
 	 * return Arrays.<IRecipeInput>asList(RecipeInputCardboard.instance,
 	 * new RecipeInputItemStack(new ItemStack(BetterStorageItems.cardboardSheet)));
 	 * }
@@ -166,13 +166,13 @@ public class CardboardRepairRecipe implements IStationRecipe
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public List< ItemStack > getPossibleOutputs()
+	public List< ItemStack > getBlockPossibleOutputs()
 	{
 		return Collections.emptyList();
 	}
 
 	@Override
-	public List< IRecipeInput > getPossibleInputs()
+	public List< IRecipeInput > getBlockPossibleInputs()
 	{
 		// TODO Auto-generated method stub
 		return null;

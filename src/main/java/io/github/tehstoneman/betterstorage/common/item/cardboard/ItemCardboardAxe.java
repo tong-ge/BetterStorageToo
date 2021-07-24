@@ -10,7 +10,7 @@ public class ItemCardboardAxe extends AxeItem implements ICardboardItem
 {
 	public ItemCardboardAxe()
 	{
-		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

@@ -35,7 +35,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public void setUses( int uses )
 	{
 		this.uses = uses;
-		markDirty();
+		setChanged();
 	}
 
 	public int getColor()
@@ -48,7 +48,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public void setColor( int color )
 	{
 		this.color = color;
-		markDirty();
+		setChanged();
 	}
 
 	/*
@@ -72,7 +72,7 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
-		return new ContainerCardboardBox( windowID, playerInventory, world, pos );
+		return new ContainerCardboardBox( windowID, playerInventory, level, worldPosition );
 	}
 
 	/*
@@ -106,14 +106,14 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	 */
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		if( ItemBlockCardboardBox.getMaxUses() > 0 )
 			nbt.putInt( "Uses", uses );
 		if( color >= 0 )
 			nbt.putInt( "Color", color );
 
-		return super.write( nbt );
+		return super.save( nbt );
 	}
 
 	/*

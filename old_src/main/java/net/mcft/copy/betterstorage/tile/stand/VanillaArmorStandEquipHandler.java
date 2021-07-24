@@ -44,7 +44,7 @@ public class VanillaArmorStandEquipHandler extends ArmorStandEquipHandler
 	{
 		// player.setCurrentItemOrArmor(region.ordinal() + 1, item);
 		// Shouldn't this be done automatically?
-		// ((EntityPlayerMP)player).playerNetServerHandler.sendPacket( new SPacketSetSlot(player.openContainer.windowId, 8 - region.ordinal(), item));
+		// ((EntityPlayerMP)player).playerNetServerHandler.sendPacket( new SPacketSetSlot(player.containerMenu.windowId, 8 - region.ordinal(), item));
 	}
 
 }

@@ -14,6 +14,6 @@ public class BlockItemBetterStorage extends BlockItem
 
 	public BlockItemBetterStorage( Block blockIn, Properties properties )
 	{
-		super( blockIn, properties.group( BetterStorage.ITEM_GROUP ) );
+		super( blockIn, properties.tab( BetterStorage.ITEM_GROUP ) );
 	}
 }

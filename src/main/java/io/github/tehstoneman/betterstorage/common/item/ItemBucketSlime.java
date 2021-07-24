@@ -62,7 +62,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * @Override
 	 *
 	 * @SideOnly( Side.CLIENT )
-	 * public void addInformation( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
+	 * public void appendHoverText( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
 	 * {
 	 * final EnumSlime slime = EnumSlime.byMetadata( stack.getMetadata() );
 	 * final ResourceLocation resourceLocation = slime.getResourceLocation();
@@ -122,10 +122,10 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public EnumActionResult onItemUse( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
+	 * public EnumActionResult useOn( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
 	 * float hitZ )
 	 * {
-	 * final ItemStack stack = player.getHeldItem( hand );
+	 * final ItemStack stack = player.getItemInHand( hand );
 	 * // If player is sneaking, eat slime
 	 * // instead of placing it in the world.
 	 * if( player.isSneaking() )
@@ -160,7 +160,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * }
 	 *
 	 * if( !player.capabilities.isCreativeMode )
-	 * player.setHeldItem( EnumHand.MAIN_HAND, new ItemStack( Items.BUCKET ) );
+	 * player.setItemInHand( EnumHand.MAIN_HAND, new ItemStack( Items.BUCKET ) );
 	 * }
 	 *
 	 * return EnumActionResult.SUCCESS;
@@ -187,23 +187,23 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public ActionResult< ItemStack > onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand handIn )
+	 * public ActionResult< ItemStack > use( World worldIn, EntityPlayer playerIn, EnumHand handIn )
 	 * {
 	 * if( handIn == EnumHand.MAIN_HAND )
 	 * {
-	 * final ItemStack stack = playerIn.getHeldItem( handIn );
+	 * final ItemStack stack = playerIn.getItemInHand( handIn );
 	 * // playerIn.canEat( true );
 	 * playerIn.setActiveHand( handIn );
-	 * return new ActionResult( EnumActionResult.SUCCESS, playerIn.getHeldItem( handIn ) );
+	 * return new ActionResult( EnumActionResult.SUCCESS, playerIn.getItemInHand( handIn ) );
 	 * }
 	 *
-	 * return super.onItemRightClick( worldIn, playerIn, handIn );
+	 * return super.use( worldIn, playerIn, handIn );
 	 * }
 	 */
 
 	/*
 	 * @Override
-	 * public ItemStack onItemUseFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving )
+	 * public ItemStack useOnFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving )
 	 * {
 	 * if( entityLiving instanceof EntityPlayer )
 	 * {
@@ -272,17 +272,17 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * compound.setTag( "effects", effectList );
 	 * stack.setTagCompound( compound );
 	 * }
-	 * if( player.getHeldItemMainhand().getCount() <= 1 )
-	 * player.setHeldItem( EnumHand.MAIN_HAND, stack );
+	 * if( player.getMainHandItem().getCount() <= 1 )
+	 * player.setItemInHand( EnumHand.MAIN_HAND, stack );
 	 *
 	 * else
 	 * {
-	 * player.getHeldItemMainhand().shrink( 1 );
+	 * player.getMainHandItem().shrink( 1 );
 	 * if( !player.inventory.addItemStackToInventory( stack ) )
 	 * player.dropItem( stack, true, false );
 	 *
 	 * else
-	 * ( (EntityPlayerMP)player ).inventoryContainer.detectAndSendChanges();
+	 * ( (EntityPlayerMP)player ).inventoryContainer.broadcastChanges();
 	 * }
 	 *
 	 * slime.playSound( SoundEvents.ENTITY_SLIME_JUMP, 1.2F, 0.8F );
@@ -418,7 +418,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		 *
 		 * @Override
 		 * public void onEaten(EntityPlayer player, boolean potionEffects) {
-		 * player.attackEntityFrom(DamageSource.magic, 3.0F);
+		 * player.hurt(DamageSource.magic, 3.0F);
 		 * player.addPotionEffect(new PotionEffect(Potion.jump.id, (potionEffects ? 4 : 8) * 20, 0));
 		 * player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (potionEffects ? 4 : 8) * 20, 1));
 		 * player.addPotionEffect(new PotionEffect(Potion.resistance.id, 30 * 20, 1));
@@ -654,7 +654,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		}
 
 		@Override
-		public String getString()
+		public String getSerializedName()
 		{
 			return getName();
 		}

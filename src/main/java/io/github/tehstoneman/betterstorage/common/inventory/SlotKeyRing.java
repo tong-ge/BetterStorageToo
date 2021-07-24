@@ -13,7 +13,7 @@ public class SlotKeyRing extends Slot
 	}
 
 	@Override
-	public boolean isItemValid( ItemStack stack )
+	public boolean mayPlace( ItemStack stack )
 	{
 		return stack == null || stack.getItem() instanceof IKey && ( (IKey)stack.getItem() ).isNormalKey();
 	}

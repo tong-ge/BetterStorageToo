@@ -47,7 +47,7 @@ public class RecipeInputIngredient extends RecipeInputBase {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public List<ItemStack> getPossibleMatches() {
+	public List<ItemStack> getBlockPossibleMatches() {
 		List<IItemStack> stacks = ingredient.getItems();
 		return ((stacks != null) ? MTHelper.toStacks(stacks) : Arrays.asList(new ItemStack(Blocks.air)));
 	}

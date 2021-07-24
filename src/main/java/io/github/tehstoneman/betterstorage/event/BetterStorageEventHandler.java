@@ -39,15 +39,15 @@ public class BetterStorageEventHandler
 		if( blockState.hasTileEntity() )
 		{
 			final PlayerEntity player = event.getPlayer();
-			final World world = player.getEntityWorld();
-			final TileEntity tileEntity = world.getTileEntity( event.getPos() );
+			final World world = player.level;
+			final TileEntity tileEntity = world.getBlockEntity( event.getPos() );
 			if( tileEntity instanceof IKeyLockable )
 			{
 				final IKeyLockable lockable = (IKeyLockable)tileEntity;
 				if( lockable != null && lockable.isLocked() )
 					if( BetterStorageConfig.COMMON.lockBreakable.get() )
 					{
-						final ItemStack tool = player.getHeldItemMainhand();
+						final ItemStack tool = player.getMainHandItem();
 						final Set< ToolType > toolTypes = tool.getToolTypes();
 						float speed = event.getOriginalSpeed() * 0.2f;
 						if( !( toolTypes.contains( ToolType.AXE ) || toolTypes.contains( ToolType.PICKAXE ) ) )
@@ -56,7 +56,7 @@ public class BetterStorageEventHandler
 						{
 							final int level = Math.max( tool.getHarvestLevel( ToolType.AXE, player, blockState ),
 									tool.getHarvestLevel( ToolType.PICKAXE, player, blockState ) );
-							if( level < EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), lockable.getLock() ) )
+							if( level < EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), lockable.getLock() ) )
 								speed *= 0.1f;
 						}
 						event.setNewSpeed( speed );
@@ -86,7 +86,7 @@ public class BetterStorageEventHandler
 			// If no tank available, try to place milk in world
 			if( !result )
 			{
-				final FluidActionResult fluidActionResult = FluidUtil.tryPlaceFluid( player, world, hand, pos.offset( face ),
+				final FluidActionResult fluidActionResult = FluidUtil.tryPlaceFluid( player, world, hand, pos.offset( face.getNormal() ),
 						new ItemStack( BetterStorageItems.MILK_BUCKET.get() ), new FluidStack( BetterStorageFluids.MILK.get(), 1000 ) );
 				result = fluidActionResult.isSuccess();
 			}
@@ -98,7 +98,7 @@ public class BetterStorageEventHandler
 				if( event.isCancelable() )
 					event.setCanceled( true );
 				if( !event.getPlayer().isCreative() )
-					event.getPlayer().setHeldItem( hand, new ItemStack( Items.BUCKET ) );
+					event.getPlayer().setItemInHand( hand, new ItemStack( Items.BUCKET ) );
 			}
 		}
 	}

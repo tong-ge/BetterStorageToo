@@ -90,11 +90,11 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public CrateStackHandler getCrateStackHandler()
 	{
-		if( world.isRemote )
+		if( level.isClientSide )
 			return new CrateStackHandler( getCapacity() );
 
-		final CrateStackCollection collection = CrateStackCollection.getCollection( world );
-		final CrateStackHandler handler = collection.getOrCreateCratePile( getPileID() );
+		final CrateStackCollection collection = CrateStackCollection.getCollection( level );
+		final CrateStackHandler handler = collection.computeIfAbsentCratePile( getPileID() );
 		handler.sendUpdatesTo( this );
 
 		return handler;
@@ -104,7 +104,7 @@ public class TileEntityCrate extends TileEntityContainer
 	{
 		if( pileID == null )
 		{
-			final CrateStackCollection collection = CrateStackCollection.getCollection( world );
+			final CrateStackCollection collection = CrateStackCollection.getCollection( level );
 			final CrateStackHandler handler = collection.createCratePile();
 			setPileID( handler.getPileID() );
 		}
@@ -119,18 +119,18 @@ public class TileEntityCrate extends TileEntityContainer
 	public void setPileID( @NotNull UUID pileID )
 	{
 		this.pileID = pileID;
-		markDirty();
+		setChanged();
 	}
 
 	public void updateConnections()
 	{
-		if( !getWorld().isRemote )
+		if( !getLevel().isClientSide )
 		{
 			final CrateStackHandler handler = getCrateStackHandler();
 			pileID = handler.getPileID();
 			numCrates = handler.getNumCrates();
 			checkPileConnections( pileID );
-			markDirty();
+			setChanged();
 			notifyRegionUpdate( handler.getRegion(), pileID );
 		}
 	}
@@ -138,19 +138,19 @@ public class TileEntityCrate extends TileEntityContainer
 	private void checkPileConnections( UUID pileID )
 	{
 		final CrateStackHandler handler = getCrateStackHandler();
-		final CrateStackCollection collection = CrateStackCollection.getCollection( world );
+		final CrateStackCollection collection = CrateStackCollection.getCollection( level );
 
 		// Remove empty pile
 		if( handler.getNumCrates() <= 0 )
 		{
 			collection.removeCratePile( pileID );
 			final BlockState state = getBlockState();
-			getWorld().notifyBlockUpdate( pos, state, state, 3 );
+			getLevel().sendBlockUpdated( worldPosition, state, state, 3 );
 			return;
 		}
 
 		// If there's more than one crate set, they need to split.
-		final List< HashSet< TileEntityCrate > > crateSets = getCrateSets( pos, pileID );
+		final List< HashSet< TileEntityCrate > > crateSets = getCrateSets( worldPosition, pileID );
 		if( crateSets.size() > 1 )
 			// The first crate set will keep the original pile data.
 			// All other sets will get new pile data objects.
@@ -175,7 +175,7 @@ public class TileEntityCrate extends TileEntityContainer
 		// Trim the original map to the size it actually is.
 		// This is needed because the crates may not be removed in
 		// order, from outside to inside.
-		handler.trimRegion( getWorld() );
+		handler.trimRegion( getLevel() );
 		notifyRegionUpdate( handler.getRegion(), getPileID() );
 	}
 
@@ -185,7 +185,7 @@ public class TileEntityCrate extends TileEntityContainer
 		for( final Direction dir : Direction.values() )
 		{
 			// Continue if this neighbor block is not part of the crate pile.
-			final TileEntityCrate tileCrate = getCrateAt( world, pos.offset( dir ) );
+			final TileEntityCrate tileCrate = getCrateAt( level, pos.relative( dir ) );
 			if( tileCrate != null )
 				if( !isInSet( tileCrate, crateSets ) )
 				{
@@ -193,7 +193,7 @@ public class TileEntityCrate extends TileEntityContainer
 					final HashSet< TileEntityCrate > set = new HashSet<>();
 					set.add( tileCrate );
 					for( final Direction ndir : Direction.values() )
-						checkConnections( tileCrate.getPos().offset( ndir ), pileID, set );
+						checkConnections( tileCrate.getBlockPos().relative( ndir ), pileID, set );
 					crateSets.add( set );
 				}
 		}
@@ -211,12 +211,12 @@ public class TileEntityCrate extends TileEntityContainer
 
 	private void checkConnections( BlockPos pos, UUID pileID, HashSet< TileEntityCrate > set )
 	{
-		final TileEntityCrate tileCrate = getCrateAt( world, pos );
+		final TileEntityCrate tileCrate = getCrateAt( level, pos );
 		if( tileCrate == null || tileCrate == this || !pileID.equals( tileCrate.getPileID() ) || set.contains( tileCrate ) )
 			return;
 		set.add( tileCrate );
 		for( final Direction ndir : Direction.values() )
-			checkConnections( pos.offset( ndir ), pileID, set );
+			checkConnections( pos.relative( ndir ), pileID, set );
 	}
 
 	public void notifyRegionUpdate( Region region, UUID pileID )
@@ -225,12 +225,12 @@ public class TileEntityCrate extends TileEntityContainer
 			return;
 		for( final BlockPos blockPos : BlockUtils.getAllInBox( region ) )
 		{
-			final TileEntity te = getWorld().getTileEntity( blockPos );
+			final TileEntity te = getLevel().getBlockEntity( blockPos );
 			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
 			{
-				te.markDirty();
-				final BlockState state = getWorld().getBlockState( blockPos );
-				getWorld().notifyBlockUpdate( blockPos, state, state, 3 );
+				te.setChanged();
+				final BlockState state = getLevel().getBlockState( blockPos );
+				getLevel().sendBlockUpdated( blockPos, state, state, 3 );
 			}
 		}
 	}
@@ -240,7 +240,7 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public int getNumCrates()
 	{
-		if( getWorld().isRemote )
+		if( getLevel().isClientSide )
 			return numCrates;
 		return getCrateStackHandler().getNumCrates();
 	}
@@ -252,7 +252,7 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public int getCapacity()
 	{
-		if( getWorld().isRemote )
+		if( getLevel().isClientSide )
 			return capacity;
 		return getCrateStackHandler().getCapacity();
 	}
@@ -265,11 +265,11 @@ public class TileEntityCrate extends TileEntityContainer
 	// Comparator related
 
 	@Override
-	public void markDirty()
+	public void setChanged()
 	{
-		super.markDirty();
-		if( !world.isRemote )
-			CrateStackCollection.getCollection( getWorld() ).markDirty();
+		super.setChanged();
+		if( !level.isClientSide )
+			CrateStackCollection.getCollection( getLevel() ).setDirty();
 	}
 
 	// TileEntity synchronization
@@ -280,19 +280,19 @@ public class TileEntityCrate extends TileEntityContainer
 		final CompoundNBT nbt = new CompoundNBT();
 
 		if( pileID != null )
-			nbt.putUniqueId( "PileID", pileID );
+			nbt.putUUID( "PileID", pileID );
 		nbt.putInt( "NumCrates", getNumCrates() );
 		nbt.putInt( "Capacity", getCapacity() );
-		return new SUpdateTileEntityPacket( getPos(), 1, nbt );
+		return new SUpdateTileEntityPacket( getBlockPos(), 1, nbt );
 	}
 
 	@Override
 	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
 	{
-		final CompoundNBT nbt = packet.getNbtCompound();
+		final CompoundNBT nbt = packet.getTag();
 
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
+		if( nbt.hasUUID( "PileID" ) )
+			pileID = nbt.getUUID( "PileID" );
 		numCrates = nbt.getInt( "NumCrates" );
 		capacity = nbt.getInt( "Capacity" );
 	}
@@ -303,7 +303,7 @@ public class TileEntityCrate extends TileEntityContainer
 		final CompoundNBT nbt = super.getUpdateTag();
 
 		if( pileID != null )
-			nbt.putUniqueId( "PileID", pileID );
+			nbt.putUUID( "PileID", pileID );
 		nbt.putInt( "NumCrates", getNumCrates() );
 		nbt.putInt( "Capacity", getCapacity() );
 
@@ -315,8 +315,8 @@ public class TileEntityCrate extends TileEntityContainer
 	{
 		super.handleUpdateTag( state, nbt );
 
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
+		if( nbt.hasUUID( "PileID" ) )
+			pileID = nbt.getUUID( "PileID" );
 		numCrates = nbt.getInt( "NumCrates" );
 		capacity = nbt.getInt( "Capacity" );
 	}
@@ -324,31 +324,31 @@ public class TileEntityCrate extends TileEntityContainer
 	// Reading from / writing to NBT
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
-		super.write( nbt );
+		super.save( nbt );
 
 		if( pileID != null )
-			nbt.putUniqueId( "PileID", pileID );
+			nbt.putUUID( "PileID", pileID );
 
 		return nbt;
 	}
 
 	@Override
-	public void read( BlockState state, CompoundNBT nbt )
+	public void load( BlockState state, CompoundNBT nbt )
 	{
-		if( nbt.hasUniqueId( "PileID" ) )
-			pileID = nbt.getUniqueId( "PileID" );
+		if( nbt.hasUUID( "PileID" ) )
+			pileID = nbt.getUUID( "PileID" );
 
-		super.read( state, nbt );
+		super.load( state, nbt );
 	}
 
 	@Override
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
 		BetterStorage.NETWORK.send( PacketDistributor.PLAYER.with( () -> (ServerPlayerEntity)player ),
-				new UpdateCrateMessage( pos, getNumCrates(), getCapacity() ) );
-		return new ContainerCrate( windowID, playerInventory, world, pos );
+				new UpdateCrateMessage( worldPosition, getNumCrates(), getCapacity() ) );
+		return new ContainerCrate( windowID, playerInventory, level, worldPosition );
 	}
 
 	@Override
@@ -360,7 +360,7 @@ public class TileEntityCrate extends TileEntityContainer
 	@Nullable
 	public static TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
 	{
-		final TileEntity tileEntity = world.getTileEntity( pos );
+		final TileEntity tileEntity = world.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityCrate )
 			return (TileEntityCrate)tileEntity;
 		return null;
@@ -389,7 +389,7 @@ public class TileEntityCrate extends TileEntityContainer
 		// All rules passed - Add crate to pile
 		for( final BlockPos blockPos : BlockUtils.getAllInBox( region.posMin, region.posMax ) )
 		{
-			final TileEntityCrate newCrate = getCrateAt( world, blockPos );
+			final TileEntityCrate newCrate = getCrateAt( level, blockPos );
 			if( newCrate != null && !newCrate.getPileID().equals( pileID ) )
 				handler.addCrate( newCrate );
 		}

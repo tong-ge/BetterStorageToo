@@ -33,7 +33,7 @@ public class CardboardColor implements IItemColor, IBlockColor
 	{
 		if( reader != null )
 		{
-			final TileEntity tileEntity = reader.getTileEntity( pos );
+			final TileEntity tileEntity = reader.getBlockEntity( pos );
 			if( tileEntity instanceof TileEntityCardboardBox )
 				return ( (TileEntityCardboardBox)tileEntity ).getColor();
 		}

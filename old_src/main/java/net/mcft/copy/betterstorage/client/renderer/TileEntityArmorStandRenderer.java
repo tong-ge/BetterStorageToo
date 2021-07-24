@@ -44,14 +44,14 @@ public class TileEntityArmorStandRenderer extends TileEntitySpecialRenderer
 		GL11.glPopMatrix();
 		GL11.glColor4f( 1.0F, 1.0F, 1.0F, 1.0F );
 
-		if( armorStand.getWorld() == null )
+		if( armorStand.getLevel() == null )
 			return;
 
 		if( playerDummy == null )
-			playerDummy = new ClientArmorStandPlayer( armorStand.getWorld() );
+			playerDummy = new ClientArmorStandPlayer( armorStand.getLevel() );
 
 		playerDummy.ticksExisted = armorStand.ticksExisted;
-		playerDummy.worldObj = armorStand.getWorld();
+		playerDummy.worldObj = armorStand.getLevel();
 		playerDummy.renderYawOffset = playerDummy.prevRenderYawOffset = rotation;
 		playerDummy.rotationYawHead = playerDummy.prevRotationYawHead = rotation;
 

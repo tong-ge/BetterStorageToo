@@ -15,14 +15,14 @@ public abstract class BlockConnectableContainer extends BlockContainerBetterStor
 		super( builder );
 
 		//@formatter:off
-		setDefaultState( stateContainer.getBaseState().with( TYPE, ConnectedType.SINGLE ) );
+		registerDefaultState( defaultBlockState().getBlockState().setValue( TYPE, ConnectedType.SINGLE ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void fillStateContainer( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
 	{
-		super.fillStateContainer( builder );
+		super.createBlockStateDefinition( builder );
 		builder.add( TYPE );
 	}
 }

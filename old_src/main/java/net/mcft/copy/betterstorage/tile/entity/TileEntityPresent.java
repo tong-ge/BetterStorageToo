@@ -88,7 +88,7 @@ public class TileEntityPresent extends TileEntityCardboardBox implements ITickab
 	@Override
 	public boolean onBlockActivated( EntityPlayer player, int side, float hitX, float hitY, float hitZ )
 	{
-		final ItemStack holding = player.getHeldItemMainhand();
+		final ItemStack holding = player.getMainHandItem();
 		if( holding == null )
 		{
 			Logger.getLogger( ModInfo.modId ).info( "Present hit : " + breakPause );
@@ -140,7 +140,7 @@ public class TileEntityPresent extends TileEntityCardboardBox implements ITickab
 				//else
 					for( int i = 0; i < inventory.getSlots(); i++ )
 					{
-						final ItemStack stack = inventory.getStackInSlot( i );
+						final ItemStack stack = inventory.getItem( i );
 						if( stack != null && stack.stackSize > 0 )
 						{
 							final EntityItem entityItem = new EntityItem( worldObj, pos.getX(), pos.getY(), pos.getZ(), stack );
@@ -210,7 +210,7 @@ public class TileEntityPresent extends TileEntityCardboardBox implements ITickab
 	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
 	{
 		super.onDataPacket( net, packet );
-		final NBTTagCompound compound = packet.getNbtCompound();
+		final NBTTagCompound compound = packet.getTag();
 		colorInner = compound.getByte( TAG_COLOR_INNER );
 		colorOuter = compound.getByte( TAG_COLOR_OUTER );
 		skojanzaMode = compound.getBoolean( TAG_SKOJANZA_MODE );

@@ -193,7 +193,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 		 * if( containerItem != null && !simulate )
 		 * // Try to add the container item to the internal storage, or spawn the item in the world.
 		 * if( !InventoryUtils.tryAddItemToInventory( containerItem, new InventoryStacks( contents ), true ) && entity != null )
-		 * WorldUtils.spawnItem( entity.getWorld(), entity.getPos().getX() + 0.5, entity.getPos().getY() + 0.5, entity.getPos().getZ() + 0.5,
+		 * WorldUtils.spawnItem( entity.getLevel(), entity.getBlockPos().getX() + 0.5, entity.getBlockPos().getY() + 0.5, entity.getBlockPos().getZ() + 0.5,
 		 * containerItem );
 		 */
 		return stack;
@@ -274,22 +274,22 @@ public class InventoryCraftingStation extends ItemStackHandler
 
 	/*
 	 * @Override
-	 * public int getSizeInventory()
+	 * public int getContainerSize()
 	 * {
 	 * return crafting.length + output.length + contents.getSlots();
 	 * }
 	 */
 
 	@Override
-	public ItemStack getStackInSlot( int slot )
+	public ItemStack getItem( int slot )
 	{
 		if( slot < crafting.getSlots() )
-			return crafting.getStackInSlot( slot );
+			return crafting.getItem( slot );
 		else
 			if( slot < crafting.getSlots() + output.getSlots() )
-				return output.getStackInSlot( slot - crafting.getSlots() );
+				return output.getItem( slot - crafting.getSlots() );
 			else
-				return inventory.getStackInSlot( slot - ( crafting.getSlots() + output.getSlots() ) );
+				return inventory.getItem( slot - ( crafting.getSlots() + output.getSlots() ) );
 	}
 
 	/*
@@ -302,7 +302,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 	 * if( slot < crafting.length + output.length )
 	 * output[slot - crafting.length] = stack;
 	 * //else contents[slot - ( crafting.length + output.length )] = stack;
-	 * markDirty();
+	 * setChanged();
 	 * }
 	 */
 
@@ -328,10 +328,10 @@ public class InventoryCraftingStation extends ItemStackHandler
 
 	/*
 	 * @Override
-	 * public void markDirty()
+	 * public void setChanged()
 	 * {
 	 * if( entity != null )
-	 * entity.markDirtySuper();
+	 * entity.setChangedSuper();
 	 * if( outputEmpty() )
 	 * {
 	 * outputIsReal = false;
@@ -427,7 +427,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 
 	/*
 	 * @Override
-	 * public ItemStack decrStackSize( int index, int count )
+	 * public ItemStack remove( int index, int count )
 	 * {
 	 * // TODO Auto-generated method stub
 	 * return null;
@@ -445,7 +445,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 
 	/*
 	 * @Override
-	 * public boolean isItemValidForSlot( int index, ItemStack stack )
+	 * public boolean mayPlaceForSlot( int index, ItemStack stack )
 	 * {
 	 * // TODO Auto-generated method stub
 	 * return false;

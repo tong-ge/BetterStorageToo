@@ -6,6 +6,6 @@ public class HexKeyItem extends ItemBetterStorage
 {
 	public HexKeyItem()
 	{
-		super( new Item.Properties().maxStackSize( 1 ) );
+		super( new Item.Properties().stacksTo( 1 ) );
 	}
 }

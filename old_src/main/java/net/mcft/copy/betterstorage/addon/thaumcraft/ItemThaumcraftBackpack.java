@@ -54,14 +54,14 @@ public class ItemThaumcraftBackpack extends ItemBackpack implements IRepairable,
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
-		super.addInformation(stack, player, list, advancedTooltips);
+	public void appendHoverText(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
+		super.appendHoverText(stack, player, list, advancedTooltips);
 		list.add(String.format("%s%s: %s%%", EnumChatFormatting.DARK_PURPLE,
 		                       StatCollector.translateToLocal("tc.visdiscount"), 2));
 	}
 	
 	@Override
-	public int getItemEnchantability() { return 25; }
+	public int getEnchantmentValue() { return 25; }
 	
 	@Override
 	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
@@ -85,8 +85,8 @@ public class ItemThaumcraftBackpack extends ItemBackpack implements IRepairable,
 		// Count items over normal backpack capacity.
 		IInventory inventory = ItemBackpack.getBackpackItems(player);
 		int count = -(getRows() * 9);
-		for (int i = 0; i < inventory.getSizeInventory(); i++)
-			if (inventory.getStackInSlot(i) != null) count++;
+		for (int i = 0; i < inventory.getContainerSize(); i++)
+			if (inventory.getItem(i) != null) count++;
 		
 		// When count <= 0, return.
 		// When count = 1, chance is ~2%.
@@ -119,8 +119,8 @@ public class ItemThaumcraftBackpack extends ItemBackpack implements IRepairable,
 		int time = ((repair > 0) ? (15 - Math.min(repair, 2) * 5) : 30) * 20;
 		if ((player.ticksExisted % time) > 0) return;
 		
-		for (int i = 0; i < backpackInventory.getSizeInventory(); i++) {
-			ItemStack stack = backpackInventory.getStackInSlot(i);
+		for (int i = 0; i < backpackInventory.getContainerSize(); i++) {
+			ItemStack stack = backpackInventory.getItem(i);
 			if ((stack != null) && (stack.isItemDamaged()) && (stack.getItem() instanceof IRepairable) &&
 			    (EnchantmentHelper.getEnchantmentLevel(ThaumcraftApi.enchantRepair, stack) > 0))
 				repairItem(stack, player);

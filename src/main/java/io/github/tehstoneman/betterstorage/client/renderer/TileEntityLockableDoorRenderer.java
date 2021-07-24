@@ -28,32 +28,32 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 	@SuppressWarnings( "deprecation" )
 	public void render( TileEntityLockableDoor tileEntityDoor, double x, double y, double z, float partialTicks, int destroyStage )
 	{
-		final BlockState iblockstate = tileEntityDoor.hasWorld() ? tileEntityDoor.getBlockState()
-				: BetterStorageBlocks.LOCKABLE_DOOR.get().getDefaultState().with( DoorBlock.FACING, Direction.SOUTH );
+		final BlockState iblockstate = tileEntityDoor.hasLevel() ? tileEntityDoor.getBlockState()
+				: BetterStorageBlocks.LOCKABLE_DOOR.get().defaultBlockState().setValue( DoorBlock.FACING, Direction.SOUTH );
 		//final DoubleBlockHalf lockertype = iblockstate.has( DoorBlock.HALF ) ? iblockstate.get( DoorBlock.HALF ) : DoubleBlockHalf.LOWER;
 
 		/*if( lockertype == DoubleBlockHalf.UPPER )
 			return;*/
 
-		GlStateManager.enableDepthTest();
-		GlStateManager.depthFunc( 515 );
-		GlStateManager.depthMask( true );
+		GlStateManager._enableDepthTest();
+		GlStateManager._depthFunc( 515 );
+		GlStateManager._depthMask( true );
 
-		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		GlStateManager._color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 
-		GlStateManager.pushMatrix();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.translatef( (float)x + 0.5f, (float)y + 1.0f, (float)z + 0.5f );
+		GlStateManager._pushMatrix();
+		GlStateManager._enableRescaleNormal();
+		GlStateManager._translatef( (float)x + 0.5f, (float)y + 1.0f, (float)z + 0.5f );
 
-		final float f = iblockstate.get( BlockLocker.FACING ).getHorizontalAngle();
+		final float f = iblockstate.getValue( BlockLocker.FACING ).toYRot();
 		if( Math.abs( f ) > 1.0E-5D )
-			GlStateManager.rotatef( -f, 0.0F, 1.0F, 0.0F );
+			GlStateManager._rotatef( -f, 0.0F, 1.0F, 0.0F );
 
 		renderItem( tileEntityDoor, partialTicks, destroyStage, iblockstate );
 
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.popMatrix();
-		GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+		GlStateManager._disableRescaleNormal();
+		GlStateManager._popMatrix();
+		GlStateManager._color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 	}
 
 	/** Renders attached lock on chest. Adapted from vanilla item frame **/
@@ -64,27 +64,27 @@ public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEnti
 
 		if( !itemstack.isEmpty() )
 		{
-			//final ItemEntity ItemEntity = new ItemEntity( tileEntityDoor.getWorld(), 0.0D, 0.0D, 0.0D, itemstack );
-			GlStateManager.pushMatrix();
-			GlStateManager.disableLighting();
+			//final ItemEntity ItemEntity = new ItemEntity( tileEntityDoor.getLevel(), 0.0D, 0.0D, 0.0D, itemstack );
+			GlStateManager._pushMatrix();
+			GlStateManager._disableLighting();
 
 			//final float openAngle = state.get( DoorBlock.OPEN ) ? 1.0f : 0.0f;
 
 			//final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-			final boolean left = state.get( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
-			final boolean open = state.get( DoorBlock.OPEN );
+			final boolean left = state.getValue( DoorBlock.HINGE ) == DoorHingeSide.LEFT;
+			final boolean open = state.getValue( DoorBlock.OPEN );
 
 			// if( open ) GlStateManager.rotated( left ? 90 : -90, 0.0, 1.0, 0.0 );
-			GlStateManager.translated( left ? -0.25 : 0.25, -0.0625, open ? 0.280875 : -0.531625 );
+			GlStateManager._translated( left ? -0.25 : 0.25, -0.0625, open ? 0.280875 : -0.531625 );
 
-			GlStateManager.scaled( 0.5, 0.5, 0.5 );
+			GlStateManager._scaled( 0.5, 0.5, 0.5 );
 
-			RenderHelper.enableStandardItemLighting();
+			RenderHelper.turnOff();
 			// itemRenderer.renderItem( ItemEntity.getItem(), ItemCameraTransforms.TransformType.FIXED );
-			RenderHelper.disableStandardItemLighting();
+			RenderHelper.turnBackOn();
 
-			GlStateManager.enableLighting();
-			GlStateManager.popMatrix();
+			GlStateManager._enableLighting();
+			GlStateManager._popMatrix();
 		}
 	}
 

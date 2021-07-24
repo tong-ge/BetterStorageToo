@@ -44,8 +44,8 @@ public class UpdateCrateMessage
 		{
 			if( ctx.get().getDirection().getReceptionSide().isClient() )
 			{
-				final ClientWorld world = Minecraft.getInstance().world;
-				final TileEntity tileEntity = world.getTileEntity( message.pos );
+				final ClientWorld world = Minecraft.getInstance().level;
+				final TileEntity tileEntity = world.getBlockEntity( message.pos );
 				if( tileEntity instanceof TileEntityCrate )
 				{
 					final TileEntityCrate crate = (TileEntityCrate)tileEntity;

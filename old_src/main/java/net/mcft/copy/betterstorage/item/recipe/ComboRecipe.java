@@ -31,7 +31,7 @@ public abstract class ComboRecipe implements IRecipe
 	}
 
 	@Override
-	public ItemStack getRecipeOutput()
+	public ItemStack getResultItem()
 	{
 		return result;
 	}

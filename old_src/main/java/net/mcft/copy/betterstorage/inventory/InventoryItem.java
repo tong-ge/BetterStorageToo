@@ -16,11 +16,11 @@ public class InventoryItem extends InventoryStacks
 
 	public InventoryItem( EntityPlayer player, int size, String title, boolean localized )
 	{
-		super( StackUtils.getStackContents( player.getHeldItemMainhand(), size ) );
+		super( StackUtils.getStackContents( player.getMainHandItem(), size ) );
 		this.title = title;
 		this.player = player;
 		slot = player.inventory.currentItem;
-		stack = player.getHeldItemMainhand().copy();
+		stack = player.getMainHandItem().copy();
 	}
 
 	@Override

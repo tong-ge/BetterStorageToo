@@ -61,7 +61,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 		if( worldObj != null )
 		{
 			markForUpdate();
-			markDirty();
+			setChanged();
 		}
 	}
 
@@ -130,7 +130,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 			{
 
 				// Swap player's held item with armor stand's.
-				final ItemStack holding = player.getHeldItemMainhand();
+				final ItemStack holding = player.getMainHandItem();
 				if( item == null && holding == null || holding != null && !handler.isValidItem( player, holding ) )
 					continue;
 
@@ -194,7 +194,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 	@Override
 	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
 	{
-		read( packet.getNbtCompound() );
+		read( packet.getTag() );
 	}
 
 	// Reading from / writing to NBT

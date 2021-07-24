@@ -25,7 +25,7 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< Compo
 				@Override
 				protected void onContentsChanged( int slot )
 				{
-					KeyringCapabilityProvider.this.markDirty();
+					KeyringCapabilityProvider.this.setChanged();
 				}
 			};
 		else
@@ -45,7 +45,7 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< Compo
 		return 9;
 	}
 
-	public void markDirty()
+	public void setChanged()
 	{
 		CompoundNBT tag = invItem.getOrCreateTag();
 		int count = 0;

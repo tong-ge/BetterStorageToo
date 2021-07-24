@@ -41,13 +41,13 @@ public class CrateStackCollection extends WorldSavedData
 	@Nullable
 	public static CrateStackCollection getCollection( World world )
 	{
-		if( world.isRemote )
+		if( world.isClientSide )
 			return null;
 
 		// final DimensionType dimType = world.getDimension().getType();
-		final RegistryKey< World > dimType = world.getDimensionKey();
-		final DimensionSavedDataManager manager = world.getServer().getWorld( dimType ).getSavedData();
-		final WorldSavedData data = manager.getOrCreate( CrateStackCollection::new, filename );
+		final RegistryKey< World > dimType = world.dimension();
+		final DimensionSavedDataManager manager = world.getServer().getLevel( dimType ).getDataStorage();
+		final WorldSavedData data = manager.computeIfAbsent( CrateStackCollection::new, filename );
 
 		return (CrateStackCollection)data;
 	}
@@ -60,7 +60,7 @@ public class CrateStackCollection extends WorldSavedData
 	 *            (Null to create new ID)
 	 * @return The {@link CrateStackHandler} for the given {@link UUID}
 	 */
-	public CrateStackHandler getOrCreateCratePile( @Nullable UUID pileID )
+	public CrateStackHandler computeIfAbsentCratePile( @Nullable UUID pileID )
 	{
 		// Check if pileID is null, and create a new ID if so
 		if( pileID == null )
@@ -104,7 +104,7 @@ public class CrateStackCollection extends WorldSavedData
 		final CrateStackHandler cratePile = new CrateStackHandler( 18 );
 		cratePile.setPileID( pileID );
 		pileDataMap.put( pileID, cratePile );
-		markDirty();
+		setDirty();
 		return cratePile;
 	}
 
@@ -117,14 +117,14 @@ public class CrateStackCollection extends WorldSavedData
 	public void removeCratePile( UUID pileID )
 	{
 		pileDataMap.remove( pileID );
-		markDirty();
+		setDirty();
 	}
 
 	@Override
-	public void read( CompoundNBT nbt )
+	public void load( CompoundNBT nbt )
 	{
 		if( !nbt.isEmpty() )
-			for( final String key : nbt.keySet() )
+			for( final String key : nbt.getAllKeys() )
 			{
 				final CrateStackHandler crateStackHandler = new CrateStackHandler( 0 );
 				crateStackHandler.deserializeNBT( nbt.getCompound( key ) );
@@ -133,7 +133,7 @@ public class CrateStackCollection extends WorldSavedData
 	}
 
 	@Override
-	public CompoundNBT write( CompoundNBT nbt )
+	public CompoundNBT save( CompoundNBT nbt )
 	{
 		if( !pileDataMap.isEmpty() )
 			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )

@@ -8,14 +8,14 @@ public class ItemCardboardSheet extends ItemBetterStorage
 {
 	public ItemCardboardSheet()
 	{
-		super( new Item.Properties().maxStackSize( 8 ) );
+		super( new Item.Properties().stacksTo( 8 ) );
 		// toolMaterial.setRepairItem( new ItemStack( this ) );
 		// armorMaterial.setRepairItem( new ItemStack( this ) );
 	}
 
 	public static boolean isEffective( ItemStack stack )
 	{
-		return stack.getMaxDamage() == 0 || stack.getDamage() < stack.getMaxDamage();
+		return stack.getMaxDamage() == 0 || stack.getDamageValue() < stack.getMaxDamage();
 	}
 
 	public static boolean canHarvestBlock( ItemStack stack, boolean canHarvestDefault )

@@ -24,7 +24,7 @@ public class TileEntityBackpackRenderer extends TileEntitySpecialRenderer {
 	
 	public void renderTileEntityAt(TileEntityBackpack backpack, double x, double y, double z, float partialTicks) {
 		
-		if ((backpack.getWorldObj() == null) && (backpack.blockType == null)) return;
+		if ((backpack.getLevelObj() == null) && (backpack.blockType == null)) return;
 		ItemBackpack item = ((TileBackpack)backpack.getBlockType()).getItemType();
 		ItemStack stack = ((backpack.stack != null) ? backpack.stack : new ItemStack(item));
 		ModelBackpack backpackModel = item.getModel();

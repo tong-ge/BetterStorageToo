@@ -8,11 +8,11 @@ import net.minecraft.world.World;
 public class ItemMasterKey extends ItemKey
 {
 	@Override
-	public void onCreated( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	public void onCraftedBy( ItemStack stack, World worldIn, PlayerEntity playerIn )
 	{}
 
 	@Override
-	public boolean hasEffect( ItemStack stack )
+	public boolean isFoil( ItemStack stack )
 	{
 		return true;
 	}

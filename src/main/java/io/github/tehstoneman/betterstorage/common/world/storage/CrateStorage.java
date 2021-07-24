@@ -25,7 +25,7 @@ public class CrateStorage implements ICrateStorage
 	}
 
 	@Override
-	public CrateStackHandler getOrCreateCratePile( UUID pileID )
+	public CrateStackHandler computeIfAbsentCratePile( UUID pileID )
 	{
 		if( !pileDataMap.containsKey( pileID ) )
 		{
@@ -51,7 +51,7 @@ public class CrateStorage implements ICrateStorage
 		final CrateStackHandler cratePile = new CrateStackHandler( 18 );
 		pileDataMap.put( pileID, cratePile );
 		cratePile.setPileID( pileID );
-		// markDirty();
+		// setChanged();
 		return cratePile;
 	}
 
@@ -59,7 +59,7 @@ public class CrateStorage implements ICrateStorage
 	public void removeCratePile( UUID pileID )
 	{
 		pileDataMap.remove( pileID );
-		// markDirty();
+		// setChanged();
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class CrateStorage implements ICrateStorage
 	public void deserializeNBT( CompoundNBT compound )
 	{
 		if( !compound.isEmpty() )
-			for( final String key : compound.keySet() )
+			for( final String key : compound.getAllKeys() )
 			{
 				final CrateStackHandler crateStackHandler = new CrateStackHandler( 18 );
 				crateStackHandler.deserializeNBT( compound.getCompound( key ) );

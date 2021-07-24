@@ -56,17 +56,17 @@ public class ItemPresentBook extends ItemWritableBook
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public void addInformation( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
+	public void appendHoverText( ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips )
 	{
 		// list.add(EnumChatFormatting.DARK_GRAY + "" + EnumChatFormatting.ITALIC + "An instructionary tale..?");
 		list.add( "for " + StackUtils.get( stack, "[undefined]", "name" ) );
 	}
 
 	@Override
-	public ActionResult< ItemStack > onItemRightClick( ItemStack stack, World world, EntityPlayer player, EnumHand hand )
+	public ActionResult< ItemStack > use( ItemStack stack, World world, EntityPlayer player, EnumHand hand )
 	{
 		if( hand != EnumHand.MAIN_HAND )
-			return super.onItemRightClick( stack, world, player, hand );
+			return super.use( stack, world, player, hand );
 		if( !world.isRemote || !ChristmasEventHandler.isBeforeChristmas()
 				|| StackUtils.get( stack, 9001, "year" ) != ChristmasEventHandler.getYear() )
 			return new ActionResult( EnumActionResult.SUCCESS, stack );

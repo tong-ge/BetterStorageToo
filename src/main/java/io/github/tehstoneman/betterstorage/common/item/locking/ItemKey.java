@@ -26,18 +26,18 @@ public class ItemKey extends KeyLockItem implements IKey
 {
 	public ItemKey()
 	{
-		super( new Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( new Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	@Override
-	public void onCreated( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	public void onCraftedBy( ItemStack stack, World worldIn, PlayerEntity playerIn )
 	{
-		if( !worldIn.isRemote )
+		if( !worldIn.isClientSide )
 			ensureHasID( stack );
 	}
 
 	@Override
-	public int getItemEnchantability()
+	public int getEnchantmentValue()
 	{
 		return 20;
 	}
@@ -55,23 +55,23 @@ public class ItemKey extends KeyLockItem implements IKey
 	}
 
 	@Override
-	public ActionResultType onItemUse( ItemUseContext context )
+	public ActionResultType useOn( ItemUseContext context )
 	{
-		final World worldIn = context.getWorld();
+		final World worldIn = context.getLevel();
 		final Hand hand = context.getHand();
-		if( !worldIn.isRemote && hand == Hand.MAIN_HAND )
+		if( !worldIn.isClientSide && hand == Hand.MAIN_HAND )
 		{
 			final PlayerEntity playerIn = context.getPlayer();
-			final ItemStack stack = playerIn.getHeldItem( hand );
-			BlockPos pos = context.getPos();
-			TileEntity tileEntity = worldIn.getTileEntity( pos );
+			final ItemStack stack = playerIn.getItemInHand( hand );
+			BlockPos pos = context.getClickedPos();
+			TileEntity tileEntity = worldIn.getBlockEntity( pos );
 			/*if( tileEntity == null )
 			{
 				final BlockState state = worldIn.getBlockState( pos );
 				if( state.getProperties().contains( DoorBlock.HALF ) && state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
 				{
 					pos = pos.down();
-					tileEntity = worldIn.getTileEntity( pos );
+					tileEntity = worldIn.getBlockEntity( pos );
 				}
 			}*/
 
@@ -82,7 +82,7 @@ public class ItemKey extends KeyLockItem implements IKey
 				{
 					if( playerIn.isCrouching() )
 					{
-						worldIn.addEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
+						worldIn.addFreshEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
 						lockable.setLock( ItemStack.EMPTY );
 					}
 					return ActionResultType.SUCCESS;
@@ -91,7 +91,7 @@ public class ItemKey extends KeyLockItem implements IKey
 					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, LockInteraction.PICK );
 			}
 		}
-		return super.onItemUse( context );
+		return super.useOn( context );
 	}
 
 	/*
@@ -116,10 +116,10 @@ public class ItemKey extends KeyLockItem implements IKey
 		if( lockId.equals( keyId ) )
 			return true;
 
-		final int lockSecurity = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.SECURITY.get(), lock );
-		final int unlocking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.UNLOCKING.get(), key );
-		final int lockpicking = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.LOCKPICKING.get(), key );
-		final int morphing = EnchantmentHelper.getEnchantmentLevel( EnchantmentBetterStorage.MORPHING.get(), key );
+		final int lockSecurity = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.SECURITY.get(), lock );
+		final int unlocking = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.UNLOCKING.get(), key );
+		final int lockpicking = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.LOCKPICKING.get(), key );
+		final int morphing = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.MORPHING.get(), key );
 
 		final int effectiveUnlocking = Math.max( 0, unlocking - lockSecurity );
 		final int effectiveLockpicking = Math.max( 0, lockpicking - lockSecurity );

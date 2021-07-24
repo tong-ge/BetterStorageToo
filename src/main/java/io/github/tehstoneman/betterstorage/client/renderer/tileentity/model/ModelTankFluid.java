@@ -13,7 +13,7 @@ public class ModelTankFluid extends Model
 
 	public ModelTankFluid()
 	{
-		super( RenderType::getEntityCutout );
+		super( RenderType::entityCutout );
 	}
 
 	public void setLevel( float amount, boolean fillTop, boolean fillBottom, boolean isLigterThanAir )
@@ -24,7 +24,7 @@ public class ModelTankFluid extends Model
 	}
 
 	@Override
-	public void render( MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue,
+	public void renderToBuffer( MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue,
 			float alpha )
 	{
 		fluid.render( matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha );

@@ -15,14 +15,14 @@ public final class WorldUtils
 	// @SideOnly( Side.CLIENT )
 	public static World getLocalWorld()
 	{
-		return Minecraft.getInstance().world;
+		return Minecraft.getInstance().level;
 	}
 
 	public static AxisAlignedBB getAABB( TileEntity entity, double minX, double minY, double minZ, double maxX, double maxY, double maxZ )
 	{
-		final double x = entity.getPos().getX();
-		final double y = entity.getPos().getY();
-		final double z = entity.getPos().getZ();
+		final double x = entity.getBlockPos().getX();
+		final double y = entity.getBlockPos().getY();
+		final double z = entity.getBlockPos().getZ();
 		return new AxisAlignedBB( x - minX, y - minY, z - minZ, x + maxX + 1, y + maxY + 1, z + maxZ + 1 );
 	}
 
@@ -75,7 +75,7 @@ public final class WorldUtils
 	/*
 	 * public static EntityItem dropStackFromBlock( TileEntity te, ItemStack stack )
 	 * {
-	 * return dropStackFromBlock( te.getWorld(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), stack );
+	 * return dropStackFromBlock( te.getLevel(), te.getBlockPos().getX(), te.getBlockPos().getY(), te.getBlockPos().getZ(), stack );
 	 * }
 	 */
 
@@ -116,7 +116,7 @@ public final class WorldUtils
 	/*
 	 * public static <T> boolean is( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
 	 * {
-	 * return tileClass.isInstance( world.getTileEntity( new BlockPos( x, y, z ) ) );
+	 * return tileClass.isInstance( world.getBlockEntity( new BlockPos( x, y, z ) ) );
 	 * }
 	 */
 
@@ -124,7 +124,7 @@ public final class WorldUtils
 	/*
 	 * public static <T> T get( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
 	 * {
-	 * final TileEntity t = world.getTileEntity( new BlockPos( x, y, z ) );
+	 * final TileEntity t = world.getBlockEntity( new BlockPos( x, y, z ) );
 	 * return tileClass.isInstance( t ) ? (T)t : null;
 	 * }
 	 */
@@ -133,8 +133,8 @@ public final class WorldUtils
 	/*
 	 * public static boolean isTileEntityUsableByPlayer( TileEntity entity, EntityPlayer player )
 	 * {
-	 * return entity.getWorld().getTileEntity( entity.getPos() ) == entity
-	 * && player.getDistanceSq( entity.getPos().getX() + 0.5, entity.getPos().getY() + 0.5, entity.getPos().getZ() + 0.5 ) <= 64.0;
+	 * return entity.getLevel().getBlockEntity( entity.getBlockPos() ) == entity
+	 * && player.getDistanceSq( entity.getBlockPos().getX() + 0.5, entity.getBlockPos().getY() + 0.5, entity.getBlockPos().getZ() + 0.5 ) <= 64.0;
 	 * }
 	 */
 
@@ -142,14 +142,14 @@ public final class WorldUtils
 	/*
 	 * public static int syncPlayersUsing( TileEntity te, int playersUsing, IInventory playerInventory )
 	 * {
-	 * if( !te.getWorld().isRemote && playersUsing != 0 )
+	 * if( !te.getLevel().isRemote && playersUsing != 0 )
 	 * {
 	 * playersUsing = 0;
-	 * final List< EntityPlayer > players = te.getWorld().getEntitiesWithinAABB( EntityPlayer.class, getAABB( te, 5 ) );
+	 * final List< EntityPlayer > players = te.getLevel().getEntitiesOfClass( EntityPlayer.class, getAABB( te, 5 ) );
 	 * for( final EntityPlayer player : players )
-	 * if( player.openContainer instanceof ContainerBetterStorage )
+	 * if( player.containerMenu instanceof ContainerBetterStorage )
 	 * {
-	 * final IInventory inventory = ( (ContainerBetterStorage)player.openContainer ).inventory;
+	 * final IInventory inventory = ( (ContainerBetterStorage)player.containerMenu ).inventory;
 	 * if( inventory == playerInventory )
 	 * playersUsing++;
 	 * else
@@ -170,7 +170,7 @@ public final class WorldUtils
 	 * }
 	 */
 
-	/** This will perform a World.notifyNeighborsOfStateChange() on every adjacent block including the block at x|y|z.
+	/** This will perform a World.updateNeighborsAt() on every adjacent block including the block at x|y|z.
 	 * 
 	 * @param world The world
 	 * @param x X position
@@ -181,14 +181,14 @@ public final class WorldUtils
 	public static void notifyBlocksAround( World world, int x, int y, int z )
 	{
 		final Block block = world.getBlockState( new BlockPos( x, y, z ) ).getBlock();
-		// world.notifyNeighborsOfStateChange( pos, blockType );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x + 1, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x - 1, y, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y + 1, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y - 1, z ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z + 1 ), block );
-		world.notifyNeighborsOfStateChange( new BlockPos( x, y, z - 1 ), block );
+		// world.updateNeighborsAt( pos, blockType );
+		world.updateNeighborsAt( new BlockPos( x, y, z ), block );
+		world.updateNeighborsAt( new BlockPos( x + 1, y, z ), block );
+		world.updateNeighborsAt( new BlockPos( x - 1, y, z ), block );
+		world.updateNeighborsAt( new BlockPos( x, y + 1, z ), block );
+		world.updateNeighborsAt( new BlockPos( x, y - 1, z ), block );
+		world.updateNeighborsAt( new BlockPos( x, y, z + 1 ), block );
+		world.updateNeighborsAt( new BlockPos( x, y, z - 1 ), block );
 	}
 
 	// Misc functions

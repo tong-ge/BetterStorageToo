@@ -13,7 +13,7 @@ public class ItemCardboardArmor extends DyeableArmorItem implements ICardboardIt
 {
 	public ItemCardboardArmor( EquipmentSlotType armorSlot )
 	{
-		super( BetterStorageArmorMaterial.CARDBOARD, armorSlot, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( BetterStorageArmorMaterial.CARDBOARD, armorSlot, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	@Override

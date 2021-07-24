@@ -76,7 +76,7 @@ public class PresentRemoveNametagRecipe extends ShapelessStationRecipe
 
 		@Override
 		@SideOnly( Side.CLIENT )
-		public List< ItemStack > getPossibleMatches()
+		public List< ItemStack > getBlockPossibleMatches()
 		{
 			final ItemStack stack = this.stack;
 			StackUtils.set( stack, "(somebody)", TileEntityPresent.TAG_NAMETAG );
@@ -109,7 +109,7 @@ public class PresentRemoveNametagRecipe extends ShapelessStationRecipe
 
 		@Override
 		@SideOnly( Side.CLIENT )
-		public List< ItemStack > getPossibleMatches()
+		public List< ItemStack > getBlockPossibleMatches()
 		{
 			return Arrays.asList( new ItemStack( Items.SHEARS ) );
 		}

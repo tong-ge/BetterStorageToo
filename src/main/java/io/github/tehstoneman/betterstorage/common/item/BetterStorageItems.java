@@ -69,12 +69,12 @@ public final class BetterStorageItems
 			() -> new ItemCardboardArmor( EquipmentSlotType.FEET ) );
 
 	public static RegistryObject< BlockItem >					BLOCK_FLINT				= REGISTERY.register( "block_flint",
-			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
+			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().tab( BetterStorage.ITEM_GROUP ) ) );
 	public static RegistryObject< BlockItem >					GLASS_TANK				= REGISTERY.register( "glass_tank",
-			() -> new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().group( BetterStorage.ITEM_GROUP ) ) );
+			() -> new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().tab( BetterStorage.ITEM_GROUP ) ) );
 
 	public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
-			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().containerItem( Items.BUCKET ) ) );
+			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().craftRemainder( Items.BUCKET ) ) );
 
 	public static RegistryObject< HexKeyItem >					HEX_KEY					= REGISTERY.register( "hex_key", () -> new HexKeyItem() );
 }

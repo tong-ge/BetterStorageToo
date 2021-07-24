@@ -58,7 +58,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	{
 		final BlockState state = getBlockState();
 		if( state.hasProperty( BlockConnectableContainer.TYPE ) )
-			return state.get( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
+			return state.getValue( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
 		return false;
 	};
 
@@ -71,8 +71,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	{
 		final BlockState state = getBlockState();
 		if( state.hasProperty( BlockConnectableContainer.TYPE ) )
-			return state.get( BlockConnectableContainer.TYPE ) == ConnectedType.SINGLE
-					|| state.get( BlockConnectableContainer.TYPE ) == ConnectedType.MASTER;
+			return state.getValue( BlockConnectableContainer.TYPE ) == ConnectedType.SINGLE
+					|| state.getValue( BlockConnectableContainer.TYPE ) == ConnectedType.MASTER;
 		return true;
 	}
 
@@ -98,18 +98,18 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	 */
 	public TileEntityConnectable getConnectedTileEntity()
 	{
-		if( getWorld() == null || !isConnected() )
+		if( getLevel() == null || !isConnected() )
 			return null;
-		final TileEntity tileEntity = getWorld().getTileEntity( getConnected() );
+		final TileEntity tileEntity = getLevel().getBlockEntity( getConnected() );
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
 	}
 
 	@Override
-	public void markDirty()
+	public void setChanged()
 	{
 		if( !isMain() )
-			getConnectedTileEntity().markDirty();
-		super.markDirty();
+			getConnectedTileEntity().setChanged();
+		super.setChanged();
 	}
 
 	/*

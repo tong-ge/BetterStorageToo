@@ -14,13 +14,13 @@ public class GuiKeyring extends ContainerScreen< ContainerKeyring >
 	public GuiKeyring( ContainerKeyring container, PlayerInventory playerInventory, ITextComponent title )
 	{
 		super( container, playerInventory, title );
-		ySize = 131;
+		height = 131;
 
 		// GUI label co-ordinates
-		titleX = 8;
-		titleY = 6;
-		playerInventoryTitleX = 8;
-		playerInventoryTitleY = 38;
+		titleLabelX = 8;
+		titleLabelY = 6;
+		inventoryLabelX = 8;
+		inventoryLabelY = 38;
 	}
 
 	@Override
@@ -32,20 +32,21 @@ public class GuiKeyring extends ContainerScreen< ContainerKeyring >
 		// super.render( mouseX, mouseY, partialTicks );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 		// renderHoveredToolTip( mouseX, mouseY );
-		renderHoveredTooltip( matrixStack, mouseX, mouseY );
+		renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Override
 	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
-	protected void drawGuiContainerBackgroundLayer( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
 		// GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
 		// minecraft.getTextureManager().bindTexture( getResource() );
-		minecraft.getTextureManager().bindTexture( Resources.CONTAINER_GENERIC );
+		minecraft.getTextureManager().getTexture( Resources.CONTAINER_GENERIC );
 
-		blit( matrixStack, guiLeft, guiTop, 0, 0, xSize, 35 );
-		blit( matrixStack, guiLeft, guiTop + 35, 0, 125, xSize, 97 );
+		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), 35 );
+		blit( matrixStack, getGuiLeft(), getGuiTop() + 35, 0, 125, getXSize(), 97 );
 
 		// blit( guiLeft, guiTop, 0, 0, xSize, 35 );
 		// blit( guiLeft, guiTop + 35, 0, 125, xSize, 97 );

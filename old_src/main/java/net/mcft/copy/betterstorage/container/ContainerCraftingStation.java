@@ -86,15 +86,15 @@ public class ContainerCraftingStation extends Container
 	}
 
 	@Override
-	public boolean canInteractWith( EntityPlayer playerIn )
+	public boolean stillValid( EntityPlayer playerIn )
 	{
 		return true;
 	}
 
 	@Override
-	public void detectAndSendChanges()
+	public void broadcastChanges()
 	{
-		super.detectAndSendChanges();
+		super.broadcastChanges();
 
 		for( int j = 0; j < listeners.size(); ++j )
 		{
@@ -126,115 +126,115 @@ public class ContainerCraftingStation extends Container
 	}
 
 	@Override
-	public ItemStack transferStackInSlot( EntityPlayer player, int index )
+	public ItemStack quickMoveStack( EntityPlayer player, int index )
 	{
-		final Slot slot = inventorySlots.get( index );
+		final Slot slot = slots.get( index );
 		ItemStack returnStack = null;
 
-		if( slot != null && slot.getHasStack() )
+		if( slot != null && slot.hasItem() )
 		{
-			final ItemStack itemStack = slot.getStack();
+			final ItemStack itemStack = slot.getItem();
 			returnStack = itemStack.copy();
 
 			if( index < indexOutput )
 			{
 				// Empty slot contents
-				slot.putStack( null );
+				slot.set( null );
 				return null;
 			}
 			else
 				if( index < indexHotbar )
 				{
 					// Try to transfer from output to player
-					if( !mergeItemStack( itemStack, indexHotbar, inventorySlots.size(), true ) )
+					if( !moveItemStackTo( itemStack, indexHotbar, slots.size(), true ) )
 						return null;
 				}
 				else
-					if( !mergeItemStack( itemStack, indexContents, indexHotbar, false ) )
+					if( !moveItemStackTo( itemStack, indexContents, indexHotbar, false ) )
 						return null;
 
 			if( itemStack == null || itemStack.stackSize == 0 )
-				slot.putStack( null );
+				slot.set( null );
 			else
-				slot.onSlotChanged();
+				slot.setChanged();
 		}
 
 		return returnStack;
 	}
 
 	@Override
-	public ItemStack slotClick( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
+	public ItemStack clicked( int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player )
 	{
 		final InventoryPlayer inventoryplayer = player.inventory;
 
 		if( clickTypeIn == ClickType.PICKUP_ALL && slotId >= 0 )
 		{
-			final Slot slot = inventorySlots.get( slotId );
+			final Slot slot = slots.get( slotId );
 			final ItemStack itemstack = inventoryplayer.getItemStack();
 
-			if( itemstack != null && ( slot == null || !slot.getHasStack() || !slot.canTakeStack( player ) ) )
+			if( itemstack != null && ( slot == null || !slot.hasItem() || !slot.mayPickup( player ) ) )
 			{
-				final int i1 = dragType == 0 ? 0 : inventorySlots.size() - 1;
+				final int i1 = dragType == 0 ? 0 : slots.size() - 1;
 				final int j1 = dragType == 0 ? 1 : -1;
 
 				for( int i3 = 0; i3 < 2; ++i3 )
-					for( int j3 = i1; j3 >= 0 && j3 < inventorySlots.size() && itemstack.stackSize < itemstack.getMaxStackSize(); j3 += j1 )
+					for( int j3 = i1; j3 >= 0 && j3 < slots.size() && itemstack.stackSize < itemstack.getMaxStackSize(); j3 += j1 )
 					{
-						final Slot slot8 = inventorySlots.get( j3 );
+						final Slot slot8 = slots.get( j3 );
 
-						if( j3 >= indexOutput && slot8.getHasStack() && canAddItemToSlot( slot8, itemstack, true ) && slot8.canTakeStack( player )
+						if( j3 >= indexOutput && slot8.hasItem() && canAddItemToSlot( slot8, itemstack, true ) && slot8.mayPickup( player )
 								&& canMergeSlot( itemstack, slot8 )
-								&& ( i3 != 0 || slot8.getStack().stackSize != slot8.getStack().getMaxStackSize() ) )
+								&& ( i3 != 0 || slot8.getItem().stackSize != slot8.getItem().getMaxStackSize() ) )
 						{
-							final int l = Math.min( itemstack.getMaxStackSize() - itemstack.stackSize, slot8.getStack().stackSize );
-							final ItemStack itemstack2 = slot8.decrStackSize( l );
+							final int l = Math.min( itemstack.getMaxStackSize() - itemstack.stackSize, slot8.getItem().stackSize );
+							final ItemStack itemstack2 = slot8.remove( l );
 							itemstack.stackSize += l;
 
 							if( itemstack2.stackSize <= 0 )
-								slot8.putStack( (ItemStack)null );
+								slot8.set( (ItemStack)null );
 
 							slot8.onPickupFromSlot( player, itemstack2 );
 						}
 					}
 			}
-			detectAndSendChanges();
+			broadcastChanges();
 			return itemstack;
 		}
 
 		if( slotId >= 0 && slotId < indexOutput && clickTypeIn == ClickType.PICKUP && ( dragType == 0 || dragType == 1 ) )
 		{
 			final ItemStack itemstack = inventoryplayer.getItemStack();
-			final Slot slot = inventorySlots.get( slotId );
+			final Slot slot = slots.get( slotId );
 
 			if( slot != null )
 			{
 
 				if( itemstack != null )
 				{
-					if( slot.isItemValid( itemstack ) )
-						slot.putStack( new ItemStack( itemstack.getItem() ) );
+					if( slot.mayPlace( itemstack ) )
+						slot.set( new ItemStack( itemstack.getItem() ) );
 
 				}
 				else
-					slot.putStack( null );
+					slot.set( null );
 				tileCraftingStation.onCraftMatrixChanged();
-				slot.onSlotChanged();
+				slot.setChanged();
 				return itemstack;
 			}
 		}
 
 		if( slotId >= indexOutput && slotId < indexContents && tileCraftingStation.currentCrafting != null
-				&& output.getStackInSlot( slotId - 9 ) != null )
+				&& output.getItem( slotId - 9 ) != null )
 		{
-			final ItemStack craftingStack = output.getStackInSlot( slotId - 9 );
+			final ItemStack craftingStack = output.getItem( slotId - 9 );
 			final int amount = craftingStack.stackSize;
 			// if( clickTypeIn == ClickType.QUICK_MOVE )
 
 			final ItemStack holding = player.inventory.getItemStack();
-			if( holding == null || ItemStack.areItemsEqual( holding, craftingStack ) && holding.stackSize + amount <= holding.getMaxStackSize() )
+			if( holding == null || ItemStack.isSame( holding, craftingStack ) && holding.stackSize + amount <= holding.getMaxStackSize() )
 				tileCraftingStation.craft( player );
 		}
-		return super.slotClick( slotId, dragType, clickTypeIn, player );
+		return super.clicked( slotId, dragType, clickTypeIn, player );
 	}
 
 	@Override

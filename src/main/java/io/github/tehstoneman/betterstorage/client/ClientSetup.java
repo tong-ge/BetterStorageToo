@@ -43,14 +43,14 @@ public class ClientSetup
 	public static void init( final FMLClientSetupEvent event )
 	{
 		// Register GUIs
-		ScreenManager.registerFactory( BetterStorageContainerTypes.CARDBOARD_BOX.get(), GuiCardboardBox::new );
-		ScreenManager.registerFactory( BetterStorageContainerTypes.CRATE.get(), GuiCrate::new );
-		ScreenManager.registerFactory( BetterStorageContainerTypes.KEYRING.get(), GuiKeyring::new );
-		ScreenManager.registerFactory( BetterStorageContainerTypes.LOCKER.get(), GuiLocker::new );
-		ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_CHEST.get(), GuiReinforcedChest::new );
-		ScreenManager.registerFactory( BetterStorageContainerTypes.REINFORCED_LOCKER.get(), GuiReinforcedLocker::new );
+		ScreenManager.register( BetterStorageContainerTypes.CARDBOARD_BOX.get(), GuiCardboardBox::new );
+		ScreenManager.register( BetterStorageContainerTypes.CRATE.get(), GuiCrate::new );
+		ScreenManager.register( BetterStorageContainerTypes.KEYRING.get(), GuiKeyring::new );
+		ScreenManager.register( BetterStorageContainerTypes.LOCKER.get(), GuiLocker::new );
+		ScreenManager.register( BetterStorageContainerTypes.REINFORCED_CHEST.get(), GuiReinforcedChest::new );
+		ScreenManager.register( BetterStorageContainerTypes.REINFORCED_LOCKER.get(), GuiReinforcedLocker::new );
 
-		ScreenManager.registerFactory( BetterStorageContainerTypes.CONFIG.get(), ConfigContainerGui::new );
+		ScreenManager.register( BetterStorageContainerTypes.CONFIG.get(), ConfigContainerGui::new );
 
 		// Register Tile Entity Renderers
 		ClientRegistry.bindTileEntityRenderer( BetterStorageTileEntityTypes.GLASS_TANK.get(), TileEntityTankRenderer::new );
@@ -66,13 +66,13 @@ public class ClientSetup
 				BetterStorageItems.CARDBOARD_SHOVEL.get(), BetterStorageItems.CARDBOARD_SWORD.get(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 		Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 
-		RenderTypeLookup.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.getCutout() );
+		RenderTypeLookup.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.cutout() );
 	}
 
 	@SubscribeEvent
 	public static void onTextureStitch( TextureStitchEvent.Pre event )
 	{
-		if( !event.getMap().getTextureLocation().equals( PlayerContainer.LOCATION_BLOCKS_TEXTURE ) )
+		if( !event.getMap().location().equals( PlayerContainer.BLOCK_ATLAS ) )
 			return;
 
 		event.addSprite( Resources.TEXTURE_CHEST_REINFORCED );

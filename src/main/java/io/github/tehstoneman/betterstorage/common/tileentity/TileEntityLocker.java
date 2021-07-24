@@ -38,7 +38,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return new AxisAlignedBB( pos.add( -1, 0, -1 ), pos.add( 2, 2, 2 ) );
+		return new AxisAlignedBB( worldPosition.offset( -1, 0, -1 ), worldPosition.offset( 2, 2, 2 ) );
 	}
 
 	@Override
@@ -52,9 +52,9 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	{
 		if( isConnected() )
 			if( isMain() )
-				return pos.up();
+				return worldPosition.above();
 			else
-				return pos.down();
+				return worldPosition.below();
 		return null;
 	}
 
@@ -62,7 +62,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
 	{
 		if( isMain() )
-			return new ContainerLocker( windowID, playerInventory, world, pos );
+			return new ContainerLocker( windowID, playerInventory, level, worldPosition );
 		else
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
@@ -70,22 +70,22 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	@Override
 	public void tick()
 	{
-		final int x = pos.getX();
-		final int y = pos.getY();
-		final int z = pos.getZ();
+		final int x = worldPosition.getX();
+		final int y = worldPosition.getY();
+		final int z = worldPosition.getZ();
 		++ticksSinceSync;
-		if( !world.isRemote && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
+		if( !level.isClientSide && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			for( final PlayerEntity entityplayer : world.getEntitiesWithinAABB( PlayerEntity.class,
+			for( final PlayerEntity entityplayer : level.getEntitiesOfClass( PlayerEntity.class,
 					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
-				if( entityplayer.openContainer instanceof ContainerLocker )
+				if( entityplayer.containerMenu instanceof ContainerLocker )
 					++numPlayersUsing;
 		}
 
 		prevLidAngle = lidAngle;
 		if( numPlayersUsing > 0 && lidAngle == 0.0F )
-			playSound( SoundEvents.BLOCK_CHEST_OPEN );
+			playSound( SoundEvents.CHEST_OPEN );
 
 		if( numPlayersUsing == 0 && lidAngle > 0.0F || numPlayersUsing > 0 && lidAngle < 1.0F )
 		{
@@ -99,7 +99,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 				lidAngle = 1.0F;
 
 			if( lidAngle < 0.5F && f2 >= 0.5F )
-				playSound( SoundEvents.BLOCK_CHEST_CLOSE );
+				playSound( SoundEvents.CHEST_CLOSE );
 
 			if( lidAngle < 0.0F )
 				lidAngle = 0.0F;
@@ -108,22 +108,22 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 
 	protected void playSound( SoundEvent soundIn )
 	{
-		final ConnectedType chesttype = getBlockState().get( BlockConnectableContainer.TYPE );
-		double x = pos.getX() + 0.5D;
-		final double y = pos.getY() + 0.5D;
-		double z = pos.getZ() + 0.5D;
+		final ConnectedType chesttype = getBlockState().getValue( BlockConnectableContainer.TYPE );
+		double x = worldPosition.getX() + 0.5D;
+		final double y = worldPosition.getY() + 0.5D;
+		double z = worldPosition.getZ() + 0.5D;
 		if( chesttype != ConnectedType.SINGLE )
 		{
 			final Direction enumfacing = BlockLocker.getDirectionToAttached( getBlockState() );
-			x += enumfacing.getXOffset() * 0.5D;
-			z += enumfacing.getZOffset() * 0.5D;
+			x += enumfacing.getStepX() * 0.5D;
+			z += enumfacing.getStepZ() * 0.5D;
 		}
 
-		world.playSound( (PlayerEntity)null, x, y, z, soundIn, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F );
+		level.playSound( (PlayerEntity)null, x, y, z, soundIn, SoundCategory.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F );
 	}
 
 	@Override
-	public float getLidAngle( float partialTicks )
+	public float getOpenNess( float partialTicks )
 	{
 		return prevLidAngle + ( lidAngle - prevLidAngle ) * partialTicks;
 	}

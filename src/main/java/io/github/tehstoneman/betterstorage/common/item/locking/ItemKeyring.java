@@ -41,15 +41,15 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		final ItemStack stack = player.getHeldItem(hand);
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		final ItemStack stack = player.getItemInHand(hand);
 
 		if (!player.isCrouching())
 			return new ActionResult<>(ActionResultType.PASS, stack);
 
-		if (!world.isRemote)
+		if (!world.isClientSide)
 			NetworkHooks.openGui((ServerPlayerEntity) player, BetterStorageItems.KEYRING.get(),
-					buf -> buf.writeItemStack(player.getHeldItem(hand)).writeInt(player.inventory.currentItem));
+					buf -> buf.writeItem(player.getItemInHand(hand)).writeInt(player.inventory.selected));
 		return new ActionResult<>(ActionResultType.SUCCESS, stack);
 	}
 
@@ -89,8 +89,8 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 
 	@Override
 	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
-		final ItemStack itemStack = player.getHeldItemMainhand();
-		final int index = player.inventory.currentItem;
+		final ItemStack itemStack = player.getMainHandItem();
+		final int index = player.inventory.selected;
 		return new ContainerKeyring(windowID, playerInventory, itemStack, index);
 	}
 
@@ -111,9 +111,9 @@ public class ItemKeyring extends ItemBetterStorage implements IKey, INamedContai
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+	public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
 			ITooltipFlag flagIn) {
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		if (flagIn.isAdvanced() && stack.hasTag()) {
 			final CompoundNBT tag = stack.getTag();
 			if (tag.contains("Occupied"))

@@ -29,9 +29,9 @@ public class KeyColorRecipe extends SpecialRecipe
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< ItemStack > dyeList = Lists.newArrayList();
 
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		for( int i = 0; i < inv.getContainerSize(); ++i )
 		{
-			final ItemStack itemStack = inv.getStackInSlot( i );
+			final ItemStack itemStack = inv.getItem( i );
 			if( !itemStack.isEmpty() )
 				if( itemStack.getItem() instanceof KeyLockItem )
 				{
@@ -42,7 +42,7 @@ public class KeyColorRecipe extends SpecialRecipe
 				}
 				else
 				{
-					if( !itemStack.getItem().isIn( Tags.Items.DYES ) )
+					if( !itemStack.getItem().is( Tags.Items.DYES ) )
 						return false;
 
 					dyeList.add( itemStack );
@@ -53,14 +53,14 @@ public class KeyColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack getCraftingResult( CraftingInventory inv )
+	public ItemStack assemble( CraftingInventory inv )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 
 		final CompoundNBT tagCompound = new CompoundNBT();
-		for( int i = 0; i < inv.getSizeInventory(); ++i )
+		for( int i = 0; i < inv.getContainerSize(); ++i )
 		{
-			final ItemStack ingredientStack = inv.getStackInSlot( i );
+			final ItemStack ingredientStack = inv.getItem( i );
 
 			if( !ingredientStack.isEmpty() )
 			{
@@ -76,7 +76,7 @@ public class KeyColorRecipe extends SpecialRecipe
 					if( ingredientStack.hasTag() )
 						tagCompound.merge( ingredientStack.getTag() );
 				}
-				else if( item.isIn( Tags.Items.DYES ) )
+				else if( item.is( Tags.Items.DYES ) )
 				{
 					final DyeColor dyeColor = DyeColor.getColor( ingredientStack );
 					if( !tagCompound.contains( KeyLockItem.TAG_COLOR1 ) )
@@ -94,7 +94,7 @@ public class KeyColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean canFit( int width, int height )
+	public boolean canCraftInDimensions( int width, int height )
 	{
 		return width * height >= 2;
 	}
@@ -106,7 +106,7 @@ public class KeyColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean isDynamic()
+	public boolean isSpecial()
 	{
 		return true;
 	}

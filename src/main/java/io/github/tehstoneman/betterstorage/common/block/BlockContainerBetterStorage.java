@@ -32,9 +32,9 @@ public abstract class BlockContainerBetterStorage extends Block
 	 */
 
 	@Override
-	public boolean eventReceived( BlockState state, World worldIn, BlockPos pos, int id, int param )
+	public boolean triggerEvent( BlockState state, World worldIn, BlockPos pos, int id, int param )
 	{
-		final TileEntity te = worldIn.getTileEntity( pos );
-		return te != null ? te.receiveClientEvent( id, param ) : false;
+		final TileEntity te = worldIn.getBlockEntity( pos );
+		return te != null ? te.triggerEvent( id, param ) : false;
 	}
 }

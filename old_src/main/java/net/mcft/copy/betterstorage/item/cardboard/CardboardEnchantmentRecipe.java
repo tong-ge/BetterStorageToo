@@ -70,15 +70,15 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 			if( stack == null || !( stack.getItem() instanceof ICardboardItem ) )
 				continue;
 
-			final ItemStack outputStack = stack.copy();
+			final ItemStack outset = stack.copy();
 
 			final boolean canApply = false;
-			final Map< Integer, StackEnchantment > stackEnchants = StackUtils.getEnchantments( outputStack );
+			final Map< Integer, StackEnchantment > stackEnchants = StackUtils.getEnchantments( outset );
 			final int numEnchants = stackEnchants.size();
 
 			/*
 			 * for (StackEnchantment bookEnch : bookEnchantments) {
-			 * if (!StackUtils.isEnchantmentCompatible(outputStack, stackEnchants.values(), bookEnch))
+			 * if (!StackUtils.isEnchantmentCompatible(outset, stackEnchants.values(), bookEnch))
 			 * continue;
 			 * 
 			 * StackEnchantment stackEnch = stackEnchants.get(bookEnch.ench.effectId);
@@ -89,7 +89,7 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 			 * 
 			 * // Set enchantment level of output item.
 			 * if (stackEnch != null) stackEnch.setLevel(bookEnch.getLevel());
-			 * else outputStack.addEnchantment(bookEnch.ench, bookEnch.getLevel());
+			 * else outset.addEnchantment(bookEnch.ench, bookEnch.getLevel());
 			 * 
 			 * canApply = true;
 			 * }
@@ -100,7 +100,7 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 			if( !canApply )
 				return null;
 
-			output[i] = outputStack;
+			output[i] = outset;
 			requiredInput[i] = new RecipeInputItemStack( StackUtils.copyStack( stack, 1 ), true );
 		}
 
@@ -160,7 +160,7 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 	 * @Override
 	 * 
 	 * @SideOnly(Side.CLIENT)
-	 * public List<IRecipeInput> getPossibleInputs() {
+	 * public List<IRecipeInput> getBlockPossibleInputs() {
 	 * return Arrays.<IRecipeInput>asList(
 	 * RecipeInputCardboard.instance,
 	 * RecipeInputEnchantedBook.instance);
@@ -169,7 +169,7 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public List< ItemStack > getPossibleOutputs()
+	public List< ItemStack > getBlockPossibleOutputs()
 	{
 		return Collections.emptyList();
 	}
@@ -182,7 +182,7 @@ public class CardboardEnchantmentRecipe implements IStationRecipe
 	}
 
 	@Override
-	public List< IRecipeInput > getPossibleInputs()
+	public List< IRecipeInput > getBlockPossibleInputs()
 	{
 		// TODO Auto-generated method stub
 		return null;

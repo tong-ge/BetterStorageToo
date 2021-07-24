@@ -79,7 +79,7 @@ public class CraftingStackHandler extends ItemStackHandler
 	public InventoryCrafting getCraftingInventory()
 	{
 		final InventoryCrafting crafting = new InventoryCrafting( new DummyContainer(), 3, 3 );
-		for( int i = 0; i < crafting.getSizeInventory(); i++ )
+		for( int i = 0; i < crafting.getContainerSize(); i++ )
 			crafting.setInventorySlotContents( i, stacks[i] );
 		return crafting;
 	}
@@ -87,7 +87,7 @@ public class CraftingStackHandler extends ItemStackHandler
 	private class DummyContainer extends Container
 	{
 		@Override
-		public boolean canInteractWith( EntityPlayer playerIn )
+		public boolean stillValid( EntityPlayer playerIn )
 		{
 			return false;
 		}

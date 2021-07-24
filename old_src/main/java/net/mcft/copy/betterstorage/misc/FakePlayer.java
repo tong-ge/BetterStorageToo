@@ -44,7 +44,7 @@ public class FakePlayer extends EntityPlayer
 
 	public static FakePlayer get( TileEntity entity )
 	{
-		return get( entity != null ? entity.getWorld() : WorldUtils.getLocalWorld() );
+		return get( entity != null ? entity.getLevel() : WorldUtils.getLocalWorld() );
 	}
 
 	public static void unset()

@@ -34,7 +34,7 @@ public class RecipeInputCardboard implements IRecipeInput
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public List< ItemStack > getPossibleMatches()
+	public List< ItemStack > getBlockPossibleMatches()
 	{
 		return null;
 	}

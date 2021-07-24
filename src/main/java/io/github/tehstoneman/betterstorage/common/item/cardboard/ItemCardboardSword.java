@@ -10,7 +10,7 @@ public class ItemCardboardSword extends SwordItem implements ICardboardItem
 {
 	public ItemCardboardSword()
 	{
-		super( ItemTier.WOOD, 3, -2.4F, new Item.Properties().group( BetterStorage.ITEM_GROUP ) );
+		super( ItemTier.WOOD, 3, -2.4F, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,

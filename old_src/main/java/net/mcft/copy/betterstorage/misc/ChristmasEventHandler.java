@@ -60,8 +60,8 @@ public class ChristmasEventHandler
 		/*
 		 * if (isPresentTime() && !properties.gotPresent) {
 		 * IInventory inv = event.player.inventory;
-		 * for (int i = 0; i < inv.getSizeInventory(); i++) {
-		 * ItemStack stack = inv.getStackInSlot(i);
+		 * for (int i = 0; i < inv.getContainerSize(); i++) {
+		 * ItemStack stack = inv.getItem(i);
 		 * if ((stack != null) && (stack.getItem() == BetterStorageItems.presentBook) &&
 		 * (StackUtils.get(stack, 9001, "year") == getYear()) &&
 		 * event.player.getUniqueID().toString().equals(StackUtils.get(stack, null, "uuid"))) {

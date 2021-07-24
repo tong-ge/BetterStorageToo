@@ -30,7 +30,7 @@ public class PresentRecipe extends ShapedRecipes
 	@Override
 	public boolean matches( InventoryCrafting crafting, World world )
 	{
-		final ItemStack box = crafting.getStackInSlot( 4 );
+		final ItemStack box = crafting.getItem( 4 );
 		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) || !StackUtils.has( box, "Items" ) )
 			return false;
 
@@ -46,13 +46,13 @@ public class PresentRecipe extends ShapedRecipes
 	}
 
 	@Override
-	public ItemStack getCraftingResult( InventoryCrafting crafting )
+	public ItemStack assemble( InventoryCrafting crafting )
 	{
 		final int colorInner = checkWoolColor( crafting, 0 );
 		final int colorOuter = checkWoolColor( crafting, 1 );
 		final int leftRight = checkWoolColor( crafting, 3 );
 		final boolean skojanzaMode = leftRight == colorOuter;
-		final ItemStack box = crafting.getStackInSlot( 4 );
+		final ItemStack box = crafting.getItem( 4 );
 
 		final ItemStack present = new ItemStack( BetterStorageBlocks.PRESENT );
 		final NBTTagCompound compound = box.getTagCompound().copy();
@@ -73,7 +73,7 @@ public class PresentRecipe extends ShapedRecipes
 		for( int i = 0; i < slots.length; i++ )
 		{
 			final int slot = slots[i];
-			final ItemStack stack = crafting.getStackInSlot( slot );
+			final ItemStack stack = crafting.getItem( slot );
 			int woolColor;
 			if( stack == null )
 				return -1;

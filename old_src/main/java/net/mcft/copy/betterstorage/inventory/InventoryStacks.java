@@ -27,7 +27,7 @@ public class InventoryStacks extends InventoryBetterStorage
 	}
 
 	@Override
-	public int getSizeInventory()
+	public int getContainerSize()
 	{
 		return totalSize;
 	}
@@ -50,7 +50,7 @@ public class InventoryStacks extends InventoryBetterStorage
 	}
 
 	@Override
-	public ItemStack getStackInSlot( int slot )
+	public ItemStack getItem( int slot )
 	{
 		return getContentsAndSlot( slot )[tempSlot];
 	}
@@ -68,7 +68,7 @@ public class InventoryStacks extends InventoryBetterStorage
 	}
 
 	@Override
-	public void markDirty()
+	public void setChanged()
 	{}
 	// @Override
 	// public void openInventory() { }
