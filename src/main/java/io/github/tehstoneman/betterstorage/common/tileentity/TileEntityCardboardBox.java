@@ -4,6 +4,7 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -94,16 +95,14 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return nbt;
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 * 
-	 * uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
-	 * color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+	}
 
 	@Override
 	public CompoundNBT save( CompoundNBT nbt )
@@ -116,14 +115,12 @@ public class TileEntityCardboardBox extends TileEntityContainer
 		return super.save( nbt );
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
-	 * color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
-	 * 
-	 * super.read( nbt );
-	 * }
-	 */
+	@Override
+	public void load( BlockState state, CompoundNBT nbt )
+	{
+		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
+		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
+
+		super.load( state, nbt );
+	}
 }

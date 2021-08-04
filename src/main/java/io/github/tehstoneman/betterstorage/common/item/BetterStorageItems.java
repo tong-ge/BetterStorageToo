@@ -73,8 +73,8 @@ public final class BetterStorageItems
 	public static RegistryObject< BlockItem >					GLASS_TANK				= REGISTERY.register( "glass_tank",
 			() -> new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().tab( BetterStorage.ITEM_GROUP ) ) );
 
-	public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
-			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().craftRemainder( Items.BUCKET ) ) );
+	/*public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
+			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().craftRemainder( Items.BUCKET ) ) );*/
 
 	public static RegistryObject< HexKeyItem >					HEX_KEY					= REGISTERY.register( "hex_key", () -> new HexKeyItem() );
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
@@ -13,7 +12,10 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class GuiCrate extends ContainerScreen< ContainerCrate >
 {
 	private final int	rows;
@@ -35,10 +37,8 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 	}
 
 	@Override
-	// public void render( int mouseX, int mouseY, float partialTicks )
 	public void render( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
-		// renderBackground();
 		renderBackground( matrixStack );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 
@@ -47,27 +47,18 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 			final ITextComponent toolTip = new TranslationTextComponent( ModInfo.CONTAINER_CAPACITY, menu.getVolume() );
 			final List< ITextComponent > list1 = Lists.newArrayList( toolTip );
 			renderComponentTooltip( matrixStack, list1, mouseX, mouseY );
-			// this.renderTooltip( toolTip.getFormattedText(), mouseX, mouseY );
 		}
 		else
-			// renderHoveredToolTip( mouseX, mouseY );
 			renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
-	@SuppressWarnings( "deprecation" )
 	@Override
-	// protected void drawGuiContainerBackgroundLayer( float partialTicks, int x, int y )
 	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
-		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		// minecraft.getTextureManager().bindTexture( Resources.CONTAINER_CRATE );
-		minecraft.getTextureManager().getTexture( Resources.CONTAINER_CRATE );
+		minecraft.getTextureManager().bind( Resources.CONTAINER_CRATE );
 
 		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), offsetY );
 		blit( matrixStack, getGuiLeft(), getGuiTop() + offsetY, 0, 126, getXSize(), 96 );
-
-		// blit( guiLeft, guiTop, 0, 0, xSize, offsetY );
-		// blit( guiLeft, guiTop + offsetY, 0, 126, xSize, 96 );
 
 		final int volume = menu.getVolume();
 		if( volume > 0.0 )

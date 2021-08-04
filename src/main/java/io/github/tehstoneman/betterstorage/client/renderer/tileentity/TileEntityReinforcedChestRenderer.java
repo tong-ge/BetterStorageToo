@@ -38,9 +38,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 
+@OnlyIn( Dist.CLIENT )
 public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileEntityReinforcedChest >
 {
 	private final ChestModel				simpleChest	= new ChestModel();
@@ -62,7 +65,8 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 	{
 		final BlockState blockState = tileEntity.hasLevel() ? tileEntity.getBlockState()
 				: BetterStorageBlocks.REINFORCED_CHEST.get().defaultBlockState().setValue( BlockReinforcedChest.FACING, Direction.SOUTH );
-		final ConnectedType chestType = blockState.hasProperty( BlockConnectableContainer.TYPE ) ? blockState.getValue( BlockConnectableContainer.TYPE )
+		final ConnectedType chestType = blockState.hasProperty( BlockConnectableContainer.TYPE )
+				? blockState.getValue( BlockConnectableContainer.TYPE )
 				: ConnectedType.SINGLE;
 		final Direction facing = blockState.getValue( BlockReinforcedChest.FACING );
 
@@ -110,8 +114,8 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 					if( item instanceof BlockItem )
 					{
 						final BlockState state = ( (BlockItem)item ).getBlock().defaultBlockState();
-						final TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper()
-								.getTexture( state, world, pos );
+						final TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getTexture( state, world,
+								pos );
 						material = new RenderMaterial( PlayerContainer.BLOCK_ATLAS, texture.getName() );
 					}
 				}
@@ -122,15 +126,15 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 
 				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferChest, null, modelBase, 1.0f, 1.0f, 1.0f, combinedLight,
 						combinedOverlay, data );
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelFrame, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelFrame, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
 
 				rotateLid( tileEntity, partialTicks, matrixStack );
 
 				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferChest, null, modelLid, 1.0f, 1.0f, 1.0f, combinedLight,
 						combinedOverlay, data );
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelLidFrame, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelLidFrame, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
 			}
 			else
 			{
@@ -195,7 +199,7 @@ public class TileEntityReinforcedChestRenderer extends TileEntityRenderer< TileE
 			if( itemRenderer == null )
 				itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-			matrixStack.translate( chest.isConnected() ? 1.0 : 0.5,-0.1875, 0.9375 );
+			matrixStack.translate( chest.isConnected() ? 1.0 : 0.5, -0.1875, 0.9375 );
 
 			matrixStack.scale( 0.5F, 0.5F, 0.5F );
 			itemRenderer.renderStatic( itemstack, ItemCameraTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, matrixStack,

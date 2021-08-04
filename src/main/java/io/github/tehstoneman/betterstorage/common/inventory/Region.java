@@ -2,7 +2,6 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import com.google.common.base.MoreObjects;
 
-import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -74,7 +73,8 @@ public class Region
 	}
 
 	/**
-	 * Sets the area of this region<p>
+	 * Sets the area of this region
+	 * <p>
 	 * Automatically adjusts min and max values
 	 *
 	 * @param posMin
@@ -192,7 +192,7 @@ public class Region
 	 */
 	public boolean isFull( World world, Block block )
 	{
-		for( final BlockPos blockPos : BlockUtils.getAllInBox( posMin, posMax ) )
+		for( final BlockPos blockPos : BlockPos.betweenClosed( posMin, posMax ) )
 			if( !world.getBlockState( blockPos ).getBlock().equals( block ) )
 				return false;
 		return true;
@@ -209,7 +209,7 @@ public class Region
 	 */
 	public boolean isFull( World world, TileEntity tileEntity )
 	{
-		for( final BlockPos blockPos : BlockUtils.getAllInBox( posMin, posMax ) )
+		for( final BlockPos blockPos : BlockPos.betweenClosed( posMin, posMax ) )
 			if( !world.getBlockEntity( blockPos ).equals( tileEntity ) )
 				return false;
 		return true;
@@ -308,5 +308,10 @@ public class Region
 			return test.posMin.equals( posMin ) && test.posMax.equals( posMax );
 		}
 		return false;
+	}
+
+	public Iterable< BlockPos > betweenClosed()
+	{
+		return BlockPos.betweenClosed( posMin, posMax );
 	}
 }

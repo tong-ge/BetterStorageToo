@@ -15,7 +15,10 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.DoorHingeSide;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class TileEntityLockableDoorRenderer extends TileEntityRenderer< TileEntityLockableDoor >
 {
 	public TileEntityLockableDoorRenderer( TileEntityRendererDispatcher rendererDispatcherIn )

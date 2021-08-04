@@ -14,10 +14,13 @@ import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.obj.LineReader;
 import net.minecraftforge.client.model.obj.MaterialLibrary;
 
+@OnlyIn( Dist.CLIENT )
 public class XOBJLoader implements IModelLoader< XOBJModel >
 {
 	public static XOBJLoader								INSTANCE		= new XOBJLoader();

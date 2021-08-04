@@ -59,14 +59,14 @@ public class ContainerLocker extends Container
 		for( int i = 0; i < 27; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
-			final int y = 14 + i / 9 * 18;
+			final int y = 15 + i / 9 * 18;
 			addSlot( new Slot( playerInventory, i + 9, offsetX + x, offsetY + y ) );
 		}
 
 		for( int i = 0; i < 9; i++ )
 		{
 			final int x = i % 9 * 18 + 8;
-			final int y = 72;
+			final int y = 73;
 			addSlot( new Slot( playerInventory, i, offsetX + x, offsetY + y ) );
 		}
 	}

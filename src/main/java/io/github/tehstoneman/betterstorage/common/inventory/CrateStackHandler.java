@@ -10,7 +10,6 @@ import com.google.common.base.MoreObjects;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -419,7 +418,7 @@ public class CrateStackHandler extends ItemStackHandler
 	public void trimRegion( World world )
 	{
 		final Region region = Region.EMPTY.clone();
-		for( final BlockPos pos : BlockUtils.getAllInBox( this.region.posMin, this.region.posMax ) )
+		for( final BlockPos pos : BlockPos.betweenClosed( this.region.posMin, this.region.posMax ) )
 		{
 			final TileEntityCrate tileCrate = TileEntityCrate.getCrateAt( world, pos );
 			if( tileCrate != null )

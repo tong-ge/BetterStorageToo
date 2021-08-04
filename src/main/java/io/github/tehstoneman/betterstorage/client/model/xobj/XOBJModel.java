@@ -35,6 +35,8 @@ import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModelBuilder;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -47,6 +49,7 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 
+@OnlyIn( Dist.CLIENT )
 public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 {
 	private static Vector4f					COLOR_WHITE		= new Vector4f( 1, 1, 1, 1 );
@@ -277,21 +280,6 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 		return Optional.ofNullable( parts.get( name ) );
 	}
 
-	/*
-	 * @Override
-	 * public IBakedModel bake( IModelConfiguration owner, ModelBakery bakery, Function< Material, TextureAtlasSprite > spriteGetter,
-	 * IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation )
-	 * {
-	 * final TextureAtlasSprite particle = spriteGetter.apply( owner.resolveTexture( "particle" ) );
-	 *
-	 * final IModelBuilder< ? > builder = IModelBuilder.of( owner, overrides, particle );
-	 *
-	 * addQuads( owner, builder, bakery, spriteGetter, modelTransform, modelLocation );
-	 *
-	 * return builder.build();
-	 * }
-	 */
-
 	private Pair< BakedQuad, Direction > makeQuad( int[][] indices, int tintIndex, Vector4f colorTint, Vector4f ambientColor,
 			TextureAtlasSprite texture, TransformationMatrix transform )
 	{
@@ -327,6 +315,10 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 			uv2 = new Vector2f( ( fakeLight << 4 ) / 32767.0f, ( fakeLight << 4 ) / 32767.0f );
 			builder.setApplyDiffuseLighting( fakeLight == 0 );
 		}
+        else
+        {
+            builder.setApplyDiffuseLighting(diffuseLighting);
+        }
 
 		final boolean hasTransform = !transform.isIdentity();
 		// The incoming transform is referenced on the center of the block, but our coords are referenced on the corner
@@ -347,8 +339,8 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 				transformation.transformPosition( position );
 				transformation.transformNormal( normal );
 			} ;
-			final Vector4f tintedColor = new Vector4f( color.x() * colorTint.x(), color.y() * colorTint.y(),
-					color.z() * colorTint.z(), color.w() * colorTint.w() );
+			final Vector4f tintedColor = new Vector4f( color.x() * colorTint.x(), color.y() * colorTint.y(), color.z() * colorTint.z(),
+					color.w() * colorTint.w() );
 			putVertexData( builder, position, texCoord, normal, tintedColor, uv2, texture );
 			pos[i] = position;
 			norm[i] = normal;
@@ -359,28 +351,22 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 		Direction cull = null;
 		if( detectCullableFaces )
 			if( MathHelper.equal( pos[0].x(), 0 ) && // vertex.position.x
-					MathHelper.equal( pos[1].x(), 0 ) && MathHelper.equal( pos[2].x(), 0 )
-					&& MathHelper.equal( pos[3].x(), 0 ) && norm[0].x() < 0 )
+					MathHelper.equal( pos[1].x(), 0 ) && MathHelper.equal( pos[2].x(), 0 ) && MathHelper.equal( pos[3].x(), 0 ) && norm[0].x() < 0 )
 				cull = Direction.WEST;
 			else if( MathHelper.equal( pos[0].x(), 1 ) && // vertex.position.x
-					MathHelper.equal( pos[1].x(), 1 ) && MathHelper.equal( pos[2].x(), 1 )
-					&& MathHelper.equal( pos[3].x(), 1 ) && norm[0].x() > 0 )
+					MathHelper.equal( pos[1].x(), 1 ) && MathHelper.equal( pos[2].x(), 1 ) && MathHelper.equal( pos[3].x(), 1 ) && norm[0].x() > 0 )
 				cull = Direction.EAST;
 			else if( MathHelper.equal( pos[0].z(), 0 ) && // vertex.position.z
-					MathHelper.equal( pos[1].z(), 0 ) && MathHelper.equal( pos[2].z(), 0 )
-					&& MathHelper.equal( pos[3].z(), 0 ) && norm[0].z() < 0 )
+					MathHelper.equal( pos[1].z(), 0 ) && MathHelper.equal( pos[2].z(), 0 ) && MathHelper.equal( pos[3].z(), 0 ) && norm[0].z() < 0 )
 				cull = Direction.NORTH; // can never remember
 			else if( MathHelper.equal( pos[0].z(), 1 ) && // vertex.position.z
-					MathHelper.equal( pos[1].z(), 1 ) && MathHelper.equal( pos[2].z(), 1 )
-					&& MathHelper.equal( pos[3].z(), 1 ) && norm[0].z() > 0 )
+					MathHelper.equal( pos[1].z(), 1 ) && MathHelper.equal( pos[2].z(), 1 ) && MathHelper.equal( pos[3].z(), 1 ) && norm[0].z() > 0 )
 				cull = Direction.SOUTH;
 			else if( MathHelper.equal( pos[0].y(), 0 ) && // vertex.position.y
-					MathHelper.equal( pos[1].y(), 0 ) && MathHelper.equal( pos[2].y(), 0 )
-					&& MathHelper.equal( pos[3].y(), 0 ) && norm[0].y() < 0 )
+					MathHelper.equal( pos[1].y(), 0 ) && MathHelper.equal( pos[2].y(), 0 ) && MathHelper.equal( pos[3].y(), 0 ) && norm[0].y() < 0 )
 				cull = Direction.DOWN; // can never remember
 			else if( MathHelper.equal( pos[0].y(), 1 ) && // vertex.position.y
-					MathHelper.equal( pos[1].y(), 1 ) && MathHelper.equal( pos[2].y(), 1 )
-					&& MathHelper.equal( pos[3].y(), 1 ) && norm[0].y() > 0 )
+					MathHelper.equal( pos[1].y(), 1 ) && MathHelper.equal( pos[2].y(), 1 ) && MathHelper.equal( pos[3].y(), 1 ) && norm[0].y() > 0 )
 				cull = Direction.UP;
 
 		return Pair.of( builder.build(), cull );

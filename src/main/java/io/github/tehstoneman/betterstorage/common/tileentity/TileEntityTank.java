@@ -35,7 +35,7 @@ public class TileEntityTank extends TileEntity
 	private StackedTankHandler					stackedTank;
 	private final LazyOptional< IFluidHandler >	stackedHandler	= LazyOptional.of( () -> stackedTank );
 	private BlockPos							mainPos			= BlockPos.ZERO;
-	private final int							tankCount;
+	private int									tankCount;
 
 	public TileEntityTank()
 	{
@@ -119,7 +119,7 @@ public class TileEntityTank extends TileEntity
 
 	public ArrayList< FluidTankHandler > getStackedTanks()
 	{
-		final ArrayList< FluidTankHandler > tanks = new ArrayList< >();
+		final ArrayList< FluidTankHandler > tanks = new ArrayList<>();
 		BlockPos tankPos = worldPosition;
 		while( level.getBlockState( tankPos ).getBlock() instanceof BlockTank )
 		{
@@ -145,15 +145,13 @@ public class TileEntityTank extends TileEntity
 		return nbt;
 	}
 
-	/*
-	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
-	 * {
-	 * super.handleUpdateTag( nbt );
-	 *
-	 * fluidTank.readFromNBT( nbt );
-	 * }
-	 */
+	@Override
+	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	{
+		super.handleUpdateTag( state, nbt );
+
+		fluidTank.readFromNBT( nbt );
+	}
 
 	@Override
 	public CompoundNBT save( CompoundNBT nbt )
@@ -167,17 +165,15 @@ public class TileEntityTank extends TileEntity
 		return super.save( nbt );
 	}
 
-	/*
-	 * @Override
-	 * public void read( CompoundNBT nbt )
-	 * {
-	 * fluidTank.readFromNBT( nbt );
-	 * tankCount = nbt.getInt( "tankCount" );
-	 *
-	 * if( nbt.contains( "mainPos" ) )
-	 * mainPos = BlockPos.fromLong( nbt.getLong( "mainPos" ) );
-	 *
-	 * super.read( nbt );
-	 * }
-	 */
+	@Override
+	public void load( BlockState state, CompoundNBT nbt )
+	{
+		fluidTank.readFromNBT( nbt );
+		tankCount = nbt.getInt( "tankCount" );
+
+		if( nbt.contains( "mainPos" ) )
+			mainPos = BlockPos.of( nbt.getLong( "mainPos" ) );
+
+		super.load( state, nbt );
+	}
 }

@@ -11,8 +11,8 @@ public class BetterStorageFluids
 {
 	public static final DeferredRegister< Fluid >		REGISTERY		= DeferredRegister.create( ForgeRegistries.FLUIDS, ModInfo.MOD_ID );
 
-	public static RegistryObject< ForgeFlowingFluid >	MILK			= REGISTERY.register( "milk",
+	/*public static RegistryObject< ForgeFlowingFluid >	MILK			= REGISTERY.register( "milk",
 			() -> new ForgeFlowingFluid.Source( FluidMilk.PROPERTIES ) );
 	public static RegistryObject< ForgeFlowingFluid >	FLOWING_MILK	= REGISTERY.register( "flowing_milk",
-			() -> new ForgeFlowingFluid.Flowing( FluidMilk.PROPERTIES ) );
+			() -> new ForgeFlowingFluid.Flowing( FluidMilk.PROPERTIES ) );*/
 }

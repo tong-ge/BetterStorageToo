@@ -30,8 +30,6 @@ sourceSets {
 				include '**/**'
 				exclude '**/**.lang'
 				exclude '**/**.blend*'
-				exclude '**/**.obj'
-				exclude '**/**.mtl'
 				exclude '**/**.model'
 				exclude '**/**.xcf'
 			}

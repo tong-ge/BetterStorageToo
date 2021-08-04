@@ -2,7 +2,10 @@ package io.github.tehstoneman.betterstorage.client.renderer.tileentity.model;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class ModelLargeLocker extends ModelLocker
 {
 	public ModelLargeLocker()
@@ -11,7 +14,7 @@ public class ModelLargeLocker extends ModelLocker
 
 		lockerBody = new ModelRenderer( 64, 128, 0, 34 );
 		lockerBody.addBox( 0.0F, 0.0F, 0.0F, 16.0F, 32.0F, 14.0F, 0.0F );
-		
+
 		lockerDoorLeft = new ModelRenderer( 64, 128, 12, 0 );
 		lockerDoorLeft.addBox( 0.0F, 0.0F, 0.0F, 16.0F, 32.0F, 2.0F, 0.0F );
 		lockerDoorLeft.z = 13.0F;

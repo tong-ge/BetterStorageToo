@@ -1,7 +1,6 @@
 package io.github.tehstoneman.betterstorage.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer;
@@ -9,13 +8,17 @@ import io.github.tehstoneman.betterstorage.common.inventory.ConfigContainer.Conf
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 {
 	public ConfigContainerGui( ConfigContainer screenContainer, PlayerInventory inv, ITextComponent titleIn )
 	{
 		super( screenContainer, inv, titleIn );
 		imageHeight = 132;
+		inventoryLabelY = imageHeight - 94;
 	}
 
 	@Override
@@ -26,12 +29,10 @@ public class ConfigContainerGui extends ContainerScreen< ConfigContainer >
 		renderTooltip( matrixStack, mouseX, mouseY );
 	}
 
-	@SuppressWarnings( "deprecation" )
 	@Override
 	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
 	{
-		RenderSystem.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
-		minecraft.getTextureManager().getTexture( Resources.CONTAINER_CONFIG );
+		minecraft.getTextureManager().bind( Resources.CONTAINER_CONFIG );
 
 		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), imageHeight );
 		for( int i = 0; i < menu.indexHotbar; i++ )

@@ -19,7 +19,6 @@ import io.github.tehstoneman.betterstorage.common.inventory.Region;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.UpdateCrateMessage;
-import io.github.tehstoneman.betterstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -223,7 +222,7 @@ public class TileEntityCrate extends TileEntityContainer
 	{
 		if( region == null || region.isEmpty() )
 			return;
-		for( final BlockPos blockPos : BlockUtils.getAllInBox( region ) )
+		for( final BlockPos blockPos : region.betweenClosed() )
 		{
 			final TileEntity te = getLevel().getBlockEntity( blockPos );
 			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
@@ -387,7 +386,7 @@ public class TileEntityCrate extends TileEntityContainer
 			return false;
 
 		// All rules passed - Add crate to pile
-		for( final BlockPos blockPos : BlockUtils.getAllInBox( region.posMin, region.posMax ) )
+		for( final BlockPos blockPos : BlockPos.betweenClosed( region.posMin, region.posMax ) )
 		{
 			final TileEntityCrate newCrate = getCrateAt( level, blockPos );
 			if( newCrate != null && !newCrate.getPileID().equals( pileID ) )

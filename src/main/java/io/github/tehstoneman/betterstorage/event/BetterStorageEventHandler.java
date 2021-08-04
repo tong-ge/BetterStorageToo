@@ -67,7 +67,7 @@ public class BetterStorageEventHandler
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onPlayerRightClickBlock( PlayerInteractEvent.RightClickBlock event )
 	{
 		final ItemStack heldItem = event.getItemStack();
@@ -101,5 +101,5 @@ public class BetterStorageEventHandler
 					event.getPlayer().setItemInHand( hand, new ItemStack( Items.BUCKET ) );
 			}
 		}
-	}
+	}*/
 }

@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -71,13 +72,13 @@ public class CopyKeyRecipe extends SpecialRecipe
 	/**
 	 * Checks if the region of a crafting inventory is match for the recipe.
 	 */
-	private boolean checkMatch( CraftingInventory craftingInventory, int p_77573_2_, int p_77573_3_, boolean p_77573_4_ )
+	private boolean checkMatch( CraftingInventory craftingInventory, int width, int height, boolean p_77573_4_ )
 	{
 		for( int i = 0; i < craftingInventory.getWidth(); ++i )
 			for( int j = 0; j < craftingInventory.getHeight(); ++j )
 			{
-				final int k = i - p_77573_2_;
-				final int l = j - p_77573_3_;
+				final int k = i - width;
+				final int l = j - height;
 				Ingredient ingredient = Ingredient.EMPTY;
 				if( k >= 0 && l >= 0 && k < recipeWidth && l < recipeHeight )
 					if( p_77573_4_ )
@@ -292,12 +293,12 @@ public class CopyKeyRecipe extends SpecialRecipe
 		public CopyKeyRecipe fromJson( ResourceLocation recipeId, JsonObject json )
 		{
 			final String s = JSONUtils.getAsString( json, "group", "" );
-			final Map< String, Ingredient > map = deserializeKey( JSONUtils.convertToJsonObject( json, "key" ) );
-			final String[] astring = shrink( patternFromJson( JSONUtils.convertToJsonArray( json, "pattern" ) ) );
+			final Map< String, Ingredient > map = deserializeKey( JSONUtils.getAsJsonObject( json, "key" ) );
+			final String[] astring = shrink( patternFromJson( JSONUtils.getAsJsonArray( json, "pattern" ) ) );
 			final int i = astring[0].length();
 			final int j = astring.length;
 			final NonNullList< Ingredient > nonnulllist = deserializeIngredients( astring, map, i, j );
-			final ItemStack itemstack = ShapedRecipe.itemFromJson( JSONUtils.convertToJsonObject( json, "result" ) );
+			final ItemStack itemstack = ShapedRecipe.itemFromJson( JSONUtils.getAsJsonObject( json, "result" ) );
 			return new CopyKeyRecipe( recipeId, s, i, j, nonnulllist, itemstack );
 		}
 

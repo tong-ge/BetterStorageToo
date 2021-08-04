@@ -43,9 +43,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 
+@OnlyIn( Dist.CLIENT )
 public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLocker >
 {
 	private final ModelLocker				simpleLocker	= new ModelLocker();
@@ -123,8 +126,8 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 					if( item instanceof BlockItem )
 					{
 						final BlockState state = ( (BlockItem)item ).getBlock().defaultBlockState();
-						final TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper()
-								.getTexture( state, world, pos );
+						final TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getTexture( state, world,
+								pos );
 						material = new RenderMaterial( PlayerContainer.BLOCK_ATLAS, texture.getName() );
 					}
 				}
@@ -133,17 +136,17 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 				final MatrixStack.Entry currentMatrix = matrixStack.last();
 
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferLocker, null, modelBase, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelFrame, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferLocker, null, modelBase, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelFrame, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
 
 				rotateDoor( tileEntity, partialTicks, matrixStack, hingeSide );
 
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferLocker, null, modelDoor, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
-				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelDoorFrame, 1.0f, 1.0f, 1.0f,
-						combinedLight, combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferLocker, null, modelDoor, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
+				blockRenderer.getModelRenderer().renderModel( currentMatrix, renderBufferFrame, null, modelDoorFrame, 1.0f, 1.0f, 1.0f, combinedLight,
+						combinedOverlay, data );
 				matrixStack.translate( hingeSide == DoorHingeSide.LEFT ? 0.0 : -1.0, 0.0, -0.8125 );
 			}
 			else
@@ -224,9 +227,9 @@ public class TileEntityLockerRenderer extends TileEntityRenderer< TileEntityLock
 
 			matrixStack.translate( 0.0, 0.0, 0.8125 );
 
-			//matrixStack.translate( left ? 0.0 : 1.0, 0.0, 0.0 );
-			//matrixStack.rotate( Vector3f.YP.rotationDegrees( left ? -openAngle * 90 : openAngle * 90 ) );
-			//matrixStack.translate( left ? -0.0 : -1.0, 0.0, 0.0 );
+			// matrixStack.translate( left ? 0.0 : 1.0, 0.0, 0.0 );
+			// matrixStack.rotate( Vector3f.YP.rotationDegrees( left ? -openAngle * 90 : openAngle * 90 ) );
+			// matrixStack.translate( left ? -0.0 : -1.0, 0.0, 0.0 );
 
 			matrixStack.translate( left ? 0.8125 : 0.1875, locker.isConnected() ? 0.875 : 0.375, 0.125 );
 			matrixStack.scale( 0.5F, 0.5F, 0.5F );

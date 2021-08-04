@@ -6,7 +6,10 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class ModelTankFluid extends Model
 {
 	protected ModelRenderer fluid;
@@ -24,8 +27,8 @@ public class ModelTankFluid extends Model
 	}
 
 	@Override
-	public void renderToBuffer( MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue,
-			float alpha )
+	public void renderToBuffer( MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green,
+			float blue, float alpha )
 	{
 		fluid.render( matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha );
 	}

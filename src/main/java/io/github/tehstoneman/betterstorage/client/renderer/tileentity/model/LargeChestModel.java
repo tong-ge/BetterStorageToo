@@ -2,7 +2,10 @@ package io.github.tehstoneman.betterstorage.client.renderer.tileentity.model;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn( Dist.CLIENT )
 public class LargeChestModel extends ChestModel
 {
 	public LargeChestModel()

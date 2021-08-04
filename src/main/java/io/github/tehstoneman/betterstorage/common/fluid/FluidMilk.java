@@ -22,6 +22,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidUtil;
@@ -40,19 +41,19 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 	public static FluidAttributes.Builder	BUILDER			= FluidAttributes.builder( stillTexture, flowingTexture ).color( 0xFFFFFFFF )
 			.density( 1025 ).temperature( 310 ).viscosity( 2000 );
 
-	public static Properties				PROPERTIES		= new Properties( BetterStorageFluids.MILK, BetterStorageFluids.FLOWING_MILK, BUILDER )
+	/*public static Properties				PROPERTIES		= new Properties( ForgeMod.MILK, ForgeMod.FLOWING_MILK, BUILDER )
 			.bucket( () ->
 																	{
 																		return Items.MILK_BUCKET;
 																	} )
-			.block( BetterStorageBlocks.MILK );
+			.block( BetterStorageBlocks.MILK );*/
 
 	protected FluidMilk( Properties properties )
 	{
 		super( properties );
 	}
 
-	public static boolean interactFluidHandler( @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull IFluidHandler handler )
+	/*public static boolean interactFluidHandler( @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull IFluidHandler handler )
 	{
 		final ItemStack heldItem = new ItemStack( BetterStorageItems.MILK_BUCKET.get() );
 		return player.getCapability( CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ).map( playerInventory ->
@@ -68,9 +69,9 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				return true;
 			return false;
 		} ).orElse( false );
-	}
+	}*/
 
-	@SuppressWarnings( "deprecation" )
+	/*@SuppressWarnings( "deprecation" )
 	public static boolean tryPlaceContainedLiquid( Item bucketitem, @Nullable PlayerEntity player, World worldIn, BlockPos posIn,
 			@Nullable BlockRayTraceResult rayTraceResult )
 	{
@@ -85,7 +86,7 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 			if( blockstate.isAir() || flag || blockstate.getBlock() instanceof ILiquidContainer
 					&& ( (ILiquidContainer)blockstate.getBlock() ).canPlaceLiquid( worldIn, posIn, blockstate, containedBlock ) )
 			{
-				/*
+				
 				 * if( worldIn.dimension.doesWaterVaporize() && containedBlock == BetterStorageFluids.MILK.get() )
 				 * {
 				 * final int i = posIn.getX();
@@ -98,7 +99,7 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 				 * worldIn.addParticle( ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(), 0.0D, 0.0D, 0.0D );
 				 * }
 				 * else
-				 */
+				 
 				if( blockstate.getBlock() instanceof ILiquidContainer && containedBlock == BetterStorageFluids.MILK.get() )
 				{
 					if( ( (ILiquidContainer)blockstate.getBlock() ).placeLiquid( worldIn, posIn, blockstate,
@@ -121,5 +122,5 @@ public abstract class FluidMilk extends ForgeFlowingFluid
 						: tryPlaceContainedLiquid( bucketitem, player, worldIn, rayTraceResult.getBlockPos().relative( rayTraceResult.getDirection() ),
 								(BlockRayTraceResult)null );
 		}
-	}
+	}*/
 }
