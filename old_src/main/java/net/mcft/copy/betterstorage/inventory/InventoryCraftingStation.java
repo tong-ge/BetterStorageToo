@@ -98,7 +98,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 		 * }
 		 *
 		 * final ItemStack craftOutput = simulate ? output[4].copy() : output[4];
-		 * final IInventory craftMatrix = new InventoryStacks( crafting );
+		 * final Inventory craftMatrix = new InventoryStacks( crafting );
 		 * FMLCommonHandler.instance().firePlayerCraftingEvent( player, craftOutput, craftMatrix );
 		 * new CustomSlotCrafting( player, craftOutput );
 		 *
@@ -270,7 +270,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 		return hasRequirements;
 	}
 
-	// IInventory implementation
+	// Inventory implementation
 
 	/*
 	 * @Override
@@ -400,7 +400,7 @@ public class InventoryCraftingStation extends ItemStackHandler
 
 	/*
 	 * @Override
-	 * public ITextComponent getDisplayName()
+	 * public Component getDisplayName()
 	 * {
 	 * // TODO Auto-generated method stub
 	 * return null;

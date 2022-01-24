@@ -19,22 +19,22 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import com.mojang.math.Transformation;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
 
 import joptsimple.internal.Strings;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IModelTransform;
-import net.minecraft.client.renderer.model.IUnbakedModel;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.TransformationMatrix;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector4f;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModelBuilder;
@@ -53,13 +53,12 @@ import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 {
 	private static Vector4f					COLOR_WHITE		= new Vector4f( 1, 1, 1, 1 );
-	private static Vector2f[]				DEFAULT_COORDS	= { new Vector2f( 0, 0 ), new Vector2f( 0, 1 ), new Vector2f( 1, 1 ),
-			new Vector2f( 1, 0 ), };
+	private static Vec2[]					DEFAULT_COORDS	= { new Vec2( 0, 0 ), new Vec2( 0, 1 ), new Vec2( 1, 1 ), new Vec2( 1, 0 ), };
 
 	private final Map< String, ModelGroup >	parts			= Maps.newHashMap();
 
 	private final List< Vector3f >			positions		= Lists.newArrayList();
-	private final List< Vector2f >			texCoords		= Lists.newArrayList();
+	private final List< Vec2 >				texCoords		= Lists.newArrayList();
 	private final List< Vector3f >			normals			= Lists.newArrayList();
 	private final List< Vector4f >			colors			= Lists.newArrayList();
 
@@ -281,7 +280,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 	}
 
 	private Pair< BakedQuad, Direction > makeQuad( int[][] indices, int tintIndex, Vector4f colorTint, Vector4f ambientColor,
-			TextureAtlasSprite texture, TransformationMatrix transform )
+			TextureAtlasSprite texture, Transformation transform )
 	{
 		boolean needsNormalRecalculation = false;
 		for( final int[] ints : indices )
@@ -308,28 +307,26 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 
 		builder.setQuadTint( tintIndex );
 
-		Vector2f uv2 = new Vector2f( 0, 0 );
+		Vec2 uv2 = new Vec2( 0, 0 );
 		if( ambientToFullbright )
 		{
 			final int fakeLight = (int)( ( ambientColor.x() + ambientColor.y() + ambientColor.z() ) * 15 / 3.0f );
-			uv2 = new Vector2f( ( fakeLight << 4 ) / 32767.0f, ( fakeLight << 4 ) / 32767.0f );
+			uv2 = new Vec2( ( fakeLight << 4 ) / 32767.0f, ( fakeLight << 4 ) / 32767.0f );
 			builder.setApplyDiffuseLighting( fakeLight == 0 );
 		}
-        else
-        {
-            builder.setApplyDiffuseLighting(diffuseLighting);
-        }
+		else
+			builder.setApplyDiffuseLighting( diffuseLighting );
 
 		final boolean hasTransform = !transform.isIdentity();
 		// The incoming transform is referenced on the center of the block, but our coords are referenced on the corner
-		final TransformationMatrix transformation = hasTransform ? transform.blockCenterToCorner() : transform;
+		final Transformation transformation = hasTransform ? transform.blockCenterToCorner() : transform;
 
 		for( int i = 0; i < 4; i++ )
 		{
 			final int[] index = indices[Math.min( i, indices.length - 1 )];
 			final Vector3f pos0 = positions.get( index[0] );
 			final Vector4f position = new Vector4f( pos0 );
-			final Vector2f texCoord = index.length >= 2 && texCoords.size() > 0 ? texCoords.get( index[1] ) : DEFAULT_COORDS[i];
+			final Vec2 texCoord = index.length >= 2 && texCoords.size() > 0 ? texCoords.get( index[1] ) : DEFAULT_COORDS[i];
 			final Vector3f norm0 = !needsNormalRecalculation && index.length >= 3 && normals.size() > 0 ? normals.get( index[2] ) : faceNormal;
 			Vector3f normal = norm0;
 			final Vector4f color = index.length >= 4 && colors.size() > 0 ? colors.get( index[3] ) : COLOR_WHITE;
@@ -338,7 +335,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 				normal = norm0.copy();
 				transformation.transformPosition( position );
 				transformation.transformNormal( normal );
-			} ;
+			}
 			final Vector4f tintedColor = new Vector4f( color.x() * colorTint.x(), color.y() * colorTint.y(), color.z() * colorTint.z(),
 					color.w() * colorTint.w() );
 			putVertexData( builder, position, texCoord, normal, tintedColor, uv2, texture );
@@ -350,29 +347,29 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 
 		Direction cull = null;
 		if( detectCullableFaces )
-			if( MathHelper.equal( pos[0].x(), 0 ) && // vertex.position.x
-					MathHelper.equal( pos[1].x(), 0 ) && MathHelper.equal( pos[2].x(), 0 ) && MathHelper.equal( pos[3].x(), 0 ) && norm[0].x() < 0 )
+			if( Mth.equal( pos[0].x(), 0 ) && // vertex.position.x
+					Mth.equal( pos[1].x(), 0 ) && Mth.equal( pos[2].x(), 0 ) && Mth.equal( pos[3].x(), 0 ) && norm[0].x() < 0 )
 				cull = Direction.WEST;
-			else if( MathHelper.equal( pos[0].x(), 1 ) && // vertex.position.x
-					MathHelper.equal( pos[1].x(), 1 ) && MathHelper.equal( pos[2].x(), 1 ) && MathHelper.equal( pos[3].x(), 1 ) && norm[0].x() > 0 )
+			else if( Mth.equal( pos[0].x(), 1 ) && // vertex.position.x
+					Mth.equal( pos[1].x(), 1 ) && Mth.equal( pos[2].x(), 1 ) && Mth.equal( pos[3].x(), 1 ) && norm[0].x() > 0 )
 				cull = Direction.EAST;
-			else if( MathHelper.equal( pos[0].z(), 0 ) && // vertex.position.z
-					MathHelper.equal( pos[1].z(), 0 ) && MathHelper.equal( pos[2].z(), 0 ) && MathHelper.equal( pos[3].z(), 0 ) && norm[0].z() < 0 )
+			else if( Mth.equal( pos[0].z(), 0 ) && // vertex.position.z
+					Mth.equal( pos[1].z(), 0 ) && Mth.equal( pos[2].z(), 0 ) && Mth.equal( pos[3].z(), 0 ) && norm[0].z() < 0 )
 				cull = Direction.NORTH; // can never remember
-			else if( MathHelper.equal( pos[0].z(), 1 ) && // vertex.position.z
-					MathHelper.equal( pos[1].z(), 1 ) && MathHelper.equal( pos[2].z(), 1 ) && MathHelper.equal( pos[3].z(), 1 ) && norm[0].z() > 0 )
+			else if( Mth.equal( pos[0].z(), 1 ) && // vertex.position.z
+					Mth.equal( pos[1].z(), 1 ) && Mth.equal( pos[2].z(), 1 ) && Mth.equal( pos[3].z(), 1 ) && norm[0].z() > 0 )
 				cull = Direction.SOUTH;
-			else if( MathHelper.equal( pos[0].y(), 0 ) && // vertex.position.y
-					MathHelper.equal( pos[1].y(), 0 ) && MathHelper.equal( pos[2].y(), 0 ) && MathHelper.equal( pos[3].y(), 0 ) && norm[0].y() < 0 )
+			else if( Mth.equal( pos[0].y(), 0 ) && // vertex.position.y
+					Mth.equal( pos[1].y(), 0 ) && Mth.equal( pos[2].y(), 0 ) && Mth.equal( pos[3].y(), 0 ) && norm[0].y() < 0 )
 				cull = Direction.DOWN; // can never remember
-			else if( MathHelper.equal( pos[0].y(), 1 ) && // vertex.position.y
-					MathHelper.equal( pos[1].y(), 1 ) && MathHelper.equal( pos[2].y(), 1 ) && MathHelper.equal( pos[3].y(), 1 ) && norm[0].y() > 0 )
+			else if( Mth.equal( pos[0].y(), 1 ) && // vertex.position.y
+					Mth.equal( pos[1].y(), 1 ) && Mth.equal( pos[2].y(), 1 ) && Mth.equal( pos[3].y(), 1 ) && norm[0].y() > 0 )
 				cull = Direction.UP;
 
 		return Pair.of( builder.build(), cull );
 	}
 
-	private void putVertexData( IVertexConsumer consumer, Vector4f position0, Vector2f texCoord0, Vector3f normal0, Vector4f color0, Vector2f uv2,
+	private void putVertexData( IVertexConsumer consumer, Vector4f position0, Vec2 texCoord0, Vector3f normal0, Vector4f color0, Vec2 uv2,
 			TextureAtlasSprite texture )
 	{
 		final ImmutableList< VertexFormatElement > elements = consumer.getVertexFormat().getElements();
@@ -430,7 +427,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 
 		@Override
 		public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
-				Function< RenderMaterial, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
+				Function< Material, TextureAtlasSprite > spriteGetter, ModelState modelTransform, ResourceLocation modelLocation )
 		{
 			for( final ModelMesh mesh : meshes )
 			{
@@ -454,7 +451,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 		}
 
 		@Override
-		public Collection< RenderMaterial > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
+		public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, UnbakedModel > modelGetter,
 				Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
 		{
 			return meshes.stream().map( mesh -> ModelLoaderRegistry.resolveTexture( mesh.mat.diffuseColorMap, owner ) ).collect( Collectors.toSet() );
@@ -477,7 +474,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 
 		@Override
 		public void addQuads( IModelConfiguration owner, IModelBuilder< ? > modelBuilder, ModelBakery bakery,
-				Function< RenderMaterial, TextureAtlasSprite > spriteGetter, IModelTransform modelTransform, ResourceLocation modelLocation )
+				Function< Material, TextureAtlasSprite > spriteGetter, ModelState modelTransform, ResourceLocation modelLocation )
 		{
 			super.addQuads( owner, modelBuilder, bakery, spriteGetter, modelTransform, modelLocation );
 
@@ -486,7 +483,7 @@ public class XOBJModel implements IMultipartModelGeometry< XOBJModel >
 		}
 
 		@Override
-		public Collection< RenderMaterial > getTextures( IModelConfiguration owner, Function< ResourceLocation, IUnbakedModel > modelGetter,
+		public Collection< Material > getTextures( IModelConfiguration owner, Function< ResourceLocation, UnbakedModel > modelGetter,
 				Set< com.mojang.datafixers.util.Pair< String, String > > missingTextureErrors )
 		{
 			return meshes.stream().map( mesh -> ModelLoaderRegistry.resolveTexture( mesh.mat.diffuseColorMap, owner ) ).collect( Collectors.toSet() );

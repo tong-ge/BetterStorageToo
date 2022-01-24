@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.common.item.ItemBetterStorage;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemCardboardSheet extends ItemBetterStorage
 {
@@ -54,7 +54,7 @@ public class ItemCardboardSheet extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
+	 * public boolean onBlockDestroyed( ItemStack stack, Level world, IBlockState block, BlockPos pos, EntityLivingBase entity )
 	 * {
 	 * return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
 	 * }

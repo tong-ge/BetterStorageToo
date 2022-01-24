@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -41,7 +41,7 @@ public class PropertiesBackpack implements IExtendedEntityProperties {
 	private int prevPlayersUsing = 0;
 	
 	@Override
-	public void init(Entity entity, World world) {  }
+	public void init(Entity entity, Level world) {  }
 	
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {

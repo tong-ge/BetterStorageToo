@@ -4,13 +4,14 @@ import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityCardboardBox extends TileEntityContainer
 {
@@ -18,9 +19,9 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	public boolean	destroyed	= false;
 	public int		color		= -1;
 
-	public TileEntityCardboardBox()
+	public TileEntityCardboardBox( BlockPos blockPos, BlockState blockState )
 	{
-		super( BetterStorageTileEntityTypes.CARDBOARD_BOX.get() );
+		super( BetterStorageTileEntityTypes.CARDBOARD_BOX.get(), blockPos, blockState );
 	}
 
 	public boolean isEmpty()
@@ -59,9 +60,9 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	 */
 
 	@Override
-	public ITextComponent getName()
+	public Component getName()
 	{
-		return customName != null ? customName : new TranslationTextComponent( ModInfo.CONTAINER_CARDBOARD_BOX_NAME );
+		return customName != null ? customName : new TranslatableComponent( ModInfo.CONTAINER_CARDBOARD_BOX_NAME );
 	}
 
 	@Override
@@ -71,21 +72,21 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	}
 
 	@Override
-	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
+	public AbstractContainerMenu createMenu( int windowID, Inventory playerInventory, Player player )
 	{
 		return new ContainerCardboardBox( windowID, playerInventory, level, worldPosition );
 	}
 
 	/*
 	 * ==========================
-	 * TileEntity synchronization
+	 * BlockEntity synchronization
 	 * ==========================
 	 */
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		if( ItemBlockCardboardBox.getMaxUses() > 0 )
 			nbt.putInt( "Uses", uses );
@@ -96,16 +97,16 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	}
 
 	@Override
-	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	public void handleUpdateTag( CompoundTag nbt )
 	{
-		super.handleUpdateTag( state, nbt );
+		super.handleUpdateTag( nbt );
 
 		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
 		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
 	}
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		if( ItemBlockCardboardBox.getMaxUses() > 0 )
 			nbt.putInt( "Uses", uses );
@@ -116,11 +117,11 @@ public class TileEntityCardboardBox extends TileEntityContainer
 	}
 
 	@Override
-	public void load( BlockState state, CompoundNBT nbt )
+	public void load( CompoundTag nbt )
 	{
 		uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
 		color = nbt.contains( "Color" ) ? nbt.getInt( "Color" ) : -1;
 
-		super.load( state, nbt );
+		super.load( nbt );
 	}
 }

@@ -10,14 +10,14 @@ import com.google.common.base.MoreObjects;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CrateStackHandler extends ItemStackHandler
@@ -415,7 +415,7 @@ public class CrateStackHandler extends ItemStackHandler
 			stacks.set( i, stack.copy() );
 	}
 
-	public void trimRegion( World world )
+	public void trimRegion( Level world )
 	{
 		final Region region = Region.EMPTY.clone();
 		for( final BlockPos pos : BlockPos.betweenClosed( this.region.posMin, this.region.posMax ) )
@@ -481,15 +481,15 @@ public class CrateStackHandler extends ItemStackHandler
 	}
 
 	@Override
-	public CompoundNBT serializeNBT()
+	public CompoundTag serializeNBT()
 	{
-		final CompoundNBT nbt = super.serializeNBT();
+		final CompoundTag nbt = super.serializeNBT();
 
 		if( getNumCrates() > 0 )
 		{
-			final ListNBT list = new ListNBT();
+			final ListTag list = new ListTag();
 			for( final BlockPos pos : listCrates )
-				list.add( NBTUtil.writeBlockPos( pos ) );
+				list.add( NbtUtils.writeBlockPos( pos ) );
 			nbt.put( "Crates", list );
 		}
 		if( pileID != null )
@@ -501,16 +501,16 @@ public class CrateStackHandler extends ItemStackHandler
 	}
 
 	@Override
-	public void deserializeNBT( CompoundNBT nbt )
+	public void deserializeNBT( CompoundTag nbt )
 	{
 		super.deserializeNBT( nbt );
 
 		if( nbt.contains( "Crates" ) )
 		{
-			final ListNBT list = nbt.getList( "Crates", 10 );
+			final ListTag list = nbt.getList( "Crates", 10 );
 			listCrates.clear();
-			for( final INBT tag : list )
-				listCrates.add( NBTUtil.readBlockPos( (CompoundNBT)tag ) );
+			for( final Tag tag : list )
+				listCrates.add( NbtUtils.readBlockPos( (CompoundTag)tag ) );
 		}
 		if( nbt.hasUUID( "PileID" ) )
 			pileID = nbt.getUUID( "PileID" );

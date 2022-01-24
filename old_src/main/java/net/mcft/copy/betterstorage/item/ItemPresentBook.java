@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -63,7 +63,7 @@ public class ItemPresentBook extends ItemWritableBook
 	}
 
 	@Override
-	public ActionResult< ItemStack > use( ItemStack stack, World world, EntityPlayer player, EnumHand hand )
+	public ActionResult< ItemStack > use( ItemStack stack, Level world, EntityPlayer player, EnumHand hand )
 	{
 		if( hand != EnumHand.MAIN_HAND )
 			return super.use( stack, world, player, hand );

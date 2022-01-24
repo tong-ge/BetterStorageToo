@@ -4,32 +4,39 @@ import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.api.lock.IKeyLockable;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.util.WorldUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.AABB;
 
-public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
+public class TileEntityLockableDoor extends BlockEntity implements IKeyLockable
 {
 
 	private ItemStack lock = ItemStack.EMPTY.copy();
 
-	public TileEntityLockableDoor()
+	public TileEntityLockableDoor( BlockEntityType< ? > tileEntityTypeIn, BlockPos blockPos, BlockState blockState )
 	{
-		super( BetterStorageTileEntityTypes.LOCKABLE_DOOR.get() );
+		super( tileEntityTypeIn, blockPos, blockState );
+	}
+
+	public TileEntityLockableDoor( BlockPos blockPos, BlockState blockState )
+	{
+		this( BetterStorageTileEntityTypes.LOCKABLE_DOOR.get(), blockPos, blockState );
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox()
+	public AABB getRenderBoundingBox()
 	{
 		return WorldUtils.getAABB( this, 0, 0, 0, 0, 1, 0 );
 	}
@@ -39,7 +46,7 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		return getBlockState().getValue( DoorBlock.HALF ) == DoubleBlockHalf.LOWER;
 	}
 
-	public TileEntity getMain()
+	public BlockEntity getMain()
 	{
 		if( isMain() )
 			return this;
@@ -53,12 +60,12 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 		return ( (TileEntityLockableDoor)getMain() ).isPowered();
 	}
 
-	// TileEntity synchronization
+	// BlockEntity synchronization
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		if( !lock.isEmpty() )
 			nbt.put( "lock", lock.serializeNBT() );
@@ -67,12 +74,12 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	}
 
 	@Override
-	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
+	public void onDataPacket( Connection network, ClientboundBlockEntityDataPacket packet )
 	{
-		final CompoundNBT nbt = packet.getTag();
+		final CompoundTag nbt = packet.getTag();
 		if( nbt.contains( "lock" ) )
 		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
 			lock = ItemStack.of( lockNBT );
 		}
 		else
@@ -81,13 +88,13 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 
 	/*
 	 * @Override
-	 * public void handleUpdateTag( CompoundNBT nbt )
+	 * public void handleUpdateTag( CompoundTag nbt )
 	 * {
 	 * super.handleUpdateTag( nbt );
 	 *
 	 * if( nbt.contains( "lock" ) )
 	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
 	 * lock = ItemStack.of( lockNBT );
 	 * }
 	 * else
@@ -98,11 +105,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	// Reading from / writing to NBT
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		if( !lock.isEmpty() )
 		{
-			final CompoundNBT lockNBT = new CompoundNBT();
+			final CompoundTag lockNBT = new CompoundTag();
 			lock.save( lockNBT );
 			nbt.put( "lock", lockNBT );
 		}
@@ -112,11 +119,11 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 
 	/*
 	 * @Override
-	 * public void read( CompoundNBT nbt )
+	 * public void read( CompoundTag nbt )
 	 * {
 	 * if( nbt.contains( "lock" ) )
 	 * {
-	 * final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+	 * final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
 	 * lock = ItemStack.of( lockNBT );
 	 * }
 	 * else
@@ -178,7 +185,7 @@ public class TileEntityLockableDoor extends TileEntity implements IKeyLockable
 	}
 
 	@Override
-	public boolean canUse( PlayerEntity player )
+	public boolean canUse( Player player )
 	{
 		return false;
 	}

@@ -3,13 +3,13 @@ package io.github.tehstoneman.betterstorage.common.tileentity;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.inventory.ConnectedStackHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,9 +20,9 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	public ConnectedStackHandler				connectedInventory;
 	private final LazyOptional< IItemHandler >	connectedHandler	= LazyOptional.of( () -> connectedInventory );
 
-	public TileEntityConnectable( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityConnectable( BlockEntityType< ? > tileEntityTypeIn, BlockPos blockPos, BlockState blockState )
 	{
-		super( tileEntityTypeIn );
+		super( tileEntityTypeIn, blockPos, blockState );
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	}
 
 	/**
-	 * Returns position of the connected TileEntity
+	 * Returns position of the connected BlockEntity
 	 *
 	 * @return Position
 	 */
@@ -60,7 +60,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 		if( state.hasProperty( BlockConnectableContainer.TYPE ) )
 			return state.getValue( BlockConnectableContainer.TYPE ) != ConnectedType.SINGLE;
 		return false;
-	};
+	}
 
 	/**
 	 * Returns if this container is the main container, or not connected to another container.
@@ -100,7 +100,7 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	{
 		if( getLevel() == null || !isConnected() )
 			return null;
-		final TileEntity tileEntity = getLevel().getBlockEntity( getConnected() );
+		final BlockEntity tileEntity = getLevel().getBlockEntity( getConnected() );
 		return tileEntity instanceof TileEntityConnectable ? (TileEntityConnectable)tileEntity : null;
 	}
 
@@ -127,8 +127,8 @@ public abstract class TileEntityConnectable extends TileEntityContainer
 	protected abstract String getConnectableName();
 
 	@Override
-	public ITextComponent getName()
+	public Component getName()
 	{
-		return new TranslationTextComponent( getConnectableName().concat( isConnected() ? "_large" : "" ) );
+		return new TranslatableComponent( getConnectableName().concat( isConnected() ? "_large" : "" ) );
 	}
 }

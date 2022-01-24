@@ -17,20 +17,20 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class VanillaStationCrafting extends StationCrafting
 {
-	public VanillaStationCrafting( World world, IRecipe recipe, ItemStack[] craftingIn, ItemStack output )
+	public VanillaStationCrafting( Level world, IRecipe recipe, ItemStack[] craftingIn, ItemStack output )
 	{
 		super( new ItemStack[] { null, null, null, null, output }, createRecipeInput( world, recipe, craftingIn ) );
 
 	}
 
-	private static IRecipeInput[] createRecipeInput( World world, IRecipe recipe, ItemStack[] craftingIn )
+	private static IRecipeInput[] createRecipeInput( Level world, IRecipe recipe, ItemStack[] craftingIn )
 	{
 		final IRecipeInput[] requiredInput = new IRecipeInput[9];
 		for( int i = 0; i < craftingIn.length; i++ )
@@ -50,14 +50,14 @@ public class VanillaStationCrafting extends StationCrafting
 	private static class VanillaRecipeInput extends RecipeInputBase
 	{
 
-		private final World				world;
+		private final Level				world;
 		private final IRecipe			recipe;
 		private final int				slot;
 
 		private final InventoryCrafting	crafting;
 		private final ItemStack			expectedOutput;
 
-		public VanillaRecipeInput( World world, IRecipe recipe, ItemStack[] craftingIn, int slot )
+		public VanillaRecipeInput( Level world, IRecipe recipe, ItemStack[] craftingIn, int slot )
 		{
 			this.world = world;
 			this.recipe = recipe;
@@ -100,10 +100,10 @@ public class VanillaStationCrafting extends StationCrafting
 
 	}
 
-	public static VanillaStationCrafting findVanillaRecipe( ItemStack[] craftingIn,  World world )
+	public static VanillaStationCrafting findVanillaRecipe( ItemStack[] craftingIn,  Level world )
 	{
-		// final World world = inv.entity != null ? inv.entity.getLevel() : WorldUtils.getLocalWorld();
-		//final World world = Minecraft.getMinecraft().theWorld;
+		// final Level world = inv.entity != null ? inv.entity.getLevel() : WorldUtils.getLocalWorld();
+		//final Level world = Minecraft.getMinecraft().theWorld;
 
 		final InventoryCrafting crafting = new InventoryCrafting( new FakeContainer(), 3, 3 );
 		for( int i = 0; i < craftingIn.length; i++ )
@@ -113,7 +113,7 @@ public class VanillaStationCrafting extends StationCrafting
 		return recipe == null ? null : new VanillaStationCrafting( world, recipe, craftingIn, recipe.assemble( crafting ) );
 	}
 
-	private static IRecipe findRecipe( InventoryCrafting crafting, World world )
+	private static IRecipe findRecipe( InventoryCrafting crafting, Level world )
 	{
 		for( final IRecipe recipe : CraftingManager.getInstance().getRecipeList() )
 			if( recipe.matches( crafting, world ) )

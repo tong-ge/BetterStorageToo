@@ -1,12 +1,12 @@
 package io.github.tehstoneman.betterstorage.api.lock;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 /**
  * Interface to describe a lock
- * 
+ *
  * @author TehStoneMan
  *
  */
@@ -33,11 +33,11 @@ public interface ILock
 	 * @param lockable
 	 *            The {@link IKeyLockable} containing the lock.
 	 * @param player
-	 *            The {@link PlayerEntity} attempting to open the lock.
+	 *            The {@link Player} attempting to open the lock.
 	 * @param success
 	 *            True if the attempt is successful
 	 */
-	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, PlayerEntity player, boolean success );
+	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, Player player, boolean success );
 
 	/**
 	 * Applies any effects from the lock when an interaction fails.
@@ -47,11 +47,11 @@ public interface ILock
 	 * @param lockable
 	 *            The {@link IKeyLockable} containing the lock.
 	 * @param player
-	 *            The {@link PlayerEntity} attempting to open the lock.
+	 *            The {@link Player} attempting to open the lock.
 	 * @param interaction
 	 *            The type of interaction attempted - OPEN, PICK or ATTACK.
 	 */
-	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, LockInteraction interaction );
+	public void applyEffects( ItemStack lock, IKeyLockable lockable, Player player, LockInteraction interaction );
 
 	/**
 	 * Returns if the lock can be enchanted with this lock enchantment.

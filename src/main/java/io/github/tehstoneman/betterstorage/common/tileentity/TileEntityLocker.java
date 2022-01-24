@@ -5,40 +5,41 @@ import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.block.BlockConnectableContainer;
 import io.github.tehstoneman.betterstorage.common.block.BlockLocker;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerLocker;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.tileentity.IChestLid;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.LidBlockEntity;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn( value = Dist.CLIENT, _interface = IChestLid.class )
-public class TileEntityLocker extends TileEntityConnectable implements IChestLid, ITickableTileEntity
+@OnlyIn( value = Dist.CLIENT, _interface = LidBlockEntity.class )
+public class TileEntityLocker extends TileEntityConnectable implements LidBlockEntity//, TickingBlockEntity
 {
 	protected int ticksSinceSync;
 
-	public TileEntityLocker( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityLocker( BlockEntityType< ? > tileEntityTypeIn, BlockPos blockPos, BlockState blockState )
 	{
-		super( tileEntityTypeIn );
+		super( tileEntityTypeIn, blockPos, blockState );
 	}
 
-	public TileEntityLocker()
+	public TileEntityLocker( BlockPos blockPos, BlockState blockState )
 	{
-		super( BetterStorageTileEntityTypes.LOCKER.get() );
+		super( BetterStorageTileEntityTypes.LOCKER.get(), blockPos, blockState );
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox()
+	public AABB getRenderBoundingBox()
 	{
-		return new AxisAlignedBB( worldPosition.offset( -1, 0, -1 ), worldPosition.offset( 2, 2, 2 ) );
+		return new AABB( worldPosition.offset( -1, 0, -1 ), worldPosition.offset( 2, 2, 2 ) );
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 	}
 
 	@Override
-	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
+	public AbstractContainerMenu createMenu( int windowID, Inventory playerInventory, Player player )
 	{
 		if( isMain() )
 			return new ContainerLocker( windowID, playerInventory, level, worldPosition );
@@ -67,7 +68,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 			return getMainTileEntity().createMenu( windowID, playerInventory, player );
 	}
 
-	@Override
+	//@Override
 	public void tick()
 	{
 		final int x = worldPosition.getX();
@@ -77,8 +78,8 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 		if( !level.isClientSide && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
 		{
 			numPlayersUsing = 0;
-			for( final PlayerEntity entityplayer : level.getEntitiesOfClass( PlayerEntity.class,
-					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
+			for( final Player entityplayer : level.getEntitiesOfClass( Player.class,
+					new AABB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
 				if( entityplayer.containerMenu instanceof ContainerLocker )
 					++numPlayersUsing;
 		}
@@ -119,7 +120,7 @@ public class TileEntityLocker extends TileEntityConnectable implements IChestLid
 			z += enumfacing.getStepZ() * 0.5D;
 		}
 
-		level.playSound( (PlayerEntity)null, x, y, z, soundIn, SoundCategory.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F );
+		level.playSound( (Player)null, x, y, z, soundIn, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F );
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.api.lock;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 /**
  * Interface that describes a key
- * 
+ *
  * @author TehStoneMan
  *
  */
@@ -19,7 +19,7 @@ public interface IKey
 	default boolean isNormalKey()
 	{
 		return true;
-	};
+	}
 
 	/**
 	 * Returns a string describing the key's type or how it functions. <br>

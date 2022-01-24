@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.api;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 /**
  * The type of connection used to connect multi-block containers
@@ -8,7 +8,7 @@ import net.minecraft.util.IStringSerializable;
  * @author TehStoneMan
  *
  */
-public enum ConnectedType implements IStringSerializable
+public enum ConnectedType implements StringRepresentable
 {
 	SINGLE( "single", 0 ), MASTER( "master", 2 ), SLAVE( "slave", 1 ), PILE( "pile", 3 );
 

@@ -7,12 +7,12 @@ import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityPresent;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.AABB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,9 +29,9 @@ public class BlockPresent extends BlockContainerBetterStorage
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess world, BlockPos pos )
+	public AABB getBoundingBox( IBlockState state, IBlockAccess world, BlockPos pos )
 	{
-		return new AxisAlignedBB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F );
+		return new AABB( 0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F );
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class BlockPresent extends BlockContainerBetterStorage
 	}
 
 	@Override
-	public TileEntity createNewTileEntity( World world, int metadata )
+	public BlockEntity createNewTileEntity( Level world, int metadata )
 	{
 		return new TileEntityPresent();
 	}

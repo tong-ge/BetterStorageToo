@@ -7,13 +7,13 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 public class EntityCluckington extends EntityChicken
 {
 	private int healTimer = 0;
 
-	public EntityCluckington( World world )
+	public EntityCluckington( Level world )
 	{
 		super( world );
 		setSize( 0.6F, 0.8F );

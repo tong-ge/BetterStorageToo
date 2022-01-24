@@ -5,17 +5,17 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import io.github.tehstoneman.betterstorage.api.IDyeableItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 
-public class CardboardColorRecipe extends SpecialRecipe
+public class CardboardColorRecipe extends CustomRecipe
 {
 
 	public CardboardColorRecipe( ResourceLocation idIn )
@@ -24,7 +24,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean matches( CraftingInventory inv, World worldIn )
+	public boolean matches( CraftingContainer inv, Level worldIn )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< ItemStack > dyeList = Lists.newArrayList();
@@ -43,8 +43,10 @@ public class CardboardColorRecipe extends SpecialRecipe
 				}
 				else
 				{
-					if( !itemstack.getItem().is( Tags.Items.DYES ) )
-						return false;
+					/*
+					 * if( !itemstack.getItem().is( Tags.Items.DYES ) )
+					 * return false;
+					 */
 
 					dyeList.add( itemstack );
 				}
@@ -54,7 +56,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack assemble( CraftingInventory inv )
+	public ItemStack assemble( CraftingContainer inv )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< DyeColor > dyeList = Lists.newArrayList();
@@ -73,8 +75,10 @@ public class CardboardColorRecipe extends SpecialRecipe
 
 					resultStack = ingredientStack.copy();
 				}
-				else if( item.is( Tags.Items.DYES ) )
-					dyeList.add( DyeColor.getColor( ingredientStack ) );
+				/*
+				 * else if( item.is( Tags.Items.DYES ) )
+				 * dyeList.add( DyeColor.getColor( ingredientStack ) );
+				 */
 				else
 					return ItemStack.EMPTY;
 			}
@@ -93,7 +97,7 @@ public class CardboardColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public IRecipeSerializer< ? > getSerializer()
+	public RecipeSerializer< ? > getSerializer()
 	{
 		return BetterStorageRecipes.COLOR_CARDBOARD;
 	}

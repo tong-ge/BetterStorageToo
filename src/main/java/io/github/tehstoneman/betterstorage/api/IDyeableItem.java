@@ -2,10 +2,10 @@ package io.github.tehstoneman.betterstorage.api;
 
 import java.util.List;
 
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Interface used to describe an item that can be dyed.
@@ -38,7 +38,7 @@ public interface IDyeableItem
 	{
 		if( itemStack.hasTag() )
 		{
-			final CompoundNBT compound = itemStack.getTag();
+			final CompoundTag compound = itemStack.getTag();
 			return compound.contains( "Color" );
 		}
 		return false;
@@ -55,7 +55,7 @@ public interface IDyeableItem
 	{
 		if( hasColor( itemStack ) )
 		{
-			final CompoundNBT compound = itemStack.getTag();
+			final CompoundTag compound = itemStack.getTag();
 			return compound.getInt( "Color" );
 		}
 		return getDefaultColor();
@@ -78,7 +78,7 @@ public interface IDyeableItem
 	 */
 	default void setColor( ItemStack itemStack, int colorRGB )
 	{
-		final CompoundNBT compound = itemStack.getOrCreateTag();
+		final CompoundTag compound = itemStack.getOrCreateTag();
 		compound.putInt( "Color", colorRGB );
 		itemStack.setTag( compound );
 	}

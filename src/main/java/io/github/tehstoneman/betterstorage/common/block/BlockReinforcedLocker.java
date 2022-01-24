@@ -9,26 +9,26 @@ import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterS
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityReinforcedLocker;
 import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class BlockReinforcedLocker extends BlockLocker
 {
@@ -43,13 +43,13 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	public BlockEntity newBlockEntity( BlockPos blockPos, BlockState blockState )
 	{
-		return new TileEntityReinforcedLocker();
+		return new TileEntityReinforcedLocker( blockPos, blockState );
 	}
 
 	@Override
-	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public InteractionResult use( BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit )
 	{
 		if( hit.getDirection() == state.getValue( FACING ) )
 		{
@@ -62,48 +62,49 @@ public class BlockReinforcedLocker extends BlockLocker
 					{
 						final ItemStack lock = tileChest.getLock();
 						( (ILock)lock.getItem() ).applyEffects( lock, tileChest, player, LockInteraction.OPEN );
-						return ActionResultType.PASS;
+						return InteractionResult.PASS;
 					}
 					if( player.isCrouching() )
 					{
 						worldIn.addFreshEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), tileChest.getLock().copy() ) );
 						tileChest.setLock( ItemStack.EMPTY );
-						return ActionResultType.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 				}
 				return super.use( state, worldIn, pos, player, hand, hit );
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Nullable
-	public static TileEntityReinforcedLocker getLockerAt( World world, BlockPos pos )
+	public static TileEntityReinforcedLocker getLockerAt( Level world, BlockPos pos )
 	{
-		final TileEntity tileEntity = world.getBlockEntity( pos );
+		final BlockEntity tileEntity = world.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedLocker )
 			return (TileEntityReinforcedLocker)tileEntity;
 		return null;
 	}
 
 	@Override
-	public BlockState updateShape( BlockState thisState, Direction facing, BlockState facingState, IWorld world, BlockPos thisPos,
+	public BlockState updateShape( BlockState thisState, Direction facing, BlockState facingState, LevelAccessor world, BlockPos thisPos,
 			BlockPos facingPos )
 	{
 		if( thisState.getValue( WATERLOGGED ) )
-			world.getLiquidTicks().scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickDelay( world ) );
+			world.scheduleTick( thisPos, Fluids.WATER, Fluids.WATER.getTickDelay( world ) );
 
 		if( facingState.getBlock() == this && facing.getAxis().isVertical() )
 		{
 			final ConnectedType facingType = facingState.getValue( TYPE );
 
 			if( thisState.getValue( TYPE ) == ConnectedType.SINGLE && facingType != ConnectedType.SINGLE
-					&& thisState.getValue( FACING ) == facingState.getValue( FACING ) && getDirectionToAttached( facingState ) == facing.getOpposite() )
+					&& thisState.getValue( FACING ) == facingState.getValue( FACING )
+					&& getDirectionToAttached( facingState ) == facing.getOpposite() )
 			{
 				final ConnectedType newType = facingType.opposite();
-				final TileEntityReinforcedLocker thisLocker = getLockerAt( (World)world, thisPos );
-				final TileEntityReinforcedLocker facingLocker = getLockerAt( (World)world, facingPos );
+				final TileEntityReinforcedLocker thisLocker = getLockerAt( (Level)world, thisPos );
+				final TileEntityReinforcedLocker facingLocker = getLockerAt( (Level)world, facingPos );
 				if( newType == ConnectedType.SLAVE )
 				{
 					facingLocker.setConfig( thisLocker.getConfig() );
@@ -119,11 +120,11 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public void onRemove( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = world.getBlockEntity( pos );
+			final BlockEntity tileentity = world.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityContainer )
 			{
 				if( state.getValue( TYPE ) == ConnectedType.MASTER )
@@ -149,27 +150,27 @@ public class BlockReinforcedLocker extends BlockLocker
 	}
 
 	@Override
-	public int getSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getSignal( BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side )
 	{
-		final TileEntity tileEntity = blockAccess.getBlockEntity( pos );
+		final BlockEntity tileEntity = blockAccess.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityReinforcedLocker )
 		{
 			final TileEntityReinforcedLocker chest = (TileEntityReinforcedLocker)tileEntity;
-			return chest.isPowered() ? MathHelper.clamp( chest.getPlayersUsing(), 0, 15 ) : 0;
+			return chest.isPowered() ? Mth.clamp( chest.getPlayersUsing(), 0, 15 ) : 0;
 		}
 		return 0;
 	}
 
 	@Override
-	public int getDirectSignal( BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side )
+	public int getDirectSignal( BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side )
 	{
 		return side == Direction.UP ? blockState.getSignal( blockAccess, pos, side ) : 0;
 	}
 
 	@Override
-	public float getExplosionResistance( BlockState state, IBlockReader world, BlockPos pos, Explosion explosion )
+	public float getExplosionResistance( BlockState state, BlockGetter world, BlockPos pos, Explosion explosion )
 	{
-		final TileEntityReinforcedLocker chest = getLockerAt( (World)world, pos );
+		final TileEntityReinforcedLocker chest = getLockerAt( (Level)world, pos );
 		if( chest != null && chest.isLocked() )
 		{
 			final int resist = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.PERSISTANCE.get(), chest.getLock() ) + 1;

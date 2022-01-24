@@ -3,9 +3,9 @@ package io.github.tehstoneman.betterstorage.common.world.storage;
 import javax.annotation.Nonnull;
 
 import io.github.tehstoneman.betterstorage.api.IHexKeyConfig;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemStackHandler;
  *
  * @author TehStoneMan
  */
-public class HexKeyConfig extends ItemStackHandler implements IHexKeyConfig, INBTSerializable< CompoundNBT >
+public class HexKeyConfig extends ItemStackHandler implements IHexKeyConfig, INBTSerializable< CompoundTag >
 {
 	public static int SLOT_APPEARANCE = 0;
 
@@ -35,9 +35,16 @@ public class HexKeyConfig extends ItemStackHandler implements IHexKeyConfig, INB
 		return getStackInSlot( SLOT_APPEARANCE ).isEmpty();
 	}
 
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-    {
-        return stack.isEmpty() || (slot == SLOT_APPEARANCE && stack.getItem() instanceof BlockItem );
-    }
+	@Override
+	public boolean isItemValid( int slot, @Nonnull ItemStack stack )
+	{
+		return stack.isEmpty() || slot == SLOT_APPEARANCE && stack.getItem() instanceof BlockItem;
+	}
+
+	@Override
+	public void setStackInSlot( int slot, ItemStack stack )
+	{
+		// TODO Auto-generated method stub
+
+	}
 }

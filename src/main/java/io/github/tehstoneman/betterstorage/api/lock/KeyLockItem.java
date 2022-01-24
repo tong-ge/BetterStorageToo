@@ -6,15 +6,15 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.MaterialColor;
 
 /** Common base class for locks and keys **/
 public abstract class KeyLockItem extends Item
@@ -26,7 +26,7 @@ public abstract class KeyLockItem extends Item
 
 	public KeyLockItem( Properties properties )
 	{
-		super( properties.stacksTo(  1 ) );
+		super( properties.stacksTo( 1 ) );
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem )
 		{
-			final CompoundNBT tag = itemStack.getOrCreateTag();
+			final CompoundTag tag = itemStack.getOrCreateTag();
 			if( !tag.hasUUID( TAG_KEYLOCK_ID ) )
 			{
 				final UUID uuid = UUID.randomUUID();
@@ -72,14 +72,14 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem )
 		{
-			final CompoundNBT tag = itemStack.getOrCreateTag();
+			final CompoundTag tag = itemStack.getOrCreateTag();
 			tag.putUUID( TAG_KEYLOCK_ID, uuid );
 			itemStack.setTag( tag );
 		}
 	}
 
 	@Override
-	public void onCraftedBy( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	public void onCraftedBy( ItemStack stack, Level worldIn, Player playerIn )
 	{
 		if( !worldIn.isClientSide )
 			ensureHasID( stack );
@@ -95,9 +95,9 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem )
 		{
-			CompoundNBT tag = itemStack.getTag();
+			CompoundTag tag = itemStack.getTag();
 			if( tag == null )
-				tag = new CompoundNBT();
+				tag = new CompoundTag();
 			if( !tag.hasUUID( TAG_KEYLOCK_ID ) )
 			{
 				tag.putUUID( TAG_KEYLOCK_ID, UUID.randomUUID() );
@@ -119,7 +119,7 @@ public abstract class KeyLockItem extends Item
 		{
 			if( itemStack.hasTag() )
 			{
-				final CompoundNBT tag = itemStack.getTag();
+				final CompoundTag tag = itemStack.getTag();
 				if( tag.contains( TAG_COLOR1 ) )
 					return tag.getInt( TAG_COLOR1 );
 			}
@@ -140,9 +140,9 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem )
 		{
-			CompoundNBT tag = itemStack.getTag();
+			CompoundTag tag = itemStack.getTag();
 			if( tag == null )
-				tag = new CompoundNBT();
+				tag = new CompoundTag();
 
 			tag.putInt( TAG_COLOR1, color );
 			itemStack.setTag( tag );
@@ -172,7 +172,7 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem && itemStack.hasTag() )
 		{
-			final CompoundNBT tag = itemStack.getTag();
+			final CompoundTag tag = itemStack.getTag();
 			if( tag.contains( TAG_COLOR2 ) )
 				return tag.getInt( TAG_COLOR2 );
 		}
@@ -191,9 +191,9 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.getItem() instanceof KeyLockItem )
 		{
-			CompoundNBT tag = itemStack.getTag();
+			CompoundTag tag = itemStack.getTag();
 			if( tag == null )
-				tag = new CompoundNBT();
+				tag = new CompoundTag();
 
 			tag.putInt( TAG_COLOR2, color );
 			itemStack.setTag( tag );
@@ -222,7 +222,7 @@ public abstract class KeyLockItem extends Item
 	{
 		if( itemStack.hasTag() )
 		{
-			final CompoundNBT tag = itemStack.getTag();
+			final CompoundTag tag = itemStack.getTag();
 			tag.remove( TAG_COLOR1 );
 			tag.remove( TAG_COLOR2 );
 			itemStack.setTag( tag );
@@ -230,18 +230,18 @@ public abstract class KeyLockItem extends Item
 	}
 
 	@Override
-	public void appendHoverText( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
+	public void appendHoverText( ItemStack stack, @Nullable Level worldIn, List< Component > tooltip, TooltipFlag flagIn )
 	{
 		super.appendHoverText( stack, worldIn, tooltip, flagIn );
 		if( flagIn.isAdvanced() && stack.hasTag() )
 		{
-			final CompoundNBT tag = stack.getTag();
+			final CompoundTag tag = stack.getTag();
 			if( tag.hasUUID( TAG_KEYLOCK_ID ) )
-				tooltip.add( new TranslationTextComponent( "Keytag : " + tag.getUUID( TAG_KEYLOCK_ID ) ) );
+				tooltip.add( new TranslatableComponent( "Keytag : " + tag.getUUID( TAG_KEYLOCK_ID ) ) );
 			if( tag.contains( TAG_COLOR1 ) )
-				tooltip.add( new TranslationTextComponent( "Color 1 : #" + Integer.toHexString( tag.getInt( TAG_COLOR1 ) ).toUpperCase() ) );
+				tooltip.add( new TranslatableComponent( "Color 1 : #" + Integer.toHexString( tag.getInt( TAG_COLOR1 ) ).toUpperCase() ) );
 			if( tag.contains( TAG_COLOR2 ) )
-				tooltip.add( new TranslationTextComponent( "Color 2 : #" + Integer.toHexString( tag.getInt( TAG_COLOR2 ) ).toUpperCase() ) );
+				tooltip.add( new TranslatableComponent( "Color 2 : #" + Integer.toHexString( tag.getInt( TAG_COLOR2 ) ).toUpperCase() ) );
 		}
 	}
 }

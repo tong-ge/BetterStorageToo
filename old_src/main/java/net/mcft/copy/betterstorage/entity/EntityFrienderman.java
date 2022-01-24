@@ -20,7 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 // In case anyone reads this: Even though this class is called "Frienderman"
 // I would prefer it if you called the mob "friendly enderman". In my opinion,
@@ -31,7 +31,7 @@ public class EntityFrienderman extends EntityEnderman {
 	public static IdentityHashMap<Block, Boolean> friendermanCarriable = new IdentityHashMap<Block, Boolean>(1);
 	static { friendermanCarriable.put(Blocks.ender_chest, true); }
 	
-	public EntityFrienderman(World world) {
+	public EntityFrienderman(Level world) {
 		super(world);
 	}
 	

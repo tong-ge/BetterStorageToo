@@ -1,20 +1,20 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class KeyringCapabilityProvider implements ICapabilitySerializable< CompoundNBT >
+public class KeyringCapabilityProvider implements ICapabilitySerializable< CompoundTag >
 {
-	private final ItemStack		invItem;
-	public KeyringStackHandler	inventory;
+	private final ItemStack						invItem;
+	public KeyringStackHandler					inventory;
 	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> inventory );
-	
+
 	public KeyringCapabilityProvider( ItemStack stack )
 	{
 		invItem = stack;
@@ -47,7 +47,7 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< Compo
 
 	public void setChanged()
 	{
-		CompoundNBT tag = invItem.getOrCreateTag();
+		final CompoundTag tag = invItem.getOrCreateTag();
 		int count = 0;
 		for( int i = 0; i < inventory.getSlots(); i++ )
 			if( !inventory.getStackInSlot( i ).isEmpty() )
@@ -56,13 +56,13 @@ public class KeyringCapabilityProvider implements ICapabilitySerializable< Compo
 	}
 
 	@Override
-	public CompoundNBT serializeNBT()
+	public CompoundTag serializeNBT()
 	{
 		return inventory.serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT( CompoundNBT nbt )
+	public void deserializeNBT( CompoundTag nbt )
 	{
 		inventory.deserializeNBT( nbt );
 	}

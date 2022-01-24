@@ -5,27 +5,25 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityTank;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -47,13 +45,13 @@ public class BlockTank extends BlockContainerBetterStorage
 		super( Block.Properties.copy( Blocks.GLASS ).strength( 3.0f ) );
 
 		//@formatter:off
-		registerDefaultState( defaultBlockState().getBlockState().setValue( UP, Boolean.valueOf( false ) )
-																 .setValue( DOWN, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().setValue( UP, Boolean.valueOf( false ) )
+												 .setValue( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateDefinition.Builder< Block, BlockState > builder )
 	{
 		super.createBlockStateDefinition( builder );
 		builder.add( UP, DOWN );
@@ -61,7 +59,7 @@ public class BlockTank extends BlockContainerBetterStorage
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
 			BlockPos facingPos )
 	{
 		return facing.getAxis().getPlane() == Direction.Plane.VERTICAL
@@ -71,20 +69,20 @@ public class BlockTank extends BlockContainerBetterStorage
 
 	/*
 	 * ======================
-	 * TileEntity / Rendering
+	 * BlockEntity / Rendering
 	 * ======================
 	 */
 
 	@Override
-	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
+	public VoxelShape getOcclusionShape( BlockState state, BlockGetter worldIn, BlockPos pos )
 	{
 		return SHAPE_TANK;
 	}
 
 	@Override
-	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	public BlockEntity newBlockEntity( BlockPos blockPos, BlockState blockState )
 	{
-		return new TileEntityTank();
+		return new TileEntityTank( blockPos, blockState );
 	}
 
 	/*
@@ -95,14 +93,14 @@ public class BlockTank extends BlockContainerBetterStorage
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public ActionResultType use( BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public InteractionResult use( BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit )
 	{
 		final ItemStack itemStack = player.getItemInHand( hand );
 		final LazyOptional< IFluidHandlerItem > capability = itemStack.getCapability( CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY );
 		if( capability.isPresent() )
 		{
 			final boolean success = FluidUtil.interactWithFluidHandler( player, hand, world, pos, hit.getDirection() );
-			return success ? ActionResultType.SUCCESS : ActionResultType.PASS;
+			return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
 		}
 		return super.use( state, world, pos, player, hand, hit );
 	}

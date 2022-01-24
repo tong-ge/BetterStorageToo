@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import org.antlr.v4.runtime.misc.NotNull;
 
 import com.google.common.collect.Iterables;
 
@@ -19,53 +18,52 @@ import io.github.tehstoneman.betterstorage.common.inventory.Region;
 import io.github.tehstoneman.betterstorage.common.world.CrateStackCollection;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
 import io.github.tehstoneman.betterstorage.network.UpdateCrateMessage;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.PacketDistributor;
 
-@SuppressWarnings( "deprecation" )
 public class TileEntityCrate extends TileEntityContainer
 {
 	// private static final int maxCratePileSize = 125;
 
-	public static final int		slotsPerCrate	= 18;
-	public static final int		MAX_CRATES		= 125;
-	public static final int		MAX_PER_SIDE	= 5;
+	public static final int	slotsPerCrate	= 18;
+	public static final int	MAX_CRATES		= 125;
+	public static final int	MAX_PER_SIDE	= 5;
 
 	// private BlockPos mainPos;
-	private UUID				pileID;
-	protected ITextComponent	customName;
+	private UUID			pileID;
+	protected Component		customName;
 
-	private int					numCrates		= 1;
-	private int					capacity		= slotsPerCrate;
+	private int				numCrates		= 1;
+	private int				capacity		= slotsPerCrate;
 
-	public TileEntityCrate( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityCrate( BlockEntityType< ? > tileEntityTypeIn, BlockPos blockPos, BlockState blockState )
 	{
-		super( tileEntityTypeIn );
+		super( tileEntityTypeIn, blockPos, blockState );
 	}
 
-	public TileEntityCrate()
+	public TileEntityCrate( BlockPos blockPos, BlockState blockState )
 	{
-		this( BetterStorageTileEntityTypes.CRATE.get() );
+		this( BetterStorageTileEntityTypes.CRATE.get(), blockPos, blockState );
 	}
 
 	@Override
@@ -115,7 +113,7 @@ public class TileEntityCrate extends TileEntityContainer
 		return tileEntity.hasID() && getPileID().equals( tileEntity.getPileID() );
 	}
 
-	public void setPileID( @NotNull UUID pileID )
+	public void setPileID(UUID pileID )
 	{
 		this.pileID = pileID;
 		setChanged();
@@ -123,15 +121,17 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public void updateConnections()
 	{
-		if( !getLevel().isClientSide )
-		{
-			final CrateStackHandler handler = getCrateStackHandler();
-			pileID = handler.getPileID();
-			numCrates = handler.getNumCrates();
-			checkPileConnections( pileID );
-			setChanged();
-			notifyRegionUpdate( handler.getRegion(), pileID );
-		}
+		/*
+		 * if( !getLevel().isClientSide )
+		 * {
+		 * final CrateStackHandler handler = getCrateStackHandler();
+		 * pileID = handler.getPileID();
+		 * numCrates = handler.getNumCrates();
+		 * checkPileConnections( pileID );
+		 * setChanged();
+		 * notifyRegionUpdate( handler.getRegion(), pileID );
+		 * }
+		 */
 	}
 
 	private void checkPileConnections( UUID pileID )
@@ -224,7 +224,7 @@ public class TileEntityCrate extends TileEntityContainer
 			return;
 		for( final BlockPos blockPos : region.betweenClosed() )
 		{
-			final TileEntity te = getLevel().getBlockEntity( blockPos );
+			final BlockEntity te = getLevel().getBlockEntity( blockPos );
 			if( te instanceof TileEntityCrate && ( (TileEntityCrate)te ).pileID.equals( pileID ) )
 			{
 				te.setChanged();
@@ -239,8 +239,10 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public int getNumCrates()
 	{
-		if( getLevel().isClientSide )
-			return numCrates;
+		/*
+		 * if( getLevel().isClientSide )
+		 * return numCrates;
+		 */
 		return getCrateStackHandler().getNumCrates();
 	}
 
@@ -251,8 +253,10 @@ public class TileEntityCrate extends TileEntityContainer
 
 	public int getCapacity()
 	{
-		if( getLevel().isClientSide )
-			return capacity;
+		/*
+		 * if( getLevel().isClientSide )
+		 * return capacity;
+		 */
 		return getCrateStackHandler().getCapacity();
 	}
 
@@ -271,24 +275,26 @@ public class TileEntityCrate extends TileEntityContainer
 			CrateStackCollection.getCollection( getLevel() ).setDirty();
 	}
 
-	// TileEntity synchronization
+	// BlockEntity synchronization
+
+	/*
+	 * @Override
+	 * public ClientboundBlockEntityDataPacket getUpdatePacket()
+	 * {
+	 * final CompoundTag nbt = new CompoundTag();
+	 *
+	 * if( pileID != null )
+	 * nbt.putUUID( "PileID", pileID );
+	 * nbt.putInt( "NumCrates", getNumCrates() );
+	 * nbt.putInt( "Capacity", getCapacity() );
+	 * return new ClientboundBlockEntityDataPacket( getBlockPos(), 1, nbt );
+	 * }
+	 */
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket()
+	public void onDataPacket( Connection network, ClientboundBlockEntityDataPacket packet )
 	{
-		final CompoundNBT nbt = new CompoundNBT();
-
-		if( pileID != null )
-			nbt.putUUID( "PileID", pileID );
-		nbt.putInt( "NumCrates", getNumCrates() );
-		nbt.putInt( "Capacity", getCapacity() );
-		return new SUpdateTileEntityPacket( getBlockPos(), 1, nbt );
-	}
-
-	@Override
-	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
-	{
-		final CompoundNBT nbt = packet.getTag();
+		final CompoundTag nbt = packet.getTag();
 
 		if( nbt.hasUUID( "PileID" ) )
 			pileID = nbt.getUUID( "PileID" );
@@ -297,9 +303,9 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		if( pileID != null )
 			nbt.putUUID( "PileID", pileID );
@@ -310,9 +316,9 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	@Override
-	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	public void handleUpdateTag( CompoundTag nbt )
 	{
-		super.handleUpdateTag( state, nbt );
+		super.handleUpdateTag( nbt );
 
 		if( nbt.hasUUID( "PileID" ) )
 			pileID = nbt.getUUID( "PileID" );
@@ -323,7 +329,7 @@ public class TileEntityCrate extends TileEntityContainer
 	// Reading from / writing to NBT
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		super.save( nbt );
 
@@ -334,32 +340,34 @@ public class TileEntityCrate extends TileEntityContainer
 	}
 
 	@Override
-	public void load( BlockState state, CompoundNBT nbt )
+	public void load( CompoundTag nbt )
 	{
 		if( nbt.hasUUID( "PileID" ) )
 			pileID = nbt.getUUID( "PileID" );
 
-		super.load( state, nbt );
+		super.load( nbt );
 	}
 
 	@Override
-	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
+	public AbstractContainerMenu createMenu( int windowID, Inventory playerInventory, Player player )
 	{
-		BetterStorage.NETWORK.send( PacketDistributor.PLAYER.with( () -> (ServerPlayerEntity)player ),
-				new UpdateCrateMessage( worldPosition, getNumCrates(), getCapacity() ) );
+		/*
+		 * BetterStorage.NETWORK.send( PacketDistributor.PLAYER.setValue( () -> (ServerPlayer)player ),
+		 * new UpdateCrateMessage( worldPosition, getNumCrates(), getCapacity() ) );
+		 */
 		return new ContainerCrate( windowID, playerInventory, level, worldPosition );
 	}
 
 	@Override
-	public ITextComponent getName()
+	public Component getName()
 	{
-		return new TranslationTextComponent( ModInfo.CONTAINER_CRATE_NAME );
+		return new TranslatableComponent( ModInfo.CONTAINER_CRATE_NAME );
 	}
 
 	@Nullable
-	public static TileEntityCrate getCrateAt( IBlockReader world, BlockPos pos )
+	public static TileEntityCrate getCrateAt( BlockGetter world, BlockPos pos )
 	{
-		final TileEntity tileEntity = world.getBlockEntity( pos );
+		final BlockEntity tileEntity = world.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityCrate )
 			return (TileEntityCrate)tileEntity;
 		return null;

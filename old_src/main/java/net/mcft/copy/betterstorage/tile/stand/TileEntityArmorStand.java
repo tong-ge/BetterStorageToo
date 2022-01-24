@@ -16,10 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Connection;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.AABB;
+import net.minecraft.util.math.BlockHitResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,11 +65,11 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 		}
 	}
 
-	// TileEntity stuff
+	// BlockEntity stuff
 
 	@Override
 	@SideOnly( Side.CLIENT )
-	public AxisAlignedBB getRenderBoundingBox()
+	public AABB getRenderBoundingBox()
 	{
 		return WorldUtils.getAABB( this, 0, 0, 0, 0, 1, 0 );
 	}
@@ -146,7 +146,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 	}
 
 	@Override
-	public ItemStack onPickBlock( ItemStack block, RayTraceResult target )
+	public ItemStack onPickBlock( ItemStack block, BlockHitResult target )
 	{
 		final int slot = Math.max( 0, Math.min( 3, (int)( ( target.hitVec.yCoord - pos.getY() ) * 2 ) ) );
 		final EnumArmorStandRegion region = EnumArmorStandRegion.values()[slot];
@@ -181,7 +181,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 		return count;
 	}
 
-	// TileEntity synchronization
+	// BlockEntity synchronization
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket()
@@ -192,7 +192,7 @@ public class TileEntityArmorStand extends TileEntityContainer implements IArmorS
 	}
 
 	@Override
-	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
+	public void onDataPacket( Connection net, SPacketUpdateTileEntity packet )
 	{
 		read( packet.getTag() );
 	}

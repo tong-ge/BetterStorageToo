@@ -6,7 +6,7 @@ import net.mcft.copy.betterstorage.entity.EntityFrienderman;
 import net.mcft.copy.betterstorage.item.ItemBackpack;
 import net.mcft.copy.betterstorage.misc.PropertiesBackpack;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.ModelBlockRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import cpw.mods.fml.relauncher.Side;
@@ -23,10 +23,10 @@ public class ModelBackpackArmor extends ModelBiped {
 		textureWidth = baseModel.textureWidth;
 		textureHeight = baseModel.textureHeight;
 		
-		bipedBody = new ModelRenderer(this);
+		bipedBody = new ModelBlockRenderer(this);
 		
-		ModelRenderer model = new ModelRenderer(this);
-		for (ModelRenderer box : (List<ModelRenderer>)baseModel.boxList) {
+		ModelBlockRenderer model = new ModelBlockRenderer(this);
+		for (ModelBlockRenderer box : (List<ModelBlockRenderer>)baseModel.boxList) {
 			box.rotationPointY -= baseModel.getModelHeight();
 			box.rotationPointZ += 5.5F;
 			bipedBody.addChild(box);

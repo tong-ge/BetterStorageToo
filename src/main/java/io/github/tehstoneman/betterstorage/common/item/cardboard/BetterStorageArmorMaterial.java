@@ -4,16 +4,16 @@ import java.util.function.Supplier;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
-public enum BetterStorageArmorMaterial implements IArmorMaterial
+public enum BetterStorageArmorMaterial implements ArmorMaterial
 {
-	CARDBOARD( "cardboard", 3, new int[] { 1, 2, 3, 1 }, 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F,
+	CARDBOARD( "cardboard", 3, new int[] { 1, 2, 3, 1 }, 12, SoundEvents.ARMOR_EQUIP_GENERIC, 0.0F,
 			() -> Ingredient.of( BetterStorageItems.CARDBOARD_SHEET.get() ) ),;
 
 	private static final int[]	MAX_DAMAGE_ARRAY	= new int[] { 13, 15, 16, 11 };
@@ -38,13 +38,13 @@ public enum BetterStorageArmorMaterial implements IArmorMaterial
 	}
 
 	@Override
-	public int getDurabilityForSlot( EquipmentSlotType slotIn )
+	public int getDurabilityForSlot( EquipmentSlot slotIn )
 	{
 		return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * maxDamageFactor;
 	}
 
 	@Override
-	public int getDefenseForSlot( EquipmentSlotType slotIn )
+	public int getDefenseForSlot( EquipmentSlot slotIn )
 	{
 		return damageReductionAmountArray[slotIn.getIndex()];
 	}

@@ -17,16 +17,16 @@ import io.github.tehstoneman.betterstorage.network.ModNetwork;
 import io.github.tehstoneman.betterstorage.proxy.ClientProxy;
 import io.github.tehstoneman.betterstorage.proxy.IProxy;
 import io.github.tehstoneman.betterstorage.proxy.ServerProxy;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DirectionalPlaceContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -34,13 +34,13 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 @Mod( ModInfo.MOD_ID )
 public class BetterStorage
 {
 	public static final Logger			LOGGER		= LogManager.getLogger( ModInfo.MOD_ID );
-	public static final ItemGroup		ITEM_GROUP	= new BetterStorageItemGroup();
+	public static final CreativeModeTab	ITEM_GROUP	= new BetterStorageItemGroup();
 	public static final SimpleChannel	NETWORK		= ModNetwork.getNetworkChannel();
 	public static final IProxy			PROXY		= DistExecutor.<IProxy> safeRunForDist( () -> ClientProxy::new, () -> ServerProxy::new );
 
@@ -71,13 +71,13 @@ public class BetterStorage
 	public void setup( FMLCommonSetupEvent event )
 	{
 		if( BetterStorageConfig.COMMON.cardboardBoxDispenserPlaceable.get() )
-			DispenserBlock.registerBehavior( BetterStorageBlocks.CARDBOARD_BOX.get(), new OptionalDispenseBehavior()
+			DispenserBlock.registerBehavior( BetterStorageBlocks.CARDBOARD_BOX.get(), new OptionalDispenseItemBehavior()
 			{
 				/**
 				 * Dispense the specified stack, play the dispense sound and spawn particles.
 				 */
 				@Override
-				protected ItemStack execute( IBlockSource source, ItemStack stack )
+				protected ItemStack execute( BlockSource source, ItemStack stack )
 				{
 					setSuccess( false );
 					final Item item = stack.getItem();
@@ -98,14 +98,14 @@ public class BetterStorage
 		 * DispenserBlock.registerBehavior( Items.MILK_BUCKET, new OptionalDispenseBehavior()
 		 * {
 		 * private final DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior();
-		 * 
+		 *
 		 * @Override
 		 * protected ItemStack execute( IBlockSource source, ItemStack stack )
 		 * {
 		 * final Item bucketitem = stack.getItem();
 		 * final BlockPos blockpos = source.getPos().relative( source.getBlockState().getValue( DispenserBlock.FACING ) );
-		 * final World world = source.getLevel();
-		 * if( FluidMilk.emptyBucket( bucketitem, (PlayerEntity)null, world, blockpos, (BlockRayTraceResult)null ) )
+		 * final Level world = source.getLevel();
+		 * if( FluidMilk.emptyBucket( bucketitem, (Player)null, world, blockpos, (BlockHitResult)null ) )
 		 * return new ItemStack( Items.BUCKET );
 		 * else
 		 * return dispenseBehavior.dispense( source, stack );

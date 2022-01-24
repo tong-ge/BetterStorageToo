@@ -3,8 +3,8 @@ package io.github.tehstoneman.betterstorage.api.stand;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.util.text.Component;
+import net.minecraft.world.Level;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,14 +12,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientArmorStandPlayer extends AbstractClientPlayer
 {
 
-	public ClientArmorStandPlayer( World world )
+	public ClientArmorStandPlayer( Level world )
 	{
 		super( world, new GameProfile( null, "[ARMOR STAND]" ) );
 		setInvisible( true );
 	}
 
 	@Override
-	public void addChatMessage( ITextComponent message )
+	public void addChatMessage( Component message )
 	{}
 
 	/*

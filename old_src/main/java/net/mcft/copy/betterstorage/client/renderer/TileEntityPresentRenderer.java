@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.tileentity.BlockEntity;
+import net.minecraft.util.math.BlockHitResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +25,7 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 	// private final ModelPresent model = new ModelPresent();
 
 	@Override
-	public void renderTileEntityAt( TileEntity entity, double x, double y, double z, float par8, int destroyStage )
+	public void renderTileEntityAt( BlockEntity entity, double x, double y, double z, float par8, int destroyStage )
 	{
 		renderTileEntityAt( (TileEntityPresent)entity, x, y, z, par8 );
 	}
@@ -56,7 +56,7 @@ public class TileEntityPresentRenderer extends TileEntitySpecialRenderer
 		if( present.nameTag != null && present.getLevel() != null && player != null && player.getDistanceSq( present.getBlockPos().getX() + 0.5,
 				present.getBlockPos().getY() + 0.5, present.getBlockPos().getZ() + 0.5 ) < NAMETAG_RENDER_RANGE_SQ )
 			;
-		final RayTraceResult o = Minecraft.getMinecraft().objectMouseOver;
+		final BlockHitResult o = Minecraft.getMinecraft().objectMouseOver;
 		/*
 		 * renderNameTag(present.nameTag, player.getCommandSenderName().equalsIgnoreCase(present.nameTag),
 		 * ((o.blockX == present.xCoord) && (o.blockY == present.yCoord) && (o.blockZ == present.zCoord)));

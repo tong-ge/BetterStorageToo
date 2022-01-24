@@ -3,9 +3,9 @@ package io.github.tehstoneman.betterstorage.common.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
 
 public class ItemBucketSlime extends ItemBetterStorage
 {
@@ -62,7 +62,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * @Override
 	 *
 	 * @SideOnly( Side.CLIENT )
-	 * public void appendHoverText( ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag toolTipFlag )
+	 * public void appendHoverText( ItemStack stack, Level worldIn, List<String> tooltip, TooltipFlag toolTipFlag )
 	 * {
 	 * final EnumSlime slime = EnumSlime.byMetadata( stack.getMetadata() );
 	 * final ResourceLocation resourceLocation = slime.getResourceLocation();
@@ -98,7 +98,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * final Potion potion = effect.getPotion();
 	 * final int duration = (int)( effect.getDuration() * handler.durationMultiplier() );
 	 *
-	 * final StringBuilder str = new StringBuilder().append( potion.isBadEffect() ? TextFormatting.RED : TextFormatting.GRAY )
+	 * final StringBuilder str = new StringBuilder().append( potion.isBadEffect() ? ChatFormatting.RED : ChatFormatting.GRAY )
 	 * .append( BetterStorage.proxy.localize( effect.getEffectName() ) );
 	 *
 	 * if( effect.getAmplifier() > 0 )
@@ -112,7 +112,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * final int more = effectList.tagCount() - max;
 	 *
 	 * if( more > 0 )
-	 * tooltip.add( TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + LanguageUtils
+	 * tooltip.add( ChatFormatting.DARK_GRAY.toString() + ChatFormatting.ITALIC + LanguageUtils
 	 * .translateTooltip( "bucketSlime.more." + ( more == 1 ? "1" : "x" ), "%X%", Integer.toString( more ) ) );
 	 * }
 	 * }
@@ -122,7 +122,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public EnumActionResult useOn( EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
+	 * public EnumActionResult useOn( EntityPlayer player, Level worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY,
 	 * float hitZ )
 	 * {
 	 * final ItemStack stack = player.getItemInHand( hand );
@@ -187,7 +187,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public ActionResult< ItemStack > use( World worldIn, EntityPlayer playerIn, EnumHand handIn )
+	 * public ActionResult< ItemStack > use( Level worldIn, EntityPlayer playerIn, EnumHand handIn )
 	 * {
 	 * if( handIn == EnumHand.MAIN_HAND )
 	 * {
@@ -203,7 +203,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	/*
 	 * @Override
-	 * public ItemStack useOnFinish( ItemStack stack, World worldIn, EntityLivingBase entityLiving )
+	 * public ItemStack useOnFinish( ItemStack stack, Level worldIn, EntityLivingBase entityLiving )
 	 * {
 	 * if( entityLiving instanceof EntityPlayer )
 	 * {
@@ -352,10 +352,10 @@ public class ItemBucketSlime extends ItemBetterStorage
 	// Copied from ItemMonsterPlacer (Spawn eggs)
 
 	/*
-	 * protected double getYOffset( World p_190909_1_, BlockPos p_190909_2_ )
+	 * protected double getYOffset( Level p_190909_1_, BlockPos p_190909_2_ )
 	 * {
-	 * final AxisAlignedBB axisalignedbb = new AxisAlignedBB( p_190909_2_ ).expand( 0.0D, -1.0D, 0.0D );
-	 * final List< AxisAlignedBB > list = p_190909_1_.getCollisionBoxes( (Entity)null, axisalignedbb );
+	 * final AABB axisalignedbb = new AABB( p_190909_2_ ).expand( 0.0D, -1.0D, 0.0D );
+	 * final List< AABB > list = p_190909_1_.getCollisionBoxes( (Entity)null, axisalignedbb );
 	 *
 	 * if( list.isEmpty() )
 	 * return 0.0D;
@@ -363,7 +363,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 	 * {
 	 * double d0 = axisalignedbb.minY;
 	 *
-	 * for( final AxisAlignedBB axisalignedbb1 : list )
+	 * for( final AABB axisalignedbb1 : list )
 	 * d0 = Math.max( axisalignedbb1.maxY, d0 );
 	 *
 	 * return d0 - p_190909_2_.getY();
@@ -579,7 +579,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 
 	}
 
-	public enum EnumSlime implements IStringSerializable
+	public enum EnumSlime implements StringRepresentable
 	{
 		//@formatter:off
 		GREEN_SLIME	( 0, "Slime", new ResourceLocation("slime") ),
@@ -595,7 +595,7 @@ public class ItemBucketSlime extends ItemBetterStorage
 		private final ResourceLocation			resourceLocation;
 
 		private static EnumSlime[]				META_LOOKUP	= new EnumSlime[values().length];
-		private static Map< String, EnumSlime >	NAME_LOOKUP	= new HashMap<>();;
+		private static Map< String, EnumSlime >	NAME_LOOKUP	= new HashMap<>();
 
 		static
 		{
@@ -658,5 +658,5 @@ public class ItemBucketSlime extends ItemBetterStorage
 		{
 			return getName();
 		}
-	};
+	}
 }

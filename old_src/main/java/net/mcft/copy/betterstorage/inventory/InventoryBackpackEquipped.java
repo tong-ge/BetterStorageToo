@@ -4,14 +4,14 @@ import net.mcft.copy.betterstorage.item.ItemBackpack;
 import net.mcft.copy.betterstorage.utils.DirectionUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 
 public class InventoryBackpackEquipped extends InventoryWrapper {
 	
 	public final EntityLivingBase carrier;
 	public final EntityPlayer player;
 	
-	public InventoryBackpackEquipped(EntityLivingBase carrier, EntityPlayer player, IInventory inventory) {
+	public InventoryBackpackEquipped(EntityLivingBase carrier, EntityPlayer player, Inventory inventory) {
 		super(inventory);
 		this.carrier = carrier;
 		this.player = player;

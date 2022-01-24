@@ -1,23 +1,23 @@
 package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class CardboardColor implements IItemColor, IBlockColor
+public class CardboardColor implements ItemColor, BlockColor
 {
 	@Override
 	public int getColor( ItemStack stack, int tintIndex )
 	{
 		if( stack.hasTag() )
 		{
-			final CompoundNBT tag = stack.getTag();
+			final CompoundTag tag = stack.getTag();
 			if( tag.contains( "Color" ) )
 				return tag.getInt( "Color" );
 
@@ -29,11 +29,11 @@ public class CardboardColor implements IItemColor, IBlockColor
 	}
 
 	@Override
-	public int getColor( BlockState state, IBlockDisplayReader reader, BlockPos pos, int tint )
+	public int getColor( BlockState state, BlockAndTintGetter reader, BlockPos pos, int tint )
 	{
 		if( reader != null )
 		{
-			final TileEntity tileEntity = reader.getBlockEntity( pos );
+			final BlockEntity tileEntity = reader.getBlockEntity( pos );
 			if( tileEntity instanceof TileEntityCardboardBox )
 				return ( (TileEntityCardboardBox)tileEntity ).getColor();
 		}

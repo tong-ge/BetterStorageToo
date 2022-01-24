@@ -6,24 +6,24 @@ import java.util.List;
 
 import io.github.tehstoneman.betterstorage.api.lock.ILock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class EnchantmentLock extends Enchantment
 {
-	public final static EnchantmentType	LOCK			= EnchantmentType.create( "lock", ( item ) -> ( item instanceof ItemLock ) );
+	public final static EnchantmentCategory	LOCK			= EnchantmentCategory.create( "lock", ( item ) -> ( item instanceof ItemLock ) );
 
-	private final int					maxLevel;
-	private final int					minBase, minScaling;
-	private final int					maxBase, maxScaling;
+	private final int						maxLevel;
+	private final int						minBase, minScaling;
+	private final int						maxBase, maxScaling;
 
-	private List< Enchantment >			incompatible	= new ArrayList<>( 0 );
+	private List< Enchantment >				incompatible	= new ArrayList<>( 0 );
 
 	public EnchantmentLock( Rarity rarityIn, int maxLevel, int minBase, int minScaling, int maxBase, int maxScaling )
 	{
-		super( rarityIn, LOCK, new EquipmentSlotType[] { EquipmentSlotType.MAINHAND } );
+		super( rarityIn, LOCK, new EquipmentSlot[] { EquipmentSlot.MAINHAND } );
 
 		this.maxLevel = maxLevel;
 		this.minBase = minBase;

@@ -4,19 +4,19 @@ import io.github.tehstoneman.betterstorage.api.IHexKeyConfig;
 import io.github.tehstoneman.betterstorage.common.capabilities.CapabilityConfig;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ConfigContainer extends Container
+public class ConfigContainer extends AbstractContainerMenu
 {
 	private final IHexKeyConfig			configContainer;
 	private final TileEntityContainer	tileContainer;
@@ -25,7 +25,7 @@ public class ConfigContainer extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ConfigContainer( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ConfigContainer( int windowId, Inventory playerInventory, Level world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CONFIG.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getBlockEntity( pos );
@@ -53,7 +53,7 @@ public class ConfigContainer extends Container
 	}
 
 	@Override
-	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( Player playerIn, int index )
 	{
 		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
@@ -82,12 +82,12 @@ public class ConfigContainer extends Container
 	}
 
 	@Override
-	public boolean stillValid( PlayerEntity playerIn )
+	public boolean stillValid( Player playerIn )
 	{
-		final World world = tileContainer.getLevel();
+		final Level world = tileContainer.getLevel();
 		final BlockPos pos = tileContainer.getBlockPos();
 		final BlockState state = world.getBlockState( pos );
-		return stillValid( IWorldPosCallable.create( world, pos ), playerIn, state.getBlock() );
+		return stillValid( ContainerLevelAccess.create( world, pos ), playerIn, state.getBlock() );
 	}
 
 	public class ConfigSlot extends SlotItemHandler

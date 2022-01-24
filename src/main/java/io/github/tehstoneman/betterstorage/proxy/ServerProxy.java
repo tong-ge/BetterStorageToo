@@ -1,11 +1,11 @@
 package io.github.tehstoneman.betterstorage.proxy;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public class ServerProxy implements IProxy
 {
 	@Override
-	public World getClientWorld()
+	public Level getClientWorld()
 	{
 		try
 		{

@@ -3,7 +3,7 @@ package net.mcft.copy.betterstorage.container;
 import net.mcft.copy.betterstorage.item.ItemBackpack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -16,7 +16,7 @@ public class SlotArmorBackpack extends Slot {
 	
 	private static final int armorType = 1;
 	
-	public SlotArmorBackpack(IInventory inventory, int slot, int x, int y) {
+	public SlotArmorBackpack(Inventory inventory, int slot, int x, int y) {
 		super(inventory, slot, x, y);
 	}
 	

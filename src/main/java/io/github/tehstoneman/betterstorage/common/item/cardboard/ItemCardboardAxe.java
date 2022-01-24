@@ -2,15 +2,15 @@ package io.github.tehstoneman.betterstorage.common.item.cardboard;
 
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 
 public class ItemCardboardAxe extends AxeItem implements ICardboardItem
 {
 	public ItemCardboardAxe()
 	{
-		super( ItemTier.WOOD, 6.0F, -3.2F, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
+		super( Tiers.WOOD, 6.0F, -3.2F, new Item.Properties().tab( BetterStorage.ITEM_GROUP ) );
 	}
 
 	// Makes sure cardboard tools don't get destroyed,
@@ -33,7 +33,7 @@ public class ItemCardboardAxe extends AxeItem implements ICardboardItem
 
 	/*
 	 * @Override
-	 * public boolean onBlockDestroyed( ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity )
+	 * public boolean onBlockDestroyed( ItemStack stack, Level world, IBlockState block, BlockPos pos, EntityLivingBase entity )
 	 * {
 	 * return block.getBlockHardness( world, pos ) > 0 ? ItemCardboardSheet.damageItem( stack, 1, entity ) : true;
 	 * }

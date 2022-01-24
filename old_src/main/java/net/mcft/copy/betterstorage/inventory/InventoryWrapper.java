@@ -1,26 +1,26 @@
 package io.github.tehstoneman.betterstorage.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Component;
 import net.minecraft.util.text.TextComponentString;
 
-public class InventoryWrapper implements IInventory
+public class InventoryWrapper implements Inventory
 {
 
-	public final IInventory	base;
+	public final Inventory	base;
 
 	private boolean			overwriteName	= false;
 	private String			title;
 	private boolean			localized;
 
-	public InventoryWrapper( IInventory base )
+	public InventoryWrapper( Inventory base )
 	{
 		this.base = base;
 	}
 
-	public InventoryWrapper( IInventory base, String title, boolean localized )
+	public InventoryWrapper( Inventory base, String title, boolean localized )
 	{
 		this( base );
 		overwriteName = true;
@@ -29,7 +29,7 @@ public class InventoryWrapper implements IInventory
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
 		return overwriteName ? new TextComponentString( title ) : base.getDisplayName();
 	}

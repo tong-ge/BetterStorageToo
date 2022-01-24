@@ -19,16 +19,16 @@ import io.github.tehstoneman.betterstorage.utils.InventoryUtils;
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Component;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityCraftingStation extends TileEntity implements ITickable, IInventory
+public class TileEntityCraftingStation extends BlockEntity implements ITickable, Inventory
 {
 	public ItemStack[]			crafting	= new ItemStack[9];
 	public OutsetHandler	output;
@@ -107,10 +107,10 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 		return true;
 	}
 
-	// IInventory implementation
+	// Inventory implementation
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
 		return new TextComponentString( getName() );
 	}
@@ -241,7 +241,7 @@ public class TileEntityCraftingStation extends TileEntity implements ITickable, 
 			}
 
 			final ItemStack craftOutput = simulate ? output.getItem( 4 ).copy() : output.getItem( 4 );
-			final IInventory craftMatrix = new InventoryStacks( result );
+			final Inventory craftMatrix = new InventoryStacks( result );
 			FMLCommonHandler.instance().firePlayerCraftingEvent( player, craftOutput, craftMatrix );
 			new CustomSlotCrafting( player, craftOutput );
 

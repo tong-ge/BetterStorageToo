@@ -7,14 +7,14 @@ import java.util.List;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class EnchantmentKey extends Enchantment
 {
-	public final static EnchantmentType	KEY				= EnchantmentType.create( "key", ( item ) -> ( item instanceof ItemKey ) );
+	public final static EnchantmentCategory	KEY				= EnchantmentCategory.create( "key", ( item ) -> ( item instanceof ItemKey ) );
 
 	private final int					maxLevel;
 	private final int					minBase, minScaling;
@@ -24,7 +24,7 @@ public class EnchantmentKey extends Enchantment
 
 	public EnchantmentKey( Rarity rarityIn, int maxLevel, int minBase, int minScaling, int maxBase, int maxScaling )
 	{
-		super( rarityIn, KEY, new EquipmentSlotType[] { EquipmentSlotType.MAINHAND } );
+		super( rarityIn, KEY, new EquipmentSlot[] { EquipmentSlot.MAINHAND } );
 
 		this.maxLevel = maxLevel;
 		this.minBase = minBase;

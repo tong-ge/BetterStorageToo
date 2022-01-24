@@ -9,24 +9,24 @@ import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityLockableDoor;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 public class ItemLock extends KeyLockItem implements ILock
 {
@@ -50,22 +50,22 @@ public class ItemLock extends KeyLockItem implements ILock
 	 */
 
 	@Override
-	public void onCraftedBy( ItemStack stack, World world, PlayerEntity player )
+	public void onCraftedBy( ItemStack stack, Level world, Player player )
 	{
 		if( !world.isClientSide )
 			ensureHasID( stack );
 	}
 
 	@Override
-	public ActionResultType useOn( ItemUseContext context )
+	public InteractionResult useOn( UseOnContext context )
 	{
-		final PlayerEntity playerIn = context.getPlayer();
-		final Hand hand = context.getHand();
-		final World worldIn = context.getLevel();
+		final Player playerIn = context.getPlayer();
+		final InteractionHand hand = context.getHand();
+		final Level worldIn = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		final ItemStack stack = context.getItemInHand();
 
-		if( hand == Hand.MAIN_HAND )
+		if( hand == InteractionHand.MAIN_HAND )
 		{
 			BlockState blockState = worldIn.getBlockState( pos );
 			Block block = blockState.getBlock();
@@ -92,7 +92,7 @@ public class ItemLock extends KeyLockItem implements ILock
 						.setValue( DoorBlock.HALF, DoubleBlockHalf.UPPER ) );
 				//@formatter:on
 
-				final TileEntity tileEntity = worldIn.getBlockEntity( pos );
+				final BlockEntity tileEntity = worldIn.getBlockEntity( pos );
 				if( tileEntity instanceof TileEntityLockableDoor )
 				{
 					final TileEntityLockableDoor lockable = (TileEntityLockableDoor)tileEntity;
@@ -101,12 +101,12 @@ public class ItemLock extends KeyLockItem implements ILock
 						lockable.setLock( stack.copy() );
 						if( !playerIn.isCreative() )
 							playerIn.setItemInHand( hand, ItemStack.EMPTY );
-						return ActionResultType.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 				}
 			}
 
-			final TileEntity tileEntity = worldIn.getBlockEntity( pos );
+			final BlockEntity tileEntity = worldIn.getBlockEntity( pos );
 			if( tileEntity instanceof IKeyLockable )
 			{
 				final IKeyLockable lockable = (IKeyLockable)tileEntity;
@@ -115,7 +115,7 @@ public class ItemLock extends KeyLockItem implements ILock
 					lockable.setLock( stack.copy() );
 					if( !playerIn.isCreative() )
 						playerIn.setItemInHand( hand, ItemStack.EMPTY );
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
@@ -129,7 +129,7 @@ public class ItemLock extends KeyLockItem implements ILock
 	 */
 
 	@Override
-	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, PlayerEntity player, boolean success )
+	public void onUnlock( ItemStack lock, ItemStack key, IKeyLockable lockable, Player player, boolean success )
 	{
 		if( success )
 			return;
@@ -138,7 +138,7 @@ public class ItemLock extends KeyLockItem implements ILock
 	}
 
 	@Override
-	public void applyEffects( ItemStack lock, IKeyLockable lockable, PlayerEntity player, LockInteraction interaction )
+	public void applyEffects( ItemStack lock, IKeyLockable lockable, Player player, LockInteraction interaction )
 	{
 		final int shock = EnchantmentHelper.getItemEnchantmentLevel( EnchantmentBetterStorage.SHOCK.get(), lock );
 
@@ -148,9 +148,9 @@ public class ItemLock extends KeyLockItem implements ILock
 			if( interaction == LockInteraction.PICK )
 				damage *= 3;
 			player.hurt( DamageSource.MAGIC, damage );
-			final World world = player.getCommandSenderWorld();
-			world.playSound( (PlayerEntity)null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLAZE_SHOOT,
-					SoundCategory.BLOCKS, 0.5f, world.random.nextFloat() * 0.1F + 0.9F );
+			final Level world = player.getCommandSenderWorld();
+			world.playSound( (Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 0.5f,
+					world.random.nextFloat() * 0.1F + 0.9F );
 			if( shock >= 3 && interaction != LockInteraction.OPEN )
 				player.setSecondsOnFire( 3 );
 		}

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 import io.github.tehstoneman.betterstorage.api.ICrateStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 /** Holds all CratePile objects for one world / dimension. */
 public class CrateStorage implements ICrateStorage
@@ -63,9 +63,9 @@ public class CrateStorage implements ICrateStorage
 	}
 
 	@Override
-	public CompoundNBT serializeNBT()
+	public CompoundTag serializeNBT()
 	{
-		final CompoundNBT compound = new CompoundNBT();
+		final CompoundTag compound = new CompoundTag();
 		if( !pileDataMap.isEmpty() )
 			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )
 				compound.put( entry.getKey().toString(), entry.getValue().serializeNBT() );
@@ -73,7 +73,7 @@ public class CrateStorage implements ICrateStorage
 	}
 
 	@Override
-	public void deserializeNBT( CompoundNBT compound )
+	public void deserializeNBT( CompoundTag compound )
 	{
 		if( !compound.isEmpty() )
 			for( final String key : compound.getAllKeys() )

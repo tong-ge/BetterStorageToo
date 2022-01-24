@@ -5,18 +5,16 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 
-public class KeyColorRecipe extends SpecialRecipe
+public class KeyColorRecipe extends CustomRecipe
 {
 	public KeyColorRecipe( ResourceLocation idIn )
 	{
@@ -24,7 +22,7 @@ public class KeyColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean matches( CraftingInventory inv, World worldIn )
+	public boolean matches( CraftingContainer inv, Level worldIn )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 		final List< ItemStack > dyeList = Lists.newArrayList();
@@ -41,23 +39,18 @@ public class KeyColorRecipe extends SpecialRecipe
 					resultStack = itemStack;
 				}
 				else
-				{
-					if( !itemStack.getItem().is( Tags.Items.DYES ) )
-						return false;
-
 					dyeList.add( itemStack );
-				}
 		}
 
 		return !resultStack.isEmpty() && !dyeList.isEmpty() && dyeList.size() <= 2;
 	}
 
 	@Override
-	public ItemStack assemble( CraftingInventory inv )
+	public ItemStack assemble( CraftingContainer inv )
 	{
 		ItemStack resultStack = ItemStack.EMPTY;
 
-		final CompoundNBT tagCompound = new CompoundNBT();
+		final CompoundTag tagCompound = new CompoundTag();
 		for( int i = 0; i < inv.getContainerSize(); ++i )
 		{
 			final ItemStack ingredientStack = inv.getItem( i );
@@ -76,14 +69,16 @@ public class KeyColorRecipe extends SpecialRecipe
 					if( ingredientStack.hasTag() )
 						tagCompound.merge( ingredientStack.getTag() );
 				}
-				else if( item.is( Tags.Items.DYES ) )
-				{
-					final DyeColor dyeColor = DyeColor.getColor( ingredientStack );
-					if( !tagCompound.contains( KeyLockItem.TAG_COLOR1 ) )
-						tagCompound.putInt( KeyLockItem.TAG_COLOR1, dyeColor.getFireworkColor() );
-					else if( !tagCompound.contains( KeyLockItem.TAG_COLOR2 ) )
-						tagCompound.putInt( KeyLockItem.TAG_COLOR2, dyeColor.getFireworkColor() );
-				}
+				/*
+				 * else if( item.is( Tags.Items.DYES ) )
+				 * {
+				 * final DyeColor dyeColor = DyeColor.getColor( ingredientStack );
+				 * if( !tagCompound.contains( KeyLockItem.TAG_COLOR1 ) )
+				 * tagCompound.putInt( KeyLockItem.TAG_COLOR1, dyeColor.getFireworkColor() );
+				 * else if( !tagCompound.contains( KeyLockItem.TAG_COLOR2 ) )
+				 * tagCompound.putInt( KeyLockItem.TAG_COLOR2, dyeColor.getFireworkColor() );
+				 * }
+				 */
 				else
 					return ItemStack.EMPTY;
 			}
@@ -100,7 +95,7 @@ public class KeyColorRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public IRecipeSerializer< ? > getSerializer()
+	public RecipeSerializer< ? > getSerializer()
 	{
 		return BetterStorageRecipes.COLOR_KEY;
 	}

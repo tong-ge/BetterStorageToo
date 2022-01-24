@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 
 public class ItemBlockLockable extends BlockItemBetterStorage
 {

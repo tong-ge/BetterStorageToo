@@ -38,12 +38,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -68,7 +68,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 	
 	protected int getDefaultColor() { return 0x805038; }
 	
-	protected IInventory getBackpackItemsInternal(EntityLivingBase carrier, EntityPlayer player) {
+	protected Inventory getBackpackItemsInternal(EntityLivingBase carrier, EntityPlayer player) {
 		PropertiesBackpack backpackData = getBackpackData(carrier);
 		int size = (getBackpackColumns() * getBackpackRows());
 		if (backpackData.contents == null)
@@ -194,7 +194,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 	}
 	
 	@Override
-	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+	public void onArmorTick(Level world, EntityPlayer player, ItemStack itemStack) {
 		
 		// Replace the armor slot with a custom one, so the player
 		// can't unequip the backpack when there's items inside.
@@ -219,11 +219,11 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 	}
 	
 	@Override
-	public ItemStack use(ItemStack stack, World world, EntityPlayer player) { return stack; }
+	public ItemStack use(ItemStack stack, Level world, EntityPlayer player) { return stack; }
 	
 	@Override
 	public boolean useOn(ItemStack stack, EntityPlayer player,
-	                         World world, int x, int y, int z, int side,
+	                         Level world, int x, int y, int z, int side,
 	                         float hitX, float hitY, float hitZ) {
 		ForgeDirection orientation = DirectionUtils.getOrientation(player).getOpposite();
 		return placeBackpack(player, player, stack, x, y, z, side, orientation, false, false);
@@ -311,12 +311,12 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		          (player.getEquipmentInSlot(EquipmentSlot.CHEST) != null)));
 	}
 	
-	public static IInventory getBackpackItems(EntityLivingBase carrier, EntityPlayer player) {
+	public static Inventory getBackpackItems(EntityLivingBase carrier, EntityPlayer player) {
 		ItemStack backpack = getBackpack(carrier);
 		if (backpack == null) return null;
 		return ((ItemBackpack)backpack.getItem()).getBackpackItemsInternal(carrier, player);
 	}
-	public static IInventory getBackpackItems(EntityLivingBase carrier) {
+	public static Inventory getBackpackItems(EntityLivingBase carrier) {
 		return getBackpackItems(carrier, null);
 	}
 	
@@ -353,7 +353,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		if (backpack == null) return false;
 		ItemBackpack backpackType = (ItemBackpack)backpack.getItem();
 		
-		IInventory inventory = ItemBackpack.getBackpackItems(carrier, player);
+		Inventory inventory = ItemBackpack.getBackpackItems(carrier, player);
 		inventory = new InventoryBackpackEquipped(carrier, player, inventory);
 		if (!inventory.isUseableByPlayer(player)) return false;
 		
@@ -416,7 +416,7 @@ public class ItemBackpack extends ItemArmorBetterStorage implements ISpecialArmo
 		
 		if (backpack.stackSize == 0) return false;
 		
-		World world = carrier.worldObj;
+		Level world = carrier.worldObj;
 		Block blockBackpack = ((ItemBackpack)backpack.getItem()).getBlockType();
 		
 		// Return false if there's block is too low or too high.

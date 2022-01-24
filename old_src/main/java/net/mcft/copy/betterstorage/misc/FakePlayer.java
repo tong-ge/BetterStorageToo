@@ -4,15 +4,15 @@ import com.mojang.authlib.GameProfile;
 
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.BlockEntity;
+import net.minecraft.world.Level;
 
 public class FakePlayer extends EntityPlayer
 {
 	private static final GameProfile	profile	= new GameProfile( null, "[BETTERSTORAGE]" );
 	private static FakePlayer			player;
 
-	private FakePlayer( World world )
+	private FakePlayer( Level world )
 	{
 		super( world, profile );
 	}
@@ -33,7 +33,7 @@ public class FakePlayer extends EntityPlayer
 		return false;
 	}
 
-	public static FakePlayer get( World world )
+	public static FakePlayer get( Level world )
 	{
 		if( player == null )
 			player = new FakePlayer( world );
@@ -42,7 +42,7 @@ public class FakePlayer extends EntityPlayer
 		return player;
 	}
 
-	public static FakePlayer get( TileEntity entity )
+	public static FakePlayer get( BlockEntity entity )
 	{
 		return get( entity != null ? entity.getLevel() : WorldUtils.getLocalWorld() );
 	}

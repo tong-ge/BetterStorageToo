@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 public class PresentRecipe extends ShapedRecipes
 {
@@ -28,7 +28,7 @@ public class PresentRecipe extends ShapedRecipes
 	}
 
 	@Override
-	public boolean matches( InventoryCrafting crafting, World world )
+	public boolean matches( InventoryCrafting crafting, Level world )
 	{
 		final ItemStack box = crafting.getItem( 4 );
 		if( box == null || box.getItem() != Item.getItemFromBlock( BetterStorageBlocks.CARDBOARD_BOX ) || !StackUtils.has( box, "Items" ) )

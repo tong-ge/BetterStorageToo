@@ -8,41 +8,41 @@ import javax.annotation.Nullable;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCardboardBox;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 
-public class BlockCardboardBox extends BlockContainerBetterStorage implements IWaterLoggable
+public class BlockCardboardBox extends BlockContainerBetterStorage implements SimpleWaterloggedBlock
 {
 	public static final BooleanProperty	WATERLOGGED	= BlockStateProperties.WATERLOGGED;
 
@@ -52,11 +52,11 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	{
 		super( Properties.of( Material.WOOL ).strength( 0.8f ).sound( SoundType.WOOL ) );
 
-		registerDefaultState( defaultBlockState().getBlockState().setValue( WATERLOGGED, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().setValue( WATERLOGGED, Boolean.valueOf( false ) ) );
 	}
 
 	@Override
-	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateDefinition.Builder< Block, BlockState > builder )
 	{
 		super.createBlockStateDefinition( builder );
 		builder.add( WATERLOGGED );
@@ -64,18 +64,18 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	/*
 	 * ======================
-	 * TileEntity / Rendering
+	 * BlockEntity / Rendering
 	 * ======================
 	 */
 
 	@Override
-	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	public BlockEntity newBlockEntity( BlockPos blockPos, BlockState blockState )
 	{
-		return new TileEntityCardboardBox();
+		return new TileEntityCardboardBox( blockPos, blockState );
 	}
 
 	@Override
-	public VoxelShape getShape( BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context )
+	public VoxelShape getShape( BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context )
 	{
 		return SHAPE_BOX;
 	}
@@ -94,16 +94,16 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	 */
 
 	@Override
-	public BlockState getStateForPlacement( BlockItemUseContext context )
+	public BlockState getStateForPlacement( BlockPlaceContext context )
 	{
-		final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos());
+		final FluidState fluidState = context.getLevel().getFluidState( context.getClickedPos() );
 		return defaultBlockState().setValue( WATERLOGGED, Boolean.valueOf( fluidState.getType() == Fluids.WATER ) );
 	}
 
 	@Override
-	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack )
 	{
-		final TileEntity tileentity = worldIn.getBlockEntity( pos );
+		final BlockEntity tileentity = worldIn.getBlockEntity( pos );
 		if( tileentity instanceof TileEntityCardboardBox )
 		{
 			final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
@@ -111,7 +111,7 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 				cardboardBox.setCustomName( stack.getDisplayName() );
 			if( stack.hasTag() )
 			{
-				final CompoundNBT nbt = stack.getTag();
+				final CompoundTag nbt = stack.getTag();
 
 				if( nbt.contains( "Color" ) )
 					cardboardBox.setColor( nbt.getInt( "Color" ) );
@@ -120,7 +120,7 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 					cardboardBox.inventory.deserializeNBT( nbt.getCompound( "Inventory" ) );
 
 				int uses = nbt.contains( "Uses" ) ? nbt.getInt( "Uses" ) : ItemBlockCardboardBox.getMaxUses();
-				if( !( placer instanceof PlayerEntity ) || !( (PlayerEntity)placer ).isCreative() )
+				if( !( placer instanceof Player ) || !( (Player)placer ).isCreative() )
 					if( !cardboardBox.isEmpty() )
 						uses--;
 				cardboardBox.setUses( uses );
@@ -130,22 +130,22 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+	public BlockState updateShape( BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
 			BlockPos facingPos )
 	{
 		if( stateIn.getValue( WATERLOGGED ) )
-			worldIn.getLiquidTicks().scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickDelay( worldIn ) );
+			worldIn.scheduleTick( currentPos, Fluids.WATER, Fluids.WATER.getTickDelay( worldIn ) );
 
 		return super.updateShape( stateIn, facing, facingState, worldIn, currentPos, facingPos );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onRemove( BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( state.getBlock() != newState.getBlock() )
 		{
-			final TileEntity tileentity = worldIn.getBlockEntity( pos );
+			final BlockEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityCardboardBox )
 			{
 				final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
@@ -165,33 +165,33 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	 */
 
 	@Override
-	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public InteractionResult use( BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit )
 	{
 		if( worldIn.isClientSide )
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		else
 		{
-			final INamedContainerProvider box = getMenuProvider( state, worldIn, pos );
+			final MenuProvider box = getMenuProvider( state, worldIn, pos );
 			if( box != null )
-				NetworkHooks.openGui( (ServerPlayerEntity)player, box, pos );
-			return ActionResultType.SUCCESS;
+				NetworkHooks.openGui( (ServerPlayer)player, box, pos );
+			return InteractionResult.SUCCESS;
 		}
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void playerWillDestroy( World worldIn, BlockPos pos, BlockState state, PlayerEntity player )
+	public void playerWillDestroy( Level worldIn, BlockPos pos, BlockState state, Player player )
 	{
 		if( !worldIn.isClientSide() )
 		{
-			final TileEntity tileentity = worldIn.getBlockEntity( pos );
+			final BlockEntity tileentity = worldIn.getBlockEntity( pos );
 			if( tileentity instanceof TileEntityCardboardBox )
 			{
 				final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
 				if( player.isCreative() && !cardboardBox.isEmpty() && cardboardBox.uses > 0 )
 				{
 					final ItemStack itemstack = getCloneItemStack( worldIn, pos, state );
-					final CompoundNBT nbt = cardboardBox.save( new CompoundNBT() );
+					final CompoundTag nbt = cardboardBox.save( new CompoundTag() );
 					if( nbt.contains( "Inventory" ) )
 						itemstack.addTagElement( "Inventory", nbt.get( "Inventory" ) );
 					if( cardboardBox.hasCustomName() )
@@ -214,7 +214,7 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 	@Override
 	public List< ItemStack > getDrops( BlockState state, LootContext.Builder builder )
 	{
-		final TileEntity tileentity = builder.getOptionalParameter( LootParameters.BLOCK_ENTITY );
+		final BlockEntity tileentity = builder.getOptionalParameter( LootContextParams.BLOCK_ENTITY );
 		if( tileentity instanceof TileEntityCardboardBox )
 		{
 			final TileEntityCardboardBox cardboardBox = (TileEntityCardboardBox)tileentity;
@@ -227,9 +227,9 @@ public class BlockCardboardBox extends BlockContainerBetterStorage implements IW
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getMenuProvider( BlockState state, World worldIn, BlockPos pos )
+	public MenuProvider getMenuProvider( BlockState state, Level worldIn, BlockPos pos )
 	{
-		final TileEntity tileentity = worldIn.getBlockEntity( pos );
+		final BlockEntity tileentity = worldIn.getBlockEntity( pos );
 		if( tileentity instanceof TileEntityCardboardBox )
 			return (TileEntityCardboardBox)tileentity;
 		return null;

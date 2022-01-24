@@ -11,7 +11,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -83,7 +83,7 @@ public class ItemThaumcraftBackpack extends ItemBackpack implements IRepairable,
 		if (player.ticksExisted % 100 != 0) return;
 		
 		// Count items over normal backpack capacity.
-		IInventory inventory = ItemBackpack.getBackpackItems(player);
+		Inventory inventory = ItemBackpack.getBackpackItems(player);
 		int count = -(getRows() * 9);
 		for (int i = 0; i < inventory.getContainerSize(); i++)
 			if (inventory.getItem(i) != null) count++;
@@ -114,7 +114,7 @@ public class ItemThaumcraftBackpack extends ItemBackpack implements IRepairable,
 	
 	public void repairItems(ItemStack backpack, EntityPlayer player) {
 		
-		IInventory backpackInventory = ItemBackpack.getBackpackItems(player);
+		Inventory backpackInventory = ItemBackpack.getBackpackItems(player);
 		int repair = EnchantmentHelper.getEnchantmentLevel(ThaumcraftApi.enchantRepair, backpack);
 		int time = ((repair > 0) ? (15 - Math.min(repair, 2) * 5) : 30) * 20;
 		if ((player.ticksExisted % time) > 0) return;

@@ -78,7 +78,7 @@ public final class DungeonLoot
 	 * }
 	 * 
 	 * @Override
-	 * protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
+	 * protected ItemStack[] generateChestContent(Random random, Inventory newInventory) {
 	 * if (random.nextDouble() >= chance) return new ItemStack[0];
 	 * else return super.generateChestContent(random, newInventory);
 	 * }

@@ -1,14 +1,14 @@
 package io.github.tehstoneman.betterstorage.common.item.locking;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 
 public class ItemMasterKey extends ItemKey
 {
 	@Override
-	public void onCraftedBy( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	public void onCraftedBy( ItemStack stack, Level worldIn, Player playerIn )
 	{}
 
 	@Override

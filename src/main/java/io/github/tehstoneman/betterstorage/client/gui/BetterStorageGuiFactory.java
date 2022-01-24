@@ -2,12 +2,12 @@ package io.github.tehstoneman.betterstorage.client.gui;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@OnlyIn( Dist.CLIENT )
 public class BetterStorageGuiFactory // implements IModGuiFactory
 {
 	// @Override
@@ -38,7 +38,7 @@ public class BetterStorageGuiFactory // implements IModGuiFactory
 	{
 		protected BetterStorageGuiConfig( Screen parentScreen )
 		{
-			super( new TranslationTextComponent( ModInfo.MOD_ID ) );
+			super( new TranslatableComponent( ModInfo.MOD_ID ) );
 		}
 
 		/*

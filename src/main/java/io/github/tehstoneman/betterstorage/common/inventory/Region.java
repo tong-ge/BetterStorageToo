@@ -2,12 +2,12 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import com.google.common.base.MoreObjects;
 
-import net.minecraft.block.Block;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class Region
 {
@@ -27,7 +27,7 @@ public class Region
 		this( pos, pos );
 	}
 
-	public Region( TileEntity entity )
+	public Region( BlockEntity entity )
 	{
 		this( entity.getBlockPos() );
 	}
@@ -142,12 +142,12 @@ public class Region
 	}
 
 	/**
-	 * Expand the region to contain the given {@link TileEntity}
+	 * Expand the region to contain the given {@link BlockEntity}
 	 *
 	 * @param entity
-	 *            The {@link TileEntity} to contain
+	 *            The {@link BlockEntity} to contain
 	 */
-	public void expandToContain( TileEntity entity )
+	public void expandToContain( BlockEntity entity )
 	{
 		expandToContain( entity.getBlockPos() );
 	}
@@ -185,12 +185,12 @@ public class Region
 	 * Test if this region only contains the given {@link Block}
 	 *
 	 * @param world
-	 *            The {@link World} to test in
+	 *            The {@link Level} to test in
 	 * @param block
 	 *            The {@link Block} to test for
 	 * @return True if the region only contains the given {@link Block}
 	 */
-	public boolean isFull( World world, Block block )
+	public boolean isFull( Level world, Block block )
 	{
 		for( final BlockPos blockPos : BlockPos.betweenClosed( posMin, posMax ) )
 			if( !world.getBlockState( blockPos ).getBlock().equals( block ) )
@@ -199,15 +199,15 @@ public class Region
 	}
 
 	/**
-	 * Test if this region only contains the given {@link TileEntity}
+	 * Test if this region only contains the given {@link BlockEntity}
 	 *
 	 * @param world
-	 *            The {@link World} to test in
+	 *            The {@link Level} to test in
 	 * @param tileEntity
-	 *            The {@link TileEntity} to test for
-	 * @return True if the region only contains the given {@link TileEntity}
+	 *            The {@link BlockEntity} to test for
+	 * @return True if the region only contains the given {@link BlockEntity}
 	 */
-	public boolean isFull( World world, TileEntity tileEntity )
+	public boolean isFull( Level world, BlockEntity tileEntity )
 	{
 		for( final BlockPos blockPos : BlockPos.betweenClosed( posMin, posMax ) )
 			if( !world.getBlockEntity( blockPos ).equals( tileEntity ) )
@@ -249,41 +249,41 @@ public class Region
 	}
 
 	/**
-	 * Checks if the region contains the given {@link TileEntity}
+	 * Checks if the region contains the given {@link BlockEntity}
 	 *
 	 * @param entity
-	 *            The {@link TileEntity} to test for
-	 * @return True if the {@link TileEntity} is within the region
+	 *            The {@link BlockEntity} to test for
+	 * @return True if the {@link BlockEntity} is within the region
 	 */
-	public boolean contains( TileEntity entity )
+	public boolean contains( BlockEntity entity )
 	{
 		return contains( entity.getBlockPos() );
 	}
 
 	/**
-	 * Convert region to {@link CompoundNBT} data for serialization
+	 * Convert region to {@link CompoundTag} data for serialization
 	 *
 	 * @return The converted region
 	 */
-	public CompoundNBT toCompound()
+	public CompoundTag toCompound()
 	{
-		final CompoundNBT nbt = new CompoundNBT();
-		nbt.put( "posMin", NBTUtil.writeBlockPos( posMin ) );
-		nbt.put( "posMax", NBTUtil.writeBlockPos( posMax ) );
+		final CompoundTag nbt = new CompoundTag();
+		nbt.put( "posMin", NbtUtils.writeBlockPos( posMin ) );
+		nbt.put( "posMax", NbtUtils.writeBlockPos( posMax ) );
 		return nbt;
 	}
 
 	/**
-	 * Convert {@link CompoundNBT} data to region for deserialization
+	 * Convert {@link CompoundTag} data to region for deserialization
 	 *
 	 * @param nbt
-	 *            The {@link CompoundNBT} to read from
+	 *            The {@link CompoundTag} to read from
 	 * @return The converted region
 	 */
-	public static Region fromCompound( CompoundNBT nbt )
+	public static Region fromCompound( CompoundTag nbt )
 	{
-		final BlockPos posMin = NBTUtil.readBlockPos( nbt.getCompound( "posMin" ) );
-		final BlockPos posMax = NBTUtil.readBlockPos( nbt.getCompound( "posMax" ) );
+		final BlockPos posMin = NbtUtils.readBlockPos( nbt.getCompound( "posMin" ) );
+		final BlockPos posMax = NbtUtils.readBlockPos( nbt.getCompound( "posMax" ) );
 		return new Region( posMin, posMax );
 	}
 

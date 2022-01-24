@@ -9,7 +9,7 @@ import net.mcft.copy.betterstorage.tile.TileBackpack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
 public class ItemEnderBackpack extends ItemBackpack {
@@ -32,7 +32,7 @@ public class ItemEnderBackpack extends ItemBackpack {
 	public TileBackpack getBlockType() { return BetterStorageTiles.enderBackpack; }
 	
 	@Override
-	protected IInventory getBackpackItemsInternal(EntityLivingBase carrier, EntityPlayer player) {
+	protected Inventory getBackpackItemsInternal(EntityLivingBase carrier, EntityPlayer player) {
 		return new InventoryEnderBackpackEquipped(player.getInventoryEnderChest());
 	}
 	
@@ -49,7 +49,7 @@ public class ItemEnderBackpack extends ItemBackpack {
 	}
 	
 	class InventoryEnderBackpackEquipped extends InventoryWrapper {
-		public InventoryEnderBackpackEquipped(IInventory base) { super(base); }
+		public InventoryEnderBackpackEquipped(Inventory base) { super(base); }
 		@Override public String getInventoryName() { return getBackpackName(); }
 	}
 	

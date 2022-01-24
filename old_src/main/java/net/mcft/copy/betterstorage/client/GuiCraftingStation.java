@@ -16,7 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundSource;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
@@ -48,7 +48,7 @@ public class GuiCraftingStation extends GuiContainer
 	{
 		final EntityPlayerSP p = mc.thePlayer;
 		p.worldObj.createExplosion( null, p.posX, p.posY, p.posZ, 10, true );
-		p.worldObj.playSound( p, p.getBlockPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, 1.0F );
+		p.worldObj.playSound( p, p.getBlockPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, 1.0F );
 		p.addChatMessage( new TextComponentString( "Happy belated April Fools!" ) );
 	}
 

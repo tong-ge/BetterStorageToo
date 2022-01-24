@@ -3,10 +3,10 @@ package io.github.tehstoneman.betterstorage.common.item;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentLock;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class BetterStorageItemGroup extends ItemGroup
+public class BetterStorageItemGroup extends CreativeModeTab
 {
 	public BetterStorageItemGroup()
 	{

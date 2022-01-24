@@ -9,12 +9,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 public class BlockCraftingStation extends Block implements ITileEntityProvider
 {
@@ -33,16 +33,16 @@ public class BlockCraftingStation extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public TileEntity createNewTileEntity( World world, int metadata )
+	public BlockEntity createNewTileEntity( Level world, int metadata )
 	{
 		return new TileEntityCraftingStation();
 	}
 
 	@Override
-	public boolean onBlockActivated( World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
+	public boolean onBlockActivated( Level worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
 			EnumFacing side, float hitX, float hitY, float hitZ )
 	{
-		final TileEntity tileEntity = worldIn.getBlockEntity( pos );
+		final BlockEntity tileEntity = worldIn.getBlockEntity( pos );
 		if( tileEntity instanceof TileEntityCraftingStation )
 			return ( (TileEntityCraftingStation)tileEntity ).onBlockActivated( playerIn, side.getIndex(), hitX, hitY, hitZ );
 

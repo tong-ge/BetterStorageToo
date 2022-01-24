@@ -42,7 +42,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -181,7 +181,7 @@ public class BackpackHandler {
 		
 		// When a mob spawns naturally, see if it has a chance to spawn with a backpack.
 		EntityLivingBase entity = event.entityLiving;
-		World world = entity.worldObj;
+		Level world = entity.worldObj;
 		double probability = 0.0;
 		
 		for (BetterStorageBackpack.BackpackSpawnEntry entry : BetterStorageBackpack.spawnWithBackpack) {

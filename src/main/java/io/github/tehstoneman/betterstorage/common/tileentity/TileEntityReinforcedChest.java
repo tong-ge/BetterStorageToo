@@ -15,43 +15,41 @@ import io.github.tehstoneman.betterstorage.common.inventory.ReinforcedChestConta
 import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
 import io.github.tehstoneman.betterstorage.common.world.storage.HexKeyConfig;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.IChestLid;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.LidBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-@OnlyIn( value = Dist.CLIENT, _interface = IChestLid.class )
-public class TileEntityReinforcedChest extends TileEntityConnectable implements IChestLid, ITickableTileEntity, IKeyLockable, IHasConfig
+@OnlyIn( value = Dist.CLIENT, _interface = LidBlockEntity.class )
+public class TileEntityReinforcedChest extends TileEntityConnectable implements LidBlockEntity, IKeyLockable, IHasConfig// , TickableBlockEntity
 {
 	protected int								ticksSinceSync;
 	private ItemStack							lock			= ItemStack.EMPTY.copy();
 	public HexKeyConfig							config;
 	private final LazyOptional< IHexKeyConfig >	configHandler	= LazyOptional.of( () -> config );
 
-	public TileEntityReinforcedChest()
+	public TileEntityReinforcedChest( BlockPos blockPos, BlockState blockState )
 	{
-		super( BetterStorageTileEntityTypes.REINFORCED_CHEST.get() );
+		super( BetterStorageTileEntityTypes.REINFORCED_CHEST.get(), blockPos, blockState );
 		config = new HexKeyConfig()
 		{
 			@Override
@@ -79,9 +77,9 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	@Override
 	@OnlyIn( Dist.CLIENT )
-	public AxisAlignedBB getRenderBoundingBox()
+	public AABB getRenderBoundingBox()
 	{
-		return new AxisAlignedBB( worldPosition.offset( -1, 0, -1 ), worldPosition.offset( 2, 2, 2 ) );
+		return new AABB( worldPosition.offset( -1, 0, -1 ), worldPosition.offset( 2, 2, 2 ) );
 	}
 
 	@Override
@@ -122,7 +120,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 				{
 					final ItemStack stack = config.getStackInSlot( i );
 					if( !stack.isEmpty() )
-						InventoryHelper.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
+						Containers.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
 				}
 	}
 
@@ -133,7 +131,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	 */
 
 	@Override
-	public Container createMenu( int windowID, PlayerInventory playerInventory, PlayerEntity player )
+	public AbstractContainerMenu createMenu( int windowID, Inventory playerInventory, Player player )
 	{
 		if( isMain() )
 		{
@@ -151,48 +149,50 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	 * =========
 	 */
 
-	@Override
-	public void tick()
-	{
-		final int x = worldPosition.getX();
-		final int y = worldPosition.getY();
-		final int z = worldPosition.getZ();
-		++ticksSinceSync;
-		if( !level.isClientSide && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
-		{
-			numPlayersUsing = 0;
-			for( final PlayerEntity entityplayer : level.getEntitiesOfClass( PlayerEntity.class,
-					new AxisAlignedBB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
-				if( entityplayer.containerMenu instanceof ReinforcedChestContainer )
-					++numPlayersUsing;
-		}
-
-		prevLidAngle = lidAngle;
-		if( numPlayersUsing > 0 && lidAngle == 0.0F )
-			playSound( SoundEvents.CHEST_OPEN );
-
-		if( numPlayersUsing == 0 && lidAngle > 0.0F || numPlayersUsing > 0 && lidAngle < 1.0F )
-		{
-			final float f2 = lidAngle;
-			if( numPlayersUsing > 0 )
-				lidAngle += 0.1F;
-			else
-				lidAngle -= 0.1F;
-
-			if( lidAngle > 1.0F )
-				lidAngle = 1.0F;
-
-			if( lidAngle < 0.5F && f2 >= 0.5F )
-				playSound( SoundEvents.CHEST_CLOSE );
-
-			if( lidAngle < 0.0F )
-				lidAngle = 0.0F;
-		}
-	}
+	/*
+	 * @Override
+	 * public void tick()
+	 * {
+	 * final int x = worldPosition.getX();
+	 * final int y = worldPosition.getY();
+	 * final int z = worldPosition.getZ();
+	 * ++ticksSinceSync;
+	 * if( !level.isClientSide && numPlayersUsing != 0 && ( ticksSinceSync + x + y + z ) % 200 == 0 )
+	 * {
+	 * numPlayersUsing = 0;
+	 * for( final Player entityplayer : level.getEntitiesOfClass( Player.class,
+	 * new AABB( x - 5.0F, y - 5.0F, z - 5.0F, x + 1 + 5.0F, y + 1 + 5.0F, z + 1 + 5.0F ) ) )
+	 * if( entityplayer.containerMenu instanceof ReinforcedChestContainer )
+	 * ++numPlayersUsing;
+	 * }
+	 *
+	 * prevLidAngle = lidAngle;
+	 * if( numPlayersUsing > 0 && lidAngle == 0.0F )
+	 * playSound( SoundEvents.CHEST_OPEN );
+	 *
+	 * if( numPlayersUsing == 0 && lidAngle > 0.0F || numPlayersUsing > 0 && lidAngle < 1.0F )
+	 * {
+	 * final float f2 = lidAngle;
+	 * if( numPlayersUsing > 0 )
+	 * lidAngle += 0.1F;
+	 * else
+	 * lidAngle -= 0.1F;
+	 *
+	 * if( lidAngle > 1.0F )
+	 * lidAngle = 1.0F;
+	 *
+	 * if( lidAngle < 0.5F && f2 >= 0.5F )
+	 * playSound( SoundEvents.CHEST_CLOSE );
+	 *
+	 * if( lidAngle < 0.0F )
+	 * lidAngle = 0.0F;
+	 * }
+	 * }
+	 */
 
 	/*
 	 * =========
-	 * IChestLid
+	 * LidBlockEntity
 	 * =========
 	 */
 
@@ -209,7 +209,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 			z += enumfacing.getStepZ() * 0.5D;
 		}
 
-		level.playSound( (PlayerEntity)null, x, y, z, soundIn, SoundCategory.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F );
+		level.playSound( (Player)null, x, y, z, soundIn, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F );
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public boolean canUse( PlayerEntity player )
+	public boolean canUse( Player player )
 	{
 		return !isLocked() || getMainTileEntity().getPlayersUsing() > 0;
 	}
@@ -337,14 +337,14 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 
 	/*
 	 * ==========================
-	 * TileEntity synchronization
+	 * BlockEntity synchronization
 	 * ==========================
 	 */
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		if( !config.isEmpty() )
 			nbt.put( "Config", config.serializeNBT() );
@@ -355,16 +355,42 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public void onDataPacket( NetworkManager network, SUpdateTileEntityPacket packet )
+	public void onDataPacket( Connection network, ClientboundBlockEntityDataPacket packet )
 	{
-		final CompoundNBT nbt = packet.getTag();
+		final CompoundTag nbt = packet.getTag();
 		if( nbt.contains( "Config" ) )
 			config.deserializeNBT( nbt.getCompound( "Config" ) );
 		else
 			config = new HexKeyConfig();
 		if( nbt.contains( "lock" ) )
 		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
+			lock = ItemStack.of( lockNBT );
+		}
+		else
+			lock = ItemStack.EMPTY;
+	}
+
+	/*
+	 * @Override
+	 * public ClientboundBlockEntityDataPacket getUpdatePacket()
+	 * {
+	 * return new ClientboundBlockEntityDataPacket( worldPosition, 1, getUpdateTag() );
+	 * }
+	 */
+
+	@Override
+	public void handleUpdateTag( CompoundTag nbt )
+	{
+		super.handleUpdateTag( nbt );
+
+		if( nbt.contains( "Config" ) )
+			config.deserializeNBT( nbt.getCompound( "Config" ) );
+		else
+			config = new HexKeyConfig();
+		if( nbt.contains( "lock" ) )
+		{
+			final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
 			lock = ItemStack.of( lockNBT );
 		}
 		else
@@ -372,37 +398,13 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket()
-	{
-		return new SUpdateTileEntityPacket( worldPosition, 1, getUpdateTag() );
-	}
-
-	@Override
-	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
-	{
-		super.handleUpdateTag( state, nbt );
-
-		if( nbt.contains( "Config" ) )
-			config.deserializeNBT( nbt.getCompound( "Config" ) );
-		else
-			config = new HexKeyConfig();
-		if( nbt.contains( "lock" ) )
-		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
-			lock = ItemStack.of( lockNBT );
-		}
-		else
-			lock = ItemStack.EMPTY;
-	}
-
-	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		if( !config.isEmpty() )
 			nbt.put( "Config", config.serializeNBT() );
 		if( !lock.isEmpty() )
 		{
-			final CompoundNBT lockNBT = new CompoundNBT();
+			final CompoundTag lockNBT = new CompoundTag();
 			lock.save( lockNBT );
 			nbt.put( "lock", lockNBT );
 		}
@@ -411,18 +413,18 @@ public class TileEntityReinforcedChest extends TileEntityConnectable implements 
 	}
 
 	@Override
-	public void load( BlockState state, CompoundNBT nbt )
+	public void load( CompoundTag nbt )
 	{
 		if( nbt.contains( "Config" ) )
 			config.deserializeNBT( nbt.getCompound( "Config" ) );
 		if( nbt.contains( "lock" ) )
 		{
-			final CompoundNBT lockNBT = (CompoundNBT)nbt.get( "lock" );
+			final CompoundTag lockNBT = (CompoundTag)nbt.get( "lock" );
 			lock = ItemStack.of( lockNBT );
 		}
 		else
 			lock = ItemStack.EMPTY;
 
-		super.load( state, nbt );
+		super.load( nbt );
 	}
 }

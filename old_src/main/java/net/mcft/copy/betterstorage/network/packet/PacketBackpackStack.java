@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 /** Updates players about the stack used for "hidden" equipped backpacks.
  *  "Hidden" meaning it's not taking up the chestplate slot. */
@@ -24,13 +24,13 @@ public class PacketBackpackStack extends AbstractPacket<PacketBackpackStack> {
 	}
 	
 	@Override
-	public void encode(PacketBuffer buffer) throws IOException {
+	public void encode(FriendlyByteBuf buffer) throws IOException {
 		buffer.writeInt(entityID);
 		buffer.writeItemStackToBuffer(stack);
 	}
 	
 	@Override
-	public void decode(PacketBuffer buffer) throws IOException {
+	public void decode(FriendlyByteBuf buffer) throws IOException {
 		entityID = buffer.readInt();
 		stack = buffer.readItemStackFromBuffer();
 	}

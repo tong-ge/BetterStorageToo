@@ -5,18 +5,18 @@ import java.util.UUID;
 import io.github.tehstoneman.betterstorage.common.capabilities.CapabilityCrate;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.world.storage.CrateStorage;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Interface that describes the storage of crate piles.
- * 
+ *
  * @author TehStoneMan
  *
  */
-public interface ICrateStorage extends INBTSerializable< CompoundNBT >
+public interface ICrateStorage extends INBTSerializable< CompoundTag >
 {
 	/**
 	 * Get the stack handler for the associated ID.
@@ -61,13 +61,13 @@ public interface ICrateStorage extends INBTSerializable< CompoundNBT >
 	public void removeCratePile( UUID pileID );
 
 	/**
-	 * Retrieve the crate storage for the given {@link World}.
+	 * Retrieve the crate storage for the given {@link Level}.
 	 *
 	 * @param world
-	 *            The {@link World} to get the storage for.
-	 * @return the {@link ICrateStorage} for the given {@link World}.
+	 *            The {@link Level} to get the storage for.
+	 * @return the {@link ICrateStorage} for the given {@link Level}.
 	 */
-	public static ICrateStorage getCrateStorage( World world )
+	public static ICrateStorage getCrateStorage( Level world )
 	{
 		final LazyOptional< ICrateStorage > capability = world.getCapability( CapabilityCrate.CRATE_PILE_CAPABILITY );
 		final ICrateStorage crateStorage = capability.orElse( new CrateStorage() );

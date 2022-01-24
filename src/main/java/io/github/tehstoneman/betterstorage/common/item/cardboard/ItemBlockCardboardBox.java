@@ -8,15 +8,15 @@ import io.github.tehstoneman.betterstorage.api.cardboard.ICardboardItem;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.item.BlockItemBetterStorage;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICardboardItem
@@ -29,13 +29,13 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 	// Item stuff
 
 	@Override
-	public boolean showDurabilityBar( ItemStack stack )
+	public boolean isBarVisible( ItemStack stack )
 	{
 		final int maxUses = getMaxUses();
 		if( maxUses > 1 && stack.hasTag() )
 		{
 			int uses = maxUses;
-			final CompoundNBT nbt = stack.getTag();
+			final CompoundTag nbt = stack.getTag();
 			if( nbt.contains( "Uses" ) )
 				uses = Math.min( maxUses, nbt.getInt( "Uses" ) );
 			return uses < maxUses;
@@ -43,14 +43,14 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 		return false;
 	}
 
-	@Override
+	//@Override
 	public double getDurabilityForDisplay( ItemStack stack )
 	{
 		final int maxUses = getMaxUses();
 		int uses = maxUses;
 		if( stack.hasTag() )
 		{
-			final CompoundNBT nbt = stack.getTag();
+			final CompoundTag nbt = stack.getTag();
 			if( nbt.contains( "Uses" ) )
 				uses = Math.min( maxUses, nbt.getInt( "Uses" ) );
 		}
@@ -58,7 +58,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 	}
 
 	@Override
-	public void appendHoverText( ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn )
+	public void appendHoverText( ItemStack stack, @Nullable Level worldIn, List< Component > tooltip, TooltipFlag flagIn )
 	{
 		super.appendHoverText( stack, worldIn, tooltip, flagIn );
 		if( stack.hasTag() )
@@ -69,21 +69,21 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 				final boolean hasItems = stack.hasTag() && stack.getTag().contains( "Inventory" );
 
 				if( !hasItems )
-					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.use_hint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
+					tooltip.add( new TranslatableComponent( "tooltip.betterstorage.cardboard_box.use_hint" + ( maxUses > 0 ? ".reusable" : 0 ) ) );
 
 				if( maxUses > 1 )
 				{
 					int uses = maxUses;
 					if( stack.getTag().contains( "Uses" ) )
 						uses = Math.min( maxUses, stack.getTag().getInt( "Uses" ) );
-					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.uses", uses ) );// TextFormatting.DARK_GRAY.toString() +
-																													// TextFormatting.ITALIC +
+					tooltip.add( new TranslatableComponent( "tooltip.betterstorage.cardboard_box.uses", uses ) );// ChatFormatting.DARK_GRAY.toString() +
+																													// ChatFormatting.ITALIC +
 				}
 			}
 			if( BetterStorageConfig.CLIENT.cardboardBoxShowContents.get() && stack.hasTag() && stack.getTag().contains( "Inventory" ) )
 			{
 				final ItemStackHandler contents = new ItemStackHandler( 9 );
-				contents.deserializeNBT( (CompoundNBT)stack.getTag().get( "Inventory" ) );
+				contents.deserializeNBT( (CompoundTag)stack.getTag().get( "Inventory" ) );
 
 				final int limit = 4;// flagIn.isAdvanced() || GuiScreen.isShiftKeyDown() ? 6 : 3;
 				int count = 0;
@@ -96,7 +96,7 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 						if( count < limit )
 						{
 							count++;
-							final IFormattableTextComponent text = contentStack.getDisplayName().copy();
+							final MutableComponent text = contentStack.getDisplayName().copy();
 							text.append( " x" ).append( String.valueOf( contentStack.getCount() ) );
 							tooltip.add( text );
 						}
@@ -104,8 +104,8 @@ public class ItemBlockCardboardBox extends BlockItemBetterStorage implements ICa
 							more++;
 				}
 				if( more > 0 )
-					tooltip.add( new TranslationTextComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
-							.withStyle( TextFormatting.ITALIC ) );
+					tooltip.add( new TranslatableComponent( "tooltip.betterstorage.cardboard_box.plus_more", more )
+							.withStyle( ChatFormatting.ITALIC ) );
 			}
 		}
 	}

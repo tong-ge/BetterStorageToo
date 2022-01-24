@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.mcft.copy.betterstorage.network.AbstractPacket;
 import net.mcft.copy.betterstorage.utils.RandomUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 /** Spawns the particles caused from ender backpacks being teleported. */
 public class PacketBackpackTeleport extends AbstractPacket<PacketBackpackTeleport> {
@@ -25,7 +25,7 @@ public class PacketBackpackTeleport extends AbstractPacket<PacketBackpackTelepor
 	}
 	
 	@Override
-	public void encode(PacketBuffer buffer) throws IOException {
+	public void encode(FriendlyByteBuf buffer) throws IOException {
 		buffer.writeDouble(sourceX);
 		buffer.writeDouble(sourceY);
 		buffer.writeDouble(sourceZ);
@@ -35,7 +35,7 @@ public class PacketBackpackTeleport extends AbstractPacket<PacketBackpackTelepor
 	}
 	
 	@Override
-	public void decode(PacketBuffer buffer) throws IOException {
+	public void decode(FriendlyByteBuf buffer) throws IOException {
 		sourceX = buffer.readDouble();
 		sourceY = buffer.readDouble();
 		sourceZ = buffer.readDouble();

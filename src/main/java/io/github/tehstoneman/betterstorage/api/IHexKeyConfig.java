@@ -2,8 +2,8 @@ package io.github.tehstoneman.betterstorage.api;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 
@@ -12,7 +12,7 @@ import net.minecraftforge.items.IItemHandler;
  *
  * @author TehStoneMan
  */
-public interface IHexKeyConfig extends IItemHandler, INBTSerializable<CompoundNBT>
+public interface IHexKeyConfig extends IItemHandler, INBTSerializable< CompoundTag >
 {
 	/**
 	 * Check if this config object is empty

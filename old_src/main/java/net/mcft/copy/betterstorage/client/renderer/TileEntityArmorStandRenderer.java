@@ -10,7 +10,7 @@ import io.github.tehstoneman.betterstorage.client.model.ModelArmorStand;
 import io.github.tehstoneman.betterstorage.misc.Resources;
 import io.github.tehstoneman.betterstorage.tile.stand.TileEntityArmorStand;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,7 +70,7 @@ public class TileEntityArmorStandRenderer extends TileEntitySpecialRenderer
 	}
 
 	@Override
-	public void renderTileEntityAt( TileEntity entity, double x, double y, double z, float par8, int damageStage )
+	public void renderTileEntityAt( BlockEntity entity, double x, double y, double z, float par8, int damageStage )
 	{
 		renderTileEntityAt( (TileEntityArmorStand)entity, x, y, z, par8 );
 	}

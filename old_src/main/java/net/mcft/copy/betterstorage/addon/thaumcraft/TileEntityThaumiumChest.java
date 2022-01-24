@@ -29,7 +29,7 @@ public class TileEntityThaumiumChest extends TileEntityReinforcedChest {
 		if (++ticksExisted % 200 != 0) return;
 		
 		// Count items over normal backpack capacity.
-		IInventory inventory = getPlayerInventory();
+		Inventory inventory = getPlayerInventory();
 		int count = -(getRows() * Config.reinforcedChestColumns);
 		for (int i = 0; i < inventory.getContainerSize(); i++)
 			if (inventory.getItem(i) != null) count++;
@@ -84,7 +84,7 @@ public class TileEntityThaumiumChest extends TileEntityReinforcedChest {
 	
 	private void rearrangeItems() {
 		
-		IInventory inventory = getPlayerInventory();
+		Inventory inventory = getPlayerInventory();
 		
 		// Collect indices of all slots with items inside.
 		List<Integer> indices = new ArrayList<Integer>();

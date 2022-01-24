@@ -7,7 +7,7 @@ import io.github.tehstoneman.betterstorage.api.BetterStorageUtils;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 
 /** A mixture of ShapedRecipe and ShapelessRecipe. */
 public abstract class ComboRecipe implements IRecipe
@@ -37,7 +37,7 @@ public abstract class ComboRecipe implements IRecipe
 	}
 
 	@Override
-	public boolean matches( InventoryCrafting crafting, World world )
+	public boolean matches( InventoryCrafting crafting, Level world )
 	{
 		for( int x = 0; x <= 3 - width; ++x )
 			for( int y = 0; y <= 3 - height; ++y )

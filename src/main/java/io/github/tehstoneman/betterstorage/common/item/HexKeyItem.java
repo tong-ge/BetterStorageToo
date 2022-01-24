@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.item;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class HexKeyItem extends ItemBetterStorage
 {

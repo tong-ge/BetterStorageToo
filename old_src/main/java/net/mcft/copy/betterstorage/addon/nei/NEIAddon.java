@@ -10,7 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import codechicken.nei.api.API;
 import codechicken.nei.recipe.DefaultOverlayHandler;
@@ -72,6 +72,6 @@ public class NEIAddon extends Addon {
 		public FakeShapedRecipe(ItemStack result, Object... recipe) { super(result, recipe); }
 		
 		@Override
-		public boolean matches(InventoryCrafting crafting, World world) { return false; }
+		public boolean matches(InventoryCrafting crafting, Level world) { return false; }
 	}
 }

@@ -10,17 +10,17 @@ import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
 import io.github.tehstoneman.betterstorage.api.lock.LockInteraction;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentBetterStorage;
 import io.github.tehstoneman.betterstorage.common.enchantment.EnchantmentKey;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class ItemKey extends KeyLockItem implements IKey
 {
@@ -30,7 +30,7 @@ public class ItemKey extends KeyLockItem implements IKey
 	}
 
 	@Override
-	public void onCraftedBy( ItemStack stack, World worldIn, PlayerEntity playerIn )
+	public void onCraftedBy( ItemStack stack, Level worldIn, Player playerIn )
 	{
 		if( !worldIn.isClientSide )
 			ensureHasID( stack );
@@ -55,25 +55,27 @@ public class ItemKey extends KeyLockItem implements IKey
 	}
 
 	@Override
-	public ActionResultType useOn( ItemUseContext context )
+	public InteractionResult useOn( UseOnContext context )
 	{
-		final World worldIn = context.getLevel();
-		final Hand hand = context.getHand();
-		if( !worldIn.isClientSide && hand == Hand.MAIN_HAND )
+		final Level worldIn = context.getLevel();
+		final InteractionHand hand = context.getHand();
+		if( !worldIn.isClientSide && hand == InteractionHand.MAIN_HAND )
 		{
-			final PlayerEntity playerIn = context.getPlayer();
+			final Player playerIn = context.getPlayer();
 			final ItemStack stack = playerIn.getItemInHand( hand );
-			BlockPos pos = context.getClickedPos();
-			TileEntity tileEntity = worldIn.getBlockEntity( pos );
-			/*if( tileEntity == null )
-			{
-				final BlockState state = worldIn.getBlockState( pos );
-				if( state.getProperties().contains( DoorBlock.HALF ) && state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
-				{
-					pos = pos.down();
-					tileEntity = worldIn.getBlockEntity( pos );
-				}
-			}*/
+			final BlockPos pos = context.getClickedPos();
+			final BlockEntity tileEntity = worldIn.getBlockEntity( pos );
+			/*
+			 * if( tileEntity == null )
+			 * {
+			 * final BlockState state = worldIn.getBlockState( pos );
+			 * if( state.getProperties().contains( DoorBlock.HALF ) && state.get( DoorBlock.HALF ) == DoubleBlockHalf.UPPER )
+			 * {
+			 * pos = pos.down();
+			 * tileEntity = worldIn.getBlockEntity( pos );
+			 * }
+			 * }
+			 */
 
 			if( tileEntity instanceof IKeyLockable )
 			{
@@ -85,7 +87,7 @@ public class ItemKey extends KeyLockItem implements IKey
 						worldIn.addFreshEntity( new ItemEntity( worldIn, pos.getX(), pos.getY(), pos.getZ(), lockable.getLock().copy() ) );
 						lockable.setLock( ItemStack.EMPTY );
 					}
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 				else
 					( (ILock)lockable.getLock().getItem() ).applyEffects( lockable.getLock(), lockable, playerIn, LockInteraction.PICK );

@@ -10,10 +10,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModelLoader;
@@ -21,66 +17,69 @@ import net.minecraftforge.client.model.obj.LineReader;
 import net.minecraftforge.client.model.obj.MaterialLibrary;
 
 @OnlyIn( Dist.CLIENT )
-public class XOBJLoader implements IModelLoader< XOBJModel >
+public class XOBJLoader// implements IModelLoader< XOBJModel >
 {
-	public static XOBJLoader								INSTANCE		= new XOBJLoader();
-
-	private final Map< XOBJModel.ModelSettings, XOBJModel >	modelCache		= Maps.newHashMap();
-	private final Map< ResourceLocation, MaterialLibrary >	materialCache	= Maps.newHashMap();
-
-	private IResourceManager								manager			= Minecraft.getInstance().getResourceManager();
-
-	@Override
-	public void onResourceManagerReload( IResourceManager resourceManager )
-	{
-		modelCache.clear();
-		materialCache.clear();
-		manager = resourceManager;
-	}
-
-	@Override
-	public XOBJModel read( JsonDeserializationContext deserializationContext, JsonObject modelContents )
-	{
-		if( !modelContents.has( "model" ) )
-			throw new RuntimeException( "XOBJ Loader requires a 'model' key that points to a valid .OBJ model." );
-
-		final String modelLocation = modelContents.get( "model" ).getAsString();
-
-		final boolean detectCullableFaces = JSONUtils.getAsBoolean( modelContents, "detectCullableFaces", true );
-		final boolean diffuseLighting = JSONUtils.getAsBoolean( modelContents, "diffuseLighting", false );
-		final boolean flipV = JSONUtils.getAsBoolean( modelContents, "flip-v", false );
-		final boolean ambientToFullbright = JSONUtils.getAsBoolean( modelContents, "ambientToFullbright", true );
-		@Nullable
-		final String materialLibraryOverrideLocation = modelContents.has( "materialLibraryOverride" )
-				? JSONUtils.getAsString( modelContents, "materialLibraryOverride" )
-				: null;
-
-		return loadModel( new XOBJModel.ModelSettings( new ResourceLocation( modelLocation ), detectCullableFaces, diffuseLighting, flipV,
-				ambientToFullbright, materialLibraryOverrideLocation ) );
-	}
-
-	public XOBJModel loadModel( XOBJModel.ModelSettings settings )
-	{
-		return modelCache.computeIfAbsent( settings, ( data ) ->
-		{
-			IResource resource;
-			try
-			{
-				resource = manager.getResource( settings.modelLocation );
-			}
-			catch( final IOException e )
-			{
-				throw new RuntimeException( "Could not find OBJ model", e );
-			}
-
-			try( LineReader reader = new LineReader( resource ) )
-			{
-				return new XOBJModel( reader, settings );
-			}
-			catch( final Exception e )
-			{
-				throw new RuntimeException( "Could not read OBJ model", e );
-			}
-		} );
-	}
+	/*
+	 * public static XOBJLoader INSTANCE = new XOBJLoader();
+	 * 
+	 * private final Map< XOBJModel.ModelSettings, XOBJModel > modelCache = Maps.newHashMap();
+	 * private final Map< ResourceLocation, MaterialLibrary > materialCache = Maps.newHashMap();
+	 * 
+	 * private IResourceManager manager = Minecraft.getInstance().getResourceManager();
+	 * 
+	 * @Override
+	 * public void onResourceManagerReload( IResourceManager resourceManager )
+	 * {
+	 * modelCache.clear();
+	 * materialCache.clear();
+	 * manager = resourceManager;
+	 * }
+	 * 
+	 * @Override
+	 * public XOBJModel read( JsonDeserializationContext deserializationContext, JsonObject modelContents )
+	 * {
+	 * if( !modelContents.has( "model" ) )
+	 * throw new RuntimeException( "XOBJ Loader requires a 'model' key that points to a valid .OBJ model." );
+	 * 
+	 * final String modelLocation = modelContents.get( "model" ).getAsString();
+	 * 
+	 * final boolean detectCullableFaces = GsonHelper.getAsBoolean( modelContents, "detectCullableFaces", true );
+	 * final boolean diffuseLighting = GsonHelper.getAsBoolean( modelContents, "diffuseLighting", false );
+	 * final boolean flipV = GsonHelper.getAsBoolean( modelContents, "flip-v", false );
+	 * final boolean ambientToFullbright = GsonHelper.getAsBoolean( modelContents, "ambientToFullbright", true );
+	 * 
+	 * @Nullable
+	 * final String materialLibraryOverrideLocation = modelContents.has( "materialLibraryOverride" )
+	 * ? GsonHelper.getAsString( modelContents, "materialLibraryOverride" )
+	 * : null;
+	 * 
+	 * return loadModel( new XOBJModel.ModelSettings( new ResourceLocation( modelLocation ), detectCullableFaces, diffuseLighting, flipV,
+	 * ambientToFullbright, materialLibraryOverrideLocation ) );
+	 * }
+	 * 
+	 * public XOBJModel loadModel( XOBJModel.ModelSettings settings )
+	 * {
+	 * return modelCache.computeIfAbsent( settings, ( data ) ->
+	 * {
+	 * IResource resource;
+	 * try
+	 * {
+	 * resource = manager.getResource( settings.modelLocation );
+	 * }
+	 * catch( final IOException e )
+	 * {
+	 * throw new RuntimeException( "Could not find OBJ model", e );
+	 * }
+	 * 
+	 * try( LineReader reader = new LineReader( resource ) )
+	 * {
+	 * return new XOBJModel( reader, settings );
+	 * }
+	 * catch( final Exception e )
+	 * {
+	 * throw new RuntimeException( "Could not read OBJ model", e );
+	 * }
+	 * } );
+	 * }
+	 */
 }

@@ -1,12 +1,13 @@
 package io.github.tehstoneman.betterstorage.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BlockContainerBetterStorage extends Block
+public abstract class BlockContainerBetterStorage extends Block implements EntityBlock
 {
 	protected BlockContainerBetterStorage( Properties properties )
 	{
@@ -15,15 +16,17 @@ public abstract class BlockContainerBetterStorage extends Block
 
 	/*
 	 * ======================
-	 * TileEntity / Rendering
+	 * BlockEntity / Rendering
 	 * ======================
 	 */
 
-	@Override
-	public boolean hasTileEntity( BlockState state )
-	{
-		return true;
-	}
+	/*
+	 * @Override
+	 * public boolean hasBlockEntity( BlockState state )
+	 * {
+	 * return true;
+	 * }
+	 */
 
 	/*
 	 * ===========
@@ -32,9 +35,9 @@ public abstract class BlockContainerBetterStorage extends Block
 	 */
 
 	@Override
-	public boolean triggerEvent( BlockState state, World worldIn, BlockPos pos, int id, int param )
+	public boolean triggerEvent( BlockState state, Level worldIn, BlockPos pos, int id, int param )
 	{
-		final TileEntity te = worldIn.getBlockEntity( pos );
+		final BlockEntity te = worldIn.getBlockEntity( pos );
 		return te != null ? te.triggerEvent( id, param ) : false;
 	}
 }

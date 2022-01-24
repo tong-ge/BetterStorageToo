@@ -8,14 +8,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.BlockHitResult;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.Level;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -89,16 +89,16 @@ public class TileArmorStand extends TileContainerBetterStorage
 	 */
 
 	@Override
-	public void onBlockPlacedBy( World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack )
+	public void onBlockPlacedBy( Level world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack )
 	{
 		super.onBlockPlacedBy( world, pos, state, player, stack );
 		// Set block above to armor stand with metadata 1.
-		// world.setBlockState( pos.up(), state );
+		// world.setBlock( pos.up(), state );
 		// world.setBlock(x, y + 1, z, this, 1, SetBlockFlag.DEFAULT);
 	}
 
 	@Override
-	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem,
+	public boolean onBlockActivated( Level world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem,
 			EnumFacing side, float hitX, float hitY, float hitZ )
 	{
 		if( world.isRemote )
@@ -108,20 +108,20 @@ public class TileArmorStand extends TileContainerBetterStorage
 	}
 
 	@Override
-	public ItemStack getPickBlock( IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player )
+	public ItemStack getPickBlock( IBlockState state, BlockHitResult target, Level world, BlockPos pos, EntityPlayer player )
 	{
 		// if (world.getBlockMetadata(x, y, z) > 0) { y -= 1; }
 		return super.getPickBlock( state, target, world, pos, player );
 	}
 
 	@Override
-	public boolean removedByPlayer( IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean hillHarvest )
+	public boolean removedByPlayer( IBlockState state, Level world, BlockPos pos, EntityPlayer player, boolean hillHarvest )
 	{
 		return world.setBlockToAir( pos );
 	}
 
 	@Override
-	public void breakBlock( World world, BlockPos pos, IBlockState state )
+	public void breakBlock( Level world, BlockPos pos, IBlockState state )
 	{
 		// if (meta > 0) return;
 		super.breakBlock( world, pos, state );
@@ -143,7 +143,7 @@ public class TileArmorStand extends TileContainerBetterStorage
 	}
 
 	@Override
-	public TileEntity createNewTileEntity( World world, int metadata )
+	public BlockEntity createNewTileEntity( Level world, int metadata )
 	{
 		return metadata == 0 ? new TileEntityArmorStand() : null;
 	}

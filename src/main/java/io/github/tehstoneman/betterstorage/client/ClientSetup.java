@@ -1,45 +1,9 @@
 package io.github.tehstoneman.betterstorage.client;
 
-import io.github.tehstoneman.betterstorage.ModInfo;
-import io.github.tehstoneman.betterstorage.client.gui.ConfigContainerGui;
-import io.github.tehstoneman.betterstorage.client.gui.GuiCardboardBox;
-import io.github.tehstoneman.betterstorage.client.gui.GuiCrate;
-import io.github.tehstoneman.betterstorage.client.gui.GuiKeyring;
-import io.github.tehstoneman.betterstorage.client.gui.GuiLocker;
-import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedChest;
-import io.github.tehstoneman.betterstorage.client.gui.GuiReinforcedLocker;
-import io.github.tehstoneman.betterstorage.client.model.xobj.XOBJLoader;
-import io.github.tehstoneman.betterstorage.client.renderer.Resources;
-import io.github.tehstoneman.betterstorage.client.renderer.TileEntityLockableDoorRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityLockerRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityReinforcedChestRenderer;
-import io.github.tehstoneman.betterstorage.client.renderer.tileentity.TileEntityTankRenderer;
-import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.inventory.BetterStorageContainerTypes;
-import io.github.tehstoneman.betterstorage.common.item.BetterStorageItems;
-import io.github.tehstoneman.betterstorage.common.item.cardboard.CardboardColor;
-import io.github.tehstoneman.betterstorage.common.item.locking.KeyColor;
-import io.github.tehstoneman.betterstorage.common.tileentity.BetterStorageTileEntityTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-@Mod.EventBusSubscriber( modid = ModInfo.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD )
+//@Mod.EventBusSubscriber( modid = ModInfo.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD )
 public class ClientSetup
 {
-	@SubscribeEvent
+/*	@SubscribeEvent
 	public static void init( final FMLClientSetupEvent event )
 	{
 		// Register GUIs
@@ -66,13 +30,13 @@ public class ClientSetup
 				BetterStorageItems.CARDBOARD_SHOVEL.get(), BetterStorageItems.CARDBOARD_SWORD.get(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 		Minecraft.getInstance().getBlockColors().register( new CardboardColor(), BetterStorageBlocks.CARDBOARD_BOX.get() );
 
-		RenderTypeLookup.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.cutout() );
+		ItemBlockRenderTypes.setRenderLayer( BetterStorageBlocks.GLASS_TANK.get(), RenderType.cutout() );
 	}
 
 	@SubscribeEvent
 	public static void onTextureStitch( TextureStitchEvent.Pre event )
 	{
-		if( !event.getMap().location().equals( PlayerContainer.BLOCK_ATLAS ) )
+		if( !event.getMap().location().equals( InventoryMenu.BLOCK_ATLAS ) )
 			return;
 
 		event.addSprite( Resources.TEXTURE_CHEST_REINFORCED );
@@ -110,5 +74,5 @@ public class ClientSetup
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_R );
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_L );
 		ModelLoader.addSpecialModel( Resources.MODEL_REINFORCED_LOCKER_DOOR_LARGE_FRAME_R );
-	}
+	}*/
 }

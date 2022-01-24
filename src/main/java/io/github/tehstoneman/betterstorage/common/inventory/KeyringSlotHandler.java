@@ -3,7 +3,7 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 import javax.annotation.Nonnull;
 
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 

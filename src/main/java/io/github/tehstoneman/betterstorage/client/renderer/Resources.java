@@ -1,7 +1,7 @@
 package io.github.tehstoneman.betterstorage.client.renderer;
 
 import io.github.tehstoneman.betterstorage.util.BetterStorageResource;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

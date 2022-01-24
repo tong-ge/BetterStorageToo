@@ -3,25 +3,25 @@ package io.github.tehstoneman.betterstorage.client.gui;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.client.renderer.Resources;
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerCrate;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn( Dist.CLIENT )
-public class GuiCrate extends ContainerScreen< ContainerCrate >
+public class GuiCrate extends AbstractContainerScreen< ContainerCrate >
 {
 	private final int	rows;
 	private final int	offsetY;
 
-	public GuiCrate( ContainerCrate container, PlayerInventory playerInventory, ITextComponent title )
+	public GuiCrate( ContainerCrate container, Inventory playerInventory, Component title )
 	{
 		super( container, playerInventory, title );
 
@@ -37,15 +37,15 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 	}
 
 	@Override
-	public void render( MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks )
+	public void render( PoseStack matrixStack, int mouseX, int mouseY, float partialTicks )
 	{
 		renderBackground( matrixStack );
 		super.render( matrixStack, mouseX, mouseY, partialTicks );
 
 		if( mouseX >= getGuiLeft() + 115 && mouseX < getGuiLeft() + 169 && mouseY >= getGuiTop() + 7 && mouseY < getGuiTop() + 13 )
 		{
-			final ITextComponent toolTip = new TranslationTextComponent( ModInfo.CONTAINER_CAPACITY, menu.getVolume() );
-			final List< ITextComponent > list1 = Lists.newArrayList( toolTip );
+			final Component toolTip = new TranslatableComponent( ModInfo.CONTAINER_CAPACITY, menu.getVolume() );
+			final List< Component > list1 = Lists.newArrayList( toolTip );
 			renderComponentTooltip( matrixStack, list1, mouseX, mouseY );
 		}
 		else
@@ -53,9 +53,9 @@ public class GuiCrate extends ContainerScreen< ContainerCrate >
 	}
 
 	@Override
-	protected void renderBg( MatrixStack matrixStack, float partialTicks, int x, int y )
+	protected void renderBg( PoseStack matrixStack, float partialTicks, int x, int y )
 	{
-		minecraft.getTextureManager().bind( Resources.CONTAINER_CRATE );
+		minecraft.getTextureManager().getTexture( Resources.CONTAINER_CRATE );
 
 		blit( matrixStack, getGuiLeft(), getGuiTop(), 0, 0, getXSize(), offsetY );
 		blit( matrixStack, getGuiLeft(), getGuiTop() + offsetY, 0, 126, getXSize(), 96 );

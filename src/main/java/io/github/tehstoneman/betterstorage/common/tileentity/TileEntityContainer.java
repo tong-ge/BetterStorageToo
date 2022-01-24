@@ -4,30 +4,32 @@ import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.common.block.BlockContainerBetterStorage;
 import io.github.tehstoneman.betterstorage.common.inventory.ExpandableStackHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public abstract class TileEntityContainer extends TileEntity implements INamedContainerProvider, INameable
+public abstract class TileEntityContainer extends BlockEntity implements MenuProvider, Nameable
 {
 	public ExpandableStackHandler				inventory;
 	private final LazyOptional< IItemHandler >	inventoryHandler	= LazyOptional.of( () -> inventory );
 
 	/** The custom title of this container, set by an anvil. */
-	protected ITextComponent					customName;
+	protected Component							customName;
 
 	protected int								numPlayersUsing;
 
@@ -35,9 +37,9 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	public float								lidAngle			= 0;
 	public float								prevLidAngle		= 0;
 
-	public TileEntityContainer( TileEntityType< ? > tileEntityTypeIn )
+	public TileEntityContainer( BlockEntityType< ? > tileEntityTypeIn, BlockPos blockPos, BlockState blockState )
 	{
-		super( tileEntityTypeIn );
+		super( tileEntityTypeIn, blockPos, blockState );
 		final int size = getSizeContents();
 		if( size > 0 )
 			inventory = new ExpandableStackHandler( getColumns(), getRows() )
@@ -132,7 +134,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 * @param name
 	 *            The name of this container.
 	 */
-	public void setCustomName( @Nullable ITextComponent name )
+	public void setCustomName( @Nullable Component name )
 	{
 		customName = name;
 	}
@@ -143,13 +145,13 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 	 */
 	@Override
 	@Nullable
-	public ITextComponent getCustomName()
+	public Component getCustomName()
 	{
 		return customName;
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
 		if( hasCustomName() )
 			return getCustomName();
@@ -181,11 +183,11 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 			{
 				final ItemStack stack = inventory.getStackInSlot( i );
 				if( !stack.isEmpty() )
-					InventoryHelper.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
+					Containers.dropItemStack( getLevel(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack );
 			}
 	}
 
-	public void openInventory( PlayerEntity player )
+	public void openInventory( Player player )
 	{
 		if( !player.isSpectator() )
 		{
@@ -197,7 +199,7 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 		}
 	}
 
-	public void closeInventory( PlayerEntity player )
+	public void closeInventory( Player player )
 	{
 		if( !player.isSpectator() )
 		{
@@ -230,61 +232,61 @@ public abstract class TileEntityContainer extends TileEntity implements INamedCo
 
 	/*
 	 * ==========================
-	 * TileEntity synchronization
+	 * BlockEntity synchronization
 	 * ==========================
 	 */
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		if( inventory.getSlots() > 0 )
 			nbt.put( "Inventory", inventory.serializeNBT() );
 
 		if( hasCustomName() )
-			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+			nbt.putString( "CustomName", TextComponent.Serializer.toJson( getCustomName() ) );
 
 		return nbt;
 	}
 
 	@Override
-	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	public void handleUpdateTag( CompoundTag nbt )
 	{
-		super.handleUpdateTag( state, nbt );
+		super.handleUpdateTag( nbt );
 
 		if( nbt.contains( "Inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+			inventory.deserializeNBT( (CompoundTag)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+			setCustomName( TextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
 	}
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		if( inventory.getSlots() > 0 )
 			nbt.put( "Inventory", inventory.serializeNBT() );
 
 		if( hasCustomName() )
-			nbt.putString( "CustomName", ITextComponent.Serializer.toJson( getCustomName() ) );
+			nbt.putString( "CustomName", TextComponent.Serializer.toJson( getCustomName() ) );
 
 		return super.save( nbt );
 	}
 
 	@Override
-	public void load( BlockState state, CompoundNBT nbt )
+	public void load( CompoundTag nbt )
 	{
 		if( nbt.contains( "Inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "Inventory" ) );
+			inventory.deserializeNBT( (CompoundTag)nbt.get( "Inventory" ) );
 
 		if( nbt.contains( "CustomName" ) )
-			setCustomName( ITextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
+			setCustomName( TextComponent.Serializer.fromJson( nbt.getString( "CustomName" ) ) );
 
 		// For backwards compatibility
 		if( nbt.contains( "inventory" ) )
-			inventory.deserializeNBT( (CompoundNBT)nbt.get( "inventory" ) );
+			inventory.deserializeNBT( (CompoundTag)nbt.get( "inventory" ) );
 
-		super.load( state, nbt );
+		super.load( nbt );
 	}
 }

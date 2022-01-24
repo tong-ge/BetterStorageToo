@@ -1,11 +1,10 @@
 package io.github.tehstoneman.betterstorage.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 
 public final class WorldUtils
 {
@@ -13,20 +12,22 @@ public final class WorldUtils
 	{}
 
 	// @SideOnly( Side.CLIENT )
-	public static World getLocalWorld()
-	{
-		return Minecraft.getInstance().level;
-	}
+	/*
+	 * public static Level getLocalWorld()
+	 * {
+	 * return Minecraft.getInstance().level;
+	 * }
+	 */
 
-	public static AxisAlignedBB getAABB( TileEntity entity, double minX, double minY, double minZ, double maxX, double maxY, double maxZ )
+	public static AABB getAABB( BlockEntity entity, double minX, double minY, double minZ, double maxX, double maxY, double maxZ )
 	{
 		final double x = entity.getBlockPos().getX();
 		final double y = entity.getBlockPos().getY();
 		final double z = entity.getBlockPos().getZ();
-		return new AxisAlignedBB( x - minX, y - minY, z - minZ, x + maxX + 1, y + maxY + 1, z + maxZ + 1 );
+		return new AABB( x - minX, y - minY, z - minZ, x + maxX + 1, y + maxY + 1, z + maxZ + 1 );
 	}
 
-	public static AxisAlignedBB getAABB( TileEntity entity, double radius )
+	public static AABB getAABB( BlockEntity entity, double radius )
 	{
 		return getAABB( entity, radius, radius, radius, radius, radius, radius );
 	}
@@ -35,7 +36,7 @@ public final class WorldUtils
 
 	/** Spawns an ItemStack in the world. */
 	/*
-	 * public static EntityItem spawnItem( World world, double x, double y, double z, ItemStack stack )
+	 * public static EntityItem spawnItem( Level world, double x, double y, double z, ItemStack stack )
 	 * {
 	 * if( stack == null || stack.getCount() <= 0 )
 	 * return null;
@@ -47,7 +48,7 @@ public final class WorldUtils
 
 	/** Spawns an ItemStack in the world with random motion. */
 	/*
-	 * public static EntityItem spawnItemWithMotion( World world, double x, double y, double z, ItemStack stack )
+	 * public static EntityItem spawnItemWithMotion( Level world, double x, double y, double z, ItemStack stack )
 	 * {
 	 * final EntityItem item = spawnItem( world, x, y, z, stack );
 	 * if( item != null )
@@ -62,7 +63,7 @@ public final class WorldUtils
 
 	/** Spawn an ItemStack dropping from a destroyed block. */
 	/*
-	 * public static EntityItem dropStackFromBlock( World world, int x, int y, int z, ItemStack stack )
+	 * public static EntityItem dropStackFromBlock( Level world, int x, int y, int z, ItemStack stack )
 	 * {
 	 * final float itemX = x + RandomUtils.getFloat( 0.1F, 0.9F );
 	 * final float itemY = y + RandomUtils.getFloat( 0.1F, 0.9F );
@@ -73,7 +74,7 @@ public final class WorldUtils
 
 	/** Spawn an ItemStack dropping from a destroyed block. */
 	/*
-	 * public static EntityItem dropStackFromBlock( TileEntity te, ItemStack stack )
+	 * public static EntityItem dropStackFromBlock( BlockEntity te, ItemStack stack )
 	 * {
 	 * return dropStackFromBlock( te.getLevel(), te.getBlockPos().getX(), te.getBlockPos().getY(), te.getBlockPos().getZ(), stack );
 	 * }
@@ -94,9 +95,9 @@ public final class WorldUtils
 	 * // item.delayBeforeCanPickup = 40;
 	 * final float f1 = RandomUtils.getFloat( 0.5F );
 	 * final float f2 = RandomUtils.getFloat( (float)Math.PI * 2.0F );
-	 * item.motionX = -MathHelper.sin( f2 ) * f1;
+	 * item.motionX = -Mth.sin( f2 ) * f1;
 	 * item.motionY = 0.2;
-	 * item.motionZ = MathHelper.cos( f2 ) * f1;
+	 * item.motionZ = Mth.cos( f2 ) * f1;
 	 * return item;
 	 * }
 	 * else
@@ -110,9 +111,9 @@ public final class WorldUtils
 	 * }
 	 */
 
-	// TileEntity related functions
+	// BlockEntity related functions
 
-	/** Returns whether the TileEntity at the position is an instance of tileClass. */
+	/** Returns whether the BlockEntity at the position is an instance of tileClass. */
 	/*
 	 * public static <T> boolean is( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
 	 * {
@@ -120,18 +121,18 @@ public final class WorldUtils
 	 * }
 	 */
 
-	/** Returns the TileEntity at the position if it's an instance of tileClass, null if not. */
+	/** Returns the BlockEntity at the position if it's an instance of tileClass, null if not. */
 	/*
 	 * public static <T> T get( IBlockAccess world, int x, int y, int z, Class< T > tileClass )
 	 * {
-	 * final TileEntity t = world.getBlockEntity( new BlockPos( x, y, z ) );
+	 * final BlockEntity t = world.getBlockEntity( new BlockPos( x, y, z ) );
 	 * return tileClass.isInstance( t ) ? (T)t : null;
 	 * }
 	 */
 
-	/** Returns if the TileEntity can be used by this player. */
+	/** Returns if the BlockEntity can be used by this player. */
 	/*
-	 * public static boolean isTileEntityUsableByPlayer( TileEntity entity, EntityPlayer player )
+	 * public static boolean isTileEntityUsableByPlayer( BlockEntity entity, EntityPlayer player )
 	 * {
 	 * return entity.getLevel().getBlockEntity( entity.getBlockPos() ) == entity
 	 * && player.getDistanceSq( entity.getBlockPos().getX() + 0.5, entity.getBlockPos().getY() + 0.5, entity.getBlockPos().getZ() + 0.5 ) <= 64.0;
@@ -140,7 +141,7 @@ public final class WorldUtils
 
 	/** Counts and returns the number of players who're accessing a tile entity. */
 	/*
-	 * public static int syncPlayersUsing( TileEntity te, int playersUsing, IInventory playerInventory )
+	 * public static int syncPlayersUsing( BlockEntity te, int playersUsing, Inventory playerInventory )
 	 * {
 	 * if( !te.getLevel().isRemote && playersUsing != 0 )
 	 * {
@@ -149,7 +150,7 @@ public final class WorldUtils
 	 * for( final EntityPlayer player : players )
 	 * if( player.containerMenu instanceof ContainerBetterStorage )
 	 * {
-	 * final IInventory inventory = ( (ContainerBetterStorage)player.containerMenu ).inventory;
+	 * final Inventory inventory = ( (ContainerBetterStorage)player.containerMenu ).inventory;
 	 * if( inventory == playerInventory )
 	 * playersUsing++;
 	 * else
@@ -170,15 +171,20 @@ public final class WorldUtils
 	 * }
 	 */
 
-	/** This will perform a World.updateNeighborsAt() on every adjacent block including the block at x|y|z.
-	 * 
-	 * @param world The world
-	 * @param x X position
-	 * @param y Y position
-	 * @param z Z position
+	/**
+	 * This will perform a Level.updateNeighborsAt() on every adjacent block including the block at x|y|z.
+	 *
+	 * @param world
+	 *            The world
+	 * @param x
+	 *            X position
+	 * @param y
+	 *            Y position
+	 * @param z
+	 *            Z position
 	 */
 
-	public static void notifyBlocksAround( World world, int x, int y, int z )
+	public static void notifyBlocksAround( Level world, int x, int y, int z )
 	{
 		final Block block = world.getBlockState( new BlockPos( x, y, z ) ).getBlock();
 		// world.updateNeighborsAt( pos, blockType );
@@ -194,7 +200,7 @@ public final class WorldUtils
 	// Misc functions
 
 	/*
-	 * public static RayTraceResult rayTrace( EntityPlayer player, float partialTicks )
+	 * public static BlockHitResult rayTrace( EntityPlayer player, float partialTicks )
 	 * {
 	 * Attachments.playerLocal.set( player );
 	 * // final double range = player.worldObj.isRemote ? Minecraft.getMinecraft().playerController.getBlockReachDistance()
@@ -203,7 +209,7 @@ public final class WorldUtils
 	 * final Vec3d start = new Vec3d( player.posX, player.posY + 1.62 - player.getYOffset(), player.posZ );
 	 * final Vec3d look = player.getLook( 1.0F );
 	 * final Vec3d end = start.addVector( look.x * range, look.y * range, look.z * range );
-	 * final RayTraceResult target = player.world.rayTraceBlocks( start, end );
+	 * final BlockHitResult target = player.world.rayTraceBlocks( start, end );
 	 * Attachments.playerLocal.remove();
 	 * return target;
 	 * }

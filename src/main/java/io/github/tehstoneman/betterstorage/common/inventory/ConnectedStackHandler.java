@@ -1,6 +1,6 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ConnectedStackHandler extends ExpandableStackHandler
@@ -10,7 +10,7 @@ public class ConnectedStackHandler extends ExpandableStackHandler
 
 	public ConnectedStackHandler( ExpandableStackHandler inventoryUpper, ExpandableStackHandler inventoryLower )
 	{
-		super(Math.max( inventoryUpper.getColumns(), inventoryLower.getColumns()), inventoryUpper.getRows()+inventoryLower.getRows() );
+		super( Math.max( inventoryUpper.getColumns(), inventoryLower.getColumns() ), inventoryUpper.getRows() + inventoryLower.getRows() );
 		this.inventoryUpper = inventoryUpper;
 		this.inventoryLower = inventoryLower;
 	}

@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.container;
 
 import io.github.tehstoneman.betterstorage.common.inventory.ContainerBetterStorage;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -12,7 +12,7 @@ public class SlotBetterStorage extends Slot {
 	private boolean isProtected = false;
 	
 	public SlotBetterStorage(ContainerBetterStorage container,
-	                         IInventory inventory, int index, int x, int y) {
+	                         Inventory inventory, int index, int x, int y) {
 		super(inventory, index, x, y);
 		this.container = container;
 	}

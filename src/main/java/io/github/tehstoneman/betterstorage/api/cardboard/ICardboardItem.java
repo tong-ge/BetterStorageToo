@@ -10,6 +10,7 @@ import io.github.tehstoneman.betterstorage.api.IDyeableItem;
  */
 public interface ICardboardItem extends IDyeableItem
 {
+	@Override
 	default int getDefaultColor()
 	{
 		return 0xA08060;

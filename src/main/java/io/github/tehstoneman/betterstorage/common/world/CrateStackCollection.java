@@ -8,28 +8,30 @@ import javax.annotation.Nullable;
 
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
 /** Holds all CratePileData objects for one world / dimension. */
-public class CrateStackCollection extends WorldSavedData
+public class CrateStackCollection extends SavedData
 {
 	private static final String						filename	= ModInfo.MOD_ID + "_cratepile";
 
 	private final Map< UUID, CrateStackHandler >	pileDataMap	= new HashMap<>();
 
-	public CrateStackCollection()
-	{
-		this( filename );
-	}
-
-	public CrateStackCollection( String filename )
-	{
-		super( filename );
-	}
+	/*
+	 * public CrateStackCollection()
+	 * {
+	 * this( filename );
+	 * }
+	 *
+	 * public CrateStackCollection( String filename )
+	 * {
+	 * super( filename );
+	 * }
+	 */
 
 	/**
 	 * Gets or creates a CratePileCollection for a world.
@@ -39,17 +41,18 @@ public class CrateStackCollection extends WorldSavedData
 	 * @return The collection for the world, or null if client
 	 */
 	@Nullable
-	public static CrateStackCollection getCollection( World world )
+	public static CrateStackCollection getCollection( Level world )
 	{
 		if( world.isClientSide )
 			return null;
 
 		// final DimensionType dimType = world.getDimension().getType();
-		final RegistryKey< World > dimType = world.dimension();
-		final DimensionSavedDataManager manager = world.getServer().getLevel( dimType ).getDataStorage();
-		final WorldSavedData data = manager.computeIfAbsent( CrateStackCollection::new, filename );
+		final ResourceKey< Level > dimType = world.dimension();
+		final DimensionDataStorage manager = world.getServer().getLevel( dimType ).getDataStorage();
+		// final SavedData data = manager.computeIfAbsent( CrateStackCollection::new, filename );
 
-		return (CrateStackCollection)data;
+		// return (CrateStackCollection)data;
+		return null;
 	}
 
 	/**
@@ -120,8 +123,8 @@ public class CrateStackCollection extends WorldSavedData
 		setDirty();
 	}
 
-	@Override
-	public void load( CompoundNBT nbt )
+	// @Override
+	public void load( CompoundTag nbt )
 	{
 		if( !nbt.isEmpty() )
 			for( final String key : nbt.getAllKeys() )
@@ -133,7 +136,7 @@ public class CrateStackCollection extends WorldSavedData
 	}
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		if( !pileDataMap.isEmpty() )
 			for( final Map.Entry< UUID, CrateStackHandler > entry : pileDataMap.entrySet() )

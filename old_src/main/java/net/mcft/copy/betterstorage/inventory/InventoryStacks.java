@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Component;
 
 /** An inventory that wraps around one or more ItemStack arrays. */
 public class InventoryStacks extends InventoryBetterStorage
@@ -139,7 +139,7 @@ public class InventoryStacks extends InventoryBetterStorage
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
 		// TODO Auto-generated method stub
 		return null;

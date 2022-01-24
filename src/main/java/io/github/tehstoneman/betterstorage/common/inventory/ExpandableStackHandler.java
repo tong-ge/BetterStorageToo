@@ -1,8 +1,8 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ExpandableStackHandler extends ItemStackHandler
@@ -63,16 +63,16 @@ public class ExpandableStackHandler extends ItemStackHandler
 	}
 
 	@Override
-	public CompoundNBT serializeNBT()
+	public CompoundTag serializeNBT()
 	{
-		final CompoundNBT nbt = super.serializeNBT();
+		final CompoundTag nbt = super.serializeNBT();
 		nbt.putInt( "Columns", columns );
 		nbt.putInt( "Rows", rows );
 		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT( CompoundNBT nbt )
+	public void deserializeNBT( CompoundTag nbt )
 	{
 		super.deserializeNBT( nbt );
 		columns = nbt.contains( "Columns" ) ? columns = nbt.getInt( "Columns" ) : 9;

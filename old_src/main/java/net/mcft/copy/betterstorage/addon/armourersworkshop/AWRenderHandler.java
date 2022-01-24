@@ -4,7 +4,7 @@ import net.mcft.copy.betterstorage.api.stand.ClientArmorStandPlayer;
 import net.mcft.copy.betterstorage.api.stand.IArmorStand;
 import net.mcft.copy.betterstorage.api.stand.IArmorStandRenderHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,10 +15,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AWRenderHandler implements IArmorStandRenderHandler {
 	
 	@Override
-	public <T extends TileEntity & IArmorStand> void onPreRender(T armorStand, ClientArmorStandPlayer player) {  }
+	public <T extends BlockEntity & IArmorStand> void onPreRender(T armorStand, ClientArmorStandPlayer player) {  }
 	
 	@Override
-	public <T extends TileEntity & IArmorStand> void onPostRender(T armorStand, ClientArmorStandPlayer player) {
+	public <T extends BlockEntity & IArmorStand> void onPostRender(T armorStand, ClientArmorStandPlayer player) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, 3 / 16F, 0);
 		renderIfNonNull(armorStand, AWAddon.eqHandlerHead);
@@ -29,7 +29,7 @@ public class AWRenderHandler implements IArmorStandRenderHandler {
 		GL11.glPopMatrix();
 	}
 	
-	private <T extends TileEntity & IArmorStand> void renderIfNonNull(T armorStand, AWEquipmentHandler handler) {
+	private <T extends BlockEntity & IArmorStand> void renderIfNonNull(T armorStand, AWEquipmentHandler handler) {
 		ItemStack item = armorStand.getItem(handler);
 		if (item != null)
 			AWAddon.renderHandler.renderSkinWithHelper(item, 0, 0, 0, 0, 0);

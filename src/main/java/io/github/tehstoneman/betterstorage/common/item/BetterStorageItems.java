@@ -3,7 +3,6 @@ package io.github.tehstoneman.betterstorage.common.item;
 import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.ModInfo;
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
-import io.github.tehstoneman.betterstorage.common.fluid.BetterStorageFluids;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemBlockCardboardBox;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardArmor;
 import io.github.tehstoneman.betterstorage.common.item.cardboard.ItemCardboardAxe;
@@ -16,14 +15,12 @@ import io.github.tehstoneman.betterstorage.common.item.locking.ItemKey;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemKeyring;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemLock;
 import io.github.tehstoneman.betterstorage.common.item.locking.ItemMasterKey;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class BetterStorageItems
 {
@@ -60,21 +57,23 @@ public final class BetterStorageItems
 			() -> new ItemCardboardHoe() );
 
 	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_HELMET		= REGISTERY.register( "cardboard_helmet",
-			() -> new ItemCardboardArmor( EquipmentSlotType.HEAD ) );
+			() -> new ItemCardboardArmor( EquipmentSlot.HEAD ) );
 	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_CHESTPLATE	= REGISTERY.register( "cardboard_chestplate",
-			() -> new ItemCardboardArmor( EquipmentSlotType.CHEST ) );
+			() -> new ItemCardboardArmor( EquipmentSlot.CHEST ) );
 	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_LEGGINGS		= REGISTERY.register( "cardboard_leggings",
-			() -> new ItemCardboardArmor( EquipmentSlotType.LEGS ) );
+			() -> new ItemCardboardArmor( EquipmentSlot.LEGS ) );
 	public static RegistryObject< ItemCardboardArmor >			CARDBOARD_BOOTS			= REGISTERY.register( "cardboard_boots",
-			() -> new ItemCardboardArmor( EquipmentSlotType.FEET ) );
+			() -> new ItemCardboardArmor( EquipmentSlot.FEET ) );
 
 	public static RegistryObject< BlockItem >					BLOCK_FLINT				= REGISTERY.register( "block_flint",
 			() -> new BlockItem( BetterStorageBlocks.BLOCK_FLINT.get(), new Item.Properties().tab( BetterStorage.ITEM_GROUP ) ) );
 	public static RegistryObject< BlockItem >					GLASS_TANK				= REGISTERY.register( "glass_tank",
 			() -> new BlockItem( BetterStorageBlocks.GLASS_TANK.get(), new Item.Properties().tab( BetterStorage.ITEM_GROUP ) ) );
 
-	/*public static RegistryObject< BucketItem >					MILK_BUCKET				= REGISTERY.register( "milk_bucket",
-			() -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().craftRemainder( Items.BUCKET ) ) );*/
+	/*
+	 * public static RegistryObject< BucketItem > MILK_BUCKET = REGISTERY.register( "milk_bucket",
+	 * () -> new BucketItem( BetterStorageFluids.MILK, new Item.Properties().craftRemainder( Items.BUCKET ) ) );
+	 */
 
 	public static RegistryObject< HexKeyItem >					HEX_KEY					= REGISTERY.register( "hex_key", () -> new HexKeyItem() );
 }

@@ -4,29 +4,29 @@ import java.util.List;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 //@InventoryContainer
-public class ContainerCrate extends Container
+public class ContainerCrate extends AbstractContainerMenu
 {
-	private final IItemHandler			inventoryCrate;
-	private final TileEntityCrate		tileCrate;
+	private final IItemHandler		inventoryCrate;
+	private final TileEntityCrate	tileCrate;
 
-	private final int					rows;
-	public int							indexStart, indexPlayer, indexHotbar;
-	private final IntReferenceHolder	volume	= IntReferenceHolder.standalone();
+	private final int				rows;
+	public int						indexStart, indexPlayer, indexHotbar;
+	private final DataSlot			volume	= DataSlot.standalone();
 
-	public ContainerCrate( int windowID, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ContainerCrate( int windowID, Inventory playerInventory, Level world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.CRATE.get(), windowID );
 		tileCrate = (TileEntityCrate)world.getBlockEntity( pos );
@@ -89,7 +89,7 @@ public class ContainerCrate extends Container
 	}
 
 	@Override
-	public ItemStack quickMoveStack( PlayerEntity player, int index )
+	public ItemStack quickMoveStack( Player player, int index )
 	{
 		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
@@ -120,7 +120,7 @@ public class ContainerCrate extends Container
 	}
 
 	@Override
-	public void removed( PlayerEntity playerIn )
+	public void removed( Player playerIn )
 	{
 		super.removed( playerIn );
 		( (CrateStackHandler)inventoryCrate ).consolidateStacks();
@@ -137,8 +137,8 @@ public class ContainerCrate extends Container
 	}
 
 	@Override
-	public boolean stillValid( PlayerEntity playerIn )
+	public boolean stillValid( Player playerIn )
 	{
-		return stillValid( IWorldPosCallable.create( tileCrate.getLevel(), tileCrate.getBlockPos() ), playerIn, BetterStorageBlocks.CRATE.get() );
+		return stillValid( ContainerLevelAccess.create( tileCrate.getLevel(), tileCrate.getBlockPos() ), playerIn, BetterStorageBlocks.CRATE.get() );
 	}
 }

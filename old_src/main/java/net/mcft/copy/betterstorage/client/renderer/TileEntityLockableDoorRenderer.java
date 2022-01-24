@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL12;
 import io.github.tehstoneman.betterstorage.attachment.LockAttachment;
 import io.github.tehstoneman.betterstorage.tile.entity.TileEntityLockableDoor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 
 public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer
 {
@@ -71,7 +71,7 @@ public class TileEntityLockableDoorRenderer extends TileEntitySpecialRenderer
 	}
 
 	@Override
-	public void renderTileEntityAt( TileEntity arg0, double arg1, double arg2, double arg3, float arg4, int destroyStage )
+	public void renderTileEntityAt( BlockEntity arg0, double arg1, double arg2, double arg3, float arg4, int destroyStage )
 	{
 		renderTileEntityAt( (TileEntityLockableDoor)arg0, arg1, arg2, arg3, arg4 );
 	}

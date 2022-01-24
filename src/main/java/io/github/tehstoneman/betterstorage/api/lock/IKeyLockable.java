@@ -1,12 +1,11 @@
 package io.github.tehstoneman.betterstorage.api.lock;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Interface to describe a lockable object. <br>
- * Should normally be used with a {@link TileEntity} <br>
+ * Should normally be used with a {@link BlockEntity} <br>
  * Defines and object that can accept an {@link ItemStack} to use as a lock.
  *
  * @author TehStoneMan
@@ -57,10 +56,10 @@ public interface IKeyLockable
 	 * while a container is being held open by another player.
 	 *
 	 * @param player
-	 *            The {@link PlayerEntity} to check for.
-	 * @return True is this {@link PlayerEntity} can use this object.
+	 *            The {@link Player} to check for.
+	 * @return True is this {@link Player} can use this object.
 	 */
-	public boolean canUse( PlayerEntity player );
+	public boolean canUse( Player player );
 
 	/**
 	 * Apply logic for when the lock has the Trigger enchantment.

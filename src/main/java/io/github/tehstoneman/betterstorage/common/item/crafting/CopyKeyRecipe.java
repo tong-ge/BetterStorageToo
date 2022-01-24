@@ -12,23 +12,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import io.github.tehstoneman.betterstorage.BetterStorage;
 import io.github.tehstoneman.betterstorage.api.lock.IKey;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 
-public class CopyKeyRecipe extends SpecialRecipe
+public class CopyKeyRecipe extends CustomRecipe
 {
 	static int							MAX_WIDTH	= 3;
 	static int							MAX_HEIGHT	= 3;
@@ -54,15 +53,12 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public boolean matches( CraftingInventory inv, World worldIn )
+	public boolean matches( CraftingContainer inv, Level worldIn )
 	{
 		for( int i = 0; i <= inv.getWidth() - recipeWidth; ++i )
 			for( int j = 0; j <= inv.getHeight() - recipeHeight; ++j )
 			{
-				if( checkMatch( inv, i, j, true ) )
-					return true;
-
-				if( checkMatch( inv, i, j, false ) )
+				if( checkMatch( inv, i, j, true ) || checkMatch( inv, i, j, false ) )
 					return true;
 			}
 
@@ -72,7 +68,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 	/**
 	 * Checks if the region of a crafting inventory is match for the recipe.
 	 */
-	private boolean checkMatch( CraftingInventory craftingInventory, int width, int height, boolean p_77573_4_ )
+	private boolean checkMatch( CraftingContainer craftingInventory, int width, int height, boolean p_77573_4_ )
 	{
 		for( int i = 0; i < craftingInventory.getWidth(); ++i )
 			for( int j = 0; j < craftingInventory.getHeight(); ++j )
@@ -100,14 +96,14 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public ItemStack assemble( CraftingInventory inv )
+	public ItemStack assemble( CraftingContainer inv )
 	{
 		// final ItemStack outset = ItemStack.EMPTY;
 		final ItemStack outset = getResultItem().copy();
 
 		if( !outset.isEmpty() )
 		{
-			final CompoundNBT tagCompound = outset.getOrCreateTag();
+			final CompoundTag tagCompound = outset.getOrCreateTag();
 
 			for( int i = 0; i < inv.getContainerSize(); ++i )
 			{
@@ -125,7 +121,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public NonNullList< ItemStack > getRemainingItems( CraftingInventory inv )
+	public NonNullList< ItemStack > getRemainingItems( CraftingContainer inv )
 	{
 		final NonNullList< ItemStack > ret = NonNullList.withSize( inv.getContainerSize(), ItemStack.EMPTY );
 
@@ -149,7 +145,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 	}
 
 	@Override
-	public IRecipeSerializer< ? > getSerializer()
+	public RecipeSerializer< ? > getSerializer()
 	{
 		return BetterStorageRecipes.COPY_KEY;
 	}
@@ -247,7 +243,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 		{
 			for( int i = 0; i < astring.length; ++i )
 			{
-				final String s = JSONUtils.convertToString( jsonArr.get( i ), "pattern[" + i + "]" );
+				final String s = GsonHelper.convertToString( jsonArr.get( i ), "pattern[" + i + "]" );
 				if( s.length() > MAX_WIDTH )
 					throw new JsonSyntaxException( "Invalid pattern: too many columns, " + MAX_WIDTH + " is maximum" );
 
@@ -286,24 +282,24 @@ public class CopyKeyRecipe extends SpecialRecipe
 			return nonnulllist;
 	}
 
-	public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry< IRecipeSerializer< ? > >
-			implements IRecipeSerializer< CopyKeyRecipe >
+	public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry< RecipeSerializer< ? > >
+			implements RecipeSerializer< CopyKeyRecipe >
 	{
 		@Override
 		public CopyKeyRecipe fromJson( ResourceLocation recipeId, JsonObject json )
 		{
-			final String s = JSONUtils.getAsString( json, "group", "" );
-			final Map< String, Ingredient > map = deserializeKey( JSONUtils.getAsJsonObject( json, "key" ) );
-			final String[] astring = shrink( patternFromJson( JSONUtils.getAsJsonArray( json, "pattern" ) ) );
+			final String s = GsonHelper.getAsString( json, "group", "" );
+			final Map< String, Ingredient > map = deserializeKey( GsonHelper.getAsJsonObject( json, "key" ) );
+			final String[] astring = shrink( patternFromJson( GsonHelper.getAsJsonArray( json, "pattern" ) ) );
 			final int i = astring[0].length();
 			final int j = astring.length;
 			final NonNullList< Ingredient > nonnulllist = deserializeIngredients( astring, map, i, j );
-			final ItemStack itemstack = ShapedRecipe.itemFromJson( JSONUtils.getAsJsonObject( json, "result" ) );
+			final ItemStack itemstack = ShapedRecipe.itemStackFromJson( GsonHelper.getAsJsonObject( json, "result" ) );
 			return new CopyKeyRecipe( recipeId, s, i, j, nonnulllist, itemstack );
 		}
 
 		@Override
-		public CopyKeyRecipe fromNetwork( ResourceLocation recipeId, PacketBuffer buffer )
+		public CopyKeyRecipe fromNetwork( ResourceLocation recipeId, FriendlyByteBuf buffer )
 		{
 			final int i = buffer.readVarInt();
 			final int j = buffer.readVarInt();
@@ -318,7 +314,7 @@ public class CopyKeyRecipe extends SpecialRecipe
 		}
 
 		@Override
-		public void toNetwork( PacketBuffer buffer, CopyKeyRecipe recipe )
+		public void toNetwork( FriendlyByteBuf buffer, CopyKeyRecipe recipe )
 		{
 			buffer.writeVarInt( recipe.recipeWidth );
 			buffer.writeVarInt( recipe.recipeHeight );

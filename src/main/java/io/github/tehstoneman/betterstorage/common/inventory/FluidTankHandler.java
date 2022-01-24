@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -130,7 +130,7 @@ public class FluidTankHandler implements IFluidHandler
 		return fluid.getAmount();
 	}
 
-	public FluidTankHandler readFromNBT( CompoundNBT nbt )
+	public FluidTankHandler readFromNBT( CompoundTag nbt )
 	{
 
 		final FluidStack fluid = FluidStack.loadFluidStackFromNBT( nbt );
@@ -138,7 +138,7 @@ public class FluidTankHandler implements IFluidHandler
 		return this;
 	}
 
-	public CompoundNBT writeToNBT( CompoundNBT nbt )
+	public CompoundTag writeToNBT( CompoundTag nbt )
 	{
 
 		fluid.writeToNBT( nbt );

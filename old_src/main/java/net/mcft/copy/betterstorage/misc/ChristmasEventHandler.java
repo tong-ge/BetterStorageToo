@@ -59,7 +59,7 @@ public class ChristmasEventHandler
 
 		/*
 		 * if (isPresentTime() && !properties.gotPresent) {
-		 * IInventory inv = event.player.inventory;
+		 * Inventory inv = event.player.inventory;
 		 * for (int i = 0; i < inv.getContainerSize(); i++) {
 		 * ItemStack stack = inv.getItem(i);
 		 * if ((stack != null) && (stack.getItem() == BetterStorageItems.presentBook) &&
@@ -324,7 +324,7 @@ public class ChristmasEventHandler
 	 * public boolean gotPresent = false;
 	 * 
 	 * @Override
-	 * public void init(Entity entity, World world) { }
+	 * public void init(Entity entity, Level world) { }
 	 * 
 	 * @Override
 	 * public void saveNBTData(NBTTagCompound compound) {

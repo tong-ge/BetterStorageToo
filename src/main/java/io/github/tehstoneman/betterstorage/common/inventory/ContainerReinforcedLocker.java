@@ -2,19 +2,19 @@ package io.github.tehstoneman.betterstorage.common.inventory;
 
 import io.github.tehstoneman.betterstorage.common.block.BetterStorageBlocks;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerReinforcedLocker extends Container
+public class ContainerReinforcedLocker extends AbstractContainerMenu
 {
 	private final IItemHandler			inventoryContainer;
 	private final TileEntityContainer	tileContainer;
@@ -24,7 +24,7 @@ public class ContainerReinforcedLocker extends Container
 
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerReinforcedLocker( int windowId, PlayerInventory playerInventory, World world, BlockPos pos )
+	public ContainerReinforcedLocker( int windowId, Inventory playerInventory, Level world, BlockPos pos )
 	{
 		super( BetterStorageContainerTypes.REINFORCED_LOCKER.get(), windowId );
 		tileContainer = (TileEntityContainer)world.getBlockEntity( pos );
@@ -82,14 +82,14 @@ public class ContainerReinforcedLocker extends Container
 	}
 
 	@Override
-	public void removed( PlayerEntity playerIn )
+	public void removed( Player playerIn )
 	{
 		tileContainer.closeInventory( playerIn );
 		super.removed( playerIn );
 	}
 
 	@Override
-	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( Player playerIn, int index )
 	{
 		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
@@ -118,9 +118,9 @@ public class ContainerReinforcedLocker extends Container
 	}
 
 	@Override
-	public boolean stillValid( PlayerEntity playerIn )
+	public boolean stillValid( Player playerIn )
 	{
-		return stillValid( IWorldPosCallable.create( tileContainer.getLevel(), tileContainer.getBlockPos() ), playerIn,
+		return stillValid( ContainerLevelAccess.create( tileContainer.getLevel(), tileContainer.getBlockPos() ), playerIn,
 				BetterStorageBlocks.REINFORCED_LOCKER.get() );
 	}
 }

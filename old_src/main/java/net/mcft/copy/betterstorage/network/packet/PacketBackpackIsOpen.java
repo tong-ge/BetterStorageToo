@@ -7,7 +7,7 @@ import net.mcft.copy.betterstorage.network.AbstractPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 /** Updates players about the open status of equipped backpacks. */
 public class PacketBackpackIsOpen extends AbstractPacket<PacketBackpackIsOpen> {
@@ -22,13 +22,13 @@ public class PacketBackpackIsOpen extends AbstractPacket<PacketBackpackIsOpen> {
 	}
 	
 	@Override
-	public void encode(PacketBuffer buffer) throws IOException {
+	public void encode(FriendlyByteBuf buffer) throws IOException {
 		buffer.writeInt(entityID);
 		buffer.writeBoolean(isOpen);
 	}
 	
 	@Override
-	public void decode( PacketBuffer buffer) throws IOException {
+	public void decode( FriendlyByteBuf buffer) throws IOException {
 		entityID = buffer.readInt();
 		isOpen = buffer.readBoolean();
 	}

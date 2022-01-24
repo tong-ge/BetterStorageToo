@@ -1,22 +1,21 @@
 package io.github.tehstoneman.betterstorage.common.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 //@InventoryContainer
-public class ContainerKeyring extends Container
+public class ContainerKeyring extends AbstractContainerMenu
 {
-	private final IInventory			inventoryPlayer;
+	private final Inventory				inventoryPlayer;
 	private final KeyringStackHandler	inventoryKeyRing;
 	public int							indexStart, indexPlayer, indexHotbar;
 
-	public ContainerKeyring( int windowID, PlayerInventory playerInventory, ItemStack keyring, int protectedIndex )
+	public ContainerKeyring( int windowID, Inventory playerInventory, ItemStack keyring, int protectedIndex )
 	{
 		super( BetterStorageContainerTypes.KEYRING.get(), windowID );
 
@@ -48,22 +47,24 @@ public class ContainerKeyring extends Container
 		}
 	}
 
-	@Override
-	public ItemStack clicked( int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player )
-	{
-		if( slotId >= 0 && getSlot( slotId ) != null && getSlot( slotId ).getItem() == player.getMainHandItem() )
-			return ItemStack.EMPTY;
-		return super.clicked( slotId, dragType, clickTypeIn, player );
-	}
+	/*
+	 * @Override
+	 * public ItemStack clicked( int slotId, int dragType, ClickType clickTypeIn, Player player )
+	 * {
+	 * if( slotId >= 0 && getSlot( slotId ) != null && getSlot( slotId ).getItem() == player.getMainHandItem() )
+	 * return ItemStack.EMPTY;
+	 * return super.clicked( slotId, dragType, clickTypeIn, player );
+	 * }
+	 */
 
 	@Override
-	public boolean stillValid( PlayerEntity playerIn )
+	public boolean stillValid( Player playerIn )
 	{
 		return true;
 	}
 
 	@Override
-	public ItemStack quickMoveStack( PlayerEntity playerIn, int index )
+	public ItemStack quickMoveStack( Player playerIn, int index )
 	{
 		final Slot slot = slots.get( index );
 		ItemStack returnStack = ItemStack.EMPTY;
@@ -92,7 +93,7 @@ public class ContainerKeyring extends Container
 	}
 
 	@Override
-	public void removed( PlayerEntity playerIn )
+	public void removed( Player playerIn )
 	{
 		super.removed( playerIn );
 		inventoryKeyRing.updateCount();

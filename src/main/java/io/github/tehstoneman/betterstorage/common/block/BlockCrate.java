@@ -9,30 +9,29 @@ import com.google.common.collect.Maps;
 import io.github.tehstoneman.betterstorage.api.ConnectedType;
 import io.github.tehstoneman.betterstorage.common.inventory.CrateStackHandler;
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityCrate;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 //@Interface( modid = "Botania", iface = "vazkii.botania.api.mana.ILaputaImmobile", striprefs = true )
 public class BlockCrate extends BlockConnectableContainer// implements ILaputaImmobile
@@ -58,30 +57,30 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 		super( Properties.copy( Blocks.OAK_PLANKS ) );
 
 		//@formatter:off
-		registerDefaultState( defaultBlockState().getBlockState().setValue( NORTH, Boolean.valueOf( false ) )
-													  			 .setValue( EAST, Boolean.valueOf( false ) )
-													  			 .setValue( SOUTH, Boolean.valueOf( false ) )
-													  			 .setValue( WEST, Boolean.valueOf( false ) )
-													  			 .setValue( UP, Boolean.valueOf( false ) )
-													  			 .setValue( DOWN, Boolean.valueOf( false ) ) );
+		registerDefaultState( defaultBlockState().setValue( NORTH, Boolean.valueOf( false ) )
+												 .setValue( EAST, Boolean.valueOf( false ) )
+												 .setValue( SOUTH, Boolean.valueOf( false ) )
+												 .setValue( WEST, Boolean.valueOf( false ) )
+												 .setValue( UP, Boolean.valueOf( false ) )
+												 .setValue( DOWN, Boolean.valueOf( false ) ) );
 		//@formatter:on
 	}
 
 	@Override
-	protected void createBlockStateDefinition( StateContainer.Builder< Block, BlockState > builder )
+	protected void createBlockStateDefinition( StateDefinition.Builder< Block, BlockState > builder )
 	{
 		super.createBlockStateDefinition( builder );
 		builder.add( NORTH, EAST, SOUTH, WEST, UP, DOWN );
 	}
 
 	@Override
-	public TileEntity createTileEntity( BlockState state, IBlockReader world )
+	public BlockEntity newBlockEntity( BlockPos blockPos, BlockState blockState )
 	{
-		return new TileEntityCrate();
+		return new TileEntityCrate( blockPos, blockState );
 	}
 
 	@Override
-	public void setPlacedBy( World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack )
+	public void setPlacedBy( Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack )
 	{
 		super.setPlacedBy( worldIn, pos, state, placer, stack );
 		if( !worldIn.isClientSide() )
@@ -97,8 +96,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public BlockState updateShape( BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos,
-			BlockPos facingPos )
+	public BlockState updateShape( BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos )
 	{
 		if( !world.isClientSide() )
 		{
@@ -115,29 +113,29 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	}
 
 	@Override
-	public ActionResultType use( BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit )
+	public InteractionResult use( BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit )
 	{
 		if( worldIn.isClientSide )
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		else
 		{
-			final INamedContainerProvider tileEntityCrate = getMenuProvider( state, worldIn, pos );
+			final MenuProvider tileEntityCrate = getMenuProvider( state, worldIn, pos );
 			if( tileEntityCrate != null )
-				NetworkHooks.openGui( (ServerPlayerEntity)player, tileEntityCrate, pos );
-			return ActionResultType.SUCCESS;
+				NetworkHooks.openGui( (ServerPlayer)player, tileEntityCrate, pos );
+			return InteractionResult.SUCCESS;
 		}
 	}
 
 	@Override
 	@Nullable
-	public INamedContainerProvider getMenuProvider( BlockState state, World world, BlockPos pos )
+	public MenuProvider getMenuProvider( BlockState state, Level world, BlockPos pos )
 	{
 		return TileEntityCrate.getCrateAt( world, pos );
 	}
 
 	@SuppressWarnings( "deprecation" )
 	@Override
-	public void onRemove( BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving )
+	public void onRemove( BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving )
 	{
 		if( !world.isClientSide && state.getBlock() != newState.getBlock() )
 		{
@@ -147,7 +145,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 				final CrateStackHandler handler = tileCrate.getCrateStackHandler();
 				final NonNullList< ItemStack > overflow = tileCrate.removeCrate();
 				if( !overflow.isEmpty() )
-					InventoryHelper.dropContents( world, pos, overflow );
+					Containers.dropContents( world, pos, overflow );
 				tileCrate.notifyRegionUpdate( handler.getRegion(), tileCrate.getPileID() );
 			}
 
@@ -165,9 +163,9 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 
 	/*
 	 * @Override
-	 * public int getComparatorInputOverride( BlockState blockState, World worldIn, BlockPos pos )
+	 * public int getComparatorInputOverride( BlockState blockState, Level worldIn, BlockPos pos )
 	 * {
-	 * final TileEntity tileEntity = worldIn.getBlockEntity( pos );
+	 * final BlockEntity tileEntity = worldIn.getBlockEntity( pos );
 	 * if( !( tileEntity instanceof TileEntityCrate ) )
 	 * return 0;
 	 *
@@ -180,7 +178,7 @@ public class BlockCrate extends BlockConnectableContainer// implements ILaputaIm
 	 * @Method( modid = "Botania" )
 	 *
 	 * @Override
-	 * public boolean canMove( World world, BlockPos pos )
+	 * public boolean canMove( Level world, BlockPos pos )
 	 * {
 	 * return false;
 	 * }

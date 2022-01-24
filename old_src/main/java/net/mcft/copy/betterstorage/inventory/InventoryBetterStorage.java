@@ -1,14 +1,14 @@
 package io.github.tehstoneman.betterstorage.inventory;
 
 import io.github.tehstoneman.betterstorage.utils.StackUtils;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
 /**
- * Basic IInventory with name and default
+ * Basic Inventory with name and default
  * remove and getItemOnClosing,
  */
-public abstract class InventoryBetterStorage implements IInventory
+public abstract class InventoryBetterStorage implements Inventory
 {
 	private final String name;
 

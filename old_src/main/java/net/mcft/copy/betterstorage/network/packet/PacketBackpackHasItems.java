@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.mcft.copy.betterstorage.item.ItemBackpack;
 import net.mcft.copy.betterstorage.network.AbstractPacket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 /** Updates the "hasItems" status for equipped backpacks. */
 public class PacketBackpackHasItems extends AbstractPacket<PacketBackpackHasItems> {
@@ -18,12 +18,12 @@ public class PacketBackpackHasItems extends AbstractPacket<PacketBackpackHasItem
 	}
 	
 	@Override
-	public void encode(PacketBuffer buffer) throws IOException {
+	public void encode(FriendlyByteBuf buffer) throws IOException {
 		buffer.writeBoolean(hasItems);
 	}
 	
 	@Override
-	public void decode(PacketBuffer buffer) throws IOException {
+	public void decode(FriendlyByteBuf buffer) throws IOException {
 		hasItems = buffer.readBoolean();
 	}
 	

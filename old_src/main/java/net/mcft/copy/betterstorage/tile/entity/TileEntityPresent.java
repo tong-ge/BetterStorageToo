@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Connection;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ITickable;
 
@@ -130,7 +130,7 @@ public class TileEntityPresent extends TileEntityCardboardBox implements ITickab
 				return true;
 
 			//if( BetterStorageBlocks.CARDBOARD_BOX != null )
-				//if( worldObj.setBlockState( pos, BetterStorageBlocks.CARDBOARD_BOX.getDefaultState() ) )
+				//if( worldObj.setBlock( pos, BetterStorageBlocks.CARDBOARD_BOX.defaultBlockState() ) )
 				//{
 					// TileEntityCardboardBox box = WorldUtils.get(worldObj, xCoord, yCoord, zCoord, TileEntityCardboardBox.class);
 					// box.uses = ItemBlockCardboardBox.getUses();
@@ -207,7 +207,7 @@ public class TileEntityPresent extends TileEntityCardboardBox implements ITickab
 	}
 
 	@Override
-	public void onDataPacket( NetworkManager net, SPacketUpdateTileEntity packet )
+	public void onDataPacket( Connection net, SPacketUpdateTileEntity packet )
 	{
 		super.onDataPacket( net, packet );
 		final NBTTagCompound compound = packet.getTag();

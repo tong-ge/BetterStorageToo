@@ -3,10 +3,10 @@ package io.github.tehstoneman.betterstorage.common.item.locking;
 import java.awt.Color;
 
 import io.github.tehstoneman.betterstorage.api.lock.KeyLockItem;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.ItemStack;
 
-public class KeyColor implements IItemColor
+public class KeyColor implements ItemColor
 {
 	@Override
 	public int getColor( ItemStack stack, int tintIndex )

@@ -2,9 +2,9 @@ package io.github.tehstoneman.betterstorage.inventory;
 
 import io.github.tehstoneman.betterstorage.common.tileentity.TileEntityContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Component;
 
 /** An inventory that is connected to a TileEntityInventoy. */
 public class InventoryTileEntity extends InventoryBetterStorage
@@ -12,10 +12,10 @@ public class InventoryTileEntity extends InventoryBetterStorage
 
 	public final TileEntityContainer	mainTileEntity;
 	public final TileEntityContainer[]	tileEntities;
-	public final IInventory				inventory;
+	public final Inventory				inventory;
 	public final int					columns, rows;
 
-	public InventoryTileEntity( TileEntityContainer mainTileEntity, TileEntityContainer[] tileEntities, IInventory inventory )
+	public InventoryTileEntity( TileEntityContainer mainTileEntity, TileEntityContainer[] tileEntities, Inventory inventory )
 	{
 		this.mainTileEntity = mainTileEntity;
 		this.tileEntities = tileEntities;
@@ -30,7 +30,7 @@ public class InventoryTileEntity extends InventoryBetterStorage
 		this( mainTileEntity, tileEntities, new InventoryStacks( getAllContents( tileEntities ) ) );
 	}
 
-	public InventoryTileEntity( TileEntityContainer tileEntity, IInventory inventory )
+	public InventoryTileEntity( TileEntityContainer tileEntity, Inventory inventory )
 	{
 		this( tileEntity, new TileEntityContainer[] { tileEntity }, inventory );
 	}
@@ -149,7 +149,7 @@ public class InventoryTileEntity extends InventoryBetterStorage
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
 		// TODO Auto-generated method stub
 		return null;

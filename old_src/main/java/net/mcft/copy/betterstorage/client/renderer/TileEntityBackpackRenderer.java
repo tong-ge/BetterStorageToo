@@ -9,7 +9,7 @@ import net.mcft.copy.betterstorage.utils.DirectionUtils;
 import net.mcft.copy.betterstorage.utils.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.BlockEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -96,7 +96,7 @@ public class TileEntityBackpackRenderer extends TileEntitySpecialRenderer {
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float par8) {
+	public void renderTileEntityAt(BlockEntity entity, double x, double y, double z, float par8) {
 		renderTileEntityAt((TileEntityBackpack)entity, x, y, z, par8);
 	}
 	

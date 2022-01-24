@@ -8,7 +8,7 @@ import io.github.tehstoneman.betterstorage.config.GlobalConfig;
 import io.github.tehstoneman.betterstorage.network.AbstractPacket;
 import io.github.tehstoneman.betterstorage.utils.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 /** Lets other clients know about a lock being hit. */
 public class PacketLockHit extends AbstractPacket< PacketLockHit >
@@ -28,7 +28,7 @@ public class PacketLockHit extends AbstractPacket< PacketLockHit >
 	}
 
 	@Override
-	public void encode( PacketBuffer buffer ) throws IOException
+	public void encode( FriendlyByteBuf buffer ) throws IOException
 	{
 		buffer.writeInt( x );
 		buffer.writeInt( y );
@@ -37,7 +37,7 @@ public class PacketLockHit extends AbstractPacket< PacketLockHit >
 	}
 
 	@Override
-	public void decode( PacketBuffer buffer ) throws IOException
+	public void decode( FriendlyByteBuf buffer ) throws IOException
 	{
 		x = buffer.readInt();
 		y = buffer.readInt();

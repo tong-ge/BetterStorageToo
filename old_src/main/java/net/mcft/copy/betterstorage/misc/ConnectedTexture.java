@@ -2,7 +2,7 @@ package io.github.tehstoneman.betterstorage.misc;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -60,7 +60,7 @@ public abstract class ConnectedTexture
 
 	public abstract boolean canConnect( IBlockAccess world, BlockPos pos, EnumFacing side, EnumFacing connected );
 
-	public static enum EnumConnected implements IStringSerializable
+	public static enum EnumConnected implements StringRepresentable
 	{
 		//@formatter:off
 		ALL(  0xF, "all" ),

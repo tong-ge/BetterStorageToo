@@ -9,18 +9,18 @@ import io.github.tehstoneman.betterstorage.common.block.BlockTank;
 import io.github.tehstoneman.betterstorage.common.inventory.FluidTankHandler;
 import io.github.tehstoneman.betterstorage.common.inventory.StackedTankHandler;
 import io.github.tehstoneman.betterstorage.config.BetterStorageConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class TileEntityTank extends TileEntity
+public class TileEntityTank extends BlockEntity
 {
 	private final FluidTankHandler				fluidTank		= new FluidTankHandler( BetterStorageConfig.COMMON.tankBuckets.get() * 1000 )
 																{
@@ -37,9 +37,9 @@ public class TileEntityTank extends TileEntity
 	private BlockPos							mainPos			= BlockPos.ZERO;
 	private int									tankCount;
 
-	public TileEntityTank()
+	public TileEntityTank( BlockPos blockPos, BlockState blockState )
 	{
-		super( BetterStorageTileEntityTypes.GLASS_TANK.get() );
+		super( BetterStorageTileEntityTypes.GLASS_TANK.get(), blockPos, blockState );
 		tankCount = 1;
 	}
 
@@ -131,14 +131,14 @@ public class TileEntityTank extends TileEntity
 
 	/*
 	 * ==========================
-	 * TileEntity synchronization
+	 * BlockEntity synchronization
 	 * ==========================
 	 */
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		final CompoundNBT nbt = super.getUpdateTag();
+		final CompoundTag nbt = super.getUpdateTag();
 
 		fluidTank.writeToNBT( nbt );
 
@@ -146,15 +146,15 @@ public class TileEntityTank extends TileEntity
 	}
 
 	@Override
-	public void handleUpdateTag( BlockState state, CompoundNBT nbt )
+	public void handleUpdateTag( CompoundTag nbt )
 	{
-		super.handleUpdateTag( state, nbt );
+		super.handleUpdateTag( nbt );
 
 		fluidTank.readFromNBT( nbt );
 	}
 
 	@Override
-	public CompoundNBT save( CompoundNBT nbt )
+	public CompoundTag save( CompoundTag nbt )
 	{
 		fluidTank.writeToNBT( nbt );
 		nbt.putInt( "tankCount", tankCount );
@@ -166,7 +166,7 @@ public class TileEntityTank extends TileEntity
 	}
 
 	@Override
-	public void load( BlockState state, CompoundNBT nbt )
+	public void load( CompoundTag nbt )
 	{
 		fluidTank.readFromNBT( nbt );
 		tankCount = nbt.getInt( "tankCount" );
@@ -174,6 +174,6 @@ public class TileEntityTank extends TileEntity
 		if( nbt.contains( "mainPos" ) )
 			mainPos = BlockPos.of( nbt.getLong( "mainPos" ) );
 
-		super.load( state, nbt );
+		super.load( nbt );
 	}
 }
