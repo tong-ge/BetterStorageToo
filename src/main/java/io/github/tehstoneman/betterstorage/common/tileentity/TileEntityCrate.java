@@ -227,7 +227,12 @@ public class TileEntityCrate extends TileEntity
 			set.add( crate );
 		}
 		for( final EnumFacing ndir : EnumFacing.HORIZONTALS )
+		{
+			try{
 			checkConnections( x + ndir.getFrontOffsetX(), y, z + ndir.getFrontOffsetZ(), pileID, set );
+			}
+			catch(StackOverflowError e){}
+		}
 	}
 
 	/** Tries to connect a crate to the given side */
